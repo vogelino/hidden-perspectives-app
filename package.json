@@ -1,38 +1,50 @@
 {
-  "name": "hidden-perspectives-app",
-  "version": "0.1.0",
-  "private": true,
-  "url": "git@github.com:vogelino/hidden-perspectives-app.git",
-  "description": "The Frontend App of the US-IRAN project",
-  "engines": {
-	  "node": "10.11.0",
-	  "npm": "6.4.1"
-  },
-  "authors": [
-    "Lucas Vogel @vogelino <contact@vogelino.com> (https://vogelino.com)",
-    "Ludwig Frank @ludwigfrank <mail@ludwigfrank.com> (http://ludwigfrank.com/)",
-    "Bela Kurek @q-rec <bela.kurek@berlin.de>",
-    "Florian Zia @flozia <zia.florian@gmail.com>",
-    "Joshua Pacheco @josues <joshua.pacheco@me.com>"
-  ],
-  "dependencies": {
-    "react": "^16.5.2",
-    "react-dom": "^16.5.2",
-    "react-scripts": "2.0.5"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ]
+	"name": "hidden-perspectives-app",
+	"version": "0.1.0",
+	"private": true,
+	"url": "git@github.com:vogelino/hidden-perspectives-app.git",
+	"description": "The Frontend App of the US-IRAN project",
+	"engines": {
+		"node": "10.11.0",
+		"npm": "6.4.1"
+	},
+	"authors": [
+		"Lucas Vogel @vogelino <contact@vogelino.com> (https://vogelino.com)",
+		"Ludwig Frank @ludwigfrank <mail@ludwigfrank.com> (http://ludwigfrank.com/)",
+		"Bela Kurek @q-rec <bela.kurek@berlin.de>",
+		"Florian Zia @flozia <zia.florian@gmail.com>",
+		"Joshua Pacheco @josues <joshua.pacheco@me.com>"
+	],
+	"scripts": {
+		"start": "react-scripts start",
+		"build": "react-scripts build",
+		"test": "react-scripts test",
+		"eject": "react-scripts eject",
+		"lint": "npx eslint ./src",
+		"lint-fix": "npx eslint --fix ./src"
+	},
+	"husky": {
+		"hooks": {
+			"pre-commit": "npm run lint-fix && yarn test -o -b --coverage"
+		}
+	},
+	"browserslist": [
+		">0.2%",
+		"not dead",
+		"not ie <= 11",
+		"not op_mini all"
+	],
+	"dependencies": {
+		"react": "^16.5.2",
+		"react-dom": "^16.5.2",
+		"react-scripts": "2.0.5"
+	},
+	"devDependencies": {
+		"eslint-config-airbnb": "^17.1.0",
+		"eslint-plugin-import": "^2.14.0",
+		"eslint-plugin-jest": "^21.26.0",
+		"eslint-plugin-jsx-a11y": "^6.1.2",
+		"eslint-plugin-react": "^7.11.1",
+		"husky": "^1.1.2"
+	}
 }
