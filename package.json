@@ -23,7 +23,7 @@
 		"eject": "react-scripts eject",
 		"lint": "npx eslint ./src",
 		"lint-fix": "npx eslint --fix ./src",
-		"quality-check": "npm run lint-fix && yarn test -o -b --coverage"
+		"quality-check": "npm run lint-fix --cache && yarn test -o -b --coverage"
 	},
 	"husky": {
 		"hooks": {
