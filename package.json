@@ -21,11 +21,13 @@
 		"test": "react-scripts test",
 		"eject": "react-scripts eject",
 		"lint": "npx eslint ./src",
-		"lint-fix": "npx eslint --fix ./src"
+		"lint-fix": "npx eslint --fix ./src",
+		"quality-check": "npm run lint-fix && yarn test -o -b --coverage"
 	},
 	"husky": {
 		"hooks": {
-			"pre-commit": "npm run lint-fix && yarn test -o -b --coverage"
+			"pre-commit": "yarn run quality-check",
+			"pre-push": "yarn run quality-check"
 		}
 	},
 	"browserslist": [
