@@ -2,6 +2,15 @@
   "name": "hidden-perspectives-app",
   "version": "0.1.0",
   "private": true,
+  "url": "git@github.com:vogelino/hidden-perspectives-app.git",
+  "description": "The Frontend App of the US-IRAN project",
+  "authors": [
+    "Lucas Vogel @vogelino <contact@vogelino.com> (https://vogelino.com)",
+    "Ludwig Frank @ludwigfrank <mail@ludwigfrank.com> (http://ludwigfrank.com/)",
+    "Bela Kurek @q-rec <bela.kurek@berlin.de>",
+    "Florian Zia @flozia <zia.florian@gmail.com>",
+    "Joshua Pacheco @josues <joshua.pacheco@me.com>"
+  ],
   "dependencies": {
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
