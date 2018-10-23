@@ -21,9 +21,9 @@
 		"build": "react-scripts build",
 		"test": "react-scripts test",
 		"eject": "react-scripts eject",
-		"lint": "npx eslint ./src",
-		"lint-fix": "npx eslint --fix ./src",
-		"quality-check": "npm run lint-fix --cache && yarn test -o -b --coverage"
+		"lint": "npx eslint --fix ./src",
+		"lint-latest": "LIST=`git diff-index --name-only HEAD | grep .*\\.js | grep -v json`; if [ \"$LIST\" ]; then npx eslint --fix $LIST; fi",
+		"quality-check": "yarn run lint-latest && yarn run test -b --coverage"
 	},
 	"husky": {
 		"hooks": {
@@ -38,6 +38,7 @@
 		"not op_mini all"
 	],
 	"dependencies": {
+		"lint-staged": "^7.3.0",
 		"react": "^16.5.2",
 		"react-dom": "^16.5.2",
 		"react-scripts": "2.0.5"
@@ -51,4 +52,3 @@
 		"husky": "^1.1.2"
 	}
 }
-
