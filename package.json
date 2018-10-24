@@ -2,24 +2,84 @@
   "name": "hidden-perspectives-app",
   "version": "0.1.0",
   "private": true,
-  "dependencies": {
-    "react": "^16.5.2",
-    "react-dom": "^16.5.2",
-    "react-scripts": "2.0.5"
+  "url": "git@github.com:vogelino/hidden-perspectives-app.git",
+  "description": "The Frontend App of the US-IRAN project",
+  "engines": {
+    "node": "10.11.0",
+    "npm": "6.4.1"
   },
+  "authors": [
+    "Lucas Vogel @vogelino <contact@vogelino.com> (https://vogelino.com)",
+    "Ludwig Frank @ludwigfrank <mail@ludwigfrank.com> (http://ludwigfrank.com/)",
+    "Bela Kurek @q-rec <bela.kurek@berlin.de>",
+    "Florian Zia @flozia <zia.florian@gmail.com>",
+    "Joshua Pacheco @josues <joshua.pacheco@me.com>"
+  ],
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "npx serve build",
+    "dev": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
+    "eject": "react-scripts eject",
+    "lint": "npx eslint --fix ./src",
+    "lint-latest": "LIST=`git diff-index --name-only --diff-filter=d HEAD | grep .*\\.js | grep -v json`; if [ \"$LIST\" ]; then npx eslint --fix $LIST; fi",
+    "quality-check": "yarn run lint-latest && CI=true yarn run test -b -o",
+    "storybook": "start-storybook -p 9009 -s public",
+    "build-storybook": "build-storybook -s public"
   },
-  "eslintConfig": {
-    "extends": "react-app"
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn run quality-check",
+      "pre-push": "yarn run quality-check"
+    }
   },
   "browserslist": [
     ">0.2%",
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "dependencies": {
+    "apollo-cache-inmemory": "^1.3.6",
+    "apollo-client": "^2.4.3",
+    "apollo-link": "^1.2.3",
+    "apollo-link-http": "^1.5.5",
+    "apollo-link-state": "^0.4.2",
+    "graphql": "^14.0.2",
+    "graphql-tag": "^2.10.0",
+    "lint-staged": "^7.3.0",
+    "normalize.css": "^8.0.0",
+    "prop-types": "^15.6.2",
+    "ramda": "^0.25.0",
+    "react": "^16.5.2",
+    "react-apollo": "^2.2.4",
+    "react-app-rewire-styled-components": "^3.0.2",
+    "react-dom": "^16.5.2",
+    "react-helmet": "^5.2.0",
+    "react-router-dom": "^4.3.1",
+    "react-scripts": "2.0.5",
+    "recompose": "^0.30.0",
+    "styled-components": "^4.0.2"
+  },
+  "devDependencies": {
+    "@storybook/addon-actions": "^3.4.11",
+    "@storybook/addon-info": "^3.4.11",
+    "@storybook/addon-links": "^3.4.11",
+    "@storybook/react": "^3.4.11",
+    "enzyme": "^3.7.0",
+    "enzyme-adapter-react-16": "^1.6.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jest": "^21.26.0",
+    "eslint-plugin-jsx-a11y": "^6.1.2",
+    "eslint-plugin-react": "^7.11.1",
+    "husky": "^1.1.2",
+    "react-app-rewired": "^1.6.2"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.js",
+      "!src/index.js"
+    ]
+  }
 }
