@@ -5,6 +5,8 @@ const title = 'Hidden Perspectives';
 const description = 'A collaborative exploration tool for analysing the US-IRAN relashionships';
 const OGURL = '';
 const OGImage = '';
+const metaColor = '#ffffff';
+const safariPinnedTabColor = '#5bbad5';
 
 const Head = () => (
 	<Helmet>
@@ -15,10 +17,15 @@ const Head = () => (
 			content={description}
 		/>
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<link rel="icon" sizes="192x192" href="/static/touch-icon.png" />
-		<link rel="apple-touch-icon" href="/static/touch-icon.png" />
-		<link rel="mask-icon" href="/static/favicon-mask.svg" color="#49B882" />
-		<link rel="icon" href="/static/favicon.ico" />
+
+		<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+		<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+		<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+		<link rel="mask-icon" href="/safari-pinned-tab.svg" color={safariPinnedTabColor} />
+		<link rel="manifest" href="/manifest.json" />
+		<meta name="msapplication-TileColor" content={metaColor} />
+		<meta name="theme-color" content={metaColor} />
+
 		<meta property="og:url" content={OGURL} />
 		<meta property="og:title" content={title} />
 		<meta
