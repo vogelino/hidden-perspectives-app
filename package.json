@@ -43,6 +43,8 @@
 		"apollo-link": "^1.2.3",
 		"apollo-link-http": "^1.5.5",
 		"apollo-link-state": "^0.4.2",
+		"enzyme": "^3.7.0",
+		"enzyme-adapter-react-16": "^1.6.0",
 		"graphql": "^14.0.2",
 		"graphql-tag": "^2.10.0",
 		"lint-staged": "^7.3.0",
