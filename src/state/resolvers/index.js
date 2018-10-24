@@ -1,7 +1,7 @@
 import { mergeAll, map, prop } from 'ramda';
 import todos from './todos';
 
-const combineResolver = (...resolverObjects) => {
+export const combineResolver = (...resolverObjects) => {
 	const allDefaults = map(prop('defaults'), resolverObjects);
 	const allResolvers = map(prop('resolvers'), resolverObjects);
 	const defaults = mergeAll(allDefaults);

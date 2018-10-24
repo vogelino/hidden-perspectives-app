@@ -30,13 +30,13 @@ VisibilityFilter.propTypes = {
 	toggleVisibility: PropTypes.func.isRequired,
 };
 
-const withVisibilityFilter = graphql(GET_VISIBILITY, {
+export const withVisibilityFilter = graphql(GET_VISIBILITY, {
 	props: ({ data }) => ({
 		visibilityFilter: data.visibilityFilter,
 	}),
 });
 
-const withVisibilityFilterToggler = graphql(SET_VISIBILITY, {
+export const withVisibilityFilterToggler = graphql(SET_VISIBILITY, {
 	props: ({ mutate, ownProps }) => ({
 		toggleVisibility: () => mutate({
 			variables: {
