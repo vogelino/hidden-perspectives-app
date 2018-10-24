@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
+import Head from '../Head';
 import Header from '../Header';
 import VisibilityFilter from '../VisibilityFilter';
 import Home from '../../pages/home';
@@ -30,6 +31,7 @@ export const pages = [
 const App = () => (
 	<Router>
 		<div className="App">
+			<Head />
 			<Header pages={pages} />
 			<div className="AppContent">
 				{pages.map((page) => <Route key={page.path} {...page} />)}
