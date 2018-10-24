@@ -1,9 +1,10 @@
 body {
 	margin-top: 40px;
-	font-family: sans-serif;
 }
 
 * {
 	box-sizing: border-box;
+	font-family: 'Inter UI', 'Source Sans', 'Open Sans', arial, helvetica, sans-serif;
+	-webkit-font-smoothing: antialiased;
 }
 

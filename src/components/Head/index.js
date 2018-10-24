@@ -38,6 +38,7 @@ const Head = () => (
 		<meta property="og:image" content={OGImage} />
 		<meta property="og:image:width" content="1200" />
 		<meta property="og:image:height" content="630" />
+		<link rel="stylesheet" href="/fonts/fonts.css" />
 	</Helmet>
 );
 
