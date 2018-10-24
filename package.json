@@ -22,7 +22,7 @@
 		"test": "react-scripts test",
 		"eject": "react-scripts eject",
 		"lint": "npx eslint --fix ./src",
-		"lint-latest": "LIST=`git diff-index --name-only HEAD | grep .*\\.js | grep -v json`; if [ \"$LIST\" ]; then npx eslint --fix $LIST; fi",
+		"lint-latest": "LIST=`git diff-index --name-only --diff-filter=d HEAD | grep .*\\.js | grep -v json`; if [ \"$LIST\" ]; then npx eslint --fix $LIST; fi",
 		"quality-check": "yarn run lint-latest && yarn run test -b --coverage"
 	},
 	"husky": {
@@ -39,8 +39,10 @@
 	],
 	"dependencies": {
 		"lint-staged": "^7.3.0",
+		"prop-types": "^15.6.2",
 		"react": "^16.5.2",
 		"react-dom": "^16.5.2",
+		"react-router-dom": "^4.3.1",
 		"react-scripts": "2.0.5"
 	},
 	"devDependencies": {
