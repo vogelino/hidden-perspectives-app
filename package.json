@@ -23,7 +23,7 @@
 		"eject": "react-scripts eject",
 		"lint": "npx eslint --fix ./src",
 		"lint-latest": "LIST=`git diff-index --name-only --diff-filter=d HEAD | grep .*\\.js | grep -v json`; if [ \"$LIST\" ]; then npx eslint --fix $LIST; fi",
-		"quality-check": "yarn run lint-latest && yarn run test -b --coverage"
+		"quality-check": "yarn run lint-latest && CI=true yarn run test -b -o"
 	},
 	"husky": {
 		"hooks": {
