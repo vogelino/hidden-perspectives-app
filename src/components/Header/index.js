@@ -1,15 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { HeaderContainer, HeaderLink } from './styles';
 
 const Header = ({ pages }) => (
-	<div>
+	<HeaderContainer>
 		{pages.map(({ title, path }) => (
-			<Link to={path} key={path}>
-				<button type="button">{title}</button>
-			</Link>
+			<HeaderLink to={path} key={path}>
+				{title}
+			</HeaderLink>
 		))}
-	</div>
+	</HeaderContainer>
 );
 
 Header.propTypes = {

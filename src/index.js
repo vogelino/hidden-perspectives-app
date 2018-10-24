@@ -1,9 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { ApolloProvider } from 'react-apollo';
+import 'normalize.css/normalize.css';
 import client from './state/client';
-import './index.css';
 import App from './components/App';
+import './index.css';
 
 ReactDOM.render(
 	(
