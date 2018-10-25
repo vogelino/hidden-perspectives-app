@@ -45,6 +45,8 @@
     "apollo-link": "^1.2.3",
     "apollo-link-http": "^1.5.5",
     "apollo-link-state": "^0.4.2",
+    "apollo-link-ws": "^1.0.9",
+    "apollo-utilities": "^1.0.23",
     "graphql": "^14.0.2",
     "graphql-tag": "^2.10.0",
     "lint-staged": "^7.3.0",
@@ -59,7 +61,8 @@
     "react-router-dom": "^4.3.1",
     "react-scripts": "2.0.5",
     "recompose": "^0.30.0",
-    "styled-components": "^4.0.2"
+    "styled-components": "^4.0.2",
+    "subscriptions-transport-ws": "^0.9.15"
   },
   "devDependencies": {
     "@storybook/addon-actions": "^3.4.11",

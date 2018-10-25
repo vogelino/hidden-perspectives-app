@@ -1,8 +1,9 @@
 import React from 'react';
+import DocumentList from '../../components/DocumentList';
 
 const Home = () => (
 	<div className="Home">
-		<h1>Home!</h1>
+		<DocumentList />
 	</div>
 );
 
