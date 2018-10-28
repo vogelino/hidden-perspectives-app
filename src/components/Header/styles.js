@@ -35,3 +35,7 @@ export const HeaderLink = styled(Link)`
 	}
 `;
 
+export const LogButton = styled(HeaderLink)`
+	float: right;
+`;
+
