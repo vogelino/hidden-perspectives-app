@@ -8,9 +8,12 @@ import {
 import gql from 'graphql-tag';
 import { Mutation, withApollo } from 'react-apollo';
 import Login from '../../components/Login';
-import { AUTH_TOKEN } from '../../state/constants';
+import { AUTH_TOKEN, USER_ID } from '../../state/constants';
 
-const saveUserData = async (token) => localStorage.setItem(AUTH_TOKEN, token);
+const saveUserData = async (token, id) => {
+	localStorage.setItem(AUTH_TOKEN, token);
+	localStorage.setItem(USER_ID, id);
+};
 
 const SIGNUP_MUTATION = gql`
 mutation CreateUser($userName: String!, $authProviderData: AuthProviderSignupData!) {
@@ -36,12 +39,12 @@ mutation SigninUser($email: AUTH_PROVIDER_EMAIL!) {
 }
 `;
 
-const getLoginCallback = (props) => ({ data: { signinUser: { token } }, errors }) => {
+const getLoginCallback = (props) => ({ data: { signinUser: { token, user: { id } } }, errors }) => {
 	if (errors) {
 		localStorage.removeItem(AUTH_TOKEN);
 		props.setErrors(errors);
 	}
-	saveUserData(token);
+	saveUserData(token, id);
 	props.clearFields();
 };
 
@@ -109,7 +112,7 @@ export default compose(
 						.then(getLoginCallback(props));
 					return;
 				}
-				saveUserData(data.signinUser.token);
+				saveUserData(data.signinUser.token, data.signinUser.user.id);
 				props.clearFields();
 			};
 		},

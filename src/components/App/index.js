@@ -6,7 +6,7 @@ import VisibilityFilter from '../VisibilityFilter';
 import Home from '../../pages/home';
 import About from '../../pages/about';
 import Login from '../../pages/login';
-import { AUTH_TOKEN } from '../../state/constants';
+import { USER_ID, AUTH_TOKEN } from '../../state/constants';
 
 export const pages = [
 	{
@@ -29,7 +29,7 @@ const App = () => (
 			<Head />
 			<Header
 				pages={pages}
-				isAuthenticated={Boolean(localStorage.getItem(AUTH_TOKEN))}
+				isAuthenticated={Boolean(localStorage.getItem(USER_ID) && localStorage.getItem(AUTH_TOKEN))}
 			/>
 			{pages.map((page) => <Route key={page.path} {...page} />)}
 			<Route exact path="/login" component={Login} />

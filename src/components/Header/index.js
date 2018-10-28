@@ -1,11 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import UserInfo from './UserInfo';
 import { AUTH_TOKEN } from '../../state/constants';
-import { HeaderContainer, HeaderLink, LogButton } from './styles';
+import {
+	HeaderContainer,
+	UserInfoContainer,
+	HeaderLink,
+	LogButton,
+} from './styles';
 
 const Header = ({
 	pages,
-	isAuthenticated,
 }) => (
 	<HeaderContainer>
 		{pages.map(({ title, path }) => (
@@ -13,26 +18,15 @@ const Header = ({
 				{title}
 			</HeaderLink>
 		))}
-		{!isAuthenticated ? (
-			<LogButton to="/login">
-				{'Login'}
-			</LogButton>
-		) : (
-			<LogButton
-				to="/"
-				onClick={() => {
-					localStorage.removeItem(AUTH_TOKEN);
-				}}
-			>
-				{'Logout'}
-			</LogButton>
-		)}
+		{!localStorage.getItem(AUTH_TOKEN) ? (
+			<UserInfoContainer>
+				<LogButton to="/login">
+					{'Login'}
+				</LogButton>
+			</UserInfoContainer>
+		) : <UserInfo />}
 	</HeaderContainer>
 );
-
-Header.defaultProps = {
-	isAuthenticated: false,
-};
 
 Header.propTypes = {
 	pages: PropTypes.arrayOf(PropTypes.shape({
@@ -40,7 +34,6 @@ Header.propTypes = {
 		exact: PropTypes.bool.isRequired,
 		title: PropTypes.string.isRequired,
 	}).isRequired).isRequired,
-	isAuthenticated: PropTypes.bool,
 };
 
 export default Header;
