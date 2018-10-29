@@ -6,6 +6,7 @@ import VisibilityFilter from '../VisibilityFilter';
 import Home from '../../pages/home';
 import About from '../../pages/about';
 import Login from '../../pages/login';
+import CreatePage from '../../pages/create';
 
 export const pages = [
 	{
@@ -25,7 +26,7 @@ export const pages = [
 	{
 		path: '/create',
 		exact: true,
-		component: () => {},
+		component: CreatePage,
 		title: 'Create new',
 		requiresAuthentication: true,
 		authorizedRoles: ['Editor', 'Admin'],
