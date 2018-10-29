@@ -5,7 +5,7 @@ import Header from '../Header';
 import VisibilityFilter from '../VisibilityFilter';
 import Home from '../../pages/home';
 import About from '../../pages/about';
-import Other from '../../pages/other';
+import Login from '../../pages/login';
 
 export const pages = [
 	{
@@ -13,18 +13,22 @@ export const pages = [
 		exact: true,
 		component: Home,
 		title: 'Home',
+		requiresAuthentication: false,
 	},
 	{
 		path: '/about',
 		exact: true,
 		component: About,
 		title: 'About',
+		requiresAuthentication: false,
 	},
 	{
-		path: '/other',
+		path: '/create',
 		exact: true,
-		component: Other,
-		title: 'Other',
+		component: () => {},
+		title: 'Create new',
+		requiresAuthentication: true,
+		authorizedRoles: ['Editor', 'Admin'],
 	},
 ];
 
@@ -33,9 +37,8 @@ const App = () => (
 		<div className="App">
 			<Head />
 			<Header pages={pages} />
-			<div className="AppContent">
-				{pages.map((page) => <Route key={page.path} {...page} />)}
-			</div>
+			{pages.map((page) => <Route key={page.path} {...page} />)}
+			<Route exact path="/login" component={Login} />
 			<VisibilityFilter />
 		</div>
 	</Router>

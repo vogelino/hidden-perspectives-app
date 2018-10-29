@@ -35,3 +35,13 @@ export const HeaderLink = styled(Link)`
 	}
 `;
 
+export const LogButton = styled(HeaderLink)`
+	margin-left: 16px;
+`;
+
+export const UserInfoContainer = styled.div`
+	float: right;
+	color: white;
+	font-size: 12px;
+`;
+

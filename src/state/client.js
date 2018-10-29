@@ -5,12 +5,24 @@ import { withClientState } from 'apollo-link-state';
 import { HttpLink } from 'apollo-link-http';
 import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
+import { setContext } from 'apollo-link-context';
+import { AUTH_TOKEN } from './constants';
 
 import { defaults, resolvers } from './resolvers';
 
 const cache = new InMemoryCache();
 
 const stateLink = withClientState({ resolvers, cache, defaults });
+
+const authLink = setContext((_, { headers }) => {
+	const token = localStorage.getItem(AUTH_TOKEN);
+	return {
+		headers: {
+			...headers,
+			Authorization: token ? `Bearer ${token}` : null,
+		},
+	};
+});
 
 const httpLink = new HttpLink({
 	uri: process.env.REACT_APP_GRAPHQL_QUERY_API,
@@ -29,7 +41,7 @@ const link = split(
 		return kind === 'OperationDefinition' && operation === 'subscription';
 	},
 	subscriptionLink,
-	httpLink,
+	authLink.concat(httpLink),
 );
 
 const client = new ApolloClient({
