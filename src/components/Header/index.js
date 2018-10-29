@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import UserInfo from './UserInfo';
-import { AUTH_TOKEN } from '../../state/constants';
+import { isAuthenticated, isAuthorized } from '../../utils/localStorageUtil';
 import {
 	HeaderContainer,
 	UserInfoContainer,
@@ -13,12 +13,15 @@ const Header = ({
 	pages,
 }) => (
 	<HeaderContainer>
-		{pages.map(({ title, path }) => (
+		{pages.filter(({ requiresAuthentication, authorizedRoles }) => (
+			(isAuthenticated() && isAuthorized(authorizedRoles))
+			|| !requiresAuthentication
+		)).map(({ title, path }) => (
 			<HeaderLink to={path} key={path}>
 				{title}
 			</HeaderLink>
 		))}
-		{!localStorage.getItem(AUTH_TOKEN) ? (
+		{!isAuthenticated() ? (
 			<UserInfoContainer>
 				<LogButton to="/login">
 					{'Login'}

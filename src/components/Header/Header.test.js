@@ -5,6 +5,13 @@ import { shallow } from 'enzyme';
 import { pages } from '../App';
 import Header from '.';
 import { HeaderLink } from './styles';
+import { isAuthorized, isAuthenticated } from '../../utils/localStorageUtil';
+
+jest.mock('../../utils/localStorageUtil');
+
+beforeEach(() => {
+	isAuthenticated.mockClear();
+});
 
 it('renders without crashing', () => {
 	const div = document.createElement('div');
@@ -13,6 +20,8 @@ it('renders without crashing', () => {
 });
 
 it('should render the same amount of links as given to header', () => {
+	isAuthenticated.mockImplementation(() => true);
+	isAuthorized.mockImplementation(() => true);
 	const header = shallow(<Header pages={pages} />);
 	const links = header.find(HeaderLink);
 	expect(links.length).toBe(pages.length);

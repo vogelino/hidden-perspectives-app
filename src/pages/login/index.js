@@ -8,12 +8,7 @@ import {
 import gql from 'graphql-tag';
 import { Mutation, withApollo } from 'react-apollo';
 import Login from '../../components/Login';
-import { AUTH_TOKEN, USER_ID } from '../../state/constants';
-
-const saveUserData = async (token, id) => {
-	localStorage.setItem(AUTH_TOKEN, token);
-	localStorage.setItem(USER_ID, id);
-};
+import { logUserIn, logUserOut } from '../../utils/localStorageUtil';
 
 const SIGNUP_MUTATION = gql`
 mutation CreateUser($userName: String!, $authProviderData: AuthProviderSignupData!) {
@@ -34,17 +29,21 @@ mutation SigninUser($email: AUTH_PROVIDER_EMAIL!) {
     token
     user {
       id
+	  role
     }
   }
 }
 `;
 
-const getLoginCallback = (props) => ({ data: { signinUser: { token, user: { id } } }, errors }) => {
+const getLoginCallback = (props) => ({
+	data: { signinUser: { token, user: { id, role } } },
+	errors,
+}) => {
 	if (errors) {
-		localStorage.removeItem(AUTH_TOKEN);
+		logUserOut();
 		props.setErrors(errors);
 	}
-	saveUserData(token, id);
+	logUserIn(token, id, role);
 	props.clearFields();
 };
 
@@ -112,7 +111,11 @@ export default compose(
 						.then(getLoginCallback(props));
 					return;
 				}
-				saveUserData(data.signinUser.token, data.signinUser.user.id);
+				logUserIn(
+					data.signinUser.token,
+					data.signinUser.user.id,
+					data.signinUser.user.role,
+				);
 				props.clearFields();
 			};
 		},
