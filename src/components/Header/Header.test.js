@@ -27,3 +27,23 @@ it('should render the same amount of links as given to header', () => {
 	expect(links.length).toBe(pages.length);
 });
 
+it('should only render links that do not require to be authenticated if logged out', () => {
+	isAuthenticated.mockImplementation(() => false);
+	isAuthorized.mockImplementation(() => false);
+	const header = shallow(<Header pages={pages} />);
+	const links = header.find(HeaderLink);
+	expect(links.length).toBe(
+		pages.filter(({ requiresAuthentication }) => !requiresAuthentication).length,
+	);
+});
+
+it('should only render links that are authorized if logged in', () => {
+	isAuthenticated.mockImplementation(() => true);
+	isAuthorized.mockImplementation(() => false);
+	const header = shallow(<Header pages={pages} />);
+	const links = header.find(HeaderLink);
+	expect(links.length).toBe(
+		pages.filter(({ authorizedRoles }) => !authorizedRoles).length,
+	);
+});
+
