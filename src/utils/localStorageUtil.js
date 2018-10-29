@@ -5,11 +5,13 @@ export const getAuthToken = () => localStorage.getItem(AUTH_TOKEN);
 export const getUserId = () => localStorage.getItem(USER_ID);
 
 export const isAuthenticated = () => Boolean(
-	getUserId() && getUserRole() && getAuthToken(),
+	lib.getUserId() // eslint-disable-line no-use-before-define
+	&& lib.getUserRole() // eslint-disable-line no-use-before-define
+	&& lib.getAuthToken(), // eslint-disable-line no-use-before-define
 );
 
 export const isAuthorized = (authorizedRoles = ['Viewer', 'Editor', 'Admin']) => authorizedRoles
-	.some((role) => role === getUserRole());
+	.some((role) => role === lib.getUserRole()); // eslint-disable-line no-use-before-define
 
 export const logUserOut = () => {
 	localStorage.removeItem(AUTH_TOKEN);
@@ -23,4 +25,13 @@ export const logUserIn = (token, id, role) => {
 	localStorage.setItem(USER_ROLE, role);
 };
 
+export const lib = {
+	isAuthenticated,
+	isAuthorized,
+	getUserRole,
+	getAuthToken,
+	getUserId,
+	logUserOut,
+	logUserIn,
+};
 
