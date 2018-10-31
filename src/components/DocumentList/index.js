@@ -2,21 +2,34 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
+import {
+	Container,
+	List,
+	Title,
+	Id,
+	ListElement,
+	ListTitle,
+} from './styles';
 
 const DocumentList = ({ documents }) => (
-	<div>
-		{documents.map(({ id, documentTitle }) => (
-			<li key={id}>
-				<small>{id}</small>
-				<h2>{documentTitle}</h2>
-			</li>
-		))}
-	</div>
+	<Container>
+		<ListTitle>Documents</ListTitle>
+		<List>
+			{documents.map(({ documentOriginalID, documentTitle }) => (
+				<ListElement key={documentOriginalID}>
+					<Title>
+						<Id>{documentOriginalID}</Id>
+						{documentTitle}
+					</Title>
+				</ListElement>
+			))}
+		</List>
+	</Container>
 );
 
 DocumentList.propTypes = {
 	documents: PropTypes.arrayOf(PropTypes.shape({
-		id: PropTypes.string.isRequired,
+		documentOriginalID: PropTypes.string.isRequired,
 		documentTitle: PropTypes.string.isRequired,
 	})),
 };
