@@ -20,10 +20,11 @@
     "dev": "react-app-rewired start",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",
+    "test-latest": "CI=true yarn run test -b -o",
     "eject": "react-scripts eject",
     "lint": "npx eslint --fix ./src",
     "lint-latest": "LIST=`git diff-index --name-only --diff-filter=d HEAD | grep .*\\.js | grep -v json`; if [ \"$LIST\" ]; then npx eslint --fix $LIST; fi",
-    "quality-check": "yarn run lint-latest && CI=true yarn run test -b -o",
+    "quality-check": "yarn run lint-latest && yarn run test-latest",
     "storybook": "start-storybook -p 9009 -s public",
     "build-storybook": "build-storybook -s public"
   },
