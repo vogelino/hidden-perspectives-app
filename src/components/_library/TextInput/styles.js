@@ -3,6 +3,7 @@ import {
 	Label as SmoothUiLabel,
 	Input as SmoothUiInput,
 	ControlFeedback as SmoothUiControlFeedback,
+	FormGroup as SmoothUiFormGroup,
 } from '@smooth-ui/core-sc';
 
 const withSymbol = (symbol) => `
@@ -18,6 +19,10 @@ const withSymbol = (symbol) => `
 		top: 0;
 		left: 0;
 	}
+`;
+
+export const FormGroup = styled(SmoothUiFormGroup)`
+	margin: 0;
 `;
 
 export const Description = styled.p`

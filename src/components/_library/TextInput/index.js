@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-	FormGroup,
 } from '@smooth-ui/core-sc';
 import {
+	FormGroup,
 	Description,
 	Label,
 	Input,
@@ -18,6 +18,7 @@ const TextInput = ({
 	label,
 	error,
 	optional,
+	nolabel,
 	onChange,
 	placeholder,
 	description,
@@ -25,14 +26,16 @@ const TextInput = ({
 	...rest
 }) => (
 	<FormGroup>
-		<Label
-			htmlFor={name}
-			tabIndex="-1"
-			id={`${name}-label`}
-		>
-			{label}
-			{optional && <OptionalText>(optional)</OptionalText>}
-		</Label>
+		{!nolabel && (
+			<Label
+				htmlFor={name}
+				tabIndex="-1"
+				id={`${name}-label`}
+			>
+				{label}
+				{optional && <OptionalText>(optional)</OptionalText>}
+			</Label>
+		)}
 		<Input
 			type={type}
 			name={name}
@@ -60,6 +63,7 @@ TextInput.propTypes = {
 	label: PropTypes.string.isRequired,
 	error: PropTypes.string,
 	optional: PropTypes.bool,
+	nolabel: PropTypes.bool,
 	placeholder: PropTypes.string,
 	description: PropTypes.string,
 	onChange: PropTypes.func.isRequired,
@@ -74,6 +78,7 @@ TextInput.defaultProps = {
 	placeholder: undefined,
 	labelArticle: 'the',
 	optional: false,
+	nolabel: false,
 };
 
 export default TextInput;

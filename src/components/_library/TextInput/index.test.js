@@ -2,8 +2,6 @@ import React from 'react';
 import { shallow, mount } from 'enzyme';
 import {
 	FormGroup,
-} from '@smooth-ui/core-sc';
-import {
 	Description,
 	Label,
 	Input,

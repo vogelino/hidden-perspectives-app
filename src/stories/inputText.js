@@ -68,10 +68,27 @@ storiesOf('Text input field', module)
 			label="Password"
 		/>
 	))
+	.add('Number', () => (
+		<TextInput
+			{...required}
+			description="Access is denied to minors under 18 years of age"
+			label="Age"
+			type="number"
+			min={18}
+			value={18}
+			width={80}
+		/>
+	))
 	.add('Optional', () => (
 		<TextInput
 			{...required}
 			optional
+		/>
+	))
+	.add('No label', () => (
+		<TextInput
+			{...required}
+			nolabel
 		/>
 	));
 
