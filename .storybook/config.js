@@ -1,13 +1,10 @@
-import { configure } from '@storybook/react';
-import { setDefaults } from '@storybook/addon-info';
+import { withInfo } from '@storybook/addon-info';
+import { addDecorator, configure } from '@storybook/react';
 
-setDefaults({
-	header: false,
-});
+addDecorator((getStory, context) => withInfo({ inline: true })(getStory)(context));
 
 function loadStories() {
 	require('../src/stories'); // eslint-disable-line global-require
 }
 
 configure(loadStories, module);
-
