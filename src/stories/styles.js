@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import Theme from '../components/Theme';
 import '../index.css';
 import '../fonts.css';
 
@@ -24,11 +25,13 @@ const StoryWrapperContainer = styled.div`
 `;
 
 export const StoryWrapper = ({ children }) => (
-	<StoryWrapperContainer>
-		<StoryWrapperContent>
-			{children}
-		</StoryWrapperContent>
-	</StoryWrapperContainer>
+	<Theme>
+		<StoryWrapperContainer>
+			<StoryWrapperContent>
+				{children}
+			</StoryWrapperContent>
+		</StoryWrapperContainer>
+	</Theme>
 );
 
 StoryWrapper.propTypes = {
