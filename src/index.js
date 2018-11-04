@@ -7,6 +7,7 @@ import App from './components/App';
 import './fonts.css';
 import './index.css';
 
+
 ReactDOM.render(
 	(
 		<ApolloProvider client={client}>

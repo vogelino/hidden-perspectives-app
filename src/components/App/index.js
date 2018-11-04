@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { globalStyle, createGlobalStyle } from '@smooth-ui/core-sc';
 import Head from '../Head';
 import Header from '../Header';
 import VisibilityFilter from '../VisibilityFilter';
@@ -7,6 +8,8 @@ import Home from '../../pages/home';
 import About from '../../pages/about';
 import Login from '../../pages/login';
 import CreatePage from '../../pages/create';
+
+const GlobalStyle = createGlobalStyle`${globalStyle()}`;
 
 export const pages = [
 	{
@@ -37,6 +40,7 @@ const App = () => (
 	<Router>
 		<div className="App">
 			<Head />
+			<GlobalStyle />
 			<Header pages={pages} />
 			{pages.map((page) => <Route key={page.path} {...page} />)}
 			<Route exact path="/login" component={Login} />
