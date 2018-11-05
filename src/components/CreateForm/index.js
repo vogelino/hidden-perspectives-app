@@ -125,6 +125,7 @@ const CreateForm = ({
 						placeholder="YYYY-MM-DD"
 						onChange={onDateChange}
 						value={dateValue}
+						todayOrPrior
 					>
 						{(props) => <DatePicker {...props} />}
 					</InputWrapper>
@@ -136,6 +137,7 @@ const CreateForm = ({
 						placeholder="YYYY-MM-DD"
 						onChange={onPublicationDateChange}
 						value={publicationDateValue}
+						todayOrPrior
 					>
 						{(props) => <DatePicker {...props} />}
 					</InputWrapper>

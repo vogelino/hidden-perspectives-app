@@ -2,14 +2,19 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import OutsideClickHandler from 'react-outside-click-handler';
 import { compose, withHandlers, withState } from 'recompose';
+import { DateUtils } from 'react-day-picker';
 import TextInput from '../TextInput';
 import {
 	DayPicker,
 	Container,
 } from './styles';
 
-const ensureTwoDigits = (digit) => (`0${digit}`).slice(-2);
+const now = new Date();
+const isSameDayAsToday = (day) => DateUtils.isSameDay(day, now);
+const isTodayOrPrior = (day) => DateUtils.isPastDay(day) || isSameDayAsToday(day);
+const isTodayOrAfter = (day) => DateUtils.isFutureDay(day) || isSameDayAsToday(day);
 
+const ensureTwoDigits = (digit) => (`0${digit}`).slice(-2);
 const getFormattedDate = (date) => {
 	const year = date.getFullYear();
 	const month = ensureTwoDigits(date.getMonth() + 1);
@@ -23,6 +28,8 @@ const DatePicker = ({
 	value,
 	onDaySelect,
 	onChange,
+	todayOrPrior,
+	todayOrAfter,
 	...rest
 }) => (
 	<OutsideClickHandler onOutsideClick={() => setIsFocused(false)}>
@@ -32,13 +39,17 @@ const DatePicker = ({
 				onFocus={() => setIsFocused(true)}
 				value={value}
 				onChange={(evt) => onChange(evt.target.value)}
-				type="date"
 			/>
 			{isFocused && (
 				<DayPicker
 					onDayClick={onDaySelect}
 					selectedDays={new Date(value)}
 					onBlur={() => setIsFocused(false)}
+					disabledDays={(day) => {
+						if (todayOrPrior) return !isTodayOrPrior(day);
+						if (todayOrAfter) return !isTodayOrAfter(day);
+						return undefined;
+					}}
 				/>
 			)}
 		</Container>
@@ -51,6 +62,8 @@ DatePicker.propTypes = {
 	value: PropTypes.string,
 	onChange: PropTypes.func,
 	onDaySelect: PropTypes.func,
+	todayOrPrior: PropTypes.bool,
+	todayOrAfter: PropTypes.bool,
 };
 
 DatePicker.defaultProps = {
@@ -59,6 +72,8 @@ DatePicker.defaultProps = {
 	onDaySelect: () => {},
 	onChange: () => {},
 	value: undefined,
+	todayOrPrior: false,
+	todayOrAfter: false,
 };
 
 export default compose(

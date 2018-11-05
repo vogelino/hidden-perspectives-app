@@ -15,7 +15,7 @@ describe('DatePicker component', () => {
 		expect(datePicker.find(DayPicker)).toHaveLength(0);
 	});
 
-	it('should render a TextInput element of type date', () => {
+	it('should render a TextInput element', () => {
 		const input = datePicker.find(TextInput);
 		expect(input.exists()).toBe(true);
 	});
