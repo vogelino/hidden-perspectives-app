@@ -1,2 +1,3 @@
 import './inputText';
+import './forms';
 

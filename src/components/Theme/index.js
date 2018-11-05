@@ -8,10 +8,10 @@ const hpTheme = {
 	...originalTheme,
 	fontFamily: `"HP Sans", ${originalTheme.fontFamily}`,
 	primary: '#239F40',
-	controlFocus: () => () => css`
+	controlFocus: () => (color = 'primary') => css`
 		outline: 0;
-		border-color: ${({ theme }) => theme.primary}
-		box-shadow: 0 0 0 2px ${({ theme }) => transparentize(0.8, theme.primary)};
+		border-color: ${({ theme }) => theme[color]}
+		box-shadow: 0 0 0 2px ${({ theme }) => transparentize(0.8, theme[color])};
 	`,
 };
 

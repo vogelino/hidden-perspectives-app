@@ -2,10 +2,10 @@ import React from 'react';
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { compose, withHandlers, withState } from 'recompose';
-import OriginalTextInput from '../components/_library/TextInput';
+import OriginalInputWrapper from '../components/_library/InputWrapper';
 import { StoryWrapper } from './styles';
 
-const TextInputWithState = compose(
+const InputWrapperWithState = compose(
 	withState('value', 'onInputChange', ({ value }) => value || ''),
 	withHandlers({
 		onChange: ({ onInputChange }) => (evt) => {
@@ -13,14 +13,14 @@ const TextInputWithState = compose(
 			onInputChange(evt.target.value);
 		},
 	}),
-)(OriginalTextInput);
+)(OriginalInputWrapper);
 
-const TextInput = (props) => (
+const InputWrapper = (props) => (
 	<StoryWrapper>
-		<TextInputWithState {...props} />
+		<InputWrapperWithState {...props} />
 	</StoryWrapper>
 );
-TextInput.propTypes = OriginalTextInput.propTypes;
+InputWrapper.propTypes = OriginalInputWrapper.propTypes;
 
 const required = {
 	name: 'storybook-input',
@@ -31,45 +31,45 @@ const required = {
 
 storiesOf('Text input field', module)
 	.add('Empty field', () => (
-		<TextInput {...required} />
+		<InputWrapper {...required} />
 	))
 	.add('Filled by default', () => (
-		<TextInput {...required} value="Sponge Bob" />
+		<InputWrapper {...required} value="Sponge Bob" />
 	))
 	.add('With description', () => (
-		<TextInput
+		<InputWrapper
 			{...required}
 			description="Please don't use numbers"
 		/>
 	))
 	.add('Invalid', () => (
-		<TextInput
+		<InputWrapper
 			{...required}
 			error="This field is required"
 		/>
 	))
 	.add('Invalid with description', () => (
-		<TextInput
+		<InputWrapper
 			{...required}
 			description="Please don't use numbers"
 			error="This field is required"
 		/>
 	))
 	.add('Disabled', () => (
-		<TextInput
+		<InputWrapper
 			{...required}
 			disabled
 		/>
 	))
 	.add('Password', () => (
-		<TextInput
+		<InputWrapper
 			{...required}
 			type="password"
 			label="Password"
 		/>
 	))
 	.add('Number', () => (
-		<TextInput
+		<InputWrapper
 			{...required}
 			description="Access is denied to minors under 18 years of age"
 			label="Age"
@@ -80,13 +80,13 @@ storiesOf('Text input field', module)
 		/>
 	))
 	.add('Optional', () => (
-		<TextInput
+		<InputWrapper
 			{...required}
 			optional
 		/>
 	))
 	.add('No label', () => (
-		<TextInput
+		<InputWrapper
 			{...required}
 			nolabel
 		/>
