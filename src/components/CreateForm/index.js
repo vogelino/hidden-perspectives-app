@@ -7,204 +7,235 @@ import {
 	Col,
 	Typography,
 } from '@smooth-ui/core-sc';
+import { Form, Field } from 'react-final-form';
+import { isTodayOrPrior } from '../../utils/dateUtil';
 import InputWrapper from '../_library/InputWrapper';
 import DatePicker from '../_library/DatePicker';
 import Select from '../_library/Select';
-import { Form, Separator } from './styles';
+import { Separator } from './styles';
+
+const required = (value) => (value ? undefined : 'Required field');
+const mustBeTodayOrPrior = (value) => {
+	if (!value) return required(value);
+	return isTodayOrPrior(new Date(value)) ? undefined : 'The date must be prior or equal to today';
+};
+
+const getError = ({ error, touched }) => (touched && error ? error : undefined);
+const isValid = ({ valid, touched }) => (!touched || valid);
+
+const getMeta = (meta) => ({
+	valid: isValid(meta),
+	error: getError(meta),
+});
+
+const adapt = (Component) => ({ input, meta, ...rest }) => (
+	<Component {...input} {...rest} {...getMeta(meta)} />
+);
+
+const AdaptedInputWrapper = adapt(InputWrapper);
 
 const CreateForm = ({
 	onSubmit,
-
-	titleValue,
-	onTitleChange,
-
-	idValue,
-	onIdChange,
-
-	summaryValue,
-	onSummaryChange,
-
-	classificationValue,
-	onClassificationChange,
-	classificationOptions,
-
-	kindValue,
-	onKindChange,
-	kindOptions,
-
-	dateValue,
-	onDateChange,
-
-	publicationDateValue,
-	onPublicationDateChange,
 }) => (
-	<Form onSubmit={onSubmit}>
-		<Grid>
-			<Row>
-				<Col>
-					<Typography variant="h2">New document</Typography>
-				</Col>
-			</Row>
-			<Row>
-				<Separator />
-			</Row>
-			<Row>
-				<Col>
-					<InputWrapper
-						name="documentTitle"
-						label="Title"
-						placeholder="Enter the document's title"
-						onChange={onTitleChange}
-						multiline
-						height={118}
-						value={titleValue}
-					/>
-				</Col>
-				<Col xs={4}>
-					<InputWrapper
-						name="documentOriginalId"
-						label="Identifier"
-						placeholder="Original identifier"
-						description="The identifier is the filename originally present in the briefing book. For example “uir001001”."
-						onChange={onIdChange}
-						value={idValue}
-					/>
-				</Col>
-			</Row>
-			<Row>
-				<Separator />
-			</Row>
-			<Row>
-				<Col>
-					<InputWrapper
-						name="documentSummary"
-						label="Summary"
-						placeholder="Resume in a sentence or two the contents of the document"
-						onChange={onSummaryChange}
-						multiline
-						height={200}
-						value={summaryValue}
-					/>
-				</Col>
-			</Row>
-			<Row>
-				<Separator />
-			</Row>
-			<Row>
-				<Col>
-					<InputWrapper
-						name="documentKind"
-						label="Kind"
-						onChange={onKindChange}
-						options={kindOptions}
-						value={kindValue}
-					>
-						{(props) => <Select {...props} />}
-					</InputWrapper>
-				</Col>
-				<Col>
-					<InputWrapper
-						name="documentClassification"
-						label="Classification"
-						onChange={onClassificationChange}
-						options={classificationOptions}
-						value={classificationValue}
-					>
-						{(props) => <Select {...props} />}
-					</InputWrapper>
-				</Col>
-			</Row>
-			<Row>
-				<Separator />
-			</Row>
-			<Row>
-				<Col>
-					<InputWrapper
-						name="documentDate"
-						label="Creation date"
-						placeholder="YYYY-MM-DD"
-						onChange={onDateChange}
-						value={dateValue}
-						todayOrPrior
-					>
-						{(props) => <DatePicker {...props} />}
-					</InputWrapper>
-				</Col>
-				<Col>
-					<InputWrapper
-						name="documentPublicationDate"
-						label="Publication date"
-						placeholder="YYYY-MM-DD"
-						onChange={onPublicationDateChange}
-						value={publicationDateValue}
-						todayOrPrior
-					>
-						{(props) => <DatePicker {...props} />}
-					</InputWrapper>
-				</Col>
-			</Row>
-			<Row>
-				<Separator />
-			</Row>
-			<Row>
-				<Button as="input" type="submit" alignSelf="flex-end" value="Submit document" />
-			</Row>
-		</Grid>
-	</Form>
+	<Form
+		onSubmit={onSubmit}
+		render={({
+			handleSubmit,
+			form,
+			submitting,
+			pristine,
+		}) => (
+			<form onSubmit={handleSubmit}>
+				<Grid>
+					<Row>
+						<Col>
+							<Typography variant="h2">New document</Typography>
+						</Col>
+					</Row>
+					<Row>
+						<Separator />
+					</Row>
+					<Row>
+						<Col>
+							<Field
+								name="documentTitle"
+								label="Title"
+								placeholder="Enter the document's title"
+								multiline
+								height={118}
+								component={AdaptedInputWrapper}
+								validate={required}
+							/>
+						</Col>
+						<Col xs={4}>
+							<Field
+								name="documentOriginalId"
+								label="Identifier"
+								placeholder="Original identifier"
+								description="The identifier is the filename originally present in the briefing book. For example “uir001001”."
+								component={AdaptedInputWrapper}
+								validate={required}
+							/>
+						</Col>
+					</Row>
+					<Row>
+						<Separator />
+					</Row>
+					<Row>
+						<Col>
+							<Field
+								name="documentSummary"
+								label="Summary"
+								placeholder="Resume in a sentence or two the contents of the document"
+								multiline
+								height={200}
+								component={AdaptedInputWrapper}
+								validate={required}
+							/>
+						</Col>
+					</Row>
+					<Row>
+						<Separator />
+					</Row>
+					<Row>
+						<Col>
+							<Field
+								name="documentKind"
+								validate={required}
+							>
+								{({ input, meta }) => (
+									<InputWrapper
+										label="Kind"
+										{...getMeta(meta)}
+										placeholder="Select a kind"
+										options={[
+											{},
+											{
+												value: 'conference-materials',
+												label: 'Conference Materials',
+											},
+											{
+												value: 'executive-order',
+												label: 'Executive Order',
+											},
+											{
+												value: 'speech',
+												label: 'Speech',
+											},
+											{
+												value: 'report',
+												label: 'Report',
+											},
+										]}
+										{...input}
+									>
+										{(props) => <Select {...props} />}
+									</InputWrapper>
+								)}
+							</Field>
+						</Col>
+						<Col>
+							<Field
+								name="documentClassification"
+								validate={required}
+							>
+								{({ input, meta }) => (
+									<InputWrapper
+										label="Classification"
+										{...getMeta(meta)}
+										placeholder="Select a classification"
+										options={[
+											{},
+											{
+												value: 'no-classification',
+												label: 'No classification',
+											},
+											{
+												value: 'classification-unknown',
+												label: 'Classification unknown',
+											},
+											{
+												value: 'secret',
+												label: 'Secret',
+											},
+											{
+												value: 'top-secret',
+												label: 'Top Secret',
+											},
+										]}
+										{...input}
+									>
+										{(props) => <Select {...props} />}
+									</InputWrapper>
+								)}
+							</Field>
+						</Col>
+					</Row>
+					<Row>
+						<Separator />
+					</Row>
+					<Row>
+						<Col>
+							<Field
+								name="documentDate"
+								validate={mustBeTodayOrPrior}
+							>
+								{({ meta, input }) => (
+									<InputWrapper
+										label="Creation date"
+										placeholder="YYYY-MM-DD"
+										todayOrPrior
+										{...getMeta(meta)}
+										{...input}
+									>
+										{(props) => <DatePicker {...props} />}
+									</InputWrapper>
+								)}
+							</Field>
+						</Col>
+						<Col>
+							<Field
+								name="documentPublicationDate"
+								validate={mustBeTodayOrPrior}
+							>
+								{({ meta, input }) => (
+									<InputWrapper
+										label="Publication date"
+										placeholder="YYYY-MM-DD"
+										todayOrPrior
+										{...getMeta(meta)}
+										{...input}
+									>
+										{(props) => <DatePicker {...props} />}
+									</InputWrapper>
+								)}
+							</Field>
+						</Col>
+					</Row>
+					<Row>
+						<Separator />
+					</Row>
+					<Row>
+						<Button
+							type="submit"
+							alignSelf="flex-end"
+							disabled={submitting || pristine}
+						>
+							{'Submit document'}
+						</Button>
+					</Row>
+				</Grid>
+			</form>
+		)}
+	/>
 );
 
 CreateForm.defaultProps = {
 	onSubmit: () => {},
-
-	titleValue: '',
-	onTitleChange: () => {},
-
-	idValue: '',
-	onIdChange: () => {},
-
-	summaryValue: '',
-	onSummaryChange: () => {},
-
-	kindValue: undefined,
-	onKindChange: () => {},
-	kindOptions: [{ name: 'nothing', text: 'Nothing' }],
-
-	classificationValue: undefined,
-	onClassificationChange: () => {},
-	classificationOptions: [{ name: 'nothing', text: 'Nothing' }],
-
-	dateValue: '',
-	onDateChange: () => {},
-
-	publicationDateValue: '',
-	onPublicationDateChange: () => {},
 };
 
 CreateForm.propTypes = {
 	onSubmit: PropTypes.func,
-
-	titleValue: PropTypes.string,
-	onTitleChange: PropTypes.func,
-
-	idValue: PropTypes.string,
-	onIdChange: PropTypes.func,
-
-	summaryValue: PropTypes.string,
-	onSummaryChange: PropTypes.func,
-
-	classificationValue: Select.propTypes.value,
-	onClassificationChange: PropTypes.func,
-	classificationOptions: PropTypes.arrayOf(Select.propTypes.value),
-
-	kindValue: Select.propTypes.value,
-	onKindChange: PropTypes.func,
-	kindOptions: PropTypes.arrayOf(Select.propTypes.value),
-
-	dateValue: PropTypes.string,
-	onDateChange: PropTypes.func,
-
-	publicationDateValue: PropTypes.string,
-	onPublicationDateChange: PropTypes.func,
 };
 
 export default CreateForm;

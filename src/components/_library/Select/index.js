@@ -9,38 +9,41 @@ const TextInput = ({
 	value,
 	options,
 	valid,
+	placeholder,
 	...rest
 }) => (
 	<Select
 		{...rest}
 		id={id}
 		name={name}
-		onChange={(evt) => onChange(options[evt.target.selectedIndex])}
+		onChange={(evt) => onChange(evt.target.value)}
 		valid={valid ? undefined : false}
-		value={value ? value.text : undefined}
+		value={value || 'undefined'}
 		control
 		multiline={undefined}
 	>
 		{options.map((option) => (
 			<option
-				key={option.name}
-				name={option.name}
+				key={option.value || 'undefined'}
+				value={option.value || 'undefined'}
+				disabled={option.disabled || !option.value}
 			>
-				{option.text}
+				{option.label || placeholder}
 			</option>
 		))}
 	</Select>
 );
 
 const optionPropTypes = PropTypes.shape({
-	name: PropTypes.string.isRequired,
-	text: PropTypes.string.isRequired,
+	value: PropTypes.string,
+	label: PropTypes.string,
 });
 
 TextInput.propTypes = {
 	id: PropTypes.string.isRequired,
 	name: PropTypes.string.isRequired,
-	value: optionPropTypes,
+	value: PropTypes.string,
+	placeholder: PropTypes.string,
 	onChange: PropTypes.func,
 	valid: PropTypes.bool,
 	options: PropTypes.arrayOf(optionPropTypes).isRequired,
@@ -50,6 +53,7 @@ TextInput.defaultProps = {
 	onChange: () => {},
 	valid: true,
 	value: undefined,
+	placeholder: 'Select an item',
 };
 
 export default TextInput;

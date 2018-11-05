@@ -2,25 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import OutsideClickHandler from 'react-outside-click-handler';
 import { compose, withHandlers, withState } from 'recompose';
-import { DateUtils } from 'react-day-picker';
 import TextInput from '../TextInput';
+import { isTodayOrPrior, isTodayOrAfter, getFormattedDate } from '../../../utils/dateUtil';
 import {
 	DayPicker,
 	Container,
 } from './styles';
 
-const now = new Date();
-const isSameDayAsToday = (day) => DateUtils.isSameDay(day, now);
-const isTodayOrPrior = (day) => DateUtils.isPastDay(day) || isSameDayAsToday(day);
-const isTodayOrAfter = (day) => DateUtils.isFutureDay(day) || isSameDayAsToday(day);
-
-const ensureTwoDigits = (digit) => (`0${digit}`).slice(-2);
-const getFormattedDate = (date) => {
-	const year = date.getFullYear();
-	const month = ensureTwoDigits(date.getMonth() + 1);
-	const day = ensureTwoDigits(date.getDate());
-	return `${year}-${month}-${day}`;
-};
 
 const DatePicker = ({
 	isFocused,
