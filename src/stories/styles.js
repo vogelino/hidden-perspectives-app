@@ -7,7 +7,7 @@ import '../fonts.css';
 
 const StoryWrapperContent = styled.div`
 	width: 100%;
-	max-width: ${({ maxWidth }) => (maxWidth ? `${maxWidth}px` : '640px')};
+	max-width: ${({ maxWidth }) => (maxWidth ? `${maxWidth}px` : '370px')};
 	margin: 40px auto;
 	padding: 40px;
 	border: 1px solid #dee2e6;
