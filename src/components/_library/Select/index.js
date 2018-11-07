@@ -16,9 +16,8 @@ const TextInput = ({
 		{...rest}
 		id={id}
 		name={name}
-		onChange={({ value: val }, { action }) => (
-			action === 'select-option' ? val : value
-		)}
+		onChange={onChange}
+		value={value}
 		valid={valid}
 		control
 		multiline={undefined}
@@ -36,7 +35,10 @@ const optionPropTypes = PropTypes.shape({
 TextInput.propTypes = {
 	id: PropTypes.string.isRequired,
 	name: PropTypes.string.isRequired,
-	value: optionPropTypes,
+	value: PropTypes.oneOfType([
+		PropTypes.string,
+		optionPropTypes,
+	]),
 	placeholder: PropTypes.string,
 	onChange: PropTypes.func,
 	valid: PropTypes.bool,

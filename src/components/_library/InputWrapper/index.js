@@ -59,6 +59,7 @@ const InputWrapper = ({
 
 InputWrapper.propTypes = {
 	value: PropTypes.oneOfType([
+		PropTypes.array,
 		PropTypes.object,
 		PropTypes.string,
 		PropTypes.number,

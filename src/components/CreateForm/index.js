@@ -14,7 +14,12 @@ import DatePicker from '../_library/DatePicker';
 import Select from '../_library/Select';
 import { Separator } from './styles';
 
-const required = (value) => (value ? undefined : 'Required field');
+const required = (value) => {
+	const error = 'This field is required!';
+	if (Array.isArray(value) && value.length === 0) return error;
+	if (!value) return error;
+	return undefined;
+};
 const mustBeTodayOrPrior = (value) => {
 	if (!value) return required(value);
 	return isTodayOrPrior(new Date(value)) ? undefined : 'The date must be prior or equal to today';
