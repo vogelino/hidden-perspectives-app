@@ -16,22 +16,16 @@ const TextInput = ({
 		{...rest}
 		id={id}
 		name={name}
-		onChange={(evt) => onChange(evt.target.value)}
-		valid={valid ? undefined : false}
-		value={value || 'undefined'}
+		onChange={({ value: val }, { action }) => (
+			action === 'select-option' ? val : value
+		)}
+		valid={valid}
 		control
 		multiline={undefined}
-	>
-		{options.map((option) => (
-			<option
-				key={option.value || 'undefined'}
-				value={option.value || 'undefined'}
-				disabled={option.disabled || !option.value}
-			>
-				{option.label || placeholder}
-			</option>
-		))}
-	</Select>
+		options={options}
+		placeholder={placeholder}
+		isSearchable={false}
+	/>
 );
 
 const optionPropTypes = PropTypes.shape({
@@ -42,7 +36,7 @@ const optionPropTypes = PropTypes.shape({
 TextInput.propTypes = {
 	id: PropTypes.string.isRequired,
 	name: PropTypes.string.isRequired,
-	value: PropTypes.string,
+	value: optionPropTypes,
 	placeholder: PropTypes.string,
 	onChange: PropTypes.func,
 	valid: PropTypes.bool,

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
-import { Select as SmoothUiSelect } from '@smooth-ui/core-sc';
+import ReactSelect from 'react-select';
 
-export const Select = styled(SmoothUiSelect)`
+export const Select = styled(ReactSelect)`
 	${({ theme, valid }) => (!valid ? `border-color: ${theme.red};` : '')}
 
 	&:focus {

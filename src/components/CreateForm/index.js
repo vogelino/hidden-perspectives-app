@@ -109,7 +109,6 @@ const CreateForm = ({
 										{...getMeta(meta)}
 										placeholder="Select a kind"
 										options={[
-											{},
 											{
 												value: 'conference-materials',
 												label: 'Conference Materials',
@@ -145,7 +144,6 @@ const CreateForm = ({
 										{...getMeta(meta)}
 										placeholder="Select a classification"
 										options={[
-											{},
 											{
 												value: 'no-classification',
 												label: 'No classification',
