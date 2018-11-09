@@ -1,8 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Select } from './styles';
+import { withTheme } from 'styled-components';
+import Select from 'react-select';
+import { Control, Menu } from './styles';
 
-const TextInput = ({
+const SelectInput = ({
 	id,
 	name,
 	onChange,
@@ -10,6 +12,7 @@ const TextInput = ({
 	options,
 	valid,
 	placeholder,
+	theme,
 	...rest
 }) => (
 	<Select
@@ -24,6 +27,12 @@ const TextInput = ({
 		options={options}
 		placeholder={placeholder}
 		isSearchable={false}
+		theme={(reactSelectTheme) => ({
+			...reactSelectTheme,
+			...theme.selectTheme,
+		})}
+		components={{ Control, Menu }}
+		appTheme={theme}
 	/>
 );
 
@@ -32,7 +41,7 @@ const optionPropTypes = PropTypes.shape({
 	label: PropTypes.string,
 });
 
-TextInput.propTypes = {
+SelectInput.propTypes = {
 	id: PropTypes.string.isRequired,
 	name: PropTypes.string.isRequired,
 	value: PropTypes.oneOfType([
@@ -45,12 +54,12 @@ TextInput.propTypes = {
 	options: PropTypes.arrayOf(optionPropTypes).isRequired,
 };
 
-TextInput.defaultProps = {
+SelectInput.defaultProps = {
 	onChange: () => {},
 	valid: true,
 	value: undefined,
 	placeholder: 'Select an item',
 };
 
-export default TextInput;
+export default withTheme(SelectInput);
 

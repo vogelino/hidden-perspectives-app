@@ -9,6 +9,7 @@ export const HeaderContainer = styled.header`
 	left: 0;
 	background: black;
 	text-align: center;
+	z-index: 1;
 `;
 
 export const HeaderLink = styled(Link)`
