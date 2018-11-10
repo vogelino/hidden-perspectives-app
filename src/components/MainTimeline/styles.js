@@ -1,20 +1,17 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-	padding: 40px;
+	padding: 1.75rem 0;
+	margin: 0 1.75rem;
+	border-left: 1px solid ${({ theme }) => theme.commonBorderColor};
 `;
 
 export const EventsContainer = styled.div`
 	height: ${({ height }) => height}px;
 	position: relative;
-	border-left: 1px solid #E6E6E6;
 `;
 
-export const Event = styled.div.attrs({
-	style: ({ eventYPosition }) => ({
-		top: `${eventYPosition}px`,
-	}),
-})`
+export const Event = styled.div`
 	position: absolute;
 	padding-left: 16px;
 `;
@@ -22,7 +19,7 @@ export const Event = styled.div.attrs({
 export const EventPill = styled.div`
 	position: absolute;
 	border-radius: 50%;
-	background: #A39999;
+	background: ${({ theme }) => theme.gray900};
 	box-shadow: 0 0 0 2px white;
 `;
 
@@ -44,4 +41,13 @@ export const MultipleEventsPill = styled(EventPill)`width: 17px;
 	text-align: center;
 	line-height: 17px;
 	color: white;
+`;
+
+export const EventDate = styled.span`
+	color: ${({ theme }) => theme.gray600};
+	margin-right: .5rem;
+`;
+
+export const EventTitle = styled.span`
+	font-weight: bold;
 `;

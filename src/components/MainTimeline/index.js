@@ -64,7 +64,7 @@ const parseEvents = (scaleFunction) => ({ data: { allEvents } }) => new Promise(
 	const parseAllEvents = pipe(
 		map(({ eventStartDate, ...rest }) => ({
 			...rest,
-			eventStartDate,
+			eventStartDate: new Date(eventStartDate),
 			eventYPosition: parseYPosition(eventStartDate),
 		})),
 		groupBy(prop('eventYPosition')),

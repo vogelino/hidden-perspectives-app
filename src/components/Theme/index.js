@@ -6,6 +6,7 @@ import { theme as originalTheme } from '@smooth-ui/core-sc';
 
 const colors = {
 	primary: '#239F40',
+	commonBorderColor: originalTheme.gray300,
 };
 
 const selectTheme = {

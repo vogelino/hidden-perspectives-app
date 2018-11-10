@@ -2,13 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
+import { Link } from 'react-router-dom';
 import { logUserOut, getUserId } from '../../utils/localStorageUtil';
-import { LogButton, UserInfoContainer } from './styles';
+import { LogButton, UserInfoContainer, UserAvatar } from './styles';
 
 const UserInfo = ({ userName }) => (
 	<UserInfoContainer>
-		{userName}
-		<LogButton to="/" onClick={logUserOut}>
+		<UserAvatar>{userName[0].toUpperCase()}</UserAvatar>
+		<LogButton to="/" onClick={logUserOut} as={Link}>
 			{'Logout'}
 		</LogButton>
 	</UserInfoContainer>

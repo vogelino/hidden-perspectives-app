@@ -7,23 +7,30 @@ import {
 	UserInfoContainer,
 	HeaderLink,
 	LogButton,
+	Logo,
 } from './styles';
 
 const Header = ({
 	pages,
 }) => (
 	<HeaderContainer>
+		<Logo to="/">Hidden Perspectives</Logo>
 		{pages.filter(({ requiresAuthentication, authorizedRoles }) => (
 			(isAuthenticated() && isAuthorized(authorizedRoles))
 			|| !requiresAuthentication
 		)).map(({ title, path }) => (
-			<HeaderLink to={path} key={path}>
+			<HeaderLink
+				to={path}
+				key={path}
+				activeClassName="active"
+				exact
+			>
 				{title}
 			</HeaderLink>
 		))}
 		{!isAuthenticated() ? (
 			<UserInfoContainer>
-				<LogButton to="/login">
+				<LogButton to="/login" exact>
 					{'Login'}
 				</LogButton>
 			</UserInfoContainer>

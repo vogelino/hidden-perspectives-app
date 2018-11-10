@@ -1,39 +1,54 @@
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 export const HeaderContainer = styled.header`
 	width: 100%;
-	height: 40px;
+	height: 72px;
 	position: fixed;
 	top: 0;
 	left: 0;
-	background: black;
-	text-align: center;
+	background: white;
+	text-align: right;
 	z-index: 1;
+	border-bottom: 1px solid ${({ theme }) => theme.commonBorderColor};
 `;
 
-export const HeaderLink = styled(Link)`
+export const HeaderLink = styled(NavLink)`
 	border: none;
 	background: none;
-	color: white;
+	color: ${({ theme }) => theme.gray600};
 	font-family: inherit;
-	font-size: 18px;
-	line-height: 18px;
-	padding: 11px 16px;
-	margin-right: 8px;
-	display: inline-block;
+	font-size: 1rem;
+	line-height: 1rem;
+	padding: .75rem;
+	margin: 1rem;
+	font-weight: 600;
 	cursor: pointer;
 	outline: none;
 	text-decoration: none;
+	display: inline-block;
+	border-radius: 3px;
 
+	&.active,
 	&:hover {
-		background: white;
-		color: black;
+		color: ${({ theme }) => theme.black};
+	}
+
+	&.active {
+		cursor: default;
+	}
+
+	&:not(.active):hover {
+		text-decoration: underline;
 	}
 
 	&:focus {
-		text-decoration: underline;
+		box-shadow: inset 0 0 0 2px ${({ theme }) => theme.gray700};
 	}
+`;
+
+export const Logo = styled(HeaderLink)`
+	float: left;
 `;
 
 export const LogButton = styled(HeaderLink)`
@@ -41,8 +56,18 @@ export const LogButton = styled(HeaderLink)`
 `;
 
 export const UserInfoContainer = styled.div`
-	float: right;
-	color: white;
 	font-size: 12px;
+	float: right;
 `;
 
+export const UserAvatar = styled.span`
+	display: inline-block;
+	width: 1.5rem;
+	height: 1.5rem;
+	box-shadow: 0 0 0 2px ${({ theme }) => theme.gray300};
+	font-size: 1rem;
+	line-height: 1rem;
+	text-align: center;
+	border-radius: 50%;
+	padding-top: .25rem;
+`;
