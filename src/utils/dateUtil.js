@@ -1,4 +1,7 @@
 import { DateUtils } from 'react-day-picker';
+import differenceInDays from 'date-fns/difference_in_days';
+import differenceInCalendarWeeks from 'date-fns/difference_in_calendar_weeks';
+import differenceInMonths from 'date-fns/difference_in_months';
 
 export const isSameDayAsToday = (day) => DateUtils.isSameDay(day, new Date());
 export const isTodayOrPrior = (day) => DateUtils.isPastDay(day) || isSameDayAsToday(day);
@@ -12,3 +15,6 @@ export const getFormattedDate = (date) => {
 	return `${year}-${month}-${day}`;
 };
 
+export const getDifferenceInDays = (...dates) => differenceInDays(...dates);
+export const getDifferenceInMonths = (...dates) => differenceInMonths(...dates);
+export const getDifferenceInWeeks = (...dates) => differenceInCalendarWeeks(...dates);

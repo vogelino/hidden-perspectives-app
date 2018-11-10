@@ -1,9 +1,9 @@
 import React from 'react';
-import DocumentList from '../../components/DocumentList';
+import MainTimeline from '../../components/MainTimeline';
 
 const Home = () => (
 	<div className="Home">
-		<DocumentList />
+		<MainTimeline />
 	</div>
 );
 

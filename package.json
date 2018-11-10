@@ -51,6 +51,8 @@
     "apollo-link-ws": "^1.0.9",
     "apollo-utilities": "^1.0.23",
     "auth0-js": "^9.8.1",
+    "d3-scale": "^2.1.2",
+    "date-fns": "^1.29.0",
     "final-form": "^4.10.0",
     "graphql": "^14.0.2",
     "graphql-tag": "^2.10.0",
