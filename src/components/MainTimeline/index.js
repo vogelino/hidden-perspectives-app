@@ -10,8 +10,7 @@ import {
 } from 'ramda';
 import MainTimeline from './MainTimeline';
 import { withLoading, withErrors } from '../../utils/hocUtil';
-import { getTimelineHeightByDates } from '../../utils/timelineUtil';
-import { TIMELINE_EVENT_HEIGHT } from '../../state/constants';
+import { roundToUnit, getTimelineHeightByDates } from '../../utils/timelineUtil';
 
 const EARLIEST_EVENT_QUERY = gql`
   query GetEarliestEvent {
@@ -56,7 +55,7 @@ const getEarliestDate = ({ client }) => client.query({
 const getYPositionParser = (scaleFunction) => (date) => {
 	const dateInstance = new Date(date);
 	const scaledPosition = scaleFunction(dateInstance);
-	return scaledPosition - (scaledPosition % TIMELINE_EVENT_HEIGHT);
+	return roundToUnit(scaledPosition);
 };
 
 const parseEvents = (scaleFunction) => ({ data: { allEvents } }) => new Promise((resolve) => {
