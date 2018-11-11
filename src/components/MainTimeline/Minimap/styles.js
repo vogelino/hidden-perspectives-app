@@ -46,8 +46,8 @@ export const Event = styled.div.attrs({
 })`
 	position: absolute;
 	left: ${({ left }) => left}px;
-	width: 6px;
-	height: 6px;
+	width: 3px;
+	height: 3px;
 	border-radius: 50%;
 	transform: translateY(1px);
 	background: ${({ theme, density }) => mix(density, theme.gray200, theme.gray900)};
