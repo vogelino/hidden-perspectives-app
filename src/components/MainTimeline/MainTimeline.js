@@ -7,6 +7,7 @@ import {
 	MultipleEventsPill,
 	SingleEventPill,
 	EventDate,
+	EventTitleContainer,
 	EventTitle,
 	MinimapContainer,
 } from './styles';
@@ -15,6 +16,7 @@ import { getFormattedDate } from '../../utils/dateUtil';
 
 const MainTimeline = ({
 	events,
+	minimapEvents,
 	containerHeight,
 	errors,
 	isLoading,
@@ -23,7 +25,7 @@ const MainTimeline = ({
 		{isLoading && 'Loading...'}
 		{errors.map((error) => (error))}
 		<MinimapContainer>
-			<Minimap />
+			<Minimap events={minimapEvents} />
 		</MinimapContainer>
 		<EventsContainer height={containerHeight}>
 			{events.map((group) => {
@@ -40,7 +42,9 @@ const MainTimeline = ({
 							: <SingleEventPill />
 						}
 						<EventDate>{getFormattedDate(eventStartDate)}</EventDate>
-						<EventTitle>{eventTitle.trim() || 'Untitled'}</EventTitle>
+						<EventTitleContainer>
+							<EventTitle>{eventTitle.trim() || 'Untitled'}</EventTitle>
+						</EventTitleContainer>
 					</Event>
 				);
 			})}
@@ -55,6 +59,11 @@ MainTimeline.propTypes = {
 			eventTitle: PropTypes.string.isRequired,
 		})),
 	),
+	minimapEvents: PropTypes.arrayOf(PropTypes.shape({
+		id: PropTypes.string.isRequired,
+		density: PropTypes.number.isRequired,
+		position: PropTypes.number.isRequired,
+	})),
 	containerHeight: PropTypes.number,
 	errors: PropTypes.arrayOf(PropTypes.string),
 	isLoading: PropTypes.bool,
@@ -62,6 +71,7 @@ MainTimeline.propTypes = {
 
 MainTimeline.defaultProps = {
 	events: [],
+	minimapEvents: [],
 	containerHeight: window.innerHeight,
 	errors: [],
 	isLoading: true,

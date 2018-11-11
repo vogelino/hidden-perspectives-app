@@ -34,8 +34,10 @@ export default compose(
 			this.removeMinimapUpdater();
 		},
 		shouldComponentUpdate(nextProps) {
-			return (nextProps.height !== this.props.height)
-				|| (nextProps.top !== this.props.top);
+			const { height, top, events } = this.props;
+			return (nextProps.height !== height)
+				|| (nextProps.top !== top)
+				|| (nextProps.events.length !== events.length);
 		},
 	}),
 )(Minimap);

@@ -5,7 +5,7 @@ import {
 	withState,
 } from 'recompose';
 import gql from 'graphql-tag';
-import { scaleTime } from 'd3-scale';
+import { scaleTime, scaleLinear } from 'd3-scale';
 import {
 	pipe,
 	map,
@@ -14,91 +14,103 @@ import {
 } from 'ramda';
 import MainTimeline from './MainTimeline';
 import { withLoading, withErrors } from '../../utils/hocUtil';
-import { roundToUnit, getTimelineHeightByDates } from '../../utils/timelineUtil';
+import {
+	roundToTimelineUnit,
+	roundToMinimapUnit,
+	getTimelineHeightByDates,
+} from '../../utils/timelineUtil';
+import { TIMELINE_PADDING, MINIMAP_HEIGHT, MINIMAP_PADDING } from '../../state/constants';
 
-const EARLIEST_EVENT_QUERY = gql`
-  query GetEarliestEvent {
-	allEvents(
-		orderBy: eventStartDate_ASC
-		first: 1
-	) {
-		eventStartDate
+const ALL_EVENTS = gql`
+	query {
+		allEvents(
+			orderBy: eventStartDate_ASC
+		) {
+			id
+			eventTitle
+			eventStartDate
+		}
 	}
-  }
 `;
 
-const ALL_EVENTS_FROM_TO_QUERY = gql`
-  query GetEventsInView(
-    $viewStartDate: DateTime!
-    $viewEndDate: DateTime!
-  ) {
-    allEvents(
-      orderBy: eventStartDate_ASC
-      filter: {
-        AND: [
-          {
-            eventStartDate_gte: $viewStartDate
-          },
-          {
-            eventEndDate_lte: $viewEndDate
-          }
-        ]
-      }
-    ) {
-	  id
-      eventTitle
-	  eventStartDate
-    }
-}
-`;
-
-const getEarliestDate = ({ client }) => client.query({
-	query: EARLIEST_EVENT_QUERY,
-});
-
-const getYPositionParser = (scaleFunction) => (date) => {
+const getYPositionParser = (scaleFunction, minimapScaleFunction) => (date) => {
 	const dateInstance = new Date(date);
 	const scaledPosition = scaleFunction(dateInstance);
-	return roundToUnit(scaledPosition);
+	const eventYPosition = roundToTimelineUnit(scaledPosition);
+	return {
+		eventYPosition,
+		eventMinimapYPosition: roundToMinimapUnit(minimapScaleFunction(scaledPosition)),
+	};
 };
 
-const parseEvents = (scaleFunction) => ({ data: { allEvents } }) => new Promise((resolve) => {
-	const parseYPosition = getYPositionParser(scaleFunction);
+const groupEventsBy = (list, groupName) => pipe(
+	groupBy(prop(groupName)),
+	Object.values,
+)(list);
+
+const parseEvents = (
+	scaleFunction,
+	minimapScaleFunction,
+	events,
+) => {
+	const parseYPosition = getYPositionParser(scaleFunction, minimapScaleFunction);
 	const parseAllEvents = pipe(
 		map(({ eventStartDate, ...rest }) => ({
 			...rest,
 			eventStartDate: new Date(eventStartDate),
-			eventYPosition: parseYPosition(eventStartDate),
+			...parseYPosition(eventStartDate),
 		})),
-		groupBy(prop('eventYPosition')),
-		Object.values,
 	);
-	resolve(parseAllEvents(allEvents));
-});
+	const parsedEvents = parseAllEvents(events);
+	const timelineEvents = groupEventsBy(parsedEvents, 'eventYPosition');
+	const minimapEvents = groupEventsBy(parsedEvents, 'eventMinimapYPosition');
+	return { timelineEvents, minimapEvents };
+};
 
-const getEventsInViewport = ({
-	client,
+const getEvents = ({
 	setContainerHeight,
 	setEvents,
 	stopLoading,
+	setMinimapEvents,
 }) => ({ data }) => {
+	const { allEvents } = data;
 	const variables = {
-		viewStartDate: new Date(data.allEvents[0].eventStartDate),
-		viewEndDate: new Date(),
+		viewStartDate: new Date(allEvents[0].eventStartDate),
+		viewEndDate: new Date(allEvents[allEvents.length - 1].eventStartDate),
 	};
 
 	const datesArray = Object.values(variables);
 	const height = getTimelineHeightByDates(...datesArray);
-	const scaleFunction = scaleTime().domain(datesArray).range([0, height]);
+	const scaleFunction = scaleTime()
+		.domain(datesArray).range([0, (height - (TIMELINE_PADDING * 2))]);
+	const minimapScaleFunction = scaleTime()
+		.domain([0, height]).range([0, MINIMAP_HEIGHT - (MINIMAP_PADDING * 2)]);
 
 	setContainerHeight(height);
 
-	return client.query({ query: ALL_EVENTS_FROM_TO_QUERY, variables })
-		.then(parseEvents(scaleFunction))
-		.then((events) => {
-			setEvents(events);
-			stopLoading();
-		});
+	const { timelineEvents, minimapEvents } = parseEvents(
+		scaleFunction, minimapScaleFunction, allEvents,
+	);
+
+	const sortedGroups = minimapEvents.sort((a, b) => {
+		if (a.length < b.length) return -1;
+		if (a.length > b.length) return 1;
+		return 0;
+	});
+
+	const minimapColorScale = scaleLinear()
+		.domain([0, sortedGroups[sortedGroups.length - 1].length])
+		.range([1, 0.1, 0]);
+
+	const minimapDots = minimapEvents.map((group) => ({
+		density: minimapColorScale(group.length),
+		id: group[0].id,
+		position: group[0].eventMinimapYPosition,
+	}));
+
+	setEvents(timelineEvents);
+	setMinimapEvents(minimapDots);
+	stopLoading();
 };
 
 const handleErrors = ({ setErrors }) => ({ message, graphQLErrors }) => {
@@ -110,13 +122,14 @@ export default compose(
 	withLoading,
 	withErrors,
 	withState('events', 'setEvents', []),
+	withState('minimapEvents', 'setMinimapEvents', []),
 	withState('containerHeight', 'setContainerHeight', 800),
 	lifecycle({
 		componentDidMount() {
 			const { props } = this;
 
-			getEarliestDate(props)
-				.then(getEventsInViewport(props))
+			props.client.query({ query: ALL_EVENTS })
+				.then(getEvents(props))
 				.catch(handleErrors(props));
 		},
 		shouldComponentUpdate(nextProps) {

@@ -21,7 +21,7 @@ export const MinimapContainer = styled.div`
 export const EventsContainer = styled.div`
 	height: ${({ height }) => height}px;
 	position: relative;
-	margin-top: 1rem;
+	margin: 2rem 0;
 	z-index: 2;
 `;
 
@@ -61,10 +61,18 @@ export const EventDate = styled.span`
 	color: ${({ theme }) => theme.gray600};
 	margin-right: .5rem;
 	width: 6rem;
-	display: inline-block;
 	text-align: right;
+	float: left;
+`;
+
+export const EventTitleContainer = styled.span`
+	font-weight: bold;
+	max-width: 30rem;
+	overflow: hidden;
+	float: left;
+	text-overflow: ellipsis;
 `;
 
 export const EventTitle = styled.span`
-	font-weight: bold;
+	white-space: nowrap;
 `;
