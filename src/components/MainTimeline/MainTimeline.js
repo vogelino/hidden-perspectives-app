@@ -8,15 +8,24 @@ import {
 	SingleEventPill,
 	EventDate,
 	EventTitle,
+	MinimapContainer,
 } from './styles';
+import Minimap from './Minimap';
 import { getFormattedDate } from '../../utils/dateUtil';
 
 const MainTimeline = ({
 	events,
-	height,
+	containerHeight,
+	errors,
+	isLoading,
 }) => (
-	<Container>
-		<EventsContainer height={height}>
+	<Container id="mainTimeline">
+		{isLoading && 'Loading...'}
+		{errors.map((error) => (error))}
+		<MinimapContainer>
+			<Minimap />
+		</MinimapContainer>
+		<EventsContainer height={containerHeight}>
 			{events.map((group) => {
 				const {
 					id,
@@ -46,12 +55,16 @@ MainTimeline.propTypes = {
 			eventTitle: PropTypes.string.isRequired,
 		})),
 	),
-	height: PropTypes.number,
+	containerHeight: PropTypes.number,
+	errors: PropTypes.arrayOf(PropTypes.string),
+	isLoading: PropTypes.bool,
 };
 
 MainTimeline.defaultProps = {
 	events: [],
-	height: window.innerHeight,
+	containerHeight: window.innerHeight,
+	errors: [],
+	isLoading: true,
 };
 
 export default MainTimeline;

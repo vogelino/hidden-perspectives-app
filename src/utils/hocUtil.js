@@ -16,6 +16,6 @@ export const withLoading = compose(
 export const withErrors = compose(
 	withState('errors', 'setErrors', []),
 	withProps(({ errors }) => ({
-		hasErrors: errors.length > 0,
+		hasErrors: Boolean(errors && errors.length > 0),
 	})),
 );

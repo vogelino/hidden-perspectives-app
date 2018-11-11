@@ -1,11 +1,12 @@
-hmtl {
+html {
 	font-size: 100%;
+	overflow: hidden;
 }
 
 body {
-	margin-top: 72px;
 	font-size: 16px;
 	font-size: 1rem;
+	margin-top: 4.5rem;
 }
 
 * {

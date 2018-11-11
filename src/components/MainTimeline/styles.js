@@ -1,14 +1,28 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-	padding: 1.75rem 0;
-	margin: 0 1.75rem;
-	border-left: 1px solid ${({ theme }) => theme.commonBorderColor};
+	padding: 0 0 0 6rem;
+	width: 100vw;
+	height: calc(100vh - 4.5rem);
+	overflow-y: auto;
+	position: relative;
+`;
+
+export const MinimapContainer = styled.div`
+	width: 6rem;
+	height: 100%;
+	position: fixed;
+	top: 4.5rem;
+	left: 0;
+	border-right: 1px solid ${({ theme }) => theme.commonBorderColor};
+	z-index: 1;
 `;
 
 export const EventsContainer = styled.div`
 	height: ${({ height }) => height}px;
 	position: relative;
+	margin-top: 1rem;
+	z-index: 2;
 `;
 
 export const Event = styled.div`
@@ -46,6 +60,9 @@ export const MultipleEventsPill = styled(EventPill)`width: 17px;
 export const EventDate = styled.span`
 	color: ${({ theme }) => theme.gray600};
 	margin-right: .5rem;
+	width: 6rem;
+	display: inline-block;
+	text-align: right;
 `;
 
 export const EventTitle = styled.span`

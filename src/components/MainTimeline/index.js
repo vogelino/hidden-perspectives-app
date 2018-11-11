@@ -1,5 +1,9 @@
 import { withApollo } from 'react-apollo';
-import { compose, lifecycle, withState } from 'recompose';
+import {
+	compose,
+	lifecycle,
+	withState,
+} from 'recompose';
 import gql from 'graphql-tag';
 import { scaleTime } from 'd3-scale';
 import {
@@ -72,7 +76,12 @@ const parseEvents = (scaleFunction) => ({ data: { allEvents } }) => new Promise(
 	resolve(parseAllEvents(allEvents));
 });
 
-const getEventsInViewport = ({ client, setHeight, setEvents }) => ({ data }) => {
+const getEventsInViewport = ({
+	client,
+	setContainerHeight,
+	setEvents,
+	stopLoading,
+}) => ({ data }) => {
 	const variables = {
 		viewStartDate: new Date(data.allEvents[0].eventStartDate),
 		viewEndDate: new Date(),
@@ -82,15 +91,18 @@ const getEventsInViewport = ({ client, setHeight, setEvents }) => ({ data }) => 
 	const height = getTimelineHeightByDates(...datesArray);
 	const scaleFunction = scaleTime().domain(datesArray).range([0, height]);
 
-	setHeight(height);
+	setContainerHeight(height);
 
 	return client.query({ query: ALL_EVENTS_FROM_TO_QUERY, variables })
 		.then(parseEvents(scaleFunction))
-		.then(setEvents);
+		.then((events) => {
+			setEvents(events);
+			stopLoading();
+		});
 };
 
-const handleErrors = ({ setErrors }) => ({ graphQLErrors }) => {
-	setErrors(graphQLErrors);
+const handleErrors = ({ setErrors }) => ({ message, graphQLErrors }) => {
+	setErrors(message ? [message] : graphQLErrors);
 };
 
 export default compose(
@@ -98,14 +110,20 @@ export default compose(
 	withLoading,
 	withErrors,
 	withState('events', 'setEvents', []),
-	withState('scaleFunction', 'setScaleFunction', undefined),
-	withState('height', 'setHeight', window.innerHeight),
+	withState('containerHeight', 'setContainerHeight', 800),
 	lifecycle({
 		componentDidMount() {
 			const { props } = this;
+
 			getEarliestDate(props)
 				.then(getEventsInViewport(props))
 				.catch(handleErrors(props));
+		},
+		shouldComponentUpdate(nextProps) {
+			return (nextProps.events.length !== this.props.events.length)
+				|| (nextProps.containerHeight !== this.props.containerHeight)
+				|| (nextProps.errors.length !== this.props.errors.length)
+				|| (nextProps.isLoading !== this.props.isLoading);
 		},
 	}),
 )(MainTimeline);
