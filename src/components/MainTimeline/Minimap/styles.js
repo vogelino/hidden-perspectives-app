@@ -3,7 +3,6 @@ import { mix, transparentize } from 'polished';
 import { MINIMAP_HEIGHT, MINIMAP_PADDING } from '../../../state/constants';
 
 export const Container = styled.div`
-	padding: ${MINIMAP_PADDING}px 0;
 	height: ${MINIMAP_HEIGHT + 4}px;
 	width: calc(6rem - 1px);
 	position: fixed;
@@ -19,7 +18,8 @@ export const Container = styled.div`
 export const Content = styled.div`
 	position: relative;
 	width: 100%;
-	height: 100%;
+	height: ${MINIMAP_HEIGHT + 4 - (MINIMAP_PADDING * 2)}px;
+	margin: ${MINIMAP_PADDING}px 0;
 `;
 
 export const ScrollIndicator = styled.div.attrs({
@@ -52,4 +52,23 @@ export const Event = styled.div.attrs({
 	transform: translateY(1px);
 	background: ${({ theme, density }) => mix(density, theme.gray200, theme.gray900)};
 	z-index: 1;
+`;
+
+export const DatesContainer = styled(Content)`
+	display: flex;
+	flex-direction: column;
+	margin-top: -${MINIMAP_HEIGHT + 4 - MINIMAP_PADDING}px;
+	height: ${MINIMAP_HEIGHT + 4 - (MINIMAP_PADDING * 2)}px;
+	justify-content: space-between;
+	text-align: right;
+	width: 100%;
+	padding: 0 1rem;
+	color: ${({ theme }) => theme.gray500};
+`;
+
+export const Date = styled.div`
+	font-size: .875rem;
+	line-height: .875rem;
+	height: .875rem;
+	flex: 0 0 .875rem;
 `;

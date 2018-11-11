@@ -6,12 +6,15 @@ import {
 	Container,
 	EventsContainer,
 	Event,
+	Date,
+	DatesContainer,
 } from './styles';
 
 const Minimap = ({
 	height,
 	top,
 	events,
+	years,
 }) => (
 	<Container>
 		<Content>
@@ -25,6 +28,9 @@ const Minimap = ({
 				))}
 			</EventsContainer>
 		</Content>
+		<DatesContainer>
+			{years.map((year) => <Date key={year}>{year}</Date>)}
+		</DatesContainer>
 	</Container>
 );
 
@@ -36,12 +42,21 @@ Minimap.propTypes = {
 		position: PropTypes.number.isRequired,
 		density: PropTypes.number.isRequired,
 	})),
+	years: PropTypes.arrayOf(PropTypes.string),
 };
 
 Minimap.defaultProps = {
 	height: 100,
 	top: 0,
 	events: [],
+	years: [
+		'1975',
+		'1980',
+		'1985',
+		'1989',
+		'1994',
+		'1999',
+	],
 };
 
 export default Minimap;

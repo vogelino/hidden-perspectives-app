@@ -38,10 +38,10 @@ export const EventPill = styled.div`
 `;
 
 export const SingleEventPill = styled(EventPill)`
-	width: 7px;
-	height: 7px;
-	top: 8px;
-	left: -4px;
+	width: 5px;
+	height: 5px;
+	top: 9px;
+	left: -3px;
 `;
 
 export const MultipleEventsPill = styled(EventPill)`width: 17px;
