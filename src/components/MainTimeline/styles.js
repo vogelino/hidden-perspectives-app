@@ -40,13 +40,13 @@ export const EventPill = styled.div`
 export const SingleEventPill = styled(EventPill)`
 	width: 5px;
 	height: 5px;
-	top: 9px;
+	top: 7px;
 	left: -3px;
 `;
 
 export const MultipleEventsPill = styled(EventPill)`width: 17px;
 	height: 17px;
-	top: 3px;
+	top: 0;
 	left: -9px;
 	box-shadow: 0 0 0 1px white;
 	font-size: 11px;
@@ -61,7 +61,6 @@ export const EventDate = styled.span`
 	color: ${({ theme }) => theme.gray600};
 	margin-right: .5rem;
 	width: 6rem;
-	text-align: right;
 	float: left;
 `;
 
@@ -85,8 +84,8 @@ export const MultipleDocumentsPill = styled(MultipleEventsPill)`
 	border-radius: 0;
 	height: .5rem;
 	width: .5rem;
-	top: calc(.5rem + 1px);
-	left: calc(.25rem + 1px);
+	top: calc(.5rem - 3px);
+	left: -.25rem;
 	border: 1px solid ${({ theme }) => theme.gray900};
 	background: ${({ theme }) => theme.usBlue};
 	box-shadow: -1px -1px 0 0 white, -2px -2px 0 0 ${({ theme }) => theme.gray900};
@@ -96,8 +95,8 @@ export const SingleDocumentPill = styled(SingleEventPill)`
 	border-radius: 0;
 	height: .5rem;
 	width: .5rem;
-	top: .5rem;
-	left: .25rem;
+	top: calc(.5rem - 2px);
+	left: -.25rem;
 	border: 1px solid ${({ theme }) => theme.gray900};
 	background: ${({ theme }) => theme.usBlue};
 `;
