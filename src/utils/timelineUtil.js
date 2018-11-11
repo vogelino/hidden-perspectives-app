@@ -8,8 +8,8 @@ export const getTimelineHeightByDates = (...dates) => {
 	return (diffInWeeks * TIMELINE_EVENT_HEIGHT);
 };
 
-export const eventsToMinimapDots = (minimapEvents) => {
-	const sortedGroups = minimapEvents.sort((a, b) => {
+export const toMinimapDots = (minimapItems) => {
+	const sortedGroups = minimapItems.sort((a, b) => {
 		if (a.length < b.length) return -1;
 		if (a.length > b.length) return 1;
 		return 0;
@@ -19,14 +19,14 @@ export const eventsToMinimapDots = (minimapEvents) => {
 		.domain([0, sortedGroups[sortedGroups.length - 1].length])
 		.range([1, 0.1, 0]);
 
-	return minimapEvents.map((group) => ({
+	return minimapItems.map((group) => ({
 		density: minimapColorScale(group.length),
 		id: group[0].id,
-		position: group[0].eventMinimapYPosition,
+		position: group[0].minimapYPosition,
 	}));
 };
 
-export const groupEventsBy = (list, groupName) => pipe(
+export const groupItemsBy = (list, groupName) => pipe(
 	groupBy(prop(groupName)),
 	Object.values,
 )(list);
@@ -38,9 +38,9 @@ const roundToMinimapUnit = getUnitRouderByUnit(MINIMAP_EVENT_HEIGHT);
 export const getYPositionParser = (scaleFunction, minimapScaleFunction) => (date) => {
 	const dateInstance = new Date(date);
 	const scaledPosition = scaleFunction(dateInstance);
-	const eventYPosition = roundToTimelineUnit(scaledPosition);
+	const yPosition = roundToTimelineUnit(scaledPosition);
 	return {
-		eventYPosition,
-		eventMinimapYPosition: roundToMinimapUnit(minimapScaleFunction(scaledPosition)),
+		yPosition,
+		minimapYPosition: roundToMinimapUnit(minimapScaleFunction(scaledPosition)),
 	};
 };

@@ -14,6 +14,7 @@ const Minimap = ({
 	height,
 	top,
 	events,
+	documents,
 	years,
 }) => (
 	<Container>
@@ -23,8 +24,8 @@ const Minimap = ({
 				{events.map(({ id, density, position }) => (
 					<Event left={16} key={id} top={position} density={density} />
 				))}
-				{events.map(({ id, density, position }) => (
-					<Event left={22} key={id} top={position} density={1 - density} />
+				{documents.map(({ id, density, position }) => (
+					<Event left={22} key={id} top={position} density={density} />
 				))}
 			</EventsContainer>
 		</Content>
@@ -42,6 +43,11 @@ Minimap.propTypes = {
 		position: PropTypes.number.isRequired,
 		density: PropTypes.number.isRequired,
 	})),
+	documents: PropTypes.arrayOf(PropTypes.shape({
+		id: PropTypes.string.isRequired,
+		position: PropTypes.number.isRequired,
+		density: PropTypes.number.isRequired,
+	})),
 	years: PropTypes.arrayOf(PropTypes.string),
 };
 
@@ -49,6 +55,7 @@ Minimap.defaultProps = {
 	height: 100,
 	top: 0,
 	events: [],
+	documents: [],
 	years: [
 		'1975',
 		'1980',

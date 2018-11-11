@@ -7,6 +7,10 @@ import { theme as originalTheme } from '@smooth-ui/core-sc';
 const colors = {
 	primary: '#239F40',
 	commonBorderColor: originalTheme.gray300,
+	usBlue: '#2523A0',
+	usRed: '#D7062C',
+	iranGreen: '#2523A0',
+	iranRed: '#D7062C',
 };
 
 const selectTheme = {

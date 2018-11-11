@@ -11,49 +11,55 @@ import { withLoading, withErrors } from '../../utils/hocUtil';
 import {
 	getYPositionParser,
 	getTimelineHeightByDates,
-	eventsToMinimapDots,
-	groupEventsBy,
+	toMinimapDots,
+	groupItemsBy,
 } from '../../utils/timelineUtil';
 import { TIMELINE_PADDING, MINIMAP_HEIGHT, MINIMAP_PADDING } from '../../state/constants';
 
-const ALL_EVENTS = gql`
-	query {
-		allEvents(
-			orderBy: eventStartDate_ASC
-		) {
-			id
-			eventTitle
-			eventStartDate
-		}
+const ALL_EVENTS_AND_DOCUMENTS = gql`
+	{
+	allEvents(orderBy: eventStartDate_ASC) {
+		id
+		eventTitle
+		eventStartDate
 	}
+	allDocuments(orderBy: documentCreationDate_ASC) {
+		id
+		documentTitle
+		documentCreationDate
+	}
+}
 `;
 
-const parseEvents = (
+const parseItems = ({
 	scaleFunction,
 	minimapScaleFunction,
-	events,
-) => {
+	items,
+	itemDateProperty,
+}) => {
 	const parseYPosition = getYPositionParser(scaleFunction, minimapScaleFunction);
-	const parsedEvents = events.map(({ eventStartDate, ...rest }) => ({
-		...rest,
-		eventStartDate: new Date(eventStartDate),
-		...parseYPosition(eventStartDate),
+	const parsedItems = items.map((props) => ({
+		...props,
+		[itemDateProperty]: new Date(props[itemDateProperty]),
+		...parseYPosition(props[itemDateProperty]),
 	}));
 	return {
-		timelineEvents: groupEventsBy(parsedEvents, 'eventYPosition'),
-		minimapEvents: eventsToMinimapDots(groupEventsBy(parsedEvents, 'eventMinimapYPosition')),
+		timelineItems: groupItemsBy(parsedItems, 'yPosition'),
+		minimapItems: toMinimapDots(groupItemsBy(parsedItems, 'minimapYPosition')),
 	};
 };
 
-const getEvents = ({
+const getEventsAndDocuments = ({
 	setContainerHeight,
 	setEvents,
+	setDocuments,
 	stopLoading,
 	setMinimapEvents,
-}) => ({ data: { allEvents } }) => {
+	setMinimapDocuments,
+}) => ({ data: { allEvents, allDocuments } }) => {
 	const datesArray = [
-		new Date(allEvents[0].eventStartDate),
-		new Date(allEvents[allEvents.length - 1].eventStartDate),
+		new Date(allDocuments[0].documentCreationDate),
+		new Date(allDocuments[allDocuments.length - 1].documentCreationDate),
 	];
 	const height = getTimelineHeightByDates(...datesArray);
 
@@ -63,13 +69,26 @@ const getEvents = ({
 	const minimapScaleFunction = scaleTime()
 		.domain([0, height]).range([0, MINIMAP_HEIGHT - (MINIMAP_PADDING * 2)]);
 
-	const { timelineEvents, minimapEvents } = parseEvents(
-		scaleFunction, minimapScaleFunction, allEvents,
-	);
+	const { timelineItems: timelineEvents, minimapItems: minimapEvents } = parseItems({
+		scaleFunction,
+		minimapScaleFunction,
+		items: allEvents,
+		itemDateProperty: 'eventStartDate',
+	});
 
+	const { timelineItems: timelineDocuments, minimapItems: minimapDocuments } = parseItems({
+		scaleFunction,
+		minimapScaleFunction,
+		items: allDocuments,
+		itemDateProperty: 'documentCreationDate',
+	});
+
+	// debugger;
 	setContainerHeight(height);
 	setEvents(timelineEvents);
 	setMinimapEvents(minimapEvents);
+	setDocuments(timelineDocuments);
+	setMinimapDocuments(minimapDocuments);
 	stopLoading();
 };
 
@@ -82,14 +101,16 @@ export default compose(
 	withLoading,
 	withErrors,
 	withState('events', 'setEvents', []),
+	withState('documents', 'setDocuments', []),
 	withState('minimapEvents', 'setMinimapEvents', []),
+	withState('minimapDocuments', 'setMinimapDocuments', []),
 	withState('containerHeight', 'setContainerHeight', 800),
 	lifecycle({
 		componentDidMount() {
 			const { props } = this;
 
-			props.client.query({ query: ALL_EVENTS })
-				.then(getEvents(props))
+			props.client.query({ query: ALL_EVENTS_AND_DOCUMENTS })
+				.then(getEventsAndDocuments(props))
 				.catch(handleErrors(props));
 		},
 		shouldComponentUpdate(nextProps) {

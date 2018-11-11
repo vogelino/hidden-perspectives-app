@@ -6,10 +6,13 @@ import {
 	EventsContainer,
 	MultipleEventsPill,
 	SingleEventPill,
+	MultipleDocumentsPill,
+	SingleDocumentPill,
 	EventDate,
 	EventTitleContainer,
 	EventTitle,
 	MinimapContainer,
+	Document,
 } from './styles';
 import Minimap from './Minimap';
 import { getFormattedDate } from '../../utils/dateUtil';
@@ -17,6 +20,8 @@ import { getFormattedDate } from '../../utils/dateUtil';
 const MainTimeline = ({
 	events,
 	minimapEvents,
+	documents,
+	minimapDocuments,
 	containerHeight,
 	errors,
 	isLoading,
@@ -25,18 +30,21 @@ const MainTimeline = ({
 		{isLoading && 'Loading...'}
 		{errors.map((error) => (error))}
 		<MinimapContainer>
-			<Minimap events={minimapEvents} />
+			<Minimap
+				events={minimapEvents}
+				documents={minimapDocuments}
+			/>
 		</MinimapContainer>
 		<EventsContainer height={containerHeight}>
 			{events.map((group) => {
 				const {
 					id,
 					eventTitle,
-					eventYPosition,
+					yPosition,
 					eventStartDate,
 				} = group[0];
 				return (
-					<Event style={{ top: `${eventYPosition}px` }} key={id}>
+					<Event style={{ top: `${yPosition}px` }} key={id}>
 						{group.length > 1
 							? <MultipleEventsPill>{group.length}</MultipleEventsPill>
 							: <SingleEventPill />
@@ -48,6 +56,26 @@ const MainTimeline = ({
 					</Event>
 				);
 			})}
+			{documents.map((group) => {
+				const {
+					id,
+					documentTitle,
+					yPosition,
+					documentCreationDate,
+				} = group[0];
+				return (
+					<Document style={{ top: `${yPosition}px` }} key={id}>
+						{group.length > 1
+							? <MultipleDocumentsPill />
+							: <SingleDocumentPill />
+						}
+						<EventDate>{getFormattedDate(documentCreationDate)}</EventDate>
+						<EventTitleContainer>
+							<EventTitle>{documentTitle.trim() || 'Untitled'}</EventTitle>
+						</EventTitleContainer>
+					</Document>
+				);
+			})}
 		</EventsContainer>
 	</Container>
 );
@@ -57,9 +85,24 @@ MainTimeline.propTypes = {
 		PropTypes.arrayOf(PropTypes.shape({
 			id: PropTypes.string.isRequired,
 			eventTitle: PropTypes.string.isRequired,
+			yPosition: PropTypes.number.isRequired,
+			eventStartDate: PropTypes.instanceOf(Date).isRequired,
+		})),
+	),
+	documents: PropTypes.arrayOf(
+		PropTypes.arrayOf(PropTypes.shape({
+			id: PropTypes.string.isRequired,
+			documentTitle: PropTypes.string.isRequired,
+			yPosition: PropTypes.number.isRequired,
+			documentCreationDate: PropTypes.instanceOf(Date).isRequired,
 		})),
 	),
 	minimapEvents: PropTypes.arrayOf(PropTypes.shape({
+		id: PropTypes.string.isRequired,
+		density: PropTypes.number.isRequired,
+		position: PropTypes.number.isRequired,
+	})),
+	minimapDocuments: PropTypes.arrayOf(PropTypes.shape({
 		id: PropTypes.string.isRequired,
 		density: PropTypes.number.isRequired,
 		position: PropTypes.number.isRequired,
@@ -72,6 +115,8 @@ MainTimeline.propTypes = {
 MainTimeline.defaultProps = {
 	events: [],
 	minimapEvents: [],
+	documents: [],
+	minimapDocuments: [],
 	containerHeight: window.innerHeight,
 	errors: [],
 	isLoading: true,

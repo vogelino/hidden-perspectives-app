@@ -27,7 +27,7 @@ export const EventsContainer = styled.div`
 
 export const Event = styled.div`
 	position: absolute;
-	padding-left: 16px;
+	padding-left: 1rem;
 `;
 
 export const EventPill = styled.div`
@@ -67,7 +67,7 @@ export const EventDate = styled.span`
 
 export const EventTitleContainer = styled.span`
 	font-weight: bold;
-	max-width: 30rem;
+	max-width: calc((100vw - 32rem) / 2);
 	overflow: hidden;
 	float: left;
 	text-overflow: ellipsis;
@@ -75,4 +75,29 @@ export const EventTitleContainer = styled.span`
 
 export const EventTitle = styled.span`
 	white-space: nowrap;
+`;
+
+export const Document = styled(Event)`
+	left: calc(12rem + ((100vw - 32rem) / 2));
+`;
+
+export const MultipleDocumentsPill = styled(MultipleEventsPill)`
+	border-radius: 0;
+	height: .5rem;
+	width: .5rem;
+	top: calc(.5rem + 1px);
+	left: calc(.25rem + 1px);
+	border: 1px solid ${({ theme }) => theme.gray900};
+	background: ${({ theme }) => theme.usBlue};
+	box-shadow: -1px -1px 0 0 white, -2px -2px 0 0 ${({ theme }) => theme.gray900};
+`;
+
+export const SingleDocumentPill = styled(SingleEventPill)`
+	border-radius: 0;
+	height: .5rem;
+	width: .5rem;
+	top: .5rem;
+	left: .25rem;
+	border: 1px solid ${({ theme }) => theme.gray900};
+	background: ${({ theme }) => theme.usBlue};
 `;
