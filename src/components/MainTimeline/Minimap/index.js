@@ -34,10 +34,16 @@ export default compose(
 			this.removeMinimapUpdater();
 		},
 		shouldComponentUpdate(nextProps) {
-			const { height, top, events } = this.props;
+			const {
+				height,
+				top,
+				events,
+				isLoading,
+			} = this.props;
 			return (nextProps.height !== height)
 				|| (nextProps.top !== top)
-				|| (nextProps.events.length !== events.length);
+				|| (nextProps.events.length !== events.length)
+				|| (nextProps.isLoading !== isLoading);
 		},
 	}),
 )(Minimap);

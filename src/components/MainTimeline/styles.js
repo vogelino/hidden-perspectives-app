@@ -89,6 +89,9 @@ export const MultipleDocumentsPill = styled(MultipleEventsPill)`
 	border: 1px solid ${({ theme }) => theme.gray900};
 	background: ${({ theme }) => theme.usBlue};
 	box-shadow: -1px -1px 0 0 white, -2px -2px 0 0 ${({ theme }) => theme.gray900};
+	text-indent: 100%;
+    white-space: nowrap;
+    overflow: hidden;
 `;
 
 export const SingleDocumentPill = styled(SingleEventPill)`
@@ -99,4 +102,16 @@ export const SingleDocumentPill = styled(SingleEventPill)`
 	left: -.25rem;
 	border: 1px solid ${({ theme }) => theme.gray900};
 	background: ${({ theme }) => theme.usBlue};
+`;
+
+export const LoadingContainer = styled.div`
+	position: fixed;
+	width: 8rem;
+	height: 8rem;
+	top: 50vh;
+	left: 50vw;
+	transform: translate(-50%, -50%);
+	pointer-events: none;
+	opacity: ${({ isLoading }) => (isLoading ? 1 : 0)};
+	transition: opacity 200ms ease-out;
 `;

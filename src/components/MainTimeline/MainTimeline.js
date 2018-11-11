@@ -13,9 +13,11 @@ import {
 	EventTitle,
 	MinimapContainer,
 	Document,
+	LoadingContainer,
 } from './styles';
 import Minimap from './Minimap';
-import { getFormattedDate } from '../../utils/dateUtil';
+import TimelineItemsList from './TimelineItemsList';
+import LoadingIndicator from '../LoadingIndicator';
 
 const MainTimeline = ({
 	events,
@@ -27,55 +29,36 @@ const MainTimeline = ({
 	isLoading,
 }) => (
 	<Container id="mainTimeline">
-		{isLoading && 'Loading...'}
+		<LoadingContainer isLoading={isLoading}>
+			<LoadingIndicator />
+		</LoadingContainer>
 		{errors.map((error) => (error))}
 		<MinimapContainer>
 			<Minimap
+				isLoading={isLoading}
 				events={minimapEvents}
 				documents={minimapDocuments}
 			/>
 		</MinimapContainer>
 		<EventsContainer height={containerHeight}>
-			{events.map((group) => {
-				const {
-					id,
-					eventTitle,
-					yPosition,
-					eventStartDate,
-				} = group[0];
-				return (
-					<Event style={{ top: `${yPosition}px` }} key={id}>
-						{group.length > 1
-							? <MultipleEventsPill>{group.length}</MultipleEventsPill>
-							: <SingleEventPill />
-						}
-						<EventDate>{getFormattedDate(eventStartDate)}</EventDate>
-						<EventTitleContainer>
-							<EventTitle>{eventTitle.trim() || 'Untitled'}</EventTitle>
-						</EventTitleContainer>
-					</Event>
-				);
-			})}
-			{documents.map((group) => {
-				const {
-					id,
-					documentTitle,
-					yPosition,
-					documentCreationDate,
-				} = group[0];
-				return (
-					<Document style={{ top: `${yPosition}px` }} key={id}>
-						{group.length > 1
-							? <MultipleDocumentsPill />
-							: <SingleDocumentPill />
-						}
-						<EventDate>{getFormattedDate(documentCreationDate)}</EventDate>
-						<EventTitleContainer>
-							<EventTitle>{documentTitle.trim() || 'Untitled'}</EventTitle>
-						</EventTitleContainer>
-					</Document>
-				);
-			})}
+			<TimelineItemsList
+				items={events}
+				ContainerComponent={Event}
+				SinglePillComponent={SingleEventPill}
+				MultiplePillsComponent={MultipleEventsPill}
+				DateComponent={EventDate}
+				TitleContainerComponent={EventTitleContainer}
+				TitleComponent={EventTitle}
+			/>
+			<TimelineItemsList
+				items={documents}
+				ContainerComponent={Document}
+				SinglePillComponent={SingleDocumentPill}
+				MultiplePillsComponent={MultipleDocumentsPill}
+				DateComponent={EventDate}
+				TitleContainerComponent={EventTitleContainer}
+				TitleComponent={EventTitle}
+			/>
 		</EventsContainer>
 	</Container>
 );
@@ -84,17 +67,17 @@ MainTimeline.propTypes = {
 	events: PropTypes.arrayOf(
 		PropTypes.arrayOf(PropTypes.shape({
 			id: PropTypes.string.isRequired,
-			eventTitle: PropTypes.string.isRequired,
+			title: PropTypes.string.isRequired,
 			yPosition: PropTypes.number.isRequired,
-			eventStartDate: PropTypes.instanceOf(Date).isRequired,
+			date: PropTypes.string.isRequired,
 		})),
 	),
 	documents: PropTypes.arrayOf(
 		PropTypes.arrayOf(PropTypes.shape({
 			id: PropTypes.string.isRequired,
-			documentTitle: PropTypes.string.isRequired,
+			title: PropTypes.string.isRequired,
 			yPosition: PropTypes.number.isRequired,
-			documentCreationDate: PropTypes.instanceOf(Date).isRequired,
+			date: PropTypes.string.isRequired,
 		})),
 	),
 	minimapEvents: PropTypes.arrayOf(PropTypes.shape({

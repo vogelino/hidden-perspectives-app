@@ -15,6 +15,7 @@ import {
 	groupItemsBy,
 } from '../../utils/timelineUtil';
 import { TIMELINE_PADDING, MINIMAP_HEIGHT, MINIMAP_PADDING } from '../../state/constants';
+import { getFormattedDate } from '../../utils/dateUtil';
 
 const ALL_EVENTS_AND_DOCUMENTS = gql`
 	{
@@ -36,11 +37,13 @@ const parseItems = ({
 	minimapScaleFunction,
 	items,
 	itemDateProperty,
+	itemTitleProperty,
 }) => {
 	const parseYPosition = getYPositionParser(scaleFunction, minimapScaleFunction);
 	const parsedItems = items.map((props) => ({
-		...props,
-		[itemDateProperty]: new Date(props[itemDateProperty]),
+		id: props.id,
+		date: getFormattedDate(new Date(props[itemDateProperty])),
+		title: props[itemTitleProperty],
 		...parseYPosition(props[itemDateProperty]),
 	}));
 	return {
@@ -74,6 +77,7 @@ const getEventsAndDocuments = ({
 		minimapScaleFunction,
 		items: allEvents,
 		itemDateProperty: 'eventStartDate',
+		itemTitleProperty: 'eventTitle',
 	});
 
 	const { timelineItems: timelineDocuments, minimapItems: minimapDocuments } = parseItems({
@@ -81,9 +85,9 @@ const getEventsAndDocuments = ({
 		minimapScaleFunction,
 		items: allDocuments,
 		itemDateProperty: 'documentCreationDate',
+		itemTitleProperty: 'documentTitle',
 	});
 
-	// debugger;
 	setContainerHeight(height);
 	setEvents(timelineEvents);
 	setMinimapEvents(minimapEvents);

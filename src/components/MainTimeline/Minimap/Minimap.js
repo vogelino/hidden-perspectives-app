@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { lifecycle } from 'recompose';
 import {
 	Content,
 	ScrollIndicator,
@@ -10,28 +11,48 @@ import {
 	DatesContainer,
 } from './styles';
 
+const OptimizedEvents = lifecycle({
+	shouldComponentUpdate({ events, documents }) {
+		return (
+			events.length !== this.props.events.length
+			|| documents.length !== this.props.documents.length
+		);
+	},
+})(({ events, documents }) => (
+	<EventsContainer>
+		{events.map(({ id, density, position }) => (
+			<Event left={16} key={id} top={position} density={density} />
+		))}
+		{documents.map(({ id, density, position }) => (
+			<Event left={22} key={id} top={position} density={density} />
+		))}
+	</EventsContainer>
+));
+
+const OptimizedDates = lifecycle({
+	shouldComponentUpdate({ years }) {
+		return years.length !== this.props.years.length;
+	},
+})(({ years }) => (
+	<DatesContainer>
+		{years.map((year) => <Date key={year}>{year}</Date>)}
+	</DatesContainer>
+));
+
 const Minimap = ({
 	height,
 	top,
 	events,
 	documents,
 	years,
+	isLoading,
 }) => (
 	<Container>
 		<Content>
-			<ScrollIndicator height={height} top={top} />
-			<EventsContainer>
-				{events.map(({ id, density, position }) => (
-					<Event left={16} key={id} top={position} density={density} />
-				))}
-				{documents.map(({ id, density, position }) => (
-					<Event left={22} key={id} top={position} density={density} />
-				))}
-			</EventsContainer>
+			{!isLoading && <ScrollIndicator height={height} top={top} />}
+			<OptimizedEvents events={events} documents={documents} />
 		</Content>
-		<DatesContainer>
-			{years.map((year) => <Date key={year}>{year}</Date>)}
-		</DatesContainer>
+		<OptimizedDates years={years} />
 	</Container>
 );
 
@@ -49,9 +70,11 @@ Minimap.propTypes = {
 		density: PropTypes.number.isRequired,
 	})),
 	years: PropTypes.arrayOf(PropTypes.string),
+	isLoading: PropTypes.bool,
 };
 
 Minimap.defaultProps = {
+	isLoading: false,
 	height: 100,
 	top: 0,
 	events: [],
