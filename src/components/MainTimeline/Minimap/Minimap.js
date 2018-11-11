@@ -21,7 +21,7 @@ const Minimap = ({
 					<Event left={16} key={id} top={position} density={density} />
 				))}
 				{events.map(({ id, density, position }) => (
-					<Event left={24} key={id} top={position} density={1 - density} />
+					<Event left={22} key={id} top={position} density={1 - density} />
 				))}
 			</EventsContainer>
 		</Content>
