@@ -13,10 +13,10 @@ import {
 	EventTitle,
 	MinimapContainer,
 	Document,
-	LoadingContainer,
 } from './styles';
 import Minimap from './Minimap';
 import TimelineItemsList from './TimelineItemsList';
+import { LoadingContainer } from '../LoadingIndicator/styles';
 import LoadingIndicator from '../LoadingIndicator';
 
 const MainTimeline = ({

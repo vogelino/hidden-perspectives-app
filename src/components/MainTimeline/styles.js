@@ -110,15 +110,3 @@ export const SingleDocumentPill = styled(SingleEventPill)`
 	border: 1px solid ${({ theme }) => theme.gray900};
 	background: ${({ theme }) => theme.usBlue};
 `;
-
-export const LoadingContainer = styled.div`
-	position: fixed;
-	width: 8rem;
-	height: 8rem;
-	top: 50vh;
-	left: 50vw;
-	transform: translate(-50%, -50%);
-	pointer-events: none;
-	opacity: ${({ isLoading }) => (isLoading ? 1 : 0)};
-	transition: opacity 200ms ease-out;
-`;

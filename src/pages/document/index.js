@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import DetailView from '../../components/DetailView';
 
 const DocumentPage = ({ match }) => (
 	<div className="DocumentPage">
-		{match.params.id}
+		<DetailView id={match.params.id} itemType="document" />
 	</div>
 );
 
