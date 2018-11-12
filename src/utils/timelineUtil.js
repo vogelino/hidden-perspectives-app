@@ -32,8 +32,8 @@ export const groupItemsBy = (list, groupName) => pipe(
 )(list);
 
 const getUnitRouderByUnit = (unit) => (value) => value - (value % unit);
-const roundToTimelineUnit = getUnitRouderByUnit(TIMELINE_EVENT_HEIGHT);
-const roundToMinimapUnit = getUnitRouderByUnit(MINIMAP_EVENT_HEIGHT);
+export const roundToTimelineUnit = getUnitRouderByUnit(TIMELINE_EVENT_HEIGHT);
+export const roundToMinimapUnit = getUnitRouderByUnit(MINIMAP_EVENT_HEIGHT);
 
 export const getYPositionParser = (scaleFunction, minimapScaleFunction) => (date) => {
 	const dateInstance = new Date(date);

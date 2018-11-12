@@ -8,20 +8,31 @@ import {
 	Title,
 	Subtitle,
 	CircleContainer,
+	CircleSvg,
 	Circle,
 	ItemCircle,
 	ShowMoreButton,
 	ShowMoreButtonContainer,
+	Document,
+	SingleDocumentPill,
+	MultipleDocumentsPill,
+	ConnectionLine,
 } from './styles';
 
 const toRadian = (angle) => angle * (Math.PI / 180);
 
-const DIAMETER = 1000;
-const RADIUS = 500;
-const CENTER = { cx: RADIUS, cy: RADIUS };
+const DIAMETER_OUTER = 443;
+const DIAMETER_INNER = (DIAMETER_OUTER / 100) * 80;
+const RADIUS_OUTER = DIAMETER_OUTER / 2;
+const RADIUS_INNER = DIAMETER_INNER / 2;
+const CIRCLE_CENTER = { cx: RADIUS_OUTER, cy: RADIUS_OUTER };
+
+const getXByAngle = (radius, angle) => (radius * Math.sin(toRadian(angle))) + RADIUS_OUTER;
+const getYByAngle = (radius, angle) => (radius * -Math.cos(toRadian(angle))) + RADIUS_OUTER;
 
 const DetailView = ({
 	item,
+	documents,
 	isLoading,
 }) => (
 	<Container>
@@ -31,31 +42,66 @@ const DetailView = ({
 		{item && item.subtitle && <Subtitle>{`${ucFirst(item.itemType)} — ${item.subtitle}`}</Subtitle>}
 		{item && <Title>{item.title}</Title>}
 		{item && (
-			<CircleContainer
-				id="circleContainer"
-				viewBox={`0 0 ${DIAMETER} ${DIAMETER}`}
-				preserveAspectRatio="xMidYMid meet"
-			>
-				<Circle
-					missingAngle={toRadian(20)}
-					strokeWidth={2}
-					shapeRendering="crisp-edges"
-					r={RADIUS - 1}
-					{...CENTER}
-					strokeDasharray={(Math.PI * DIAMETER)}
-				/>
-				<Circle
-					missingAngle={toRadian(20)}
-					strokeWidth={2}
-					shapeRendering="crisp-edges"
-					r={420}
-					{...CENTER}
-					strokeDasharray={(Math.PI * 860)}
-				/>
-				<ItemCircle
-					{...CENTER}
-					r={16}
-				/>
+			<CircleContainer>
+				<CircleSvg
+					id="circleContainer"
+					viewBox={`0 0 ${DIAMETER_OUTER} ${DIAMETER_OUTER}`}
+					preserveAspectRatio="xMidYMid meet"
+				>
+					<Circle
+						missingAngle={toRadian(20)}
+						strokeWidth={1}
+						shapeRendering="crisp-edges"
+						r={RADIUS_OUTER - 1}
+						{...CIRCLE_CENTER}
+						strokeDasharray={(Math.PI * (DIAMETER_OUTER - 1))}
+					/>
+					<Circle
+						missingAngle={toRadian(20)}
+						strokeWidth={1}
+						shapeRendering="crisp-edges"
+						r={RADIUS_INNER}
+						{...CIRCLE_CENTER}
+						strokeDasharray={(Math.PI * (DIAMETER_INNER))}
+					/>
+					{documents.map((group) => {
+						const { angle, id: docId } = group[0];
+						const x = getXByAngle(RADIUS_INNER, angle);
+						const y = getYByAngle(RADIUS_INNER, angle);
+						const isCurrentElement = group.find(({ id }) => id === item.id);
+						const docSize = 18;
+						const isStacked = group.length > 1;
+						return [
+							...(
+								isCurrentElement ? [
+									<ConnectionLine
+										key={`line-${docId}`}
+										x1={RADIUS_OUTER}
+										y1={RADIUS_OUTER}
+										x2={x}
+										y2={y}
+										shapeRendering="crisp-edges"
+									/>,
+								] : []
+							),
+							<Document
+								x={x - (docSize / 2)}
+								y={y - (docSize / 2)}
+								width={docSize}
+								height={docSize}
+								angle={group[0].angle}
+								key={`document-${docId}`}
+								{...CIRCLE_CENTER}
+							>
+								{isStacked ? <MultipleDocumentsPill /> : <SingleDocumentPill />}
+							</Document>,
+						];
+					})}
+					<ItemCircle
+						{...CIRCLE_CENTER}
+						r={8}
+					/>
+				</CircleSvg>
 			</CircleContainer>
 		)}
 		{item && (
@@ -74,12 +120,19 @@ DetailView.propTypes = {
 		subtitle: PropTypes.string,
 		itemType: PropTypes.string.isRequired,
 	}),
+	documents: PropTypes.arrayOf(
+		PropTypes.arrayOf(PropTypes.shape({
+			id: PropTypes.string.isRequired,
+			angle: PropTypes.number.isRequired,
+		})),
+	),
 	isLoading: PropTypes.bool,
 };
 
 DetailView.defaultProps = {
 	item: undefined,
 	isLoading: true,
+	documents: [],
 };
 
 export default DetailView;

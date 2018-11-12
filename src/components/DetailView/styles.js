@@ -1,9 +1,12 @@
 import styled from 'styled-components';
 import { Button } from '@smooth-ui/core-sc';
+import {
+	SingleDocumentPill as OriginalSingleDocumentPill,
+	MultipleDocumentsPill as OriginalMultipleDocumentsPill,
+} from '../MainTimeline/styles';
 
 export const Container = styled.div`
 	width: calc(100vh - 4.5rem);
-	max-width: 100%;
 	height: calc(100vh - 4.5rem);
 	position: relative;
 	margin: 0 auto;
@@ -19,7 +22,7 @@ export const Title = styled.h1`
 	line-height: 1.5rem;
 	text-align: center;
 	margin: 0 auto;
-	flex: 1 0 auto;
+	flex: 0 0 auto;
 	padding-bottom: 3rem;
 `;
 
@@ -30,15 +33,27 @@ export const Subtitle = styled(Title)`
 	color: ${({ theme }) => theme.gray600};
 `;
 
-export const CircleContainer = styled.svg`
-	flex: 1 1 100vh;
+export const CircleContainer = styled.div`
+	flex: 1 1;
+	position: relative;
+`;
+
+export const CircleSvg = styled.svg`
+	position: absolute;
+	height: 100%;
+	width: auto;
+	max-width: 100%;
+	max-height: 100%;
+	top: 0;
+	left: 50%;
+	transform: translateX(-50%);
 `;
 
 export const Circle = styled.circle`
 	stroke: ${({ theme }) => theme.commonBorderColor};
 	fill: none;
-	stroke-dashoffset: ${({ missingAngle }) => (1000 * missingAngle)};
-	transform-origin: 500px 500px;
+	stroke-dashoffset: ${({ missingAngle, r }) => ((r * 2) * missingAngle)};
+	transform-origin: ${({ cx, cy }) => `${cx}px ${cy}px`};
 	transform: rotate(-90deg);
 `;
 
@@ -47,6 +62,7 @@ export const ItemCircle = styled.circle`
 `;
 
 export const ShowMoreButtonContainer = styled.div`
+	flex: 0 0;
 	padding-top: 4rem;
 	text-align: center;
 `;
@@ -56,4 +72,29 @@ export const ShowMoreButton = styled(Button)`
 	background: white;
 	font-weight: bold;
 	font-size: .875rem;
+`;
+
+export const Document = styled.foreignObject`
+	position: relative;
+`;
+
+export const SingleDocumentPill = styled(OriginalSingleDocumentPill)`
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	${({ isFirst }) => isFirst && 'background: red;'}
+	${({ isSecond }) => isSecond && 'background: green;'}
+`;
+
+export const MultipleDocumentsPill = styled(OriginalMultipleDocumentsPill)`
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	${({ isFirst }) => isFirst && 'background: red;'}
+	${({ isSecond }) => isSecond && 'background: green;'}
+`;
+
+export const ConnectionLine = styled.line`
+	stroke-width: 1px;
+	stroke: ${({ theme }) => theme.commonBorderColor};
 `;
