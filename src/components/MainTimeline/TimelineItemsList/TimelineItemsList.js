@@ -15,6 +15,7 @@ const TimelineItemsList = ({
 		title,
 		yPosition,
 		date,
+		path,
 	} = group[0];
 	return (
 		<ContainerComponent style={{ top: `${yPosition}px` }} key={id}>
@@ -24,7 +25,9 @@ const TimelineItemsList = ({
 			}
 			<DateComponent>{date}</DateComponent>
 			<TitleContainerComponent>
-				<TitleComponent>{title.trim() || 'Untitled'}</TitleComponent>
+				<TitleComponent to={path}>
+					{title.trim() || 'Untitled'}
+				</TitleComponent>
 			</TitleContainerComponent>
 		</ContainerComponent>
 	);
@@ -37,6 +40,7 @@ TimelineItemsList.propTypes = {
 			title: PropTypes.string.isRequired,
 			yPosition: PropTypes.number.isRequired,
 			date: PropTypes.string.isRequired,
+			path: PropTypes.string.isRequired,
 		}),
 	)),
 	ContainerComponent: PropTypes.shape({}).isRequired,

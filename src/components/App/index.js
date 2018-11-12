@@ -6,6 +6,8 @@ import Theme from '../Theme';
 import Home from '../../pages/home';
 import Login from '../../pages/login';
 import CreatePage from '../../pages/create';
+import DocumentPage from '../../pages/document';
+import EventPage from '../../pages/event';
 
 export const pages = [
 	{
@@ -26,6 +28,8 @@ const App = () => (
 				<Header pages={pages} />
 				<Route exact path="/" component={Home} />
 				{pages.map((page) => <Route key={page.path} {...page} />)}
+				<Route path="/document/:id" component={DocumentPage} />
+				<Route path="/event/:id" component={EventPage} />
 				<Route exact path="/login" component={Login} />
 			</div>
 		</Theme>

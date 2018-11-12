@@ -38,12 +38,14 @@ const parseItems = ({
 	items,
 	itemDateProperty,
 	itemTitleProperty,
+	itemType,
 }) => {
 	const parseYPosition = getYPositionParser(scaleFunction, minimapScaleFunction);
 	const parsedItems = items.map((props) => ({
 		id: props.id,
 		date: getFormattedDate(new Date(props[itemDateProperty])),
 		title: props[itemTitleProperty],
+		path: `/${itemType}/${props.id}`,
 		...parseYPosition(props[itemDateProperty]),
 	}));
 	return {
@@ -78,6 +80,7 @@ const getEventsAndDocuments = ({
 		items: allEvents,
 		itemDateProperty: 'eventStartDate',
 		itemTitleProperty: 'eventTitle',
+		itemType: 'event',
 	});
 
 	const { timelineItems: timelineDocuments, minimapItems: minimapDocuments } = parseItems({
@@ -86,6 +89,7 @@ const getEventsAndDocuments = ({
 		items: allDocuments,
 		itemDateProperty: 'documentCreationDate',
 		itemTitleProperty: 'documentTitle',
+		itemType: 'document',
 	});
 
 	setContainerHeight(height);
