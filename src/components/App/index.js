@@ -2,31 +2,17 @@ import React from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Head from '../Head';
 import Header from '../Header';
-import VisibilityFilter from '../VisibilityFilter';
+import Theme from '../Theme';
 import Home from '../../pages/home';
-import About from '../../pages/about';
 import Login from '../../pages/login';
+import CreatePage from '../../pages/create';
 
 export const pages = [
 	{
-		path: '/',
-		exact: true,
-		component: Home,
-		title: 'Home',
-		requiresAuthentication: false,
-	},
-	{
-		path: '/about',
-		exact: true,
-		component: About,
-		title: 'About',
-		requiresAuthentication: false,
-	},
-	{
 		path: '/create',
 		exact: true,
-		component: () => {},
-		title: 'Create new',
+		component: CreatePage,
+		title: '+ New document',
 		requiresAuthentication: true,
 		authorizedRoles: ['Editor', 'Admin'],
 	},
@@ -34,13 +20,15 @@ export const pages = [
 
 const App = () => (
 	<Router>
-		<div className="App">
-			<Head />
-			<Header pages={pages} />
-			{pages.map((page) => <Route key={page.path} {...page} />)}
-			<Route exact path="/login" component={Login} />
-			<VisibilityFilter />
-		</div>
+		<Theme>
+			<div className="App">
+				<Head />
+				<Header pages={pages} />
+				<Route exact path="/" component={Home} />
+				{pages.map((page) => <Route key={page.path} {...page} />)}
+				<Route exact path="/login" component={Login} />
+			</div>
+		</Theme>
 	</Router>
 );
 

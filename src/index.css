@@ -1,10 +1,17 @@
+html {
+	font-size: 100%;
+	overflow: hidden;
+}
+
 body {
-	margin-top: 40px;
+	font-size: 16px;
+	font-size: 1rem;
+	margin-top: 4.5rem;
 }
 
 * {
 	box-sizing: border-box;
-	font-family: 'Inter UI', 'Source Sans', 'Open Sans', arial, helvetica, sans-serif;
+	font-family: 'HP Sans', 'Source Sans', 'Open Sans', arial, helvetica, sans-serif;
 	-webkit-font-smoothing: antialiased;
 }
 
