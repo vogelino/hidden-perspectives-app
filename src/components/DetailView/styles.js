@@ -3,6 +3,8 @@ import { Button } from '@smooth-ui/core-sc';
 import {
 	SingleDocumentPill as OriginalSingleDocumentPill,
 	MultipleDocumentsPill as OriginalMultipleDocumentsPill,
+	SingleEventPill as OriginalSingleEventPill,
+	MultipleEventsPill as OriginalMultipleEventsPill,
 } from '../MainTimeline/styles';
 
 export const Container = styled.div`
@@ -82,16 +84,24 @@ export const SingleDocumentPill = styled(OriginalSingleDocumentPill)`
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-	${({ isFirst }) => isFirst && 'background: red;'}
-	${({ isSecond }) => isSecond && 'background: green;'}
 `;
 
 export const MultipleDocumentsPill = styled(OriginalMultipleDocumentsPill)`
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-	${({ isFirst }) => isFirst && 'background: red;'}
-	${({ isSecond }) => isSecond && 'background: green;'}
+`;
+
+export const SingleEventPill = styled(OriginalSingleEventPill)`
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+`;
+
+export const MultipleEventsPill = styled(OriginalMultipleEventsPill)`
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 `;
 
 export const ConnectionLine = styled.line`

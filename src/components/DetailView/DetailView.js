@@ -16,6 +16,8 @@ import {
 	Document,
 	SingleDocumentPill,
 	MultipleDocumentsPill,
+	SingleEventPill,
+	MultipleEventsPill,
 	ConnectionLine,
 } from './styles';
 
@@ -33,6 +35,7 @@ const getYByAngle = (radius, angle) => (radius * -Math.cos(toRadian(angle))) + R
 const DetailView = ({
 	item,
 	documents,
+	events,
 	isLoading,
 }) => (
 	<Container>
@@ -45,7 +48,7 @@ const DetailView = ({
 			<CircleContainer>
 				<CircleSvg
 					id="circleContainer"
-					viewBox={`0 0 ${DIAMETER_OUTER} ${DIAMETER_OUTER}`}
+					viewBox={`0 0 ${DIAMETER_OUTER + 9} ${DIAMETER_OUTER + 9}`}
 					preserveAspectRatio="xMidYMid meet"
 				>
 					<Circle
@@ -97,6 +100,41 @@ const DetailView = ({
 							</Document>,
 						];
 					})}
+					{events.map((group) => {
+						const { angle, id: docId } = group[0];
+						const x = getXByAngle(RADIUS_OUTER, angle);
+						const y = getYByAngle(RADIUS_OUTER, angle);
+						const isCurrentElement = group.find(({ id }) => id === item.id);
+						const docSize = 18;
+						const isStacked = group.length > 1;
+						return [
+							...(
+								isCurrentElement ? [
+									<ConnectionLine
+										key={`line-${docId}`}
+										x1={RADIUS_OUTER}
+										y1={RADIUS_OUTER}
+										x2={x}
+										y2={y}
+										shapeRendering="crisp-edges"
+									/>,
+								] : []
+							),
+							<Document
+								x={x - (docSize / 2)}
+								y={y - (docSize / 2)}
+								width={docSize}
+								height={docSize}
+								angle={group[0].angle}
+								key={`document-${docId}`}
+								{...CIRCLE_CENTER}
+							>
+								{isStacked
+									? <MultipleEventsPill>{group.length}</MultipleEventsPill>
+									: <SingleEventPill />}
+							</Document>,
+						];
+					})}
 					<ItemCircle
 						{...CIRCLE_CENTER}
 						r={8}
@@ -126,6 +164,12 @@ DetailView.propTypes = {
 			angle: PropTypes.number.isRequired,
 		})),
 	),
+	events: PropTypes.arrayOf(
+		PropTypes.arrayOf(PropTypes.shape({
+			id: PropTypes.string.isRequired,
+			angle: PropTypes.number.isRequired,
+		})),
+	),
 	isLoading: PropTypes.bool,
 };
 
@@ -133,6 +177,7 @@ DetailView.defaultProps = {
 	item: undefined,
 	isLoading: true,
 	documents: [],
+	events: [],
 };
 
 export default DetailView;
