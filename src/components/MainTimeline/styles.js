@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 export const Container = styled.div`
 	padding: 0 0 0 6rem;
@@ -72,8 +73,14 @@ export const EventTitleContainer = styled.span`
 	text-overflow: ellipsis;
 `;
 
-export const EventTitle = styled.span`
+export const EventTitle = styled(Link)`
 	white-space: nowrap;
+	text-decoration: none;
+	color: ${({ theme }) => theme.gray900};
+
+	&:hover {
+		text-decoration: underline;
+	}
 `;
 
 export const Document = styled(Event)`
