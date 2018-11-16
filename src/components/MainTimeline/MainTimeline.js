@@ -62,14 +62,16 @@ const MainTimeline = ({
 									))}
 								</Events>
 							)}
-							<Documents>
-								{documents.map(({ title, id, path }) => (
-									<EventTitle to={path} key={id}>
-										<SingleDocumentPill />
-										{title}
-									</EventTitle>
-								))}
-							</Documents>
+							{documents.length > 0 && (
+								<Documents>
+									{documents.map(({ title, id, path }) => (
+										<EventTitle to={path} key={id}>
+											<SingleDocumentPill />
+											{title}
+										</EventTitle>
+									))}
+								</Documents>
+							)}
 						</Event>
 					</EventContainer>
 				))}

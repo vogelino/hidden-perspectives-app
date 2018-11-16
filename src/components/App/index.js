@@ -28,8 +28,8 @@ const App = () => (
 				<Header pages={pages} />
 				<Route exact path="/" component={Home} />
 				{pages.map((page) => <Route key={page.path} {...page} />)}
-				<Route path="/document/:id" component={DocumentPage} />
-				<Route path="/event/:id" component={EventPage} />
+				<Route exact path="/document/:id" component={DocumentPage} />
+				<Route exact path="/event/:id" component={EventPage} />
 				<Route exact path="/login" component={Login} />
 			</div>
 		</Theme>
