@@ -38,45 +38,49 @@ const MainTimeline = ({
 				documents={minimapDocuments}
 			/>
 		</MinimapContainer>
-		{timelineItems.map(({ year, months }) => months.map(({ month, days, ...monthKey }) => (
-			<ContainerWithStickyLabel label={`${year} — ${month}`} {...monthKey}>
-				{days.map(({
-					day,
-					key,
-					events,
-					documents,
-					...dayKey
-				}) => (
-					(events && events.length > 0) || (documents && documents.length > 0)
-				) && (
-					<EventContainer key={key}>
-						<Event {...dayKey}>
-							<SingleEventPill />
-							<EventDate>{day}</EventDate>
-							{events.length > 0 && (
-								<Events>
-									{events.map(({ title, id, path }) => (
-										<EventTitle to={path} key={id}>
-											{title}
-										</EventTitle>
-									))}
-								</Events>
-							)}
-							{documents.length > 0 && (
-								<Documents>
-									{documents.map(({ title, id, path }) => (
-										<EventTitle to={path} key={id}>
-											<SingleDocumentPill />
-											{title}
-										</EventTitle>
-									))}
-								</Documents>
-							)}
-						</Event>
-					</EventContainer>
+		{timelineItems.map(({ year, months, ...yearKey }) => (
+			<ContainerWithStickyLabel label={year} {...yearKey} isYear>
+				{months.map(({ month, days, ...monthKey }) => (
+					<ContainerWithStickyLabel label={month} {...monthKey}>
+						{days.map(({
+							day,
+							key,
+							events,
+							documents,
+							...dayKey
+						}) => (
+							(events && events.length > 0) || (documents && documents.length > 0)
+						) && (
+							<EventContainer key={key}>
+								<Event {...dayKey}>
+									<SingleEventPill />
+									<EventDate>{day}</EventDate>
+									{events.length > 0 && (
+										<Events>
+											{events.map(({ title, id, path }) => (
+												<EventTitle to={path} key={id}>
+													{title}
+												</EventTitle>
+											))}
+										</Events>
+									)}
+									{documents.length > 0 && (
+										<Documents>
+											{documents.map(({ title, id, path }) => (
+												<EventTitle to={path} key={id}>
+													<SingleDocumentPill />
+													{title}
+												</EventTitle>
+											))}
+										</Documents>
+									)}
+								</Event>
+							</EventContainer>
+						))}
+					</ContainerWithStickyLabel>
 				))}
 			</ContainerWithStickyLabel>
-		)))}
+		))}
 	</Container>
 );
 

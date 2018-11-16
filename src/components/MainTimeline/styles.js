@@ -136,7 +136,7 @@ export const ScrollMask = styled.div`
 	left: 0;
 	background: white;
 	width: 6rem;
-	height: calc(2.375rem - 1px);
+	height: calc(4.5rem + 1px);
 	box-shadow: inset -1px 0 0 0 ${({ theme }) => theme.commonBorderColor};
 	z-index: 3;
 `;
