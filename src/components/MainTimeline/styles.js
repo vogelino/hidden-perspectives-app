@@ -19,16 +19,23 @@ export const MinimapContainer = styled.div`
 	z-index: 1;
 `;
 
-export const EventsContainer = styled.div`
-	height: ${({ height }) => height}px;
+export const Event = styled.div`
+	padding: .5rem 1rem .5rem 3rem;
+	font-size: .875rem;
+	line-height: 1.25rem;
+	font-weight: bold;
+	display: flex;
 	position: relative;
-	margin: 2rem 0;
-	z-index: 2;
 `;
 
-export const Event = styled.div`
-	position: absolute;
-	padding-left: 1rem;
+export const EventContainer = styled.div`
+	&:first-of-type {
+		padding-top: .5rem;
+	}
+
+	&:last-of-type {
+		padding-bottom: .5rem;
+	}
 `;
 
 export const EventPill = styled.div`
@@ -41,8 +48,10 @@ export const EventPill = styled.div`
 export const SingleEventPill = styled(EventPill)`
 	width: 5px;
 	height: 5px;
-	top: 7px;
+	top: 1.125rem;
 	left: -3px;
+	transform: translateY(-50%);
+	z-index: 2;
 `;
 
 export const MultipleEventsPill = styled(EventPill)`width: 17px;
@@ -60,31 +69,29 @@ export const MultipleEventsPill = styled(EventPill)`width: 17px;
 
 export const EventDate = styled.span`
 	color: ${({ theme }) => theme.gray600};
-	margin-right: .5rem;
-	width: 6rem;
-	float: left;
-`;
+	position: absolute;
+	left: .875rem;
+	top: .5rem;
 
-export const EventTitleContainer = styled.span`
-	font-weight: bold;
-	max-width: calc((100vw - 32rem) / 2);
-	overflow: hidden;
-	float: left;
-	text-overflow: ellipsis;
+	&:after {
+		content: '.';
+	}
 `;
 
 export const EventTitle = styled(Link)`
-	white-space: nowrap;
+	display: block;
 	text-decoration: none;
 	color: ${({ theme }) => theme.gray900};
+	margin-bottom: 0.5rem;
+	position: relative;
 
 	&:hover {
 		text-decoration: underline;
 	}
-`;
 
-export const Document = styled(Event)`
-	left: calc(12rem + ((100vw - 32rem) / 2));
+	&:last-child {
+		margin-bottom: 0;
+	}
 `;
 
 export const MultipleDocumentsPill = styled(MultipleEventsPill)`
@@ -96,17 +103,40 @@ export const MultipleDocumentsPill = styled(MultipleEventsPill)`
 	border: 1px solid ${({ theme }) => theme.gray900};
 	background: ${({ theme }) => theme.usBlue};
 	box-shadow: -1px -1px 0 0 white, -2px -2px 0 0 ${({ theme }) => theme.gray900};
-	text-indent: 100%;
-    white-space: nowrap;
-    overflow: hidden;
 `;
 
 export const SingleDocumentPill = styled(SingleEventPill)`
 	border-radius: 0;
 	height: .5rem;
 	width: .5rem;
-	top: calc(.5rem - 2px);
-	left: -.25rem;
+	top: 10px;
+	left: -1.25rem;
 	border: 1px solid ${({ theme }) => theme.gray900};
 	background: ${({ theme }) => theme.usBlue};
+`;
+
+const Column = styled.div`
+	flex: 1 1 50%;
+	padding: 0 1rem 0 2rem;
+	position: relative;
+`;
+
+export const Events = styled(Column)`
+	padding-left: 0;
+	position: static;
+`;
+
+export const Documents = styled(Column)`
+	padding-left: 1.25rem;
+`;
+
+export const ScrollMask = styled.div`
+	position: fixed;
+	top: 4.5rem;
+	left: 0;
+	background: white;
+	width: 6rem;
+	height: calc(2.375rem - 1px);
+	box-shadow: inset -1px 0 0 0 ${({ theme }) => theme.commonBorderColor};
+	z-index: 3;
 `;

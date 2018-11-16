@@ -1,12 +1,6 @@
 import { pipe, groupBy, prop } from 'ramda';
 import { scaleLinear } from 'd3-scale';
-import { getDifferenceInWeeks } from './dateUtil';
 import { TIMELINE_EVENT_HEIGHT, MINIMAP_EVENT_HEIGHT } from '../state/constants';
-
-export const getTimelineHeightByDates = (...dates) => {
-	const diffInWeeks = Math.abs(getDifferenceInWeeks(...dates));
-	return (diffInWeeks * TIMELINE_EVENT_HEIGHT);
-};
 
 export const toMinimapDots = (minimapItems) => {
 	const sortedGroups = minimapItems.sort((a, b) => {
@@ -34,13 +28,3 @@ export const groupItemsBy = (list, groupName) => pipe(
 const getUnitRouderByUnit = (unit) => (value) => value - (value % unit);
 export const roundToTimelineUnit = getUnitRouderByUnit(TIMELINE_EVENT_HEIGHT);
 export const roundToMinimapUnit = getUnitRouderByUnit(MINIMAP_EVENT_HEIGHT);
-
-export const getYPositionParser = (scaleFunction, minimapScaleFunction) => (date) => {
-	const dateInstance = new Date(date);
-	const scaledPosition = scaleFunction(dateInstance);
-	const yPosition = roundToTimelineUnit(scaledPosition);
-	return {
-		yPosition,
-		minimapYPosition: roundToMinimapUnit(minimapScaleFunction(scaledPosition)),
-	};
-};

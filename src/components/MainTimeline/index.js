@@ -6,16 +6,21 @@ import {
 } from 'recompose';
 import gql from 'graphql-tag';
 import { scaleTime } from 'd3-scale';
+import { filter } from 'ramda';
 import MainTimeline from './MainTimeline';
 import { withLoading, withErrors } from '../../utils/hocUtil';
 import {
-	getYPositionParser,
-	getTimelineHeightByDates,
 	toMinimapDots,
 	groupItemsBy,
+	roundToMinimapUnit,
 } from '../../utils/timelineUtil';
-import { TIMELINE_PADDING, MINIMAP_HEIGHT, MINIMAP_PADDING } from '../../state/constants';
-import { getFormattedDate } from '../../utils/dateUtil';
+import { MINIMAP_HEIGHT, MINIMAP_PADDING } from '../../state/constants';
+import {
+	getDifferenceInYears,
+	formatYear,
+	ensureTwoDigits,
+	getFormattedDate,
+} from '../../utils/dateUtil';
 
 const ALL_EVENTS_AND_DOCUMENTS = gql`
 	{
@@ -32,70 +37,134 @@ const ALL_EVENTS_AND_DOCUMENTS = gql`
 }
 `;
 
-const parseItems = ({
-	scaleFunction,
+const monthsLabels = [
+	'January',
+	'February',
+	'March',
+	'April',
+	'May',
+	'June',
+	'July',
+	'August',
+	'September',
+	'October',
+	'November',
+	'December',
+];
+
+const normaliseItems = ({
 	minimapScaleFunction,
 	items,
 	itemDateProperty,
 	itemTitleProperty,
 	itemType,
 }) => {
-	const parseYPosition = getYPositionParser(scaleFunction, minimapScaleFunction);
-	const parsedItems = items.map((props) => ({
-		id: props.id,
-		date: getFormattedDate(new Date(props[itemDateProperty])),
-		title: props[itemTitleProperty],
-		path: `/${itemType}/${props.id}`,
-		...parseYPosition(props[itemDateProperty]),
-	}));
+	const parsedItems = items.map((props) => {
+		const date = new Date(props[itemDateProperty]);
+		const { id } = props;
+		return {
+			id,
+			date,
+			dateString: getFormattedDate(date),
+			title: props[itemTitleProperty],
+			path: `/${itemType}/${id}`,
+			type: itemType,
+			minimapYPosition: roundToMinimapUnit(minimapScaleFunction(date)),
+		};
+	});
 	return {
-		timelineItems: groupItemsBy(parsedItems, 'yPosition'),
+		timelineItems: parsedItems,
 		minimapItems: toMinimapDots(groupItemsBy(parsedItems, 'minimapYPosition')),
 	};
 };
 
-const getEventsAndDocuments = ({
-	setContainerHeight,
-	setEvents,
-	setDocuments,
-	stopLoading,
-	setMinimapEvents,
-	setMinimapDocuments,
-}) => ({ data: { allEvents, allDocuments } }) => {
-	const datesArray = [
-		new Date(allDocuments[0].documentCreationDate),
-		new Date(allDocuments[allDocuments.length - 1].documentCreationDate),
-	];
-	const height = getTimelineHeightByDates(...datesArray);
+const structureItems = ({
+	datesArray,
+	timelineEvents,
+	timelineDocuments,
+}) => {
+	const startYear = parseInt(formatYear(datesArray[0], 'YYYY'), 10);
+	const yearsAmount = getDifferenceInYears(...datesArray);
+	const items = [...Array(yearsAmount)].map((_, yearIdx) => {
+		const year = `${startYear + yearIdx}`;
+		return {
+			key: year,
+			year,
+			months: [...Array(12)].map((__, monthIdx) => {
+				const month = monthsLabels[monthIdx];
+				const monthNumber = ensureTwoDigits(monthIdx + 1);
+				return {
+					key: `${year}-${monthNumber}`,
+					month,
+					days: [...Array(31)].map((___, dayIdx) => {
+						const day = ensureTwoDigits(dayIdx + 1);
+						const dayId = `${year}-${monthNumber}-${day}`;
+						const filterDateString = filter(({ dateString }) => (
+							dateString === dayId
+						));
+						return {
+							key: dayId,
+							day,
+							events: filterDateString(timelineEvents),
+							documents: filterDateString(timelineDocuments),
+						};
+					}),
+				};
+			}),
+		};
+	});
+	return items;
+};
 
-	const scaleFunction = scaleTime()
-		.domain(datesArray).range([0, (height - (TIMELINE_PADDING * 2))]);
-
+const parseItems = ({ events, datesArray, documents }) => {
 	const minimapScaleFunction = scaleTime()
-		.domain([0, height]).range([0, MINIMAP_HEIGHT - (MINIMAP_PADDING * 2)]);
+		.domain(datesArray)
+		.range([0, MINIMAP_HEIGHT - (MINIMAP_PADDING * 2)]);
 
-	const { timelineItems: timelineEvents, minimapItems: minimapEvents } = parseItems({
-		scaleFunction,
+	const { timelineItems: timelineEvents, minimapItems: minimapEvents } = normaliseItems({
 		minimapScaleFunction,
-		items: allEvents,
+		items: events,
 		itemDateProperty: 'eventStartDate',
 		itemTitleProperty: 'eventTitle',
 		itemType: 'event',
 	});
 
-	const { timelineItems: timelineDocuments, minimapItems: minimapDocuments } = parseItems({
-		scaleFunction,
+	const { timelineItems: timelineDocuments, minimapItems: minimapDocuments } = normaliseItems({
 		minimapScaleFunction,
-		items: allDocuments,
+		items: documents,
 		itemDateProperty: 'documentCreationDate',
 		itemTitleProperty: 'documentTitle',
 		itemType: 'document',
 	});
 
-	setContainerHeight(height);
-	setEvents(timelineEvents);
+	return {
+		items: structureItems({
+			datesArray,
+			timelineEvents,
+			timelineDocuments,
+		}),
+		minimapEvents,
+		minimapDocuments,
+	};
+};
+
+const getEventsAndDocuments = ({
+	setTimelineItems,
+	stopLoading,
+	setMinimapEvents,
+	setMinimapDocuments,
+}) => ({ data: { allEvents: events, allDocuments: documents } }) => {
+	const { items, minimapEvents, minimapDocuments } = parseItems({
+		events,
+		documents,
+		datesArray: [
+			new Date(documents[0].documentCreationDate),
+			new Date(documents[documents.length - 1].documentCreationDate),
+		],
+	});
+
+	setTimelineItems(items);
 	setMinimapEvents(minimapEvents);
-	setDocuments(timelineDocuments);
 	setMinimapDocuments(minimapDocuments);
 	stopLoading();
 };
@@ -108,11 +177,9 @@ export default compose(
 	withApollo,
 	withLoading,
 	withErrors,
-	withState('events', 'setEvents', []),
-	withState('documents', 'setDocuments', []),
+	withState('timelineItems', 'setTimelineItems', []),
 	withState('minimapEvents', 'setMinimapEvents', []),
 	withState('minimapDocuments', 'setMinimapDocuments', []),
-	withState('containerHeight', 'setContainerHeight', 800),
 	lifecycle({
 		componentDidMount() {
 			const { props } = this;
@@ -122,8 +189,7 @@ export default compose(
 				.catch(handleErrors(props));
 		},
 		shouldComponentUpdate(nextProps) {
-			return (nextProps.events.length !== this.props.events.length)
-				|| (nextProps.containerHeight !== this.props.containerHeight)
+			return (nextProps.timelineItems.length !== this.props.timelineItems.length)
 				|| (nextProps.errors.length !== this.props.errors.length)
 				|| (nextProps.isLoading !== this.props.isLoading);
 		},

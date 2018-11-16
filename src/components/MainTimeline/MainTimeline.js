@@ -2,33 +2,31 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
 	Container,
+	MinimapContainer,
+	EventContainer,
 	Event,
-	EventsContainer,
-	MultipleEventsPill,
 	SingleEventPill,
-	MultipleDocumentsPill,
 	SingleDocumentPill,
 	EventDate,
-	EventTitleContainer,
 	EventTitle,
-	MinimapContainer,
-	Document,
+	Events,
+	Documents,
+	ScrollMask,
 } from './styles';
 import Minimap from './Minimap';
-import TimelineItemsList from './TimelineItemsList';
 import { LoadingContainer } from '../LoadingIndicator/styles';
 import LoadingIndicator from '../LoadingIndicator';
+import ContainerWithStickyLabel from './ContainerWithStickyLabel';
 
 const MainTimeline = ({
-	events,
+	timelineItems,
 	minimapEvents,
-	documents,
 	minimapDocuments,
-	containerHeight,
 	errors,
 	isLoading,
 }) => (
 	<Container id="mainTimeline">
+		<ScrollMask />
 		<LoadingContainer isLoading={isLoading}>
 			<LoadingIndicator />
 		</LoadingContainer>
@@ -40,46 +38,73 @@ const MainTimeline = ({
 				documents={minimapDocuments}
 			/>
 		</MinimapContainer>
-		<EventsContainer height={containerHeight}>
-			<TimelineItemsList
-				items={events}
-				ContainerComponent={Event}
-				SinglePillComponent={SingleEventPill}
-				MultiplePillsComponent={MultipleEventsPill}
-				DateComponent={EventDate}
-				TitleContainerComponent={EventTitleContainer}
-				TitleComponent={EventTitle}
-			/>
-			<TimelineItemsList
-				items={documents}
-				ContainerComponent={Document}
-				SinglePillComponent={SingleDocumentPill}
-				MultiplePillsComponent={MultipleDocumentsPill}
-				DateComponent={EventDate}
-				TitleContainerComponent={EventTitleContainer}
-				TitleComponent={EventTitle}
-			/>
-		</EventsContainer>
+		{timelineItems.map(({ year, months }) => months.map(({ month, days, ...monthKey }) => (
+			<ContainerWithStickyLabel label={`${year} — ${month}`} {...monthKey}>
+				{days.map(({
+					day,
+					key,
+					events,
+					documents,
+					...dayKey
+				}) => (
+					(events && events.length > 0) || (documents && documents.length > 0)
+				) && (
+					<EventContainer key={key}>
+						<Event {...dayKey}>
+							<SingleEventPill />
+							<EventDate>{day}</EventDate>
+							{events.length > 0 && (
+								<Events>
+									{events.map(({ title, id, path }) => (
+										<EventTitle to={path} key={id}>
+											{title}
+										</EventTitle>
+									))}
+								</Events>
+							)}
+							<Documents>
+								{documents.map(({ title, id, path }) => (
+									<EventTitle to={path} key={id}>
+										<SingleDocumentPill />
+										{title}
+									</EventTitle>
+								))}
+							</Documents>
+						</Event>
+					</EventContainer>
+				))}
+			</ContainerWithStickyLabel>
+		)))}
 	</Container>
 );
 
 MainTimeline.propTypes = {
-	events: PropTypes.arrayOf(
-		PropTypes.arrayOf(PropTypes.shape({
-			id: PropTypes.string.isRequired,
-			title: PropTypes.string.isRequired,
-			yPosition: PropTypes.number.isRequired,
-			date: PropTypes.string.isRequired,
-		})),
-	),
-	documents: PropTypes.arrayOf(
-		PropTypes.arrayOf(PropTypes.shape({
-			id: PropTypes.string.isRequired,
-			title: PropTypes.string.isRequired,
-			yPosition: PropTypes.number.isRequired,
-			date: PropTypes.string.isRequired,
-		})),
-	),
+	timelineItems: PropTypes.arrayOf(PropTypes.shape({
+		key: PropTypes.string.isRequired,
+		year: PropTypes.string.isRequired,
+		months: PropTypes.arrayOf(PropTypes.shape({
+			key: PropTypes.string.isRequired,
+			month: PropTypes.string.isRequired,
+			days: PropTypes.arrayOf(PropTypes.shape({
+				key: PropTypes.string.isRequired,
+				day: PropTypes.string.isRequired,
+				events: PropTypes.arrayOf(
+					PropTypes.shape({
+						id: PropTypes.string.isRequired,
+						title: PropTypes.string.isRequired,
+						date: PropTypes.instanceOf(Date).isRequired,
+					}),
+				),
+				documents: PropTypes.arrayOf(
+					PropTypes.shape({
+						id: PropTypes.string.isRequired,
+						title: PropTypes.string.isRequired,
+						date: PropTypes.instanceOf(Date).isRequired,
+					}),
+				),
+			})).isRequired,
+		})).isRequired,
+	})),
 	minimapEvents: PropTypes.arrayOf(PropTypes.shape({
 		id: PropTypes.string.isRequired,
 		density: PropTypes.number.isRequired,
@@ -90,17 +115,14 @@ MainTimeline.propTypes = {
 		density: PropTypes.number.isRequired,
 		position: PropTypes.number.isRequired,
 	})),
-	containerHeight: PropTypes.number,
 	errors: PropTypes.arrayOf(PropTypes.string),
 	isLoading: PropTypes.bool,
 };
 
 MainTimeline.defaultProps = {
-	events: [],
-	minimapEvents: [],
-	documents: [],
-	minimapDocuments: [],
-	containerHeight: window.innerHeight,
+	timelineItems: localStorage.getItem('timelineItems') || [],
+	minimapEvents: localStorage.getItem('minimapEvents') || [],
+	minimapDocuments: localStorage.getItem('minimapDocuments') || [],
 	errors: [],
 	isLoading: true,
 };
