@@ -6,9 +6,16 @@ const ContainerWithStickyLabel = ({
 	label,
 	children,
 	isYear,
+	date,
 }) => (
 	<Container>
-		<Label isYear={isYear}>{label}</Label>
+		<Label
+			isYear={isYear}
+			className={`timeline-item ${isYear ? 'timeline-year' : 'timeline-month'}`}
+			data-date={date}
+		>
+			{label}
+		</Label>
 		{children}
 	</Container>
 );
@@ -17,12 +24,14 @@ ContainerWithStickyLabel.propTypes = {
 	label: PropTypes.string,
 	children: PropTypes.node,
 	isYear: PropTypes.bool,
+	date: PropTypes.string,
 };
 
 ContainerWithStickyLabel.defaultProps = {
 	label: '—',
 	children: null,
 	isYear: false,
+	date: undefined,
 };
 
 export default ContainerWithStickyLabel;

@@ -5,16 +5,10 @@ import {
 	withState,
 } from 'recompose';
 import gql from 'graphql-tag';
-import { scaleTime } from 'd3-scale';
 import { filter } from 'ramda';
 import MainTimeline from './MainTimeline';
-import { withLoading, withErrors } from '../../utils/hocUtil';
-import {
-	toMinimapDots,
-	groupItemsBy,
-	roundToMinimapUnit,
-} from '../../utils/timelineUtil';
-import { MINIMAP_HEIGHT, MINIMAP_PADDING } from '../../state/constants';
+import { withLoading, withErrors, withIntersectionObserver } from '../../utils/hocUtil';
+import { getMinimap } from '../../utils/timelineUtil';
 import {
 	getDifferenceInYears,
 	formatYear,
@@ -53,30 +47,22 @@ const monthsLabels = [
 ];
 
 const normaliseItems = ({
-	minimapScaleFunction,
 	items,
 	itemDateProperty,
 	itemTitleProperty,
 	itemType,
-}) => {
-	const parsedItems = items.map((props) => {
-		const date = new Date(props[itemDateProperty]);
-		const { id } = props;
-		return {
-			id,
-			date,
-			dateString: getFormattedDate(date),
-			title: props[itemTitleProperty],
-			path: `/${itemType}/${id}`,
-			type: itemType,
-			minimapYPosition: roundToMinimapUnit(minimapScaleFunction(date)),
-		};
-	});
+}) => items.map((props) => {
+	const date = new Date(props[itemDateProperty]);
+	const { id } = props;
 	return {
-		timelineItems: parsedItems,
-		minimapItems: toMinimapDots(groupItemsBy(parsedItems, 'minimapYPosition')),
+		id,
+		date,
+		dateString: getFormattedDate(date),
+		title: props[itemTitleProperty],
+		path: `/${itemType}/${id}`,
+		type: itemType,
 	};
-};
+});
 
 const structureItems = ({
 	datesArray,
@@ -108,7 +94,10 @@ const structureItems = ({
 							events: filterDateString(timelineEvents),
 							documents: filterDateString(timelineDocuments),
 						};
-					}),
+					}).filter(({ events, documents }) => (
+						(events && events.length > 0)
+						|| (documents && documents.length > 0)
+					)),
 				};
 			}),
 		};
@@ -117,44 +106,33 @@ const structureItems = ({
 };
 
 const parseItems = ({ events, datesArray, documents }) => {
-	const minimapScaleFunction = scaleTime()
-		.domain(datesArray)
-		.range([0, MINIMAP_HEIGHT - (MINIMAP_PADDING * 2)]);
-
-	const { timelineItems: timelineEvents, minimapItems: minimapEvents } = normaliseItems({
-		minimapScaleFunction,
+	const timelineEvents = normaliseItems({
 		items: events,
 		itemDateProperty: 'eventStartDate',
 		itemTitleProperty: 'eventTitle',
 		itemType: 'event',
 	});
 
-	const { timelineItems: timelineDocuments, minimapItems: minimapDocuments } = normaliseItems({
-		minimapScaleFunction,
+	const timelineDocuments = normaliseItems({
 		items: documents,
 		itemDateProperty: 'documentCreationDate',
 		itemTitleProperty: 'documentTitle',
 		itemType: 'document',
 	});
 
-	return {
-		items: structureItems({
-			datesArray,
-			timelineEvents,
-			timelineDocuments,
-		}),
-		minimapEvents,
-		minimapDocuments,
-	};
+	return structureItems({
+		datesArray,
+		timelineEvents,
+		timelineDocuments,
+	});
 };
 
 const getEventsAndDocuments = ({
 	setTimelineItems,
 	stopLoading,
-	setMinimapEvents,
-	setMinimapDocuments,
+	setMinimapItems,
 }) => ({ data: { allEvents: events, allDocuments: documents } }) => {
-	const { items, minimapEvents, minimapDocuments } = parseItems({
+	const items = parseItems({
 		events,
 		documents,
 		datesArray: [
@@ -164,8 +142,7 @@ const getEventsAndDocuments = ({
 	});
 
 	setTimelineItems(items);
-	setMinimapEvents(minimapEvents);
-	setMinimapDocuments(minimapDocuments);
+	setMinimapItems(getMinimap(items));
 	stopLoading();
 };
 
@@ -178,8 +155,16 @@ export default compose(
 	withLoading,
 	withErrors,
 	withState('timelineItems', 'setTimelineItems', []),
-	withState('minimapEvents', 'setMinimapEvents', []),
-	withState('minimapDocuments', 'setMinimapDocuments', []),
+	withState('minimapItems', 'setMinimapItems', []),
+	withState('visibleMonths', 'setVisibleMonths', []),
+	withIntersectionObserver(() => (entries) => {
+		entries
+			.filter(({ isIntersecting }) => isIntersecting)
+			.forEach((entry) => {
+				const dateString = entry.target.getAttribute('data-date');
+				console.log(dateString);
+			});
+	}, { root: document.getElementById('mainTimeline') }),
 	lifecycle({
 		componentDidMount() {
 			const { props } = this;
@@ -192,6 +177,15 @@ export default compose(
 			return (nextProps.timelineItems.length !== this.props.timelineItems.length)
 				|| (nextProps.errors.length !== this.props.errors.length)
 				|| (nextProps.isLoading !== this.props.isLoading);
+		},
+		componentDidUpdate(prevProps) {
+			if (prevProps.timelineItems.length === 0
+				&& this.props.timelineItems.length > 0) {
+				const timelineItems = [...document.getElementsByClassName('timeline-month')];
+				timelineItems.forEach((item) => {
+					this.props.intersectionObserver.observe(item);
+				});
+			}
 		},
 	}),
 )(MainTimeline);

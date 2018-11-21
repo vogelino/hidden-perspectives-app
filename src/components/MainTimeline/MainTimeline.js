@@ -20,8 +20,7 @@ import ContainerWithStickyLabel from './ContainerWithStickyLabel';
 
 const MainTimeline = ({
 	timelineItems,
-	minimapEvents,
-	minimapDocuments,
+	minimapItems,
 	errors,
 	isLoading,
 }) => (
@@ -32,16 +31,16 @@ const MainTimeline = ({
 		</LoadingContainer>
 		{errors.map((error) => (error))}
 		<MinimapContainer>
-			<Minimap
-				isLoading={isLoading}
-				events={minimapEvents}
-				documents={minimapDocuments}
-			/>
+			<Minimap isLoading={isLoading} items={minimapItems} />
 		</MinimapContainer>
 		{timelineItems.map(({ year, months, ...yearKey }) => (
 			<ContainerWithStickyLabel label={year} {...yearKey} isYear>
 				{months.map(({ month, days, ...monthKey }) => (
-					<ContainerWithStickyLabel label={month} {...monthKey}>
+					<ContainerWithStickyLabel
+						label={month}
+						date={`${month} ${year}`}
+						{...monthKey}
+					>
 						{days.map(({
 							day,
 							key,
@@ -49,8 +48,6 @@ const MainTimeline = ({
 							documents,
 							...dayKey
 						}) => (
-							(events && events.length > 0) || (documents && documents.length > 0)
-						) && (
 							<EventContainer key={key}>
 								<Event {...dayKey}>
 									<SingleEventPill />
@@ -111,24 +108,17 @@ MainTimeline.propTypes = {
 			})).isRequired,
 		})).isRequired,
 	})),
-	minimapEvents: PropTypes.arrayOf(PropTypes.shape({
+	minimapItems: PropTypes.arrayOf(PropTypes.shape({
 		id: PropTypes.string.isRequired,
 		density: PropTypes.number.isRequired,
-		position: PropTypes.number.isRequired,
-	})),
-	minimapDocuments: PropTypes.arrayOf(PropTypes.shape({
-		id: PropTypes.string.isRequired,
-		density: PropTypes.number.isRequired,
-		position: PropTypes.number.isRequired,
 	})),
 	errors: PropTypes.arrayOf(PropTypes.string),
 	isLoading: PropTypes.bool,
 };
 
 MainTimeline.defaultProps = {
-	timelineItems: localStorage.getItem('timelineItems') || [],
-	minimapEvents: localStorage.getItem('minimapEvents') || [],
-	minimapDocuments: localStorage.getItem('minimapDocuments') || [],
+	timelineItems: [],
+	minimapItems: [],
 	errors: [],
 	isLoading: true,
 };

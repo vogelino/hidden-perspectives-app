@@ -1,22 +1,49 @@
-import { pipe, groupBy, prop } from 'ramda';
+import {
+	pipe,
+	isEmpty,
+	prepend,
+	take,
+	drop,
+	curry,
+	groupBy,
+	prop,
+	sort,
+} from 'ramda';
 import { scaleLinear } from 'd3-scale';
 import { TIMELINE_EVENT_HEIGHT, MINIMAP_EVENT_HEIGHT } from '../state/constants';
 
-export const toMinimapDots = (minimapItems) => {
-	const sortedGroups = minimapItems.sort((a, b) => {
-		if (a.length < b.length) return -1;
-		if (a.length > b.length) return 1;
-		return 0;
+const groupsOf = curry(function group(n, list) {
+	return isEmpty(list) ? [] : prepend(take(n, list), group(n, drop(n, list)));
+});
+
+export const getMinimap = (timelineItems) => {
+	const allMonths = timelineItems.reduce((acc, { months }) => [...acc, ...months], []);
+	const groupedMonts = groupsOf(6, allMonths);
+	const getEventsAndDocumentsLength = ({ events, documents }) => (
+		events.length + documents.length
+	);
+	const monthGoups = groupedMonts.map((monthsGroup) => {
+		const months = monthsGroup.map(prop('key'));
+		const count = monthsGroup.reduce((acc2, { days }) => (
+			acc2 + days.reduce((acc3, day) => (
+				acc3 + getEventsAndDocumentsLength(day)
+			), 0)
+		), 0);
+		return { months, count };
 	});
+	const sortedMonths = sort((a, b) => {
+		if (a.count < b.count) return -1;
+		if (a.count > b.count) return 1;
+		return 0;
+	}, monthGoups);
 
 	const minimapColorScale = scaleLinear()
-		.domain([0, sortedGroups[sortedGroups.length - 1].length])
+		.domain([0, sortedMonths[sortedMonths.length - 1].count])
 		.range([1, 0.1, 0]);
 
-	return minimapItems.map((group) => ({
-		density: minimapColorScale(group.length),
-		id: group[0].id,
-		position: group[0].minimapYPosition,
+	return monthGoups.map(({ months, count }) => ({
+		density: minimapColorScale(count),
+		id: months.join('-'),
 	}));
 };
 

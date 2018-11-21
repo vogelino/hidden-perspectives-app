@@ -19,3 +19,20 @@ export const withErrors = compose(
 		hasErrors: Boolean(errors && errors.length > 0),
 	})),
 );
+
+
+const observerDefaults = {
+	rootMargin: '0px',
+	threshold: 1,
+};
+export const withIntersectionObserver = (
+	callbackGetter = () => () => {},
+	options = observerDefaults,
+) => compose(
+	withProps((props) => ({
+		intersectionObserver: new IntersectionObserver(
+			callbackGetter(props),
+			{ ...observerDefaults, ...options },
+		),
+	})),
+);
