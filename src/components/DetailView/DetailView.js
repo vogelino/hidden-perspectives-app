@@ -20,6 +20,7 @@ import {
 	MultipleEventsPill,
 	ConnectionLine,
 } from './styles';
+import Legend from '../Legend/Legend';
 
 const toRadian = (angle) => angle * (Math.PI / 180);
 
@@ -42,6 +43,7 @@ const DetailView = ({
 		<LoadingContainer isLoading={isLoading}>
 			<LoadingIndicator />
 		</LoadingContainer>
+		<Legend />
 		{item && item.subtitle && <Subtitle>{`${ucFirst(item.itemType)} — ${item.subtitle}`}</Subtitle>}
 		{item && <Title>{item.title}</Title>}
 		{item && (
@@ -144,7 +146,7 @@ const DetailView = ({
 		)}
 		{item && (
 			<ShowMoreButtonContainer>
-				<ShowMoreButton variant="light">
+				<ShowMoreButton to={`/document/${item.id}/transcript`} variant="light">
 					{`Explore ${item.itemType}`}
 				</ShowMoreButton>
 			</ShowMoreButtonContainer>
@@ -157,6 +159,7 @@ DetailView.propTypes = {
 		title: PropTypes.string.isRequired,
 		subtitle: PropTypes.string,
 		itemType: PropTypes.string.isRequired,
+		id: PropTypes.string.isRequired,
 	}),
 	documents: PropTypes.arrayOf(
 		PropTypes.arrayOf(PropTypes.shape({

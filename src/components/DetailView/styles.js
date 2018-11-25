@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Button } from '@smooth-ui/core-sc';
+import Button from '../_library/Button';
 import {
 	SingleDocumentPill as OriginalSingleDocumentPill,
 	MultipleDocumentsPill as OriginalMultipleDocumentsPill,
@@ -70,10 +70,6 @@ export const ShowMoreButtonContainer = styled.div`
 `;
 
 export const ShowMoreButton = styled(Button)`
-	border: 1px solid ${({ theme }) => theme.commonBorderColor};
-	background: white;
-	font-weight: bold;
-	font-size: .875rem;
 `;
 
 export const Document = styled.foreignObject`
