@@ -8,6 +8,7 @@ import Login from '../../pages/login';
 import CreatePage from '../../pages/create';
 import DocumentPage from '../../pages/document';
 import EventPage from '../../pages/event';
+import TranscriptPage from '../../pages/transcript';
 
 export const pages = [
 	{
@@ -29,6 +30,7 @@ const App = () => (
 				<Route exact path="/" component={Home} />
 				{pages.map((page) => <Route key={page.path} {...page} />)}
 				<Route exact path="/document/:id" component={DocumentPage} />
+				<Route exact path="/document/:id/transcript" component={TranscriptPage} />
 				<Route exact path="/event/:id" component={EventPage} />
 				<Route exact path="/login" component={Login} />
 			</div>
