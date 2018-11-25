@@ -9,16 +9,28 @@ export const Container = styled.div`
 
 export const Label = styled.header`
 	position: sticky;
-	top: ${({ isYear }) => (isYear ? 0 : '2.25rem')};
+	top: 0;
 	left: 0;
 	width: 100%;
 	font-size: .875rem;
 	line-height: 1rem;
 	color: ${({ theme }) => theme.gray600};
 	font-weight: bold;
-	padding: .625rem .875rem;
-	background: white;
 	z-index: ${({ isYear }) => (isYear ? 4 : 3)};
-	border-bottom: 1px solid ${({ theme }) => theme.commonBorderColor};
-	box-shadow: 0 -1px 0 0 ${({ theme }) => theme.commonBorderColor};
+	font-weight: ${({ isYear }) => (isYear ? 'bold' : 'normal')};
+	/* border-bottom: 1px solid ${({ theme }) => theme.commonBorderColor}; */
+	/* box-shadow: 0 -1px 0 0 ${({ theme }) => theme.commonBorderColor}; */
+	display: flex;
+`;
+
+export const Split = styled.div`
+	flex: 0 0 50%;
+	padding: .625rem 1.5rem;
+	display: inline-block;
+	background: ${({ hasContent }) => (hasContent ? 'rgba(255,255,255,.9)' : 'none')};
+
+	&:first-child {
+		border-right: 1px solid ${({ theme }) => theme.commonBorderColor};
+		text-align: right;
+	}
 `;

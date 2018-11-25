@@ -7,7 +7,7 @@ import {
 import gql from 'graphql-tag';
 import { filter } from 'ramda';
 import MainTimeline from './MainTimeline';
-import { withLoading, withErrors, withIntersectionObserver } from '../../utils/hocUtil';
+import { withLoading, withErrors } from '../../utils/hocUtil';
 import { getMinimap } from '../../utils/timelineUtil';
 import {
 	getDifferenceInYears,
@@ -90,7 +90,7 @@ const structureItems = ({
 						));
 						return {
 							key: dayId,
-							day,
+							day: `${dayIdx + 1}`,
 							events: filterDateString(timelineEvents),
 							documents: filterDateString(timelineDocuments),
 						};
@@ -156,15 +156,6 @@ export default compose(
 	withErrors,
 	withState('timelineItems', 'setTimelineItems', []),
 	withState('minimapItems', 'setMinimapItems', []),
-	withState('visibleMonths', 'setVisibleMonths', []),
-	withIntersectionObserver(() => (entries) => {
-		entries
-			.filter(({ isIntersecting }) => isIntersecting)
-			.forEach((entry) => {
-				const dateString = entry.target.getAttribute('data-date');
-				console.log(dateString);
-			});
-	}, { root: document.getElementById('mainTimeline') }),
 	lifecycle({
 		componentDidMount() {
 			const { props } = this;
@@ -177,15 +168,6 @@ export default compose(
 			return (nextProps.timelineItems.length !== this.props.timelineItems.length)
 				|| (nextProps.errors.length !== this.props.errors.length)
 				|| (nextProps.isLoading !== this.props.isLoading);
-		},
-		componentDidUpdate(prevProps) {
-			if (prevProps.timelineItems.length === 0
-				&& this.props.timelineItems.length > 0) {
-				const timelineItems = [...document.getElementsByClassName('timeline-month')];
-				timelineItems.forEach((item) => {
-					this.props.intersectionObserver.observe(item);
-				});
-			}
 		},
 	}),
 )(MainTimeline);

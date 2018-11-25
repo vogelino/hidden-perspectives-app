@@ -5,18 +5,17 @@ import {
 	MinimapContainer,
 	EventContainer,
 	Event,
-	SingleEventPill,
-	SingleDocumentPill,
 	EventDate,
+	EventTitleContainer,
 	EventTitle,
 	Events,
 	Documents,
-	ScrollMask,
 } from './styles';
 import Minimap from './Minimap';
 import { LoadingContainer } from '../LoadingIndicator/styles';
 import LoadingIndicator from '../LoadingIndicator';
 import ContainerWithStickyLabel from './ContainerWithStickyLabel';
+import Legend from '../Legend';
 
 const MainTimeline = ({
 	timelineItems,
@@ -25,7 +24,6 @@ const MainTimeline = ({
 	isLoading,
 }) => (
 	<Container id="mainTimeline">
-		<ScrollMask />
 		<LoadingContainer isLoading={isLoading}>
 			<LoadingIndicator />
 		</LoadingContainer>
@@ -33,6 +31,7 @@ const MainTimeline = ({
 		<MinimapContainer>
 			<Minimap isLoading={isLoading} items={minimapItems} />
 		</MinimapContainer>
+		<Legend />
 		{timelineItems.map(({ year, months, ...yearKey }) => (
 			<ContainerWithStickyLabel label={year} {...yearKey} isYear>
 				{months.map(({ month, days, ...monthKey }) => (
@@ -50,27 +49,25 @@ const MainTimeline = ({
 						}) => (
 							<EventContainer key={key}>
 								<Event {...dayKey}>
-									<SingleEventPill />
 									<EventDate>{day}</EventDate>
-									{events.length > 0 && (
-										<Events>
-											{events.map(({ title, id, path }) => (
-												<EventTitle to={path} key={id}>
+									<Documents>
+										{documents.map(({ title, id, path }) => (
+											<EventTitleContainer key={id}>
+												<EventTitle to={path}>
 													{title}
 												</EventTitle>
-											))}
-										</Events>
-									)}
-									{documents.length > 0 && (
-										<Documents>
-											{documents.map(({ title, id, path }) => (
-												<EventTitle to={path} key={id}>
-													<SingleDocumentPill />
+											</EventTitleContainer>
+										))}
+									</Documents>
+									<Events>
+										{events.map(({ title, id, path }) => (
+											<EventTitleContainer key={id}>
+												<EventTitle to={path}>
 													{title}
 												</EventTitle>
-											))}
-										</Documents>
-									)}
+											</EventTitleContainer>
+										))}
+									</Events>
 								</Event>
 							</EventContainer>
 						))}

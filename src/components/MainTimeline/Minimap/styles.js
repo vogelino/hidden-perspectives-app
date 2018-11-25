@@ -38,10 +38,13 @@ export const ScrollIndicator = styled.div.attrs({
 	z-index: 2;
 `;
 
-export const MonthsContainer = styled(Content)``;
+export const MonthsContainer = styled(Content)`
+	padding-left: 1rem;
+`;
+
 export const Month = styled.div.attrs({
 	style: ({ theme, density }) => ({
-		background: mix(density, theme.gray200, theme.gray900),
+		background: mix(density, theme.gray100, theme.gray900),
 	}),
 })`
 	width: 1rem;
