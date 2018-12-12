@@ -59,7 +59,7 @@ const normaliseItems = ({
 		date,
 		dateString: getFormattedDate(date),
 		title: props[itemTitleProperty],
-		path: `/${itemType}/${id}`,
+		path: `/${itemType}/context/${id}`,
 		type: itemType,
 	};
 });

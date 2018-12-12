@@ -15,7 +15,7 @@ export const Label = styled.span`
 	padding: .875rem 1rem .875rem 0;
 	font-size: 1rem;
 	line-height: 1.2rem;
-	color: ${({ theme }) => theme.gray600}
+	color: ${({ theme }) => theme.gray600};
 	border-right: 1px solid ${({ theme }) => theme.commonBorderColor};
 `;
 

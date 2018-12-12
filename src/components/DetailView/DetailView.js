@@ -146,7 +146,7 @@ const DetailView = ({
 		)}
 		{item && (
 			<ShowMoreButtonContainer>
-				<ShowMoreButton to={`/document/${item.id}/transcript`} variant="light">
+				<ShowMoreButton to={`/document/transcript/${item.id}`} variant="light">
 					{`Explore ${item.itemType}`}
 				</ShowMoreButton>
 			</ShowMoreButtonContainer>

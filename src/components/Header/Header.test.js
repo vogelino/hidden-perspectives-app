@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { shallow } from 'enzyme';
 import { pages } from '../App';
-import Header from '.';
+import Header from './Header';
 import { HeaderLink } from './styles';
 import { isAuthorized, isAuthenticated } from '../../utils/localStorageUtil';
 
@@ -22,7 +22,13 @@ it('renders without crashing', () => {
 it('should render the same amount of links as given to header', () => {
 	isAuthenticated.mockImplementation(() => true);
 	isAuthorized.mockImplementation(() => true);
-	const header = shallow(<Header pages={pages} />);
+	const header = shallow(
+		<Header
+			pages={pages}
+			isAuthenticated={() => true}
+			isAuthorized={() => true}
+		/>,
+	);
 	const links = header.find(HeaderLink);
 	expect(links.length).toBe(pages.length);
 });
