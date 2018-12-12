@@ -9,6 +9,7 @@ import CreatePage from '../../pages/create';
 import DocumentPage from '../../pages/document';
 import EventPage from '../../pages/event';
 import TranscriptPage from '../../pages/transcript';
+import { isAuthenticated, isAuthorized } from '../../utils/localStorageUtil';
 
 export const pages = [
 	{
@@ -26,7 +27,11 @@ const App = () => (
 		<Theme>
 			<div className="App">
 				<Head />
-				<Header pages={pages} />
+				<Header
+					pages={pages}
+					isAuthenticated={isAuthenticated}
+					isAuthorized={isAuthorized}
+				/>
 				<Route exact path="/" component={Home} />
 				{pages.map((page) => <Route key={page.path} {...page} />)}
 				<Route exact path="/document/:id" component={DocumentPage} />
