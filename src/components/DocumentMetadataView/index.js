@@ -14,6 +14,7 @@ import { withLoading } from '../../utils/hocUtil';
 import DocumentMetadataView from './DocumentMetadataView';
 import { getFormattedDate } from '../../utils/dateUtil';
 import Tag from '../_library/Tag';
+import Stakeholder from '../_library/Stakeholder';
 
 const DOCUMENT_QUERY = gql`
 	query GetDocument($id: ID!) {
@@ -66,13 +67,21 @@ const hasValue = propHasValue('value');
 const hasValues = propHasValue('values');
 const formatIfValidDate = ifElse(identity, getFormattedDate, always(null));
 
+const passValueAsChild = (Component) => ({ value, ...props }) => (
+	<Component {...props}>{value}</Component>
+);
+
 const structureData = (data) => {
 	const coreInformation = {
 		groupLabel: 'Core information',
 		values: [
 			{ label: 'Title', value: data.documentTitle },
 			{ label: 'Summary', value: data.documentDescription },
-			{ label: 'Authors', value: data.documentAuthors.map(mapStakeholder) },
+			{
+				label: 'Authors',
+				value: data.documentAuthors.map(mapStakeholder),
+				ValueComponent: passValueAsChild(Stakeholder),
+			},
 			{ label: 'Creation date', value: formatIfValidDate(data.documentCreationDate) },
 			{ label: 'Publication date', value: formatIfValidDate(data.documentPublicationDate) },
 		].filter(hasValue),
@@ -81,7 +90,11 @@ const structureData = (data) => {
 	const appearences = {
 		groupLabel: 'Appearences',
 		values: [
-			{ label: 'Protagonists', value: data.mentionedStakeholders.map(mapStakeholder) },
+			{
+				label: 'Protagonists',
+				value: data.mentionedStakeholders.map(mapStakeholder),
+				ValueComponent: passValueAsChild(Stakeholder),
+			},
 			{ label: 'Locations', value: data.mentionedLocations.map(mapLocation) },
 		].filter(hasValue),
 	};
@@ -94,7 +107,7 @@ const structureData = (data) => {
 			{
 				label: 'Tags',
 				value: data.documentTags,
-				ValueComponent: ({ value }) => (<Tag>{value}</Tag>), // eslint-disable-line react/prop-types
+				ValueComponent: passValueAsChild(Tag),
 			},
 		].filter(hasValue),
 	};

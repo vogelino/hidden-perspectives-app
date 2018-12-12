@@ -5550,6 +5550,11 @@ ini@^1.3.4, ini@~1.3.0:
   version "1.3.5"
   resolved "https://registry.yarnpkg.com/ini/-/ini-1.3.5.tgz#eee25f56db1c9ec6085e0c22778083f596abf927"
 
+initials@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/initials/-/initials-3.0.0.tgz#f7fecf44e7ab2fc0d6b591cd98828855924c4776"
+  integrity sha512-yUmhaPDhOBzQQ3P+Fx6o/oHLmbKtbMQsXkaF8vEMtKk8EEaGYwza6NAl+hwUGufmVqTGfxNLS3tsCygKXxpdmQ==
+
 inline-style-prefixer@^3.0.6:
   version "3.0.8"
   resolved "https://registry.yarnpkg.com/inline-style-prefixer/-/inline-style-prefixer-3.0.8.tgz#8551b8e5b4d573244e66a34b04f7d32076a2b534"

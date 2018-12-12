@@ -4,3 +4,4 @@ import './headline';
 import './fieldset';
 import './metadataRow';
 import './tag';
+import './stakeholder';

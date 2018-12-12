@@ -4,26 +4,28 @@ import MetadataRow from '../_library/MetadataRow';
 import Fieldset from '../_library/Fieldset';
 import LoadingIndicator from '../LoadingIndicator';
 import { LoadingContainer } from '../LoadingIndicator/styles';
-import { Container } from './styles';
+import { Container, Content } from './styles';
 
 const defaultValueComponent = ({ value }) => value;
 
 const DocumentMetadataView = ({ data, isLoading }) => (
 	<Container>
-		<LoadingContainer isLoading={isLoading}>
-			<LoadingIndicator />
-		</LoadingContainer>
-		{data.map(({ values, groupLabel }) => (
-			<Fieldset title={groupLabel} key={groupLabel}>
-				{values.map(({ label, ValueComponent = defaultValueComponent, value }) => (
-					<MetadataRow key={label} label={label}>
-						{Array.isArray(value)
-							? value.map(({ name }) => <ValueComponent key={name} value={name} />)
-							: <ValueComponent value={value} />}
-					</MetadataRow>
-				))}
-			</Fieldset>
-		))}
+		<Content>
+			<LoadingContainer isLoading={isLoading}>
+				<LoadingIndicator />
+			</LoadingContainer>
+			{data.map(({ values, groupLabel }) => (
+				<Fieldset title={groupLabel} key={groupLabel}>
+					{values.map(({ label, ValueComponent = defaultValueComponent, value }) => (
+						<MetadataRow key={label} label={label}>
+							{Array.isArray(value)
+								? value.map(({ name }) => <ValueComponent key={name} value={name} />)
+								: <ValueComponent value={value} />}
+						</MetadataRow>
+					))}
+				</Fieldset>
+			))}
+		</Content>
 	</Container>
 );
 
