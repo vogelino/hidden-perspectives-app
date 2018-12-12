@@ -5,7 +5,7 @@ import { StoryWrapper } from './styles';
 
 storiesOf('Typography', module)
 	.add('Regular headlines', () => (
-		<StoryWrapper maxWidth="640">
+		<StoryWrapper maxWidth={640}>
 			<Headline variant="h1">h1. Smooth heading</Headline>
 			<Headline variant="h2">h2. Smooth heading</Headline>
 			<Headline variant="h3">h3. Smooth heading</Headline>
@@ -15,7 +15,7 @@ storiesOf('Typography', module)
 		</StoryWrapper>
 	))
 	.add('Display headlines', () => (
-		<StoryWrapper maxWidth="640">
+		<StoryWrapper maxWidth={640}>
 			<Headline variant="display-1">Display 1</Headline>
 			<Headline variant="display-2">Display 2</Headline>
 			<Headline variant="display-3">Display 3</Headline>
