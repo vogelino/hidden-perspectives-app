@@ -6,7 +6,7 @@ import { Container, Legend } from './styles';
 const Fieldset = ({ title, children }) => (
 	<Container>
 		<Legend>
-			<Headline variant="h2">
+			<Headline variant="h5">
 				{title}
 			</Headline>
 		</Legend>

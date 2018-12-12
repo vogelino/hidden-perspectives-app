@@ -35,10 +35,20 @@ const selectTheme = {
 	},
 };
 
+const typography = {
+	fontFamily: `"HP Sans", ${originalTheme.fontFamily}`,
+	h1FontSize: '2.5rem',
+	h2FontSize: '2rem',
+	h3FontSize: '1.75rem',
+	h4FontSize: '1.5rem',
+	h5FontSize: '1.125rem',
+	h6FontSize: '1rem',
+};
+
 const hpTheme = {
 	...originalTheme,
 	...colors,
-	fontFamily: `"HP Sans", ${originalTheme.fontFamily}`,
+	...typography,
 	selectTheme,
 	controlFocus: () => (baseColor = 'primary') => css`
 		outline: 0;
