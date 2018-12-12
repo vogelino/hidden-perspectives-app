@@ -6,6 +6,8 @@ import LoadingIndicator from '../LoadingIndicator';
 import { LoadingContainer } from '../LoadingIndicator/styles';
 import { Container } from './styles';
 
+const defaultValueComponent = ({ value }) => value;
+
 const DocumentMetadataView = ({ data, isLoading }) => (
 	<Container>
 		<LoadingContainer isLoading={isLoading}>
@@ -13,9 +15,11 @@ const DocumentMetadataView = ({ data, isLoading }) => (
 		</LoadingContainer>
 		{data.map(({ values, groupLabel }) => (
 			<Fieldset title={groupLabel} key={groupLabel}>
-				{values.map(({ label, value }) => (
+				{values.map(({ label, ValueComponent = defaultValueComponent, value }) => (
 					<MetadataRow key={label} label={label}>
-						{Array.isArray(value) ? value.map(({ name }) => name).join(', ') : value}
+						{Array.isArray(value)
+							? value.map(({ name }) => <ValueComponent key={name} value={name} />)
+							: <ValueComponent value={value} />}
 					</MetadataRow>
 				))}
 			</Fieldset>
@@ -29,6 +33,10 @@ DocumentMetadataView.propTypes = {
 		groupLabel: PropTypes.string.isRequired,
 		values: PropTypes.arrayOf(PropTypes.shape({
 			label: PropTypes.string.isRequired,
+			ValueComponent: PropTypes.oneOfType([
+				PropTypes.element,
+				PropTypes.func,
+			]),
 			value: PropTypes.oneOfType([
 				PropTypes.string,
 				PropTypes.array,

@@ -1,3 +1,4 @@
+import React from 'react';
 import { compose, lifecycle, withState } from 'recompose';
 import { withApollo } from 'react-apollo';
 import gql from 'graphql-tag';
@@ -12,6 +13,7 @@ import {
 import { withLoading } from '../../utils/hocUtil';
 import DocumentMetadataView from './DocumentMetadataView';
 import { getFormattedDate } from '../../utils/dateUtil';
+import Tag from '../_library/Tag';
 
 const DOCUMENT_QUERY = gql`
 	query GetDocument($id: ID!) {
@@ -89,7 +91,11 @@ const structureData = (data) => {
 		values: [
 			{ label: 'Kind', value: data.documentKind.name },
 			{ label: 'Classification', value: data.documentClassification.name },
-			{ label: 'Tags', value: data.documentTags },
+			{
+				label: 'Tags',
+				value: data.documentTags,
+				ValueComponent: ({ value }) => (<Tag>{value}</Tag>), // eslint-disable-line react/prop-types
+			},
 		].filter(hasValue),
 	};
 
