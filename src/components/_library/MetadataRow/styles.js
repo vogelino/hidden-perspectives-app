@@ -11,7 +11,7 @@ export const Row = styled.div`
 `;
 
 export const Label = styled.span`
-	flex: 0 0 10rem;
+	width: 10rem;
 	padding: .875rem 1rem .875rem 0;
 	font-size: 1rem;
 	line-height: 1.2rem;
@@ -20,5 +20,16 @@ export const Label = styled.span`
 `;
 
 export const Content = styled.div`
-	flex: 1 1 100%;
+	width: calc(100% - 10rem);
+`;
+
+export const DisplayValue = styled.div`
+	padding: .875rem 1rem;
+	background-color: white;
+	font-size: 1rem;
+	line-height: 1.2rem;
+	color: ${({ theme }) => theme.black};
+`;
+
+export const EditValue = styled.div`
 `;

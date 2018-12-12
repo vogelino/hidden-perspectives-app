@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { lighten } from 'polished';
-import { ThemeProvider } from 'styled-components';
-import { theme as originalTheme } from '@smooth-ui/core-sc';
+import { lighten, transparentize } from 'polished';
+import { ThemeProvider, css } from 'styled-components';
+import { theme as originalTheme, th } from '@smooth-ui/core-sc';
 
 const colors = {
 	primary: '#239F40',
@@ -40,6 +40,11 @@ const hpTheme = {
 	...colors,
 	fontFamily: `"HP Sans", ${originalTheme.fontFamily}`,
 	selectTheme,
+	controlFocus: () => (baseColor = 'primary') => css`
+		outline: 0;
+		box-shadow: 0 0 .5rem ${th(baseColor, (color) => transparentize(0.6, color))},
+			0 0 0 1px ${th(baseColor)};
+	`,
 };
 
 const Theme = ({ children }) => (

@@ -12,6 +12,7 @@ const StoryWrapperContent = styled.div`
 	padding: 40px;
 	border: 1px solid #dee2e6;
 	border-radius: 5px;
+	background: ${({ background }) => background};
 `;
 
 const StoryWrapperContainer = styled.div`
@@ -20,10 +21,13 @@ const StoryWrapperContainer = styled.div`
 	position: relative;
 `;
 
-export const StoryWrapper = ({ children, maxWidth }) => (
+export const StoryWrapper = ({ children, maxWidth, background }) => (
 	<Theme>
 		<StoryWrapperContainer>
-			<StoryWrapperContent maxWidth={maxWidth}>
+			<StoryWrapperContent
+				maxWidth={maxWidth}
+				background={background}
+			>
 				{children}
 			</StoryWrapperContent>
 		</StoryWrapperContainer>
@@ -33,9 +37,11 @@ export const StoryWrapper = ({ children, maxWidth }) => (
 StoryWrapper.propTypes = {
 	children: PropTypes.element.isRequired,
 	maxWidth: PropTypes.number,
+	background: PropTypes.string,
 };
 
 StoryWrapper.defaultProps = {
 	maxWidth: undefined,
+	background: 'none',
 };
 
