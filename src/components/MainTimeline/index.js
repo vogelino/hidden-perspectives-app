@@ -10,6 +10,7 @@ import MainTimeline from './MainTimeline';
 import { withLoading, withErrors } from '../../utils/hocUtil';
 import { getMinimap } from '../../utils/timelineUtil';
 import {
+	monthsLabels,
 	getDifferenceInYears,
 	formatYear,
 	ensureTwoDigits,
@@ -30,21 +31,6 @@ const ALL_EVENTS_AND_DOCUMENTS = gql`
 	}
 }
 `;
-
-const monthsLabels = [
-	'January',
-	'February',
-	'March',
-	'April',
-	'May',
-	'June',
-	'July',
-	'August',
-	'September',
-	'October',
-	'November',
-	'December',
-];
 
 const normaliseItems = ({
 	items,

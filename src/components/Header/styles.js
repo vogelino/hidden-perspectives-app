@@ -11,9 +11,11 @@ export const HeaderContainer = styled.header`
 	text-align: right;
 	z-index: 1;
 	border-bottom: 1px solid ${({ theme }) => theme.commonBorderColor};
+	display: flex;
+	justify-content: space-between;
 `;
 
-export const HeaderLink = styled(NavLink)`
+const HeaderLink = styled(NavLink)`
 	border: none;
 	background: none;
 	color: ${({ theme }) => theme.gray600};
@@ -57,7 +59,7 @@ export const LogButton = styled(HeaderLink)`
 
 export const UserInfoContainer = styled.div`
 	font-size: 12px;
-	float: right;
+	align-self: flex-end;
 `;
 
 export const UserAvatar = styled.span`

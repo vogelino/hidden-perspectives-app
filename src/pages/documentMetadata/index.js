@@ -1,9 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import DocumentMetadataView from '../../components/DocumentMetadataView';
+import Header from '../../components/Header';
+import NodeTitle from '../../components/NodeTitle';
 
 const MetadataPage = ({ match }) => (
 	<div className="MetadataPage">
+		<Header>
+			<NodeTitle
+				id={match.params.id}
+				itemType="document"
+			/>
+		</Header>
 		<DocumentMetadataView id={match.params.id} />
 	</div>
 );

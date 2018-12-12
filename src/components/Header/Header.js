@@ -4,31 +4,17 @@ import UserInfo from './UserInfo';
 import {
 	HeaderContainer,
 	UserInfoContainer,
-	HeaderLink,
 	LogButton,
 	Logo,
 } from './styles';
 
 const Header = ({
-	pages,
 	isAuthenticated,
-	isAuthorized,
+	children,
 }) => (
 	<HeaderContainer>
 		<Logo to="/">Hidden Perspectives</Logo>
-		{pages.filter(({ requiresAuthentication, authorizedRoles }) => (
-			(isAuthenticated() && isAuthorized(authorizedRoles))
-			|| !requiresAuthentication
-		)).map(({ title, path }) => (
-			<HeaderLink
-				to={path}
-				key={path}
-				activeClassName="active"
-				exact
-			>
-				{title}
-			</HeaderLink>
-		))}
+		{children}
 		{!isAuthenticated() ? (
 			<UserInfoContainer>
 				<LogButton to="/login" exact>
@@ -40,18 +26,13 @@ const Header = ({
 );
 
 Header.propTypes = {
-	pages: PropTypes.arrayOf(PropTypes.shape({
-		path: PropTypes.string.isRequired,
-		exact: PropTypes.bool.isRequired,
-		title: PropTypes.string.isRequired,
-	}).isRequired).isRequired,
 	isAuthenticated: PropTypes.func,
-	isAuthorized: PropTypes.func,
+	children: PropTypes.node,
 };
 
 Header.defaultProps = {
 	isAuthenticated: () => false,
-	isAuthorized: () => false,
+	children: null,
 };
 
 export default Header;

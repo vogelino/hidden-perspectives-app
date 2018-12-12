@@ -2,6 +2,21 @@ import { DateUtils } from 'react-day-picker';
 import differenceInYears from 'date-fns/difference_in_years';
 import format from 'date-fns/format';
 
+export const monthsLabels = [
+	'January',
+	'February',
+	'March',
+	'April',
+	'May',
+	'June',
+	'July',
+	'August',
+	'September',
+	'October',
+	'November',
+	'December',
+];
+
 export const isSameDayAsToday = (day) => DateUtils.isSameDay(day, new Date());
 export const isTodayOrPrior = (day) => DateUtils.isPastDay(day) || isSameDayAsToday(day);
 export const isTodayOrAfter = (day) => DateUtils.isFutureDay(day) || isSameDayAsToday(day);
@@ -18,3 +33,4 @@ export const getFormattedDate = (originalDate) => {
 export const getDifferenceInYears = (...dates) => Math.abs(differenceInYears(...dates));
 
 export const formatYear = (date) => format(date, 'YYYY');
+export const formatHumanDate = (date) => format(date, 'ddd, D MMM YYYY');
