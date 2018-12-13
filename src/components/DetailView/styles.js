@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import Button from '../_library/Button';
 import {
 	SingleDocumentPill as OriginalSingleDocumentPill,
 	MultipleDocumentsPill as OriginalMultipleDocumentsPill,
@@ -12,27 +11,9 @@ export const Container = styled.div`
 	height: calc(100vh - 4.5rem);
 	position: relative;
 	margin: 0 auto;
-	padding: 2rem 0;
+	padding: 5.5rem 0 3.5rem;
 	display: flex;
 	flex-direction: column;
-`;
-
-export const Title = styled.h1`
-	width: 25vw;
-	min-width: 17rem;
-	font-size: 1rem;
-	line-height: 1.5rem;
-	text-align: center;
-	margin: 0 auto;
-	flex: 0 0 auto;
-	padding-bottom: 3rem;
-`;
-
-export const Subtitle = styled(Title)`
-	font-size: .75rem;
-	line-height: 1rem;
-	padding-bottom: 0.5rem;
-	color: ${({ theme }) => theme.gray600};
 `;
 
 export const CircleContainer = styled.div`
@@ -61,15 +42,6 @@ export const Circle = styled.circle`
 
 export const ItemCircle = styled.circle`
 	fill: ${({ theme }) => theme.gray900};
-`;
-
-export const ShowMoreButtonContainer = styled.div`
-	flex: 0 0;
-	padding-top: 4rem;
-	text-align: center;
-`;
-
-export const ShowMoreButton = styled(Button)`
 `;
 
 export const Document = styled.foreignObject`

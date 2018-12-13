@@ -5,7 +5,7 @@ import { ThemeProvider, css } from 'styled-components';
 import { theme as originalTheme, th } from '@smooth-ui/core-sc';
 
 const colors = {
-	primary: '#239F40',
+	primary: '#FFCC44',
 	commonBorderColor: originalTheme.gray300,
 	usBlue: '#2523A0',
 	usRed: '#D7062C',
@@ -35,6 +35,21 @@ const selectTheme = {
 	},
 };
 
+const buttons = {
+	btnPaddingX: '2rem',
+	btnPaddingY: '.5rem',
+	btnFontSize: '.875rem',
+	btnLineHeight: '.875rem',
+	btnFontWeight: 'bold',
+	btnBorderWidth: '1px',
+	btnPrimaryBackground: colors.primary,
+	btnSecondaryBackground: 'none',
+	btnPrimaryColor: colors.black,
+	btnSecondaryColor: colors.black,
+	btnPrimaryBorderColor: colors.primary,
+	btnSecondaryBorderColor: colors.commonBorderColor,
+};
+
 const typography = {
 	fontFamily: `"HP Sans", ${originalTheme.fontFamily}`,
 	h1FontSize: '2.5rem',
@@ -49,6 +64,7 @@ const hpTheme = {
 	...originalTheme,
 	...colors,
 	...typography,
+	...buttons,
 	selectTheme,
 	controlFocus: () => (baseColor = 'primary') => css`
 		outline: 0;

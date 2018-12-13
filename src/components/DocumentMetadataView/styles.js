@@ -8,6 +8,6 @@ export const Container = styled.div`
 export const Content = styled.div`
 	max-width: 50rem;
 	margin: 0 auto;
-	padding: 3rem 0;
+	padding: 6.5rem 0 3rem 0;
 	position: relative;
 `;

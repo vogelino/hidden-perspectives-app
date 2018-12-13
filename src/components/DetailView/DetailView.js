@@ -2,17 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import LoadingIndicator from '../LoadingIndicator';
 import { LoadingContainer } from '../LoadingIndicator/styles';
-import { ucFirst } from '../../utils/stringUtil';
 import {
 	Container,
-	Title,
-	Subtitle,
 	CircleContainer,
 	CircleSvg,
 	Circle,
 	ItemCircle,
-	ShowMoreButton,
-	ShowMoreButtonContainer,
 	Document,
 	SingleDocumentPill,
 	MultipleDocumentsPill,
@@ -44,8 +39,6 @@ const DetailView = ({
 			<LoadingIndicator />
 		</LoadingContainer>
 		<Legend />
-		{item && item.subtitle && <Subtitle>{`${ucFirst(item.itemType)} — ${item.subtitle}`}</Subtitle>}
-		{item && <Title>{item.title}</Title>}
 		{item && (
 			<CircleContainer>
 				<CircleSvg
@@ -143,13 +136,6 @@ const DetailView = ({
 					/>
 				</CircleSvg>
 			</CircleContainer>
-		)}
-		{item && (
-			<ShowMoreButtonContainer>
-				<ShowMoreButton to={`/document/transcript/${item.id}`} variant="light">
-					{`Explore ${item.itemType}`}
-				</ShowMoreButton>
-			</ShowMoreButtonContainer>
 		)}
 	</Container>
 );

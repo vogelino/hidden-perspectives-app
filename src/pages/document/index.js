@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import DetailView from '../../components/DetailView';
 import Header from '../../components/Header';
 import NodeTitle from '../../components/NodeTitle';
+import NodeHeader from '../../components/NodeHeader';
 
 const DocumentPage = ({ match }) => (
 	<div className="DocumentPage">
@@ -12,6 +13,7 @@ const DocumentPage = ({ match }) => (
 				itemType="document"
 			/>
 		</Header>
+		<NodeHeader id={match.params.id} itemType="document" />
 		<DetailView id={match.params.id} itemType="document" />
 	</div>
 );

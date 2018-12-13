@@ -5,3 +5,4 @@ import './fieldset';
 import './metadataRow';
 import './tag';
 import './stakeholder';
+import './nodeHeader';

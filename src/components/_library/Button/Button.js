@@ -2,9 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Link } from './styles';
 
-const CustomButton = ({ to, children, ...rest }) => (to ? (
+const CustomButton = ({
+	to,
+	children,
+	primary,
+	...rest
+}) => (to ? (
 	<Link to={to} {...rest}>
-		<Button {...rest}>
+		<Button {...rest} variant={primary ? 'primary' : 'light'}>
 			{children}
 		</Button>
 	</Link>
@@ -15,6 +20,7 @@ const CustomButton = ({ to, children, ...rest }) => (to ? (
 ));
 
 CustomButton.propTypes = {
+	primary: PropTypes.bool,
 	to: PropTypes.string,
 	children: PropTypes.oneOfType([
 		PropTypes.string,
@@ -25,6 +31,7 @@ CustomButton.propTypes = {
 
 CustomButton.defaultProps = {
 	to: undefined,
+	primary: false,
 };
 
 export default CustomButton;

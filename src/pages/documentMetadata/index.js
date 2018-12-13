@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import DocumentMetadataView from '../../components/DocumentMetadataView';
 import Header from '../../components/Header';
 import NodeTitle from '../../components/NodeTitle';
+import NodeHeader from '../../components/NodeHeader';
 
 const MetadataPage = ({ match }) => (
 	<div className="MetadataPage">
@@ -12,6 +13,7 @@ const MetadataPage = ({ match }) => (
 				itemType="document"
 			/>
 		</Header>
+		<NodeHeader id={match.params.id} itemType="document" />
 		<DocumentMetadataView id={match.params.id} />
 	</div>
 );

@@ -32,7 +32,8 @@ const HeaderLink = styled(NavLink)`
 	border-radius: 3px;
 
 	&.active,
-	&:hover {
+	&:hover,
+	&:focus {
 		color: ${({ theme }) => theme.black};
 	}
 

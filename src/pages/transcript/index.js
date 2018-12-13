@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import TranscriptView from '../../components/TranscriptView';
 import Header from '../../components/Header';
 import NodeTitle from '../../components/NodeTitle';
+import NodeHeader from '../../components/NodeHeader';
 
 const TranscriptPage = ({ match }) => (
 	<div className="TranscriptPage">
@@ -12,6 +13,7 @@ const TranscriptPage = ({ match }) => (
 				itemType="document"
 			/>
 		</Header>
+		<NodeHeader id={match.params.id} itemType="document" />
 		<TranscriptView id={match.params.id} />
 	</div>
 );

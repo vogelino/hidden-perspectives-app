@@ -25,6 +25,7 @@ const DOCUMENT_QUERY = gql`
 			id
 			documentTitle
 			documentKind {
+				id
 				name
 			}
 			sessionNumber
