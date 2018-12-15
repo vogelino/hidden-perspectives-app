@@ -51,7 +51,10 @@ const HeaderLink = styled(NavLink)`
 `;
 
 export const Logo = styled(HeaderLink)`
-	float: left;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 1;
 `;
 
 export const LogButton = styled(HeaderLink)`
@@ -60,7 +63,10 @@ export const LogButton = styled(HeaderLink)`
 
 export const UserInfoContainer = styled.div`
 	font-size: 12px;
-	align-self: flex-end;
+	position: absolute;
+	top: 0;
+	right: 0;
+	z-index: 1;
 `;
 
 export const UserAvatar = styled.span`
