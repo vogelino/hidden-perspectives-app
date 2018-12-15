@@ -5,6 +5,8 @@ import {
 	split,
 	map,
 	join,
+	filter,
+	identity,
 } from 'ramda';
 import LoadingIndicator from '../LoadingIndicator';
 import { LoadingContainer } from '../LoadingIndicator/styles';
@@ -25,6 +27,7 @@ const wrapIntoSpan = (line, idx) => (
 
 const formatTranscript = pipe(
 	split('\n'),
+	filter(identity),
 	map(wrapIntoSpan),
 );
 
