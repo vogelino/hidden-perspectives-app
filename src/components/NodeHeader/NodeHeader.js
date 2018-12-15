@@ -21,7 +21,7 @@ const NodeHeader = ({
 				<Tab key={label} to={url}>{label}</Tab>
 			))}
 		</Tabs>
-		<EditButton to={editUrl} primary>{editText}</EditButton>
+		<EditButton to={editUrl}>{editText}</EditButton>
 	</Container>
 );
 

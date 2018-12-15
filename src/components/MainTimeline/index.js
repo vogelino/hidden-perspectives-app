@@ -7,7 +7,7 @@ import {
 import gql from 'graphql-tag';
 import { filter } from 'ramda';
 import MainTimeline from './MainTimeline';
-import { withLoading, withErrors } from '../../utils/hocUtil';
+import { withLoading, withErrors, getErrorHandler } from '../../utils/hocUtil';
 import { getMinimap } from '../../utils/timelineUtil';
 import {
 	monthsLabels,
@@ -132,10 +132,6 @@ const getEventsAndDocuments = ({
 	stopLoading();
 };
 
-const handleErrors = ({ setErrors }) => ({ message, graphQLErrors }) => {
-	setErrors(message ? [message] : graphQLErrors);
-};
-
 export default compose(
 	withApollo,
 	withLoading,
@@ -148,7 +144,7 @@ export default compose(
 
 			props.client.query({ query: ALL_EVENTS_AND_DOCUMENTS })
 				.then(getEventsAndDocuments(props))
-				.catch(handleErrors(props));
+				.catch(getErrorHandler(props));
 		},
 		shouldComponentUpdate(nextProps) {
 			return (nextProps.timelineItems.length !== this.props.timelineItems.length)

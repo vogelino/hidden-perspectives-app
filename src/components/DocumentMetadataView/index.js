@@ -10,7 +10,7 @@ import {
 	identity,
 	always,
 } from 'ramda';
-import { withLoading } from '../../utils/hocUtil';
+import { withLoading, withErrors, getErrorHandler } from '../../utils/hocUtil';
 import DocumentMetadataView from './DocumentMetadataView';
 import { getFormattedDate } from '../../utils/dateUtil';
 import Tag from '../_library/Tag';
@@ -127,6 +127,7 @@ const getDataParser = ({ stopLoading, setData }) => ({ data }) => {
 export default compose(
 	withApollo,
 	withLoading,
+	withErrors,
 	withState('data', 'setData', []),
 	lifecycle({
 		componentDidMount() {
@@ -134,7 +135,9 @@ export default compose(
 			client.query({
 				query: DOCUMENT_QUERY,
 				variables: { id },
-			}).then(getDataParser(this.props));
+			})
+				.then(getDataParser(this.props))
+				.catch(getErrorHandler(this.props));
 		},
 	}),
 )(DocumentMetadataView);

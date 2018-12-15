@@ -8,6 +8,7 @@ import DocumentPage from '../../pages/document';
 import EventPage from '../../pages/event';
 import DocumentMetadataPage from '../../pages/documentMetadata';
 import TranscriptPage from '../../pages/transcript';
+import OriginalPage from '../../pages/original';
 
 const App = () => (
 	<Router>
@@ -17,6 +18,7 @@ const App = () => (
 				<Route exact path="/" component={Home} />
 				<Route exact path="/document/context/:id" component={DocumentPage} />
 				<Route exact path="/document/transcript/:id" component={TranscriptPage} />
+				<Route exact path="/document/original/:id" component={OriginalPage} />
 				<Route exact path="/document/metadata/:id" component={DocumentMetadataPage} />
 				<Route exact path="/document/metadata/:id/edit" component={() => null} />
 				<Route exact path="/event/context/:id" component={EventPage} />

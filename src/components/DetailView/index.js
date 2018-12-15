@@ -4,7 +4,7 @@ import gql from 'graphql-tag';
 import { scaleLinear } from 'd3-scale';
 import { map, pipe } from 'ramda';
 import DetailView from './DetailView';
-import { withLoading } from '../../utils/hocUtil';
+import { withLoading, withErrors, getErrorHandler } from '../../utils/hocUtil';
 import { ucFirst } from '../../utils/stringUtil';
 import { getFormattedDate } from '../../utils/dateUtil';
 import { groupItemsBy } from '../../utils/timelineUtil';
@@ -147,6 +147,7 @@ const getItemParser = (props) => ({ data }) => {
 export default compose(
 	withApollo,
 	withLoading,
+	withErrors,
 	withState('item', 'setItem', undefined),
 	withState('documents', 'setDocuments', []),
 	withState('events', 'setEvents', []),
@@ -156,7 +157,9 @@ export default compose(
 			client.query({
 				query: itemType === 'event' ? EVENT_QUERY : DOCUMENT_QUERY,
 				variables: { id },
-			}).then(getItemParser(this.props));
+			})
+				.then(getItemParser(this.props))
+				.catch(getErrorHandler(this.props));
 		},
 	}),
 )(DetailView);

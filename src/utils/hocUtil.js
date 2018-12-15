@@ -19,3 +19,7 @@ export const withErrors = compose(
 		hasErrors: Boolean(errors && errors.length > 0),
 	})),
 );
+
+export const getErrorHandler = ({ setErrors }) => ({ message, graphQLErrors }) => {
+	setErrors(message ? [message] : graphQLErrors);
+};
