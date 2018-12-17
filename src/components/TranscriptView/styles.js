@@ -35,7 +35,7 @@ export const LineContent = styled.span`
 		color: ${({ theme }) => theme.gray300};
 		position: absolute;
 		right: -1rem;
-		top: -.125rem;
+		bottom: 0;
 	}
 `;
 

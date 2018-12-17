@@ -7,6 +7,7 @@ import {
 	join,
 	filter,
 	identity,
+	addIndex,
 } from 'ramda';
 import LoadingIndicator from '../LoadingIndicator';
 import { LoadingContainer } from '../LoadingIndicator/styles';
@@ -28,7 +29,7 @@ const wrapIntoSpan = (line, idx) => (
 const formatTranscript = pipe(
 	split('\n'),
 	filter(identity),
-	map(wrapIntoSpan),
+	addIndex(map)(wrapIntoSpan),
 );
 
 const TranscriptView = ({ isLoading, transcript }) => (
