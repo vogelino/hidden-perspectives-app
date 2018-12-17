@@ -2,7 +2,7 @@ import { compose, lifecycle, withState } from 'recompose';
 import { withApollo } from 'react-apollo';
 import gql from 'graphql-tag';
 import { scaleLinear } from 'd3-scale';
-import { map, pipe } from 'ramda';
+import { map, prop, pipe } from 'ramda';
 import DetailView from './DetailView';
 import { withLoading, withErrors, getErrorHandler } from '../../utils/hocUtil';
 import { ucFirst } from '../../utils/stringUtil';
@@ -15,6 +15,10 @@ const EVENT_QUERY = gql`
 			id
 			eventTitle
 			eventStartDate
+			eventTags {
+				id
+				name
+			}
 		}
 	}
 `;
@@ -28,120 +32,117 @@ const DOCUMENT_QUERY = gql`
 				id
 				name
 			}
-			sessionNumber
+			documentTags {
+				id
+				name
+			}
 		}
 	}
 `;
 
-const DOCUMENTS_IN_SAME_SESSION = gql`
-	query GetDocumentsBySession($sessionNumber: Int!) {
-		allDocuments(
-			filter: {sessionNumber: $sessionNumber}
-			orderBy: documentCreationDate_ASC
-		) {
-			id
-			documentCreationDate
-		}
-	}
-`;
+const formatTagsForQuery = (type, tagIds) => map(
+	(tagId) => `{ ${type}Tags_some: { id: "${tagId}" } }`,
+	tagIds,
+);
 
-const EVENTS_IN_SESSION_TIMESPAN = gql`
-	query GetEventsInRange($startDate: DateTime!, $endDate: DateTime!) {
-		allEvents(
+const getOrderBy = (type) => (
+	type === 'document' ? 'documentCreationDate_ASC' : 'eventStartDate_ASC'
+);
+
+const getAdditionalReturnValuesByType = (type) => (
+	type === 'document' ? 'documentCreationDate' : 'eventStartDate'
+);
+
+const builtQueryStringByType = (type, tagIds) => {
+	const formattedTags = formatTagsForQuery(type, tagIds);
+	const orderBy = getOrderBy(type);
+	const additionalReturnValues = getAdditionalReturnValuesByType(type);
+	const query = `
+		all${ucFirst(type)}s(
 			filter: {
-				AND: [
-					{ eventStartDate_gte: $startDate }
-					{ eventEndDate_lte: $endDate }
+				OR: [
+					${formattedTags}
 				]
 			}
-			orderBy: eventStartDate_ASC
+			orderBy: ${orderBy}
 		) {
 			id
-			eventStartDate
+			${type}Title
+			${additionalReturnValues}
+			${type}Tags {
+				id
+				name
+			}
 		}
+	`;
+	return query;
+};
+
+const buildTagsQuery = (tagIds) => gql`
+	query {
+		${builtQueryStringByType('event', tagIds)}
+		${builtQueryStringByType('document', tagIds)}
 	}
 `;
 
-const getEventsParser = (props, angleScaleFunction) => ({ data: { allEvents } }) => {
-	const { setEvents, stopLoading } = props;
-
-	const parsedEvents = pipe(
-		map(({ id, eventStartDate }) => {
-			const date = new Date(eventStartDate);
-			const angle = angleScaleFunction(date);
-			return {
-				id,
-				date,
-				angle: angle - (angle % 10),
-			};
-		}),
-		(items) => groupItemsBy(items, 'angle'),
-	)(allEvents);
-
-	setEvents(parsedEvents);
-	stopLoading();
-};
-
-const getDocumentsParser = (props) => ({ data: { allDocuments } }) => {
-	const { setDocuments, client } = props;
+const getContextParser = (props) => ({ data: { allEvents, allDocuments } }) => {
+	const { stopLoading, setDocuments, setEvents } = props;
 	const dateExtremes = [
 		new Date(allDocuments[0].documentCreationDate),
 		new Date(allDocuments[allDocuments.length - 1].documentCreationDate),
 	];
-
 	const angleScaleFunction = scaleLinear()
 		.domain(dateExtremes)
 		.range([0, 320]);
 
-	client.query({
-		query: EVENTS_IN_SESSION_TIMESPAN,
-		variables: {
-			startDate: dateExtremes[0],
-			endDate: dateExtremes[1],
-		},
-	}).then(getEventsParser(props, angleScaleFunction));
-
+	const roundAngle = (angle) => angle - (angle % 4);
+	const getAngle = pipe(angleScaleFunction, roundAngle);
 	const parsedDocuments = pipe(
 		map(({ id, documentCreationDate }) => {
 			const date = new Date(documentCreationDate);
-			const angle = angleScaleFunction(date);
-			return {
-				id,
-				date,
-				angle: angle - (angle % 10),
-			};
+			const angle = getAngle(date);
+			return { id, date, angle };
 		}),
 		(items) => groupItemsBy(items, 'angle'),
 	)(allDocuments);
+
+	const parsedEvents = pipe(
+		map(({ id, eventStartDate }) => {
+			const date = new Date(eventStartDate);
+			const angle = getAngle(date);
+			return { id, date, angle };
+		}),
+		(items) => groupItemsBy(items, 'angle'),
+	)(allEvents);
+
 	setDocuments(parsedDocuments);
+	setEvents(parsedEvents);
+	stopLoading();
 };
 
+const getResponseProp = (key, type, item) => prop(`${type}${ucFirst(key)}`, item);
+
 const getItemParser = (props) => ({ data }) => {
-	const {
-		client,
-		setItem,
-		stopLoading,
-		itemType,
-	} = props;
+	const { client, setItem, itemType } = props;
 	const dataItemName = ucFirst(itemType);
 	const item = data[dataItemName];
+
 	setItem({
 		id: item.id,
-		title: item[`${itemType}Title`],
+		title: getResponseProp('title', itemType, item),
 		subtitle: itemType === 'document'
 			? item.documentKind && item.documentKind.name
 			: getFormattedDate(new Date(item.eventStartDate)),
 		itemType,
 	});
 
-	if (itemType === 'document') {
-		client.query({
-			query: DOCUMENTS_IN_SAME_SESSION,
-			variables: { sessionNumber: item.sessionNumber },
-		}).then(getDocumentsParser(props));
-	} else {
-		stopLoading();
-	}
+	const tags = getResponseProp('tags', itemType, item);
+	const tagsQuery = buildTagsQuery(map(prop('id'), tags));
+	client.query({
+		query: tagsQuery,
+	})
+		.then(getContextParser(props))
+		.catch(getErrorHandler(props));
 };
 
 export default compose(

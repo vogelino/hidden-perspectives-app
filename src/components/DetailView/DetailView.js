@@ -19,14 +19,17 @@ import Legend from '../Legend/Legend';
 
 const toRadian = (angle) => angle * (Math.PI / 180);
 
+const MARGIN = 10;
 const DIAMETER_OUTER = 443;
 const DIAMETER_INNER = (DIAMETER_OUTER / 100) * 80;
 const RADIUS_OUTER = DIAMETER_OUTER / 2;
 const RADIUS_INNER = DIAMETER_INNER / 2;
-const CIRCLE_CENTER = { cx: RADIUS_OUTER, cy: RADIUS_OUTER };
+const CIRCLE_CENTER = { cx: RADIUS_OUTER + MARGIN, cy: RADIUS_OUTER + MARGIN };
 
-const getXByAngle = (radius, angle) => (radius * Math.sin(toRadian(angle))) + RADIUS_OUTER;
-const getYByAngle = (radius, angle) => (radius * -Math.cos(toRadian(angle))) + RADIUS_OUTER;
+const getXByAngle = (radius, angle) => (radius * Math.sin(toRadian(angle)))
+	+ RADIUS_OUTER + MARGIN;
+const getYByAngle = (radius, angle) => (radius * -Math.cos(toRadian(angle)))
+	+ RADIUS_OUTER + MARGIN;
 
 const DetailView = ({
 	item,
@@ -43,7 +46,7 @@ const DetailView = ({
 			<CircleContainer>
 				<CircleSvg
 					id="circleContainer"
-					viewBox={`0 0 ${DIAMETER_OUTER + 9} ${DIAMETER_OUTER + 9}`}
+					viewBox={`0 0 ${DIAMETER_OUTER + (MARGIN * 2)} ${DIAMETER_OUTER + (MARGIN * 2)}`}
 					preserveAspectRatio="xMidYMid meet"
 				>
 					<Circle
@@ -74,8 +77,8 @@ const DetailView = ({
 								isCurrentElement ? [
 									<ConnectionLine
 										key={`line-${docId}`}
-										x1={RADIUS_OUTER}
-										y1={RADIUS_OUTER}
+										x1={CIRCLE_CENTER.cx}
+										y1={CIRCLE_CENTER.cy}
 										x2={x}
 										y2={y}
 										shapeRendering="crisp-edges"
@@ -107,8 +110,8 @@ const DetailView = ({
 								isCurrentElement ? [
 									<ConnectionLine
 										key={`line-${docId}`}
-										x1={RADIUS_OUTER}
-										y1={RADIUS_OUTER}
+										x1={CIRCLE_CENTER.cx}
+										y1={CIRCLE_CENTER.cy}
 										x2={x}
 										y2={y}
 										shapeRendering="crisp-edges"

@@ -20,6 +20,10 @@ export const withErrors = compose(
 	})),
 );
 
-export const getErrorHandler = ({ setErrors }) => ({ message, graphQLErrors }) => {
+export const getErrorHandler = ({ setErrors }) => ({ message, graphQLErrors, stack }) => {
+	/* eslint-disable no-console */
+	console.error(message ? [message] : graphQLErrors);
+	if (stack) console.log(stack);
+	/* eslint-enable no-console */
 	setErrors(message ? [message] : graphQLErrors);
 };

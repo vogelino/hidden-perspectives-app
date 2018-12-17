@@ -48,15 +48,16 @@ export const SingleEventPill = styled(EventPill)`
 `;
 
 export const MultipleEventsPill = styled(EventPill)`width: 17px;
-	height: 17px;
+	height: 11px;
+	width: 11px;
 	top: 0;
 	left: -9px;
 	box-shadow: 0 0 0 1px white;
-	font-size: 11px;
+	font-size: 8px;
 	font-weight: bold;
 	box-sizing: border-box;
 	text-align: center;
-	line-height: 17px;
+	line-height: 11px;
 	color: white;
 `;
 
