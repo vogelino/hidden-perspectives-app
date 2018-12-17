@@ -10,6 +10,7 @@ import {
 export const CircleContainer = styled.div`
 	flex: 1 1;
 	position: relative;
+	height: calc(100vh - 11rem);
 `;
 
 export const CircleSvg = styled.svg`

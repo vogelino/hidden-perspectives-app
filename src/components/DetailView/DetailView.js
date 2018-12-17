@@ -5,14 +5,16 @@ import { LoadingContainer } from '../LoadingIndicator/styles';
 import { Container } from './styles';
 import Legend from '../Legend/Legend';
 import CircleTimeline from '../CircleTimeline';
+import SummarySection from '../SummarySection';
 
 const DetailView = ({ item, isLoading, ...rest }) => (
 	<Container>
 		<LoadingContainer isLoading={isLoading}>
 			<LoadingIndicator />
 		</LoadingContainer>
-		<Legend />
+		<Legend nomargin />
 		{item && <CircleTimeline item={item} {...rest} />}
+		{item && <SummarySection item={item} {...rest} />}
 	</Container>
 );
 

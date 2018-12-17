@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const LegendContainer = styled.ul`
 	position: fixed;
 	bottom: 1rem;
-	left: 8rem;
+	left: ${({ nomargin }) => (nomargin ? '2rem' : '8rem')};
 	padding: 1.25rem 1.5rem;
 	border-radius: 0.25rem;
 	z-index: 4;

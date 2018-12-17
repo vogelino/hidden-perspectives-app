@@ -50,7 +50,8 @@ const getOrderBy = (type) => (
 );
 
 const getAdditionalReturnValuesByType = (type) => (
-	type === 'document' ? 'documentCreationDate' : 'eventStartDate'
+	type === 'document' ? `documentCreationDate
+	documentKind { id, name }` : 'eventStartDate'
 );
 
 const builtQueryStringByType = (type, tagIds) => {
@@ -73,6 +74,7 @@ const builtQueryStringByType = (type, tagIds) => {
 				id
 				name
 			}
+			${type}Description
 		}
 	`;
 	return query;
@@ -98,19 +100,31 @@ const getContextParser = (props) => ({ data: { allEvents, allDocuments } }) => {
 	const roundAngle = (angle) => angle - (angle % 4);
 	const getAngle = pipe(angleScaleFunction, roundAngle);
 	const parsedDocuments = pipe(
-		map(({ id, documentCreationDate }) => {
+		map((document) => {
+			const { id, documentCreationDate } = document;
 			const date = new Date(documentCreationDate);
 			const angle = getAngle(date);
-			return { id, date, angle };
+			return {
+				...document,
+				id,
+				date,
+				angle,
+			};
 		}),
 		(items) => groupItemsBy(items, 'angle'),
 	)(allDocuments);
 
 	const parsedEvents = pipe(
-		map(({ id, eventStartDate }) => {
+		map((event) => {
+			const { id, eventStartDate } = event;
 			const date = new Date(eventStartDate);
 			const angle = getAngle(date);
-			return { id, date, angle };
+			return {
+				...event,
+				id,
+				date,
+				angle,
+			};
 		}),
 		(items) => groupItemsBy(items, 'angle'),
 	)(allEvents);
