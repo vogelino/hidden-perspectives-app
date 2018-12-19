@@ -27,7 +27,7 @@ const OriginalView = ({
 					file={file}
 					loading=""
 					error=""
-					renderMode="svg"
+					renderMode="canvas"
 					onLoadSuccess={({ _pdfInfo }) => {
 						setPagesCount(_pdfInfo.numPages);
 						stopLoading();
