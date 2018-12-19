@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Tooltip from '../Tooltip';
 import {
 	CircleContainer,
 	CircleSvg,
@@ -79,7 +80,9 @@ const CircleTimeline = ({ item, documents, events }) => (
 						key={`document-${docId}`}
 						{...CIRCLE_CENTER}
 					>
-						{isStacked ? <MultipleDocumentsPill /> : <SingleDocumentPill />}
+						<Tooltip id={docId} itemType="document">
+							{isStacked ? <MultipleDocumentsPill /> : <SingleDocumentPill />}
+						</Tooltip>
 					</Document>,
 				];
 			})}
@@ -109,12 +112,14 @@ const CircleTimeline = ({ item, documents, events }) => (
 						width={docSize}
 						height={docSize}
 						angle={group[0].angle}
-						key={`document-${docId}`}
+						key={`event-${docId}`}
 						{...CIRCLE_CENTER}
 					>
-						{isStacked
-							? <MultipleEventsPill>{group.length}</MultipleEventsPill>
-							: <SingleEventPill />}
+						<Tooltip id={docId} itemType="event">
+							{isStacked
+								? <MultipleEventsPill>{group.length}</MultipleEventsPill>
+								: <SingleEventPill />}
+						</Tooltip>
 					</Document>,
 				];
 			})}

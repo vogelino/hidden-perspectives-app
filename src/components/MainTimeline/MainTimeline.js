@@ -14,6 +14,7 @@ import {
 import Minimap from './Minimap';
 import { LoadingContainer } from '../LoadingIndicator/styles';
 import LoadingIndicator from '../LoadingIndicator';
+import Tooltip from '../Tooltip';
 import ContainerWithStickyLabel from './ContainerWithStickyLabel';
 import Legend from '../Legend';
 
@@ -53,18 +54,22 @@ const MainTimeline = ({
 									<Documents>
 										{documents.map(({ title, id, path }) => (
 											<EventTitleContainer key={id}>
-												<EventTitle to={path}>
-													{title}
-												</EventTitle>
+												<Tooltip id={id} itemType="document">
+													<EventTitle to={path}>
+														{title}
+													</EventTitle>
+												</Tooltip>
 											</EventTitleContainer>
 										))}
 									</Documents>
 									<Events>
 										{events.map(({ title, id, path }) => (
 											<EventTitleContainer key={id}>
-												<EventTitle to={path}>
-													{title}
-												</EventTitle>
+												<Tooltip id={id} itemType="event" position="left">
+													<EventTitle to={path}>
+														{title}
+													</EventTitle>
+												</Tooltip>
 											</EventTitleContainer>
 										))}
 									</Events>

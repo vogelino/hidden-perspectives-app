@@ -5,34 +5,11 @@ import {
 	ascend,
 	prop,
 } from 'ramda';
+import { formatGraphcoolDocument, formatGraphcoolEvent } from '../../utils/graphcoolUtil';
 import SummarySection from './SummarySection';
 
-const formatEvents = (events) => flatten(events).map(({
-	id,
-	eventTitle,
-	eventStartDate,
-	eventDescription,
-}) => ({
-	id,
-	title: eventTitle,
-	date: new Date(eventStartDate),
-	summary: eventDescription,
-	type: 'Event',
-}));
-
-const formatDocuments = (documents) => flatten(documents).map(({
-	id,
-	documentTitle,
-	documentCreationDate,
-	documentDescription,
-	documentKind,
-}) => ({
-	id,
-	title: documentTitle,
-	date: new Date(documentCreationDate),
-	summary: documentDescription,
-	type: documentKind.name,
-}));
+const formatEvents = (events) => flatten(events).map(formatGraphcoolEvent);
+const formatDocuments = (documents) => flatten(documents).map(formatGraphcoolDocument);
 
 export default compose(
 	mapProps(({ events, documents }) => ({
