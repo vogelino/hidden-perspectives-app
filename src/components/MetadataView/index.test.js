@@ -1,11 +1,11 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import DocumentMetadataView from '.';
+import MetadataView from '.';
 
 describe('DocumentMetadataView component', () => {
-	const documentMetadataView = shallow(<DocumentMetadataView />);
+	const metadataView = shallow(<MetadataView />);
 
 	it('should render without crashing', () => {
-		expect(documentMetadataView.exists()).toBe(true);
+		expect(metadataView.exists()).toBe(true);
 	});
 });

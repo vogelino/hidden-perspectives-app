@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import EventMetadataView from '../../components/EventMetadataView';
+import MetadataView from '../../components/MetadataView';
 import Header from '../../components/Header';
 import NodeTitle from '../../components/NodeTitle';
 import NodeHeader from '../../components/NodeHeader';
 
-const MetadataPage = ({ match }) => (
+const EventMetadataPage = ({ match }) => (
 	<div className="MetadataPage">
 		<Header>
 			<NodeTitle
@@ -14,11 +14,11 @@ const MetadataPage = ({ match }) => (
 			/>
 		</Header>
 		<NodeHeader id={match.params.id} itemType="event" />
-		<EventMetadataView id={match.params.id} />
+		<MetadataView id={match.params.id} itemType="event" />
 	</div>
 );
 
-MetadataPage.propTypes = {
+EventMetadataPage.propTypes = {
 	match: PropTypes.shape({
 		params: PropTypes.shape({
 			id: PropTypes.string,
@@ -26,4 +26,4 @@ MetadataPage.propTypes = {
 	}).isRequired,
 };
 
-export default MetadataPage;
+export default EventMetadataPage;

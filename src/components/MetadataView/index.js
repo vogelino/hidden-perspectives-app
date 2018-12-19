@@ -11,7 +11,7 @@ import {
 	always,
 } from 'ramda';
 import { withLoading, withErrors, getErrorHandler } from '../../utils/hocUtil';
-import DocumentMetadataView from './DocumentMetadataView';
+import MetadataView from './MetadataView';
 import { getFormattedDate } from '../../utils/dateUtil';
 import Tag from '../_library/Tag';
 import Stakeholder from '../_library/Stakeholder';
@@ -52,6 +52,30 @@ const DOCUMENT_QUERY = gql`
 	}
 `;
 
+const EVENT_QUERY = gql`
+	query GetEvent($id: ID!) {
+		Event(id: $id) {
+			id
+			eventTitle
+			eventDescription
+			eventStartDate
+			eventEndDate
+			eventStakeholders {
+				id
+				stakeholderFullName
+			}
+			eventTags {
+				id,
+				name												
+			}
+			eventLocations {
+				id,
+				locationName
+			}
+		}
+	}
+`;
+
 const mapStakeholder = ({ id, stakeholderFullName }) => ({
 	id, name: stakeholderFullName,
 });
@@ -71,7 +95,7 @@ const passValueAsChild = (Component) => ({ value, ...props }) => (
 	<Component {...props}>{value}</Component>
 );
 
-const structureData = (data) => {
+const structureDocumentData = (data) => {
 	const coreInformation = {
 		groupLabel: 'Core information',
 		values: [
@@ -119,9 +143,62 @@ const structureData = (data) => {
 	].filter(hasValues);
 };
 
-const getDataParser = ({ stopLoading, setData }) => ({ data }) => {
+const structureEventData = (data) => {
+	const {
+		eventTitle,
+		eventDescription,
+		eventStartDate,
+		eventEndDate,
+		eventStakeholders,
+		eventLocations,
+		eventTags,
+	} = data;
+
+	const coreInformation = {
+		groupLabel: 'Core information',
+		values: [
+			{ label: 'Title', value: eventTitle },
+			{ label: 'Description', value: eventDescription },
+			{ label: 'Start date', value: formatIfValidDate(eventStartDate) },
+			{ label: 'End date', value: formatIfValidDate(eventEndDate) },
+		].filter(hasValue),
+	};
+
+	const appearences = {
+		groupLabel: 'Appearences',
+		values: [
+			{
+				label: 'Protagonists',
+				value: eventStakeholders.map(mapStakeholder),
+				ValueComponent: passValueAsChild(Stakeholder),
+			},
+			{ label: 'Locations', value: eventLocations.map(mapLocation) },
+		].filter(hasValue),
+	};
+
+	const categorization = {
+		groupLabel: 'Categorization',
+		values: [
+			{
+				label: 'Tags',
+				value: eventTags,
+				ValueComponent: passValueAsChild(Tag),
+			},
+		].filter(hasValue),
+	};
+
+	return [
+		coreInformation,
+		appearences,
+		categorization,
+	].filter(hasValues);
+};
+
+const getDataParser = ({ stopLoading, setData, itemType }) => ({ data }) => {
 	stopLoading();
-	setData(structureData(data.Document));
+	const structuredData = itemType === 'event'
+		? structureEventData(data.Event) : structureDocumentData(data.Document);
+	setData(structuredData);
 };
 
 export default compose(
@@ -131,13 +208,13 @@ export default compose(
 	withState('data', 'setData', []),
 	lifecycle({
 		componentDidMount() {
-			const { id, client } = this.props;
+			const { id, client, itemType } = this.props;
 			client.query({
-				query: DOCUMENT_QUERY,
+				query: itemType === 'event' ? EVENT_QUERY : DOCUMENT_QUERY,
 				variables: { id },
 			})
 				.then(getDataParser(this.props))
 				.catch(getErrorHandler(this.props));
 		},
 	}),
-)(DocumentMetadataView);
+)(MetadataView);

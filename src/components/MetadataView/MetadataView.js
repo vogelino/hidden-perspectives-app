@@ -8,7 +8,7 @@ import { Container, Content } from './styles';
 
 const defaultValueComponent = ({ value }) => value;
 
-const DocumentMetadataView = ({ data, isLoading }) => (
+const MetadataView = ({ data, isLoading }) => (
 	<Container>
 		<Content>
 			<LoadingContainer isLoading={isLoading}>
@@ -29,7 +29,7 @@ const DocumentMetadataView = ({ data, isLoading }) => (
 	</Container>
 );
 
-DocumentMetadataView.propTypes = {
+MetadataView.propTypes = {
 	isLoading: PropTypes.bool,
 	data: PropTypes.arrayOf(PropTypes.shape({
 		groupLabel: PropTypes.string.isRequired,
@@ -48,9 +48,9 @@ DocumentMetadataView.propTypes = {
 	})),
 };
 
-DocumentMetadataView.defaultProps = {
+MetadataView.defaultProps = {
 	isLoading: true,
 	data: [],
 };
 
-export default DocumentMetadataView;
+export default MetadataView;
