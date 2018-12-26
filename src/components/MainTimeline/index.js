@@ -3,9 +3,11 @@ import {
 	compose,
 	lifecycle,
 	withState,
+	withHandlers,
 } from 'recompose';
 import gql from 'graphql-tag';
 import { filter } from 'ramda';
+import debounce from 'lodash.debounce';
 import MainTimeline from './MainTimeline';
 import { withLoading, withErrors, getErrorHandler } from '../../utils/hocUtil';
 import { getMinimap } from '../../utils/timelineUtil';
@@ -132,12 +134,49 @@ const getEventsAndDocuments = ({
 	stopLoading();
 };
 
+const isInViewport = (element, offset = 0) => {
+	if (!element) {
+		return false;
+	}
+
+	const { top } = element.getBoundingClientRect();
+	const isUnderUpperBound = (top + offset) >= 0;
+	const isAboveLowerBound = (top - offset) <= window.innerHeight;
+	return isUnderUpperBound && isAboveLowerBound;
+};
+
+const getEventIDsInViewport = (timelineElement) => {
+	const timelineEvents = timelineElement.getElementsByClassName('timeline-event');
+	const eventIDs = [...timelineEvents]
+		.filter(isInViewport)
+		.map((timelineEvent) => timelineEvent.getAttribute('data-id'));
+
+	return eventIDs;
+};
+
+const handleScroll = (event) => {
+	const timelineElement = event.target;
+
+	const timelineEventIDs = getEventIDsInViewport(timelineElement);
+	console.log(timelineEventIDs);
+};
+
 export default compose(
 	withApollo,
 	withLoading,
 	withErrors,
 	withState('timelineItems', 'setTimelineItems', []),
 	withState('minimapItems', 'setMinimapItems', []),
+	withHandlers({
+		onRef: () => (ref) => {
+			if (ref) {
+				ref.addEventListener(
+					'scroll',
+					debounce(handleScroll, 250),
+				);
+			}
+		},
+	}),
 	lifecycle({
 		componentDidMount() {
 			const { props } = this;

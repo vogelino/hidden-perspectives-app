@@ -58,6 +58,7 @@
     "graphql-tag": "^2.10.0",
     "initials": "^3.0.0",
     "lint-staged": "^7.3.0",
+    "lodash.debounce": "^4.0.8",
     "normalize.css": "^8.0.0",
     "polished": "^2.3.0",
     "prop-types": "^15.6.2",
