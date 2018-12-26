@@ -119,12 +119,21 @@ const structureItems = ({
 
 const isDocumentID = (id) => id.startsWith('uir');
 
-const getFlattenedProtagonists = (data) => data
+const getClusteredProtagonists = (data) => data
 	.map((d) => {
 		const { Document, Event } = d.data;
 		return Document ? Document.mentionedStakeholders : Event.eventStakeholders;
 	})
-	.reduce((acc, current) => acc.concat(current), []);
+	.reduce((acc, current) => {
+		const flattenedProtagonists = acc.concat(current);
+		return flattenedProtagonists;
+	}, [])
+	.reduce((acc, current) => {
+		const { id } = current;
+		return Object.assign(acc, {
+			[id]: (acc[id] || []).concat(current),
+		});
+	}, {});
 
 const parseItems = ({ events, datesArray, documents }) => {
 	const timelineEvents = normaliseItems({
@@ -201,10 +210,8 @@ const handleScroll = (event, props) => {
 
 	Promise.all(protagonistPromises)
 		.then((response) => {
-			const protagonists = getFlattenedProtagonists(response);
-			const protagonistsName = protagonists.map(({ stakeholderFullName }) => stakeholderFullName);
-			console.log(protagonists);
-			console.log(protagonistsName);
+			const clusteredProtagonists = getClusteredProtagonists(response);
+			console.log(clusteredProtagonists);
 		})
 		.catch((error) => console.log(error));
 };
