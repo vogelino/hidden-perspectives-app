@@ -21,17 +21,41 @@ import {
 
 const ALL_EVENTS_AND_DOCUMENTS = gql`
 	{
-	allEvents(orderBy: eventStartDate_ASC) {
-		id
-		eventTitle
-		eventStartDate
+		allEvents(orderBy: eventStartDate_ASC) {
+			id
+			eventTitle
+			eventStartDate
+		}
+		allDocuments(orderBy: documentCreationDate_ASC) {
+			id
+			documentTitle
+			documentCreationDate
+		}
 	}
-	allDocuments(orderBy: documentCreationDate_ASC) {
-		id
-		documentTitle
-		documentCreationDate
+`;
+
+const GET_DOCUMENT_STAKEHOLDERS = gql`
+	query GetDocumentProtagonists($id: ID!) {
+		Document(id: $id) {
+			id
+			mentionedStakeholders {
+				id
+				stakeholderFullName
+			}
+		}
 	}
-}
+`;
+
+const GET_EVENT_STAKEHOLDERS = gql`
+	query GetEventProtagonists($id: ID!) {
+		Event(id: $id) {
+			id
+			eventStakeholders {
+				id
+				stakeholderFullName
+			}
+		}
+	}
 `;
 
 const normaliseItems = ({
@@ -93,6 +117,15 @@ const structureItems = ({
 	return items;
 };
 
+const isDocumentID = (id) => id.startsWith('uir');
+
+const getFlattenedProtagonists = (data) => data
+	.map((d) => {
+		const { Document, Event } = d.data;
+		return Document ? Document.mentionedStakeholders : Event.eventStakeholders;
+	})
+	.reduce((acc, current) => acc.concat(current), []);
+
 const parseItems = ({ events, datesArray, documents }) => {
 	const timelineEvents = normaliseItems({
 		items: events,
@@ -134,6 +167,11 @@ const getEventsAndDocuments = ({
 	stopLoading();
 };
 
+const fetchProtagonistsByID = (props, id) => props.client.query({
+	query: isDocumentID(id) ? GET_DOCUMENT_STAKEHOLDERS : GET_EVENT_STAKEHOLDERS,
+	variables: { id },
+});
+
 const isInViewport = (element, offset = 0) => {
 	if (!element) {
 		return false;
@@ -154,11 +192,27 @@ const getEventIDsInViewport = (timelineElement) => {
 	return eventIDs;
 };
 
-const handleScroll = (event) => {
+const handleScroll = (event, props) => {
 	const timelineElement = event.target;
-
 	const timelineEventIDs = getEventIDsInViewport(timelineElement);
-	console.log(timelineEventIDs);
+	const protagonistPromises = timelineEventIDs.map(
+		(eventID) => fetchProtagonistsByID(props, eventID),
+	);
+
+	Promise.all(protagonistPromises)
+		.then((response) => {
+			const protagonists = getFlattenedProtagonists(response);
+			const protagonistsName = protagonists.map(({ stakeholderFullName }) => stakeholderFullName);
+			console.log(protagonists);
+			console.log(protagonistsName);
+		})
+		.catch((error) => console.log(error));
+};
+
+const handleOnRef = (props) => (ref) => {
+	if (ref) {
+		ref.addEventListener('scroll', debounce((event) => handleScroll(event, props), 500));
+	}
 };
 
 export default compose(
@@ -168,14 +222,7 @@ export default compose(
 	withState('timelineItems', 'setTimelineItems', []),
 	withState('minimapItems', 'setMinimapItems', []),
 	withHandlers({
-		onRef: () => (ref) => {
-			if (ref) {
-				ref.addEventListener(
-					'scroll',
-					debounce(handleScroll, 250),
-				);
-			}
-		},
+		onRef: (props) => handleOnRef(props),
 	}),
 	lifecycle({
 		componentDidMount() {
