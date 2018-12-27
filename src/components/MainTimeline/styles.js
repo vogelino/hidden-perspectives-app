@@ -23,7 +23,7 @@ export const BubbleChartContainer = styled.div`
 	width: 15rem;
 	height: 100%;
 	position: fixed;
-	top: 4.5rem;
+	top: 0;
 	right: 0;
 	border-left: 1px solid ${({ theme }) => theme.commonBorderColor};
 	z-index: 1;

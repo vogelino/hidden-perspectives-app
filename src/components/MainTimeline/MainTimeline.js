@@ -26,6 +26,7 @@ const MainTimeline = ({
 	bubbleChartItems,
 	errors,
 	isLoading,
+	fetchingProtagonists,
 	onRef,
 }) => (
 	<Container id="mainTimeline" ref={onRef}>
@@ -37,7 +38,13 @@ const MainTimeline = ({
 			<Minimap isLoading={isLoading} items={minimapItems} />
 		</MinimapContainer>
 		<BubbleChartContainer>
-			<BubbleChart isLoading={isLoading} items={bubbleChartItems} />
+			<BubbleChart
+				isLoading={isLoading}
+				fetchingProtagonists={fetchingProtagonists}
+				items={bubbleChartItems}
+				diameter={200}
+				bubblesPadding={3}
+			/>
 		</BubbleChartContainer>
 		<Legend />
 		{timelineItems.map(({ year, months, ...yearKey }) => (
@@ -131,6 +138,7 @@ MainTimeline.propTypes = {
 	),
 	errors: PropTypes.arrayOf(PropTypes.string),
 	isLoading: PropTypes.bool,
+	fetchingProtagonists: PropTypes.bool,
 	onRef: PropTypes.func.isRequired,
 };
 
@@ -140,6 +148,7 @@ MainTimeline.defaultProps = {
 	bubbleChartItems: {},
 	errors: [],
 	isLoading: true,
+	fetchingProtagonists: false,
 };
 
 export default MainTimeline;

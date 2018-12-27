@@ -202,6 +202,13 @@ const getEventIDsInViewport = (timelineElement) => {
 };
 
 const handleScroll = (event, props) => {
+	const {
+		setBubbleChartItems,
+		setFetchingProtagonists,
+	} = props;
+
+	setFetchingProtagonists(true);
+
 	const timelineElement = event.target;
 	const timelineEventIDs = getEventIDsInViewport(timelineElement);
 	const protagonistPromises = timelineEventIDs.map(
@@ -211,7 +218,8 @@ const handleScroll = (event, props) => {
 	Promise.all(protagonistPromises)
 		.then((response) => {
 			const clusteredProtagonists = getClusteredProtagonists(response);
-			props.setBubbleChartItems(clusteredProtagonists);
+			setBubbleChartItems(clusteredProtagonists);
+			setFetchingProtagonists(false);
 		})
 		.catch(getErrorHandler(props));
 };
@@ -229,6 +237,7 @@ export default compose(
 	withState('timelineItems', 'setTimelineItems', []),
 	withState('minimapItems', 'setMinimapItems', []),
 	withState('bubbleChartItems', 'setBubbleChartItems', {}),
+	withState('fetchingProtagonists', 'setFetchingProtagonists', false),
 	withHandlers({
 		onRef: (props) => handleOnRef(props),
 	}),
@@ -242,6 +251,7 @@ export default compose(
 		shouldComponentUpdate(nextProps) {
 			return (nextProps.timelineItems.length !== this.props.timelineItems.length)
 				|| (nextProps.bubbleChartItems !== this.props.bubbleChartItems)
+				|| (nextProps.fetchingProtagonists !== this.props.fetchingProtagonists)
 				|| (nextProps.errors.length !== this.props.errors.length)
 				|| (nextProps.isLoading !== this.props.isLoading);
 		},
