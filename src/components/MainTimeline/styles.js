@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
 export const Container = styled.div`
-	padding: 0 15rem 0 6rem;
+	padding: 0 18rem 0 6rem;
 	width: 100vw;
 	height: calc(100vh - 4.5rem);
 	overflow-y: auto;
@@ -20,7 +20,7 @@ export const MinimapContainer = styled.div`
 `;
 
 export const BubbleChartContainer = styled.div`
-	width: 15rem;
+	width: 18rem;
 	height: 100%;
 	position: fixed;
 	top: 0;

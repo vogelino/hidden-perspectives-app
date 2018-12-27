@@ -42,7 +42,7 @@ const MainTimeline = ({
 				isLoading={isLoading}
 				fetchingProtagonists={fetchingProtagonists}
 				items={bubbleChartItems}
-				diameter={200}
+				diameter={250}
 				bubblesPadding={3}
 			/>
 		</BubbleChartContainer>
