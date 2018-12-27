@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {
 	Container,
 	MinimapContainer,
+	BubbleChartContainer,
 	EventContainer,
 	Event,
 	EventDate,
@@ -12,6 +13,7 @@ import {
 	Documents,
 } from './styles';
 import Minimap from './Minimap';
+import BubbleChart from './BubbleChart';
 import { LoadingContainer } from '../LoadingIndicator/styles';
 import LoadingIndicator from '../LoadingIndicator';
 import Tooltip from '../Tooltip';
@@ -21,6 +23,7 @@ import Legend from '../Legend';
 const MainTimeline = ({
 	timelineItems,
 	minimapItems,
+	bubbleChartItems,
 	errors,
 	isLoading,
 	onRef,
@@ -33,6 +36,9 @@ const MainTimeline = ({
 		<MinimapContainer>
 			<Minimap isLoading={isLoading} items={minimapItems} />
 		</MinimapContainer>
+		<BubbleChartContainer>
+			<BubbleChart isLoading={isLoading} items={bubbleChartItems} />
+		</BubbleChartContainer>
 		<Legend />
 		{timelineItems.map(({ year, months, ...yearKey }) => (
 			<ContainerWithStickyLabel label={year} {...yearKey} isYear>
@@ -115,6 +121,14 @@ MainTimeline.propTypes = {
 			density: PropTypes.number.isRequired,
 		}),
 	),
+	bubbleChartItems: PropTypes.objectOf(
+		PropTypes.arrayOf(
+			PropTypes.shape({
+				id: PropTypes.string.isRequired,
+				stakeholderFullName: PropTypes.string.isRequired,
+			}),
+		),
+	),
 	errors: PropTypes.arrayOf(PropTypes.string),
 	isLoading: PropTypes.bool,
 	onRef: PropTypes.func.isRequired,
@@ -123,6 +137,7 @@ MainTimeline.propTypes = {
 MainTimeline.defaultProps = {
 	timelineItems: [],
 	minimapItems: [],
+	bubbleChartItems: {},
 	errors: [],
 	isLoading: true,
 };

@@ -211,9 +211,9 @@ const handleScroll = (event, props) => {
 	Promise.all(protagonistPromises)
 		.then((response) => {
 			const clusteredProtagonists = getClusteredProtagonists(response);
-			console.log(clusteredProtagonists);
+			props.setBubbleChartItems(clusteredProtagonists);
 		})
-		.catch((error) => console.log(error));
+		.catch(getErrorHandler(props));
 };
 
 const handleOnRef = (props) => (ref) => {
@@ -228,19 +228,20 @@ export default compose(
 	withErrors,
 	withState('timelineItems', 'setTimelineItems', []),
 	withState('minimapItems', 'setMinimapItems', []),
+	withState('bubbleChartItems', 'setBubbleChartItems', {}),
 	withHandlers({
 		onRef: (props) => handleOnRef(props),
 	}),
 	lifecycle({
 		componentDidMount() {
 			const { props } = this;
-
 			props.client.query({ query: ALL_EVENTS_AND_DOCUMENTS })
 				.then(getEventsAndDocuments(props))
 				.catch(getErrorHandler(props));
 		},
 		shouldComponentUpdate(nextProps) {
 			return (nextProps.timelineItems.length !== this.props.timelineItems.length)
+				|| (nextProps.bubbleChartItems !== this.props.bubbleChartItems)
 				|| (nextProps.errors.length !== this.props.errors.length)
 				|| (nextProps.isLoading !== this.props.isLoading);
 		},
