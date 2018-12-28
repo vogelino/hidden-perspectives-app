@@ -39,8 +39,7 @@ const MainTimeline = ({
 		</MinimapContainer>
 		<BubbleChartContainer>
 			<BubbleChart
-				isLoading={isLoading}
-				fetchingProtagonists={fetchingProtagonists}
+				isLoading={isLoading || fetchingProtagonists}
 				items={bubbleChartItems}
 				diameter={250}
 				bubblesPadding={3}

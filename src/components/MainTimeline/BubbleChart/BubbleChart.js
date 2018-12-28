@@ -4,6 +4,7 @@ import * as d3 from 'd3';
 import { Bubble, BubblesWrapper, BubblesLoadingContainer } from './styles';
 import LoadingIndicator from '../../LoadingIndicator';
 
+// TODO: Move logic in index file
 const calcBubbleLayout = (data, diameter, padding) => {
 	const bubbleLayout = d3.pack()
 		.size([diameter, diameter])
@@ -63,21 +64,20 @@ const Bubbles = ({
 const BubbleChart = ({
 	items,
 	isLoading,
-	fetchingProtagonists,
 	diameter,
 	bubblesPadding,
 }) => (
 	<BubblesWrapper
-		isLoading={fetchingProtagonists}
+		isLoading={isLoading}
 		diameter={diameter}
 	>
 		<Bubbles
 			items={items}
 			diameter={diameter}
 			padding={bubblesPadding}
-			isLoading={fetchingProtagonists}
+			isLoading={isLoading}
 		/>
-		<BubblesLoadingContainer isLoading={isLoading || fetchingProtagonists}>
+		<BubblesLoadingContainer isLoading={isLoading}>
 			<LoadingIndicator />
 		</BubblesLoadingContainer>
 	</BubblesWrapper>
@@ -85,7 +85,6 @@ const BubbleChart = ({
 
 BubbleChart.propTypes = {
 	isLoading: PropTypes.bool,
-	fetchingProtagonists: PropTypes.bool,
 	bubblesPadding: PropTypes.number,
 	diameter: PropTypes.number,
 	items: PropTypes.objectOf(
@@ -102,7 +101,6 @@ BubbleChart.defaultProps = {
 	isLoading: false,
 	diameter: 100,
 	bubblesPadding: 0,
-	fetchingProtagonists: false,
 	items: {},
 };
 
