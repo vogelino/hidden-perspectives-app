@@ -20,12 +20,15 @@ export const MinimapContainer = styled.div`
 `;
 
 export const BubbleChartContainer = styled.div`
-	width: 18rem;
-	height: 100%;
-	position: fixed;
-	top: 0;
-	right: 0;
+	align-items: center;
 	border-left: 1px solid ${({ theme }) => theme.commonBorderColor};
+	display: flex;
+	height: 100%;
+	justify-content: center;
+	position: fixed;
+	right: 0;
+	top: 0;
+	width: 18rem;
 	z-index: 1;
 `;
 

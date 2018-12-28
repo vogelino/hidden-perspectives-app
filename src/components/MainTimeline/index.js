@@ -201,7 +201,7 @@ const getEventIDsInViewport = (timelineElement) => {
 	return eventIDs;
 };
 
-const handleScroll = (event, props) => {
+const getProtagonistsInViewport = (timelineElement, props) => {
 	const {
 		setBubbleChartItems,
 		setFetchingProtagonists,
@@ -209,7 +209,6 @@ const handleScroll = (event, props) => {
 
 	setFetchingProtagonists(true);
 
-	const timelineElement = event.target;
 	const timelineEventIDs = getEventIDsInViewport(timelineElement);
 	const protagonistPromises = timelineEventIDs.map(
 		(eventID) => fetchProtagonistsByID(props, eventID),
@@ -224,9 +223,10 @@ const handleScroll = (event, props) => {
 		.catch(getErrorHandler(props));
 };
 
-const handleOnRef = (props) => (ref) => {
+const onRef = (props) => (ref) => {
 	if (ref) {
-		ref.addEventListener('scroll', debounce((event) => handleScroll(event, props), 500));
+		props.setTimelineContainer(ref);
+		ref.addEventListener('scroll', debounce((event) => getProtagonistsInViewport(event.target, props), 350));
 	}
 };
 
@@ -237,9 +237,11 @@ export default compose(
 	withState('timelineItems', 'setTimelineItems', []),
 	withState('minimapItems', 'setMinimapItems', []),
 	withState('bubbleChartItems', 'setBubbleChartItems', {}),
+	withState('timelineContainer', 'setTimelineContainer', null),
 	withState('fetchingProtagonists', 'setFetchingProtagonists', false),
+	withState('initialProtagonistsFetched', 'setInitialProtagonistsFetched', false),
 	withHandlers({
-		onRef: (props) => handleOnRef(props),
+		onRef,
 	}),
 	lifecycle({
 		componentDidMount() {
@@ -247,6 +249,14 @@ export default compose(
 			props.client.query({ query: ALL_EVENTS_AND_DOCUMENTS })
 				.then(getEventsAndDocuments(props))
 				.catch(getErrorHandler(props));
+		},
+		componentDidUpdate() {
+			const { props } = this;
+
+			if (!props.initialProtagonistsFetched) {
+				props.setInitialProtagonistsFetched(true);
+				getProtagonistsInViewport(props.timelineContainer, props);
+			}
 		},
 		shouldComponentUpdate(nextProps) {
 			return (nextProps.timelineItems.length !== this.props.timelineItems.length)

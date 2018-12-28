@@ -13,7 +13,7 @@ import {
 	Documents,
 } from './styles';
 import Minimap from './Minimap';
-import BubbleChart from './BubbleChart';
+import BubbleChart from '../BubbleChart';
 import { LoadingContainer } from '../LoadingIndicator/styles';
 import LoadingIndicator from '../LoadingIndicator';
 import Tooltip from '../Tooltip';
@@ -42,7 +42,7 @@ const MainTimeline = ({
 				isLoading={isLoading || fetchingProtagonists}
 				items={bubbleChartItems}
 				diameter={250}
-				bubblesPadding={3}
+				bubblesPadding={5}
 			/>
 		</BubbleChartContainer>
 		<Legend />

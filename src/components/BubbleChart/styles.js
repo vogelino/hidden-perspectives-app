@@ -3,10 +3,7 @@ import styled from 'styled-components';
 export const BubblesWrapper = styled.div`
     border-radius: 50%;
     height: ${({ diameter }) => diameter}px;
-    left: 50%;
-    position: absolute;
-    top: 50%;
-    transform: translate(-50%, -50%);
+    position: relative;
     width: ${({ diameter }) => diameter}px;
 `;
 

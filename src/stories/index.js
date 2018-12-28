@@ -6,3 +6,4 @@ import './metadataRow';
 import './tag';
 import './stakeholder';
 import './nodeHeader';
+import './bubbleChart';
