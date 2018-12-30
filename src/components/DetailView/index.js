@@ -1,4 +1,8 @@
-import { compose, lifecycle, withState } from 'recompose';
+import {
+	compose,
+	lifecycle,
+	withState,
+} from 'recompose';
 import { withApollo } from 'react-apollo';
 import gql from 'graphql-tag';
 import { scaleLinear } from 'd3-scale';
@@ -39,6 +43,67 @@ const DOCUMENT_QUERY = gql`
 		}
 	}
 `;
+
+const GET_DOCUMENT_STAKEHOLDERS = gql`
+	query GetDocumentProtagonists($id: ID!) {
+		Document(id: $id) {
+			id
+			mentionedStakeholders {
+				id
+				stakeholderFullName
+			}
+		}
+	}
+`;
+
+const GET_EVENT_STAKEHOLDERS = gql`
+	query GetEventProtagonists($id: ID!) {
+		Event(id: $id) {
+			id
+			eventStakeholders {
+				id
+				stakeholderFullName
+			}
+		}
+	}
+`;
+
+// Protagonists
+// TODO: Combine with the rest of the component logic
+const handleProtagonists = (props, documents, events) => {
+	const getClusteredProtagonists = (data) => data
+		.map((d) => {
+			const { Document, Event } = d.data;
+			return Document ? Document.mentionedStakeholders : Event.eventStakeholders;
+		})
+		.reduce((acc, current) => {
+			const flattenedProtagonists = acc.concat(current);
+			return flattenedProtagonists;
+		}, [])
+		.reduce((acc, current) => Object.assign(acc, {
+			[current.id]: (acc[current.id] || []).concat(current),
+		}), {});
+
+	const isDocumentID = (fileId) => fileId.startsWith('uir');
+	const fetchProtagonistsByID = (fileId) => props.client.query({
+		query: isDocumentID(fileId) ? GET_DOCUMENT_STAKEHOLDERS : GET_EVENT_STAKEHOLDERS,
+		variables: { id: fileId },
+	});
+
+	const itemIDs = [...documents, ...events].map((items) => items.map((item) => item.id));
+	const flattenedIDs = [].concat(...itemIDs);
+
+	const protagonistPromises = flattenedIDs.map(
+		(eventID) => fetchProtagonistsByID(eventID),
+	);
+
+	Promise.all(protagonistPromises)
+		.then((response) => {
+			const clusteredProtagonists = getClusteredProtagonists(response);
+			props.setProtagonists(clusteredProtagonists);
+		})
+		.catch(getErrorHandler(props));
+};
 
 const formatTagsForQuery = (type, tagIds) => map(
 	(tagId) => `{ ${type}Tags_some: { id: "${tagId}" } }`,
@@ -131,6 +196,7 @@ const getContextParser = (props) => ({ data: { allEvents, allDocuments } }) => {
 
 	setDocuments(parsedDocuments);
 	setEvents(parsedEvents);
+	handleProtagonists(props, parsedDocuments, parsedEvents);
 	stopLoading();
 };
 
@@ -166,6 +232,7 @@ export default compose(
 	withState('item', 'setItem', undefined),
 	withState('documents', 'setDocuments', []),
 	withState('events', 'setEvents', []),
+	withState('protagonists', 'setProtagonists', {}),
 	lifecycle({
 		componentDidMount() {
 			const { id, client, itemType } = this.props;

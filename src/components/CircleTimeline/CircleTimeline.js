@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Tooltip from '../Tooltip';
+import BubbleChart from '../BubbleChart';
 import {
 	CircleContainer,
 	CircleSvg,
@@ -28,7 +29,12 @@ const getXByAngle = (radius, angle) => (radius * Math.sin(toRadian(angle)))
 const getYByAngle = (radius, angle) => (radius * -Math.cos(toRadian(angle)))
 	+ RADIUS_OUTER + MARGIN;
 
-const CircleTimeline = ({ item, documents, events }) => (
+const CircleTimeline = ({
+	item,
+	documents,
+	events,
+	protagonists,
+}) => (
 	<CircleContainer>
 		<CircleSvg
 			id="circleContainer"
@@ -128,6 +134,11 @@ const CircleTimeline = ({ item, documents, events }) => (
 				r={8}
 			/>
 		</CircleSvg>
+		<BubbleChart
+			items={protagonists}
+			diameter={300}
+			bubblesPadding={0}
+		/>
 	</CircleContainer>
 );
 
@@ -150,11 +161,18 @@ CircleTimeline.propTypes = {
 			angle: PropTypes.number.isRequired,
 		})),
 	),
+	protagonists: PropTypes.objectOf(
+		PropTypes.arrayOf(PropTypes.shape({
+			id: PropTypes.string,
+			stakeholderFullName: PropTypes.string,
+		})),
+	),
 };
 
 CircleTimeline.defaultProps = {
 	documents: [],
 	events: [],
+	protagonists: {},
 };
 
 export default CircleTimeline;

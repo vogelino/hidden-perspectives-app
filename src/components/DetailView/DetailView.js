@@ -37,6 +37,12 @@ DetailView.propTypes = {
 			angle: PropTypes.number.isRequired,
 		})),
 	),
+	protagonists: PropTypes.objectOf(
+		PropTypes.arrayOf(PropTypes.shape({
+			id: PropTypes.string,
+			stakeholderFullName: PropTypes.string,
+		})),
+	),
 	isLoading: PropTypes.bool,
 };
 
@@ -45,6 +51,7 @@ DetailView.defaultProps = {
 	isLoading: true,
 	documents: [],
 	events: [],
+	protagonists: {},
 };
 
 export default DetailView;
