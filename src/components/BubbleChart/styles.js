@@ -1,8 +1,11 @@
 import styled from 'styled-components';
 
 export const BubblesWrapper = styled.div`
+    align-items: center;
     border-radius: 50%;
+    display: flex;
     height: ${({ diameter }) => diameter}px;
+    justify-content: center;
     position: relative;
     width: ${({ diameter }) => diameter}px;
 `;

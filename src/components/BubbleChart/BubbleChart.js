@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { isEmpty } from 'ramda';
 import { Bubble, BubblesWrapper, BubblesLoadingContainer } from './styles';
 import LoadingIndicator from '../LoadingIndicator';
 
@@ -38,10 +39,16 @@ const BubbleChart = ({
 		isLoading={isLoading}
 		diameter={diameter}
 	>
-		<Bubbles
-			bubbleLayoutItems={bubbleLayoutItems}
-			isLoading={isLoading}
-		/>
+		{
+			isEmpty(bubbleLayoutItems)
+				? 'no items'
+				: (
+					<Bubbles
+						bubbleLayoutItems={bubbleLayoutItems}
+						isLoading={isLoading}
+					/>
+				)
+		}
 		<BubblesLoadingContainer isLoading={isLoading}>
 			<LoadingIndicator />
 		</BubblesLoadingContainer>

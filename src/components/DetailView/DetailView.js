@@ -13,7 +13,7 @@ const DetailView = ({ item, isLoading, ...rest }) => (
 			<LoadingIndicator />
 		</LoadingContainer>
 		<Legend nomargin />
-		{item && <CircleTimeline item={item} {...rest} />}
+		{item && <CircleTimeline item={item} isLoading={isLoading} {...rest} />}
 		{item && <SummarySection item={item} {...rest} />}
 	</Container>
 );

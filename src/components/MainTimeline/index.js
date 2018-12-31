@@ -6,11 +6,18 @@ import {
 	withHandlers,
 } from 'recompose';
 import gql from 'graphql-tag';
-import { filter } from 'ramda';
+import {
+	filter,
+	map,
+	groupBy,
+	union,
+} from 'ramda';
 import debounce from 'lodash.debounce';
 import MainTimeline from './MainTimeline';
 import { withLoading, withErrors, getErrorHandler } from '../../utils/hocUtil';
 import { getMinimap } from '../../utils/timelineUtil';
+import { ucFirst } from '../../utils/stringUtil';
+import isDocumentId from '../../utils/isDocumentId';
 import {
 	monthsLabels,
 	getDifferenceInYears,
@@ -34,27 +41,36 @@ const ALL_EVENTS_AND_DOCUMENTS = gql`
 	}
 `;
 
-const GET_DOCUMENT_STAKEHOLDERS = gql`
-	query GetDocumentProtagonists($id: ID!) {
-		Document(id: $id) {
-			id
-			mentionedStakeholders {
-				id
-				stakeholderFullName
-			}
-		}
-	}
-`;
+const getFilterArgsForQuery = (type, itemIds) => map(
+	(id) => `{ id: "${id}" }`,
+	itemIds,
+);
 
-const GET_EVENT_STAKEHOLDERS = gql`
-	query GetEventProtagonists($id: ID!) {
-		Event(id: $id) {
+const builtProtagonistQueryStringByType = (type, itemIds) => {
+	const stakeholdersFieldName = type === 'document' ? 'mentionedStakeholders' : 'eventStakeholders';
+	const query = `
+		all${ucFirst(type)}s(
+			filter: {
+				OR: [
+					${getFilterArgsForQuery(type, itemIds)}
+				]
+			}
+		) {
 			id
-			eventStakeholders {
+			${type}Title
+			${stakeholdersFieldName} {
 				id
 				stakeholderFullName
 			}
 		}
+	`;
+	return query;
+};
+
+const protagonistQueries = (groupedItemIds) => Object.keys(groupedItemIds).map((key) => builtProtagonistQueryStringByType(key, groupedItemIds[key])); // eslint-disable-line
+const builtProtagonistQuery = (itemIds) => gql`
+	query {
+		${protagonistQueries(itemIds)}
 	}
 `;
 
@@ -117,23 +133,22 @@ const structureItems = ({
 	return items;
 };
 
-const isDocumentID = (id) => id.startsWith('uir');
+const getClusteredProtagonists = ({ data: { allEvents: events, allDocuments: documents } }) => {
+	const combinedEventsAndDocuments = union(events, documents);
+	const protagonists = combinedEventsAndDocuments.map((item) => item.mentionedStakeholders || item.eventStakeholders); // eslint-disable-line
 
-const getClusteredProtagonists = (data) => data
-	.map((d) => {
-		const { Document, Event } = d.data;
-		return Document ? Document.mentionedStakeholders : Event.eventStakeholders;
-	})
-	.reduce((acc, current) => {
-		const flattenedProtagonists = acc.concat(current);
-		return flattenedProtagonists;
-	}, [])
-	.reduce((acc, current) => {
-		const { id } = current;
-		return Object.assign(acc, {
-			[id]: (acc[id] || []).concat(current),
-		});
-	}, {});
+	return protagonists
+		.reduce((acc, current) => {
+			const flattenedProtagonists = acc.concat(current);
+			return flattenedProtagonists;
+		}, [])
+		.reduce((acc, current) => {
+			const { id } = current;
+			return Object.assign(acc, {
+				[id]: (acc[id] || []).concat(current),
+			});
+		}, {});
+};
 
 const parseItems = ({ events, datesArray, documents }) => {
 	const timelineEvents = normaliseItems({
@@ -176,11 +191,6 @@ const getEventsAndDocuments = ({
 	stopLoading();
 };
 
-const fetchProtagonistsByID = (props, id) => props.client.query({
-	query: isDocumentID(id) ? GET_DOCUMENT_STAKEHOLDERS : GET_EVENT_STAKEHOLDERS,
-	variables: { id },
-});
-
 const isInViewport = (element, offset = 0) => {
 	if (!element) {
 		return false;
@@ -192,13 +202,13 @@ const isInViewport = (element, offset = 0) => {
 	return isUnderUpperBound && isAboveLowerBound;
 };
 
-const getEventIDsInViewport = (timelineElement) => {
+const getEventIdsInViewport = (timelineElement) => {
 	const timelineEvents = timelineElement.getElementsByClassName('timeline-event');
-	const eventIDs = [...timelineEvents]
+	const eventIds = [...timelineEvents]
 		.filter(isInViewport)
 		.map((timelineEvent) => timelineEvent.getAttribute('data-id'));
 
-	return eventIDs;
+	return eventIds;
 };
 
 const getProtagonistsInViewport = (timelineElement, props) => {
@@ -207,20 +217,26 @@ const getProtagonistsInViewport = (timelineElement, props) => {
 		setFetchingProtagonists,
 	} = props;
 
-	setFetchingProtagonists(true);
+	const timelineEventIds = getEventIdsInViewport(timelineElement);
 
-	const timelineEventIDs = getEventIDsInViewport(timelineElement);
-	const protagonistPromises = timelineEventIDs.map(
-		(eventID) => fetchProtagonistsByID(props, eventID),
-	);
+	if (timelineEventIds.length > 0) {
+		const groupById = groupBy((id) => (isDocumentId(id) ? 'document' : 'event'));
+		const groupedItemIds = groupById(timelineEventIds);
 
-	Promise.all(protagonistPromises)
-		.then((response) => {
-			const clusteredProtagonists = getClusteredProtagonists(response);
-			setBubbleChartItems(clusteredProtagonists);
-			setFetchingProtagonists(false);
+		setFetchingProtagonists(true);
+
+		props.client.query({
+			query: builtProtagonistQuery(groupedItemIds),
 		})
-		.catch(getErrorHandler(props));
+			.then((response) => {
+				const clusteredProtagonists = getClusteredProtagonists(response);
+				setBubbleChartItems(clusteredProtagonists);
+				setFetchingProtagonists(false);
+			})
+			.catch(getErrorHandler(props));
+	} else {
+		setBubbleChartItems({});
+	}
 };
 
 const onRef = (props) => (ref) => {

@@ -34,6 +34,7 @@ const CircleTimeline = ({
 	documents,
 	events,
 	protagonists,
+	isLoading,
 }) => (
 	<CircleContainer>
 		<CircleSvg
@@ -137,7 +138,8 @@ const CircleTimeline = ({
 		<BubbleChart
 			items={protagonists}
 			diameter={300}
-			bubblesPadding={0}
+			bubblesPadding={5}
+			isLoading={isLoading}
 		/>
 	</CircleContainer>
 );
