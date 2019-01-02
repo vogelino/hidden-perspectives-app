@@ -12,6 +12,7 @@ import {
 	pipe,
 	has,
 	flatten,
+	union,
 } from 'ramda';
 import DetailView from './DetailView';
 import { withLoading, withErrors, getErrorHandler } from '../../utils/hocUtil';
@@ -149,9 +150,7 @@ const getContextParser = (props) => ({ data: { allEvents, allDocuments } }) => {
 		(items) => groupItemsBy(items, 'angle'),
 	)(allEvents);
 
-	// TODO: Use Ramda for parsing protagonists
-	const allDocumentsAndEvents = [...allDocuments, ...allEvents];
-	const protagonists = allDocumentsAndEvents.map((item) => {
+	const protagonists = union(allDocuments, allEvents).map((item) => {
 		const isEvent = has('eventStakeholders');
 		const stakeholdersFieldName = isEvent(item) ? 'eventStakeholders' : 'mentionedStakeholders';
 		return item[stakeholdersFieldName];

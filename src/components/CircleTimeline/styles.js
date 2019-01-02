@@ -8,6 +8,9 @@ import {
 
 
 export const CircleContainer = styled.div`
+	align-items: center;
+	display: flex;
+    justify-content: center;
 	flex: 1 1;
 	position: relative;
 	height: calc(100vh - 11rem);

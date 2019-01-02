@@ -1,12 +1,13 @@
 import styled from 'styled-components';
 
-export const BubblesWrapper = styled.div`
-    align-items: center;
+export const BubbleChartContainer = styled.div`
     border-radius: 50%;
-    display: flex;
+    position: absolute;
+`;
+
+export const BubblesWrapper = styled.svg`
+    display: block;
     height: ${({ diameter }) => diameter}px;
-    justify-content: center;
-    position: relative;
     width: ${({ diameter }) => diameter}px;
 `;
 
@@ -22,20 +23,25 @@ export const BubblesLoadingContainer = styled.div`
 	transition: opacity 200ms ease-out;
 `;
 
-export const Bubble = styled.div`
+export const Bubble = styled.circle`
     align-items: center;
-    background-color: ${({ theme }) => theme.gray200};
-    border-radius: 50%;
-    display: flex;
     height: ${({ r }) => r * 2}px;
-    font-size: 0.5rem;
-    justify-content: center;
+    fill: ${({ theme }) => theme.gray200};
     left: ${({ x }) => x}px;
     opacity: ${({ isLoading }) => (isLoading ? 0 : 1)};
-    position: absolute;
-    text-align: center;
     top: ${({ y }) => y}px;
-    transform: translate(-50%, -50%);
-    transition: opacity 200ms ease-out;
     width: ${({ r }) => r * 2}px;
+
+    &:hover {
+        fill: ${({ theme }) => theme.gray400};
+    }
+`;
+
+export const Text = styled.text`
+    alignment-baseline: central;
+	font-size: .5rem;
+	line-height: .5rem;
+    opacity: ${({ isLoading }) => (isLoading ? 0 : 1)};
+    pointer-events: none;
+    text-anchor: middle;
 `;

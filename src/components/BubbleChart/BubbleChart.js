@@ -1,7 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { isEmpty } from 'ramda';
-import { Bubble, BubblesWrapper, BubblesLoadingContainer } from './styles';
+import {
+	Bubble,
+	BubbleChartContainer,
+	BubblesWrapper,
+	BubblesLoadingContainer,
+	Text,
+} from './styles';
 import LoadingIndicator from '../LoadingIndicator';
 
 const Bubbles = ({
@@ -16,18 +22,23 @@ const Bubbles = ({
 	} = bubbleData;
 
 	const { name } = data;
-	const keyName = `bubble-${name}`;
-	return (
+	return ([
 		<Bubble
-			key={keyName}
-			x={Math.round(x)}
-			y={Math.round(y)}
-			r={Math.round(r)}
+			key={`bubble-${name}`}
+			cx={x}
+			cy={y}
+			r={r}
+			isLoading={isLoading}
+		/>,
+		<Text
+			x={x}
+			y={y}
+			key={`text-${name}`}
 			isLoading={isLoading}
 		>
 			{name}
-		</Bubble>
-	);
+		</Text>,
+	]);
 });
 
 const BubbleChart = ({
@@ -35,24 +46,26 @@ const BubbleChart = ({
 	isLoading,
 	diameter,
 }) => (
-	<BubblesWrapper
-		isLoading={isLoading}
-		diameter={diameter}
-	>
-		{
-			isEmpty(bubbleLayoutItems)
-				? 'no items'
-				: (
-					<Bubbles
-						bubbleLayoutItems={bubbleLayoutItems}
-						isLoading={isLoading}
-					/>
-				)
-		}
+	<BubbleChartContainer>
+		<BubblesWrapper
+			isLoading={isLoading}
+			diameter={diameter}
+		>
+			{
+				isEmpty(bubbleLayoutItems)
+					? <Text x={diameter / 2} y={diameter / 2}>no items</Text>
+					: (
+						<Bubbles
+							bubbleLayoutItems={bubbleLayoutItems}
+							isLoading={isLoading}
+						/>
+					)
+			}
+		</BubblesWrapper>
 		<BubblesLoadingContainer isLoading={isLoading}>
 			<LoadingIndicator />
 		</BubblesLoadingContainer>
-	</BubblesWrapper>
+	</BubbleChartContainer>
 );
 
 BubbleChart.propTypes = {
