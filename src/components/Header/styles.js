@@ -9,7 +9,7 @@ export const HeaderContainer = styled.header`
 	left: 0;
 	background: white;
 	text-align: right;
-	z-index: 1;
+	z-index: 2;
 	border-bottom: 1px solid ${({ theme }) => theme.commonBorderColor};
 	display: flex;
 	justify-content: space-between;

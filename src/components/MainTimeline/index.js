@@ -3,12 +3,21 @@ import {
 	compose,
 	lifecycle,
 	withState,
+	withHandlers,
 } from 'recompose';
 import gql from 'graphql-tag';
-import { filter } from 'ramda';
+import {
+	filter,
+	map,
+	groupBy,
+	union,
+} from 'ramda';
+import debounce from 'lodash.debounce';
 import MainTimeline from './MainTimeline';
 import { withLoading, withErrors, getErrorHandler } from '../../utils/hocUtil';
 import { getMinimap } from '../../utils/timelineUtil';
+import { ucFirst } from '../../utils/stringUtil';
+import isDocumentId from '../../utils/isDocumentId';
 import {
 	monthsLabels,
 	getDifferenceInYears,
@@ -19,17 +28,50 @@ import {
 
 const ALL_EVENTS_AND_DOCUMENTS = gql`
 	{
-	allEvents(orderBy: eventStartDate_ASC) {
-		id
-		eventTitle
-		eventStartDate
+		allEvents(orderBy: eventStartDate_ASC) {
+			id
+			eventTitle
+			eventStartDate
+		}
+		allDocuments(orderBy: documentCreationDate_ASC) {
+			id
+			documentTitle
+			documentCreationDate
+		}
 	}
-	allDocuments(orderBy: documentCreationDate_ASC) {
-		id
-		documentTitle
-		documentCreationDate
+`;
+
+const getFilterArgsForQuery = (type, itemIds) => map(
+	(id) => `{ id: "${id}" }`,
+	itemIds,
+);
+
+const builtProtagonistQueryStringByType = (type, itemIds) => {
+	const stakeholdersFieldName = type === 'document' ? 'mentionedStakeholders' : 'eventStakeholders';
+	const query = `
+		all${ucFirst(type)}s(
+			filter: {
+				OR: [
+					${getFilterArgsForQuery(type, itemIds)}
+				]
+			}
+		) {
+			id
+			${type}Title
+			${stakeholdersFieldName} {
+				id
+				stakeholderFullName
+			}
+		}
+	`;
+	return query;
+};
+
+const protagonistQueries = (groupedItemIds) => Object.keys(groupedItemIds).map((key) => builtProtagonistQueryStringByType(key, groupedItemIds[key])); // eslint-disable-line
+const builtProtagonistQuery = (itemIds) => gql`
+	query {
+		${protagonistQueries(itemIds)}
 	}
-}
 `;
 
 const normaliseItems = ({
@@ -91,6 +133,23 @@ const structureItems = ({
 	return items;
 };
 
+const getClusteredProtagonists = ({ data: { allEvents: events, allDocuments: documents } }) => {
+	const combinedEventsAndDocuments = union(events, documents);
+	const protagonists = combinedEventsAndDocuments.map((item) => item.mentionedStakeholders || item.eventStakeholders); // eslint-disable-line
+
+	return protagonists
+		.reduce((acc, current) => {
+			const flattenedProtagonists = acc.concat(current);
+			return flattenedProtagonists;
+		}, [])
+		.reduce((acc, current) => {
+			const { id } = current;
+			return Object.assign(acc, {
+				[id]: (acc[id] || []).concat(current),
+			});
+		}, {});
+};
+
 const parseItems = ({ events, datesArray, documents }) => {
 	const timelineEvents = normaliseItems({
 		items: events,
@@ -132,22 +191,93 @@ const getEventsAndDocuments = ({
 	stopLoading();
 };
 
+const isInViewport = (element, offset = 0) => {
+	if (!element) {
+		return false;
+	}
+
+	const { top } = element.getBoundingClientRect();
+	const isUnderUpperBound = (top + offset) >= 0;
+	const isAboveLowerBound = (top - offset) <= window.innerHeight;
+	return isUnderUpperBound && isAboveLowerBound;
+};
+
+const getEventIdsInViewport = (timelineElement) => {
+	const timelineEvents = timelineElement.getElementsByClassName('timeline-event');
+	const eventIds = [...timelineEvents]
+		.filter(isInViewport)
+		.map((timelineEvent) => timelineEvent.getAttribute('data-id'));
+
+	return eventIds;
+};
+
+const getProtagonistsInViewport = (timelineElement, props) => {
+	const {
+		setBubbleChartItems,
+		setFetchingProtagonists,
+	} = props;
+
+	const timelineEventIds = getEventIdsInViewport(timelineElement);
+
+	if (timelineEventIds.length > 0) {
+		const groupById = groupBy((id) => (isDocumentId(id) ? 'document' : 'event'));
+		const groupedItemIds = groupById(timelineEventIds);
+
+		setFetchingProtagonists(true);
+
+		props.client.query({
+			query: builtProtagonistQuery(groupedItemIds),
+		})
+			.then((response) => {
+				const clusteredProtagonists = getClusteredProtagonists(response);
+				setBubbleChartItems(clusteredProtagonists);
+				setFetchingProtagonists(false);
+			})
+			.catch(getErrorHandler(props));
+	} else {
+		setBubbleChartItems({});
+	}
+};
+
+const onRef = (props) => (ref) => {
+	if (ref) {
+		props.setTimelineContainer(ref);
+		ref.addEventListener('scroll', debounce((event) => getProtagonistsInViewport(event.target, props), 350));
+	}
+};
+
 export default compose(
 	withApollo,
 	withLoading,
 	withErrors,
 	withState('timelineItems', 'setTimelineItems', []),
 	withState('minimapItems', 'setMinimapItems', []),
+	withState('bubbleChartItems', 'setBubbleChartItems', {}),
+	withState('timelineContainer', 'setTimelineContainer', null),
+	withState('fetchingProtagonists', 'setFetchingProtagonists', false),
+	withState('initialProtagonistsFetched', 'setInitialProtagonistsFetched', false),
+	withHandlers({
+		onRef,
+	}),
 	lifecycle({
 		componentDidMount() {
 			const { props } = this;
-
 			props.client.query({ query: ALL_EVENTS_AND_DOCUMENTS })
 				.then(getEventsAndDocuments(props))
 				.catch(getErrorHandler(props));
 		},
+		componentDidUpdate() {
+			const { props } = this;
+
+			if (!props.initialProtagonistsFetched) {
+				props.setInitialProtagonistsFetched(true);
+				getProtagonistsInViewport(props.timelineContainer, props);
+			}
+		},
 		shouldComponentUpdate(nextProps) {
 			return (nextProps.timelineItems.length !== this.props.timelineItems.length)
+				|| (nextProps.bubbleChartItems !== this.props.bubbleChartItems)
+				|| (nextProps.fetchingProtagonists !== this.props.fetchingProtagonists)
 				|| (nextProps.errors.length !== this.props.errors.length)
 				|| (nextProps.isLoading !== this.props.isLoading);
 		},

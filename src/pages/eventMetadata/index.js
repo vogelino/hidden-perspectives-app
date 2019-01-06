@@ -5,20 +5,20 @@ import Header from '../../components/Header';
 import NodeTitle from '../../components/NodeTitle';
 import NodeHeader from '../../components/NodeHeader';
 
-const DocumentMetadataPage = ({ match }) => (
+const EventMetadataPage = ({ match }) => (
 	<div className="MetadataPage">
 		<Header>
 			<NodeTitle
 				id={match.params.id}
-				itemType="document"
+				itemType="event"
 			/>
 		</Header>
-		<NodeHeader id={match.params.id} itemType="document" />
-		<MetadataView id={match.params.id} itemType="document" />
+		<NodeHeader id={match.params.id} itemType="event" />
+		<MetadataView id={match.params.id} itemType="event" />
 	</div>
 );
 
-DocumentMetadataPage.propTypes = {
+EventMetadataPage.propTypes = {
 	match: PropTypes.shape({
 		params: PropTypes.shape({
 			id: PropTypes.string,
@@ -26,4 +26,4 @@ DocumentMetadataPage.propTypes = {
 	}).isRequired,
 };
 
-export default DocumentMetadataPage;
+export default EventMetadataPage;

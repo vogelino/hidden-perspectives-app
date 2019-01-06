@@ -1,8 +1,19 @@
-import { compose, lifecycle, withState } from 'recompose';
+import {
+	compose,
+	lifecycle,
+	withState,
+} from 'recompose';
 import { withApollo } from 'react-apollo';
 import gql from 'graphql-tag';
 import { scaleLinear } from 'd3-scale';
-import { map, prop, pipe } from 'ramda';
+import {
+	map,
+	prop,
+	pipe,
+	has,
+	flatten,
+	union,
+} from 'ramda';
 import DetailView from './DetailView';
 import { withLoading, withErrors, getErrorHandler } from '../../utils/hocUtil';
 import { ucFirst } from '../../utils/stringUtil';
@@ -58,6 +69,7 @@ const builtQueryStringByType = (type, tagIds) => {
 	const formattedTags = formatTagsForQuery(type, tagIds);
 	const orderBy = getOrderBy(type);
 	const additionalReturnValues = getAdditionalReturnValuesByType(type);
+	const stakeholdersFieldName = type === 'document' ? 'mentionedStakeholders' : 'eventStakeholders';
 	const query = `
 		all${ucFirst(type)}s(
 			filter: {
@@ -75,12 +87,16 @@ const builtQueryStringByType = (type, tagIds) => {
 				name
 			}
 			${type}Description
+			${stakeholdersFieldName} {
+				id
+				stakeholderFullName
+			}
 		}
 	`;
 	return query;
 };
 
-const buildTagsQuery = (tagIds) => gql`
+const builtTagsQuery = (tagIds) => gql`
 	query {
 		${builtQueryStringByType('event', tagIds)}
 		${builtQueryStringByType('document', tagIds)}
@@ -88,7 +104,12 @@ const buildTagsQuery = (tagIds) => gql`
 `;
 
 const getContextParser = (props) => ({ data: { allEvents, allDocuments } }) => {
-	const { stopLoading, setDocuments, setEvents } = props;
+	const {
+		stopLoading,
+		setDocuments,
+		setEvents,
+		setProtagonists,
+	} = props;
 	const dateExtremes = [
 		new Date(allDocuments[0].documentCreationDate),
 		new Date(allDocuments[allDocuments.length - 1].documentCreationDate),
@@ -129,8 +150,25 @@ const getContextParser = (props) => ({ data: { allEvents, allDocuments } }) => {
 		(items) => groupItemsBy(items, 'angle'),
 	)(allEvents);
 
+	const protagonists = union(allDocuments, allEvents).map((item) => {
+		const isEvent = has('eventStakeholders');
+		const stakeholdersFieldName = isEvent(item) ? 'eventStakeholders' : 'mentionedStakeholders';
+		return item[stakeholdersFieldName];
+	});
+	const flattenedProtagonists = flatten(protagonists);
+	const clusterProtagonists = (data) => data
+		.reduce((acc, current) => {
+			const { id } = current;
+			return Object.assign(acc, {
+				[id]: (acc[id] || []).concat(current),
+			});
+		}, {});
+	const parsedProtagonists = clusterProtagonists(flattenedProtagonists);
+
 	setDocuments(parsedDocuments);
 	setEvents(parsedEvents);
+	setProtagonists(parsedProtagonists);
+
 	stopLoading();
 };
 
@@ -151,7 +189,7 @@ const getItemParser = (props) => ({ data }) => {
 	});
 
 	const tags = getResponseProp('tags', itemType, item);
-	const tagsQuery = buildTagsQuery(map(prop('id'), tags));
+	const tagsQuery = builtTagsQuery(map(prop('id'), tags));
 	client.query({
 		query: tagsQuery,
 	})
@@ -166,6 +204,7 @@ export default compose(
 	withState('item', 'setItem', undefined),
 	withState('documents', 'setDocuments', []),
 	withState('events', 'setEvents', []),
+	withState('protagonists', 'setProtagonists', {}),
 	lifecycle({
 		componentDidMount() {
 			const { id, client, itemType } = this.props;
