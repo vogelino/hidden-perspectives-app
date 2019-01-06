@@ -10,7 +10,8 @@ import {
 export const CircleContainer = styled.div`
 	flex: 1 1;
 	position: relative;
-	height: calc(100vh - 11rem);
+	height: calc(100vh - 12rem);
+	margin: 2rem 0;
 `;
 
 export const CircleSvg = styled.svg`
@@ -22,6 +23,7 @@ export const CircleSvg = styled.svg`
 	top: 0;
 	left: 50%;
 	transform: translateX(-50%);
+	overflow: visible;
 `;
 
 export const Circle = styled.circle`
