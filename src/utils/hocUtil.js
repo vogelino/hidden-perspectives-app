@@ -3,6 +3,7 @@ import {
 	withProps,
 	withState,
 	withHandlers,
+	lifecycle,
 } from 'recompose';
 
 export const withLoading = compose(
@@ -27,3 +28,9 @@ export const getErrorHandler = ({ setErrors }) => ({ message, graphQLErrors, sta
 	/* eslint-enable no-console */
 	setErrors(message ? [message] : graphQLErrors);
 };
+
+export const withoutReRender = lifecycle({
+	shouldComponentUpdate() {
+		return false;
+	},
+});

@@ -167,3 +167,13 @@ export const Documents = styled(Column)`
 	border-right: 1px solid ${({ theme }) => theme.commonBorderColor};
 	text-align: right;
 `;
+
+export const LegendContainer = styled.div`
+	position: fixed;
+	top: 4.5rem;
+	left: 0;
+	width: 100%;
+	height: 2.25rem;
+	padding: .5rem 19rem .5rem 7rem;
+	z-index: 10;
+`;

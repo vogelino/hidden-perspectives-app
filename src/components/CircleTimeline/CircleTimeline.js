@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Tooltip from '../Tooltip';
 import BubbleChart from '../BubbleChart';
+import { EventLegend, DocumentLegend } from '../Legend/Legend';
 import {
 	CircleContainer,
 	CircleSvg,
@@ -13,6 +14,9 @@ import {
 	SingleEventPill,
 	MultipleEventsPill,
 	ConnectionLine,
+	LegendObject,
+	EventLegendContainer,
+	DocumentLegendContainer,
 } from './styles';
 
 const toRadian = (angle) => angle * (Math.PI / 180);
@@ -58,6 +62,26 @@ const CircleTimeline = ({
 				{...CIRCLE_CENTER}
 				strokeDasharray={(Math.PI * (DIAMETER_INNER))}
 			/>
+			<LegendObject
+				width={RADIUS_OUTER}
+				height={22}
+				x={0}
+				y={0}
+			>
+				<EventLegendContainer>
+					<EventLegend />
+				</EventLegendContainer>
+			</LegendObject>
+			<LegendObject
+				width={RADIUS_OUTER}
+				height={22}
+				x={0}
+				y={RADIUS_OUTER - RADIUS_INNER}
+			>
+				<DocumentLegendContainer>
+					<DocumentLegend />
+				</DocumentLegendContainer>
+			</LegendObject>
 			{documents.map((group) => {
 				const { angle, id: docId } = group[0];
 				const x = getXByAngle(RADIUS_INNER, angle);

@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import {
 	SingleDocumentPill as OriginalSingleDocumentPill,
 	MultipleDocumentsPill as OriginalMultipleDocumentsPill,
@@ -43,6 +43,25 @@ export const ItemCircle = styled.circle`
 
 export const Document = styled.foreignObject`
 	position: relative;
+`;
+
+export const LegendObject = styled.foreignObject`
+	text-align: right;
+`;
+
+const legendContainerCSS = css`
+	display: inline-block;
+	transform-origin: 100% 50%;
+	transform: scale(.8);
+	margin-right: .5rem;
+`;
+
+export const EventLegendContainer = styled.span`
+	${legendContainerCSS}
+`;
+
+export const DocumentLegendContainer = styled.span`
+	${legendContainerCSS}
 `;
 
 export const SingleDocumentPill = styled(OriginalSingleDocumentPill)`

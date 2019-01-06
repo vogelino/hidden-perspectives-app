@@ -1,24 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { LegendContainer, LegendLine, LegendLabel } from './styles';
+import { LegendLabel } from './styles';
 
-const Legend = ({ nomargin }) => (
-	<LegendContainer nomargin={nomargin}>
-		<LegendLine>
-			<LegendLabel symbol="■">Documents</LegendLabel>
-		</LegendLine>
-		<LegendLine>
-			<LegendLabel symbol="●">Events</LegendLabel>
-		</LegendLine>
-	</LegendContainer>
+export const DocumentLegend = ({ right }) => (
+	<LegendLabel symbol="■" right={right}>Documents</LegendLabel>
 );
 
-Legend.propTypes = {
-	nomargin: PropTypes.bool,
+export const EventLegend = ({ right }) => (
+	<LegendLabel symbol="●" right={right}>Events</LegendLabel>
+);
+
+const legendProptypes = {
+	right: PropTypes.bool,
 };
 
-Legend.defaultProps = {
-	nomargin: false,
+const legendDefaultProps = {
+	right: false,
 };
 
-export default Legend;
+DocumentLegend.propTypes = legendProptypes;
+EventLegend.propTypes = legendProptypes;
+
+DocumentLegend.defaultProps = legendDefaultProps;
+EventLegend.defaultProps = legendDefaultProps;

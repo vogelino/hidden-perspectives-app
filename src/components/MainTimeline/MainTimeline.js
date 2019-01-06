@@ -11,6 +11,7 @@ import {
 	EventTitle,
 	Events,
 	Documents,
+	LegendContainer,
 } from './styles';
 import Minimap from './Minimap';
 import BubbleChart from '../BubbleChart';
@@ -18,7 +19,7 @@ import { LoadingContainer } from '../LoadingIndicator/styles';
 import LoadingIndicator from '../LoadingIndicator';
 import Tooltip from '../Tooltip';
 import ContainerWithStickyLabel from './ContainerWithStickyLabel';
-import Legend from '../Legend';
+import { DocumentLegend, EventLegend } from '../Legend';
 
 const MainTimeline = ({
 	timelineItems,
@@ -45,7 +46,10 @@ const MainTimeline = ({
 				bubblesPadding={5}
 			/>
 		</BubbleChartContainer>
-		<Legend />
+		<LegendContainer>
+			<DocumentLegend />
+			<EventLegend right />
+		</LegendContainer>
 		{timelineItems.map(({ year, months, ...yearKey }) => (
 			<ContainerWithStickyLabel label={year} {...yearKey} isYear>
 				{months.map(({ month, days, ...monthKey }) => (

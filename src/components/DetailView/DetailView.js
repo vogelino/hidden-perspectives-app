@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import LoadingIndicator from '../LoadingIndicator';
 import { LoadingContainer } from '../LoadingIndicator/styles';
 import { Container } from './styles';
-import Legend from '../Legend/Legend';
 import CircleTimeline from '../CircleTimeline';
 import SummarySection from '../SummarySection';
 
@@ -12,7 +11,6 @@ const DetailView = ({ item, isLoading, ...rest }) => (
 		<LoadingContainer isLoading={isLoading}>
 			<LoadingIndicator />
 		</LoadingContainer>
-		<Legend nomargin />
 		{item && <CircleTimeline item={item} isLoading={isLoading} {...rest} />}
 		{item && <SummarySection item={item} {...rest} />}
 	</Container>
