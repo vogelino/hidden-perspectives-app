@@ -9,11 +9,13 @@ export const HeaderContainer = styled.header`
 	left: 0;
 	background: white;
 	text-align: right;
-	z-index: 1;
+	z-index: 2;
 	border-bottom: 1px solid ${({ theme }) => theme.commonBorderColor};
+	display: flex;
+	justify-content: space-between;
 `;
 
-export const HeaderLink = styled(NavLink)`
+const HeaderLink = styled(NavLink)`
 	border: none;
 	background: none;
 	color: ${({ theme }) => theme.gray600};
@@ -30,7 +32,8 @@ export const HeaderLink = styled(NavLink)`
 	border-radius: 3px;
 
 	&.active,
-	&:hover {
+	&:hover,
+	&:focus {
 		color: ${({ theme }) => theme.black};
 	}
 
@@ -48,7 +51,10 @@ export const HeaderLink = styled(NavLink)`
 `;
 
 export const Logo = styled(HeaderLink)`
-	float: left;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 1;
 `;
 
 export const LogButton = styled(HeaderLink)`
@@ -57,7 +63,10 @@ export const LogButton = styled(HeaderLink)`
 
 export const UserInfoContainer = styled.div`
 	font-size: 12px;
-	float: right;
+	position: absolute;
+	top: 0;
+	right: 0;
+	z-index: 1;
 `;
 
 export const UserAvatar = styled.span`

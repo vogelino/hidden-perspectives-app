@@ -5,29 +5,26 @@ import {
 	Content,
 	ScrollIndicator,
 	Container,
-	EventsContainer,
-	Event,
+	MonthsContainer,
+	Month,
 	Date,
 	DatesContainer,
 } from './styles';
 
-const OptimizedEvents = lifecycle({
-	shouldComponentUpdate({ events, documents }) {
-		return (
-			events.length !== this.props.events.length
-			|| documents.length !== this.props.documents.length
-		);
+const OptimizedMonths = lifecycle({
+	shouldComponentUpdate({ items }) {
+		return items.length !== this.props.items.length;
 	},
-})(({ events, documents }) => (
-	<EventsContainer>
-		{events.map(({ id, density, position }) => (
-			<Event left={16} key={id} top={position} density={density} />
-		))}
-		{documents.map(({ id, density, position }) => (
-			<Event left={22} key={id} top={position} density={density} />
-		))}
-	</EventsContainer>
-));
+})(({ items }) => {
+	const monthHeight = (100 / items.length);
+	return (
+		<MonthsContainer>
+			{items.map(({ id, density }) => (
+				<Month key={id} density={density} height={monthHeight} />
+			))}
+		</MonthsContainer>
+	);
+});
 
 const OptimizedDates = lifecycle({
 	shouldComponentUpdate({ years }) {
@@ -42,15 +39,14 @@ const OptimizedDates = lifecycle({
 const Minimap = ({
 	height,
 	top,
-	events,
-	documents,
+	items,
 	years,
 	isLoading,
 }) => (
 	<Container>
 		<Content>
 			{!isLoading && <ScrollIndicator height={height} top={top} />}
-			<OptimizedEvents events={events} documents={documents} />
+			<OptimizedMonths items={items} />
 		</Content>
 		<OptimizedDates years={years} />
 	</Container>
@@ -59,14 +55,8 @@ const Minimap = ({
 Minimap.propTypes = {
 	height: PropTypes.number,
 	top: PropTypes.number,
-	events: PropTypes.arrayOf(PropTypes.shape({
+	items: PropTypes.arrayOf(PropTypes.shape({
 		id: PropTypes.string.isRequired,
-		position: PropTypes.number.isRequired,
-		density: PropTypes.number.isRequired,
-	})),
-	documents: PropTypes.arrayOf(PropTypes.shape({
-		id: PropTypes.string.isRequired,
-		position: PropTypes.number.isRequired,
 		density: PropTypes.number.isRequired,
 	})),
 	years: PropTypes.arrayOf(PropTypes.string),
@@ -77,8 +67,7 @@ Minimap.defaultProps = {
 	isLoading: false,
 	height: 100,
 	top: 0,
-	events: [],
-	documents: [],
+	items: [],
 	years: [
 		'1975',
 		'1980',

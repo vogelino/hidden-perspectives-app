@@ -59,3 +59,15 @@ export const Text = styled.div`
 	text-align: center;
 	margin-top: 1rem;
 `;
+
+export const LoadingContainer = styled.div`
+	position: fixed;
+	width: 8rem;
+	height: 8rem;
+	top: 50vh;
+	left: 50vw;
+	transform: translate(-50%, -50%);
+	pointer-events: none;
+	opacity: ${({ isLoading }) => (isLoading ? 1 : 0)};
+	transition: opacity 200ms ease-out;
+`;

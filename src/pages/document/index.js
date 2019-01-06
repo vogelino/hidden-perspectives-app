@@ -1,9 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import DetailView from '../../components/DetailView';
+import Header from '../../components/Header';
+import NodeTitle from '../../components/NodeTitle';
+import NodeHeader from '../../components/NodeHeader';
 
 const DocumentPage = ({ match }) => (
 	<div className="DocumentPage">
-		{match.params.id}
+		<Header>
+			<NodeTitle
+				id={match.params.id}
+				itemType="document"
+			/>
+		</Header>
+		<NodeHeader id={match.params.id} itemType="document" />
+		<DetailView id={match.params.id} itemType="document" />
 	</div>
 );
 

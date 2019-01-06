@@ -37,12 +37,12 @@ export default compose(
 			const {
 				height,
 				top,
-				events,
+				items,
 				isLoading,
 			} = this.props;
 			return (nextProps.height !== height)
 				|| (nextProps.top !== top)
-				|| (nextProps.events.length !== events.length)
+				|| (nextProps.items.length !== items.length)
 				|| (nextProps.isLoading !== isLoading);
 		},
 	}),

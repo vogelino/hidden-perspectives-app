@@ -2,107 +2,156 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
 	Container,
+	MinimapContainer,
+	BubbleChartContainer,
+	EventContainer,
 	Event,
-	EventsContainer,
-	MultipleEventsPill,
-	SingleEventPill,
-	MultipleDocumentsPill,
-	SingleDocumentPill,
 	EventDate,
 	EventTitleContainer,
 	EventTitle,
-	MinimapContainer,
-	Document,
-	LoadingContainer,
+	Events,
+	Documents,
+	LegendContainer,
 } from './styles';
 import Minimap from './Minimap';
-import TimelineItemsList from './TimelineItemsList';
+import BubbleChart from '../BubbleChart';
+import { LoadingContainer } from '../LoadingIndicator/styles';
 import LoadingIndicator from '../LoadingIndicator';
+import Tooltip from '../Tooltip';
+import ContainerWithStickyLabel from './ContainerWithStickyLabel';
+import { DocumentLegend, EventLegend } from '../Legend';
 
 const MainTimeline = ({
-	events,
-	minimapEvents,
-	documents,
-	minimapDocuments,
-	containerHeight,
+	timelineItems,
+	minimapItems,
+	bubbleChartItems,
 	errors,
 	isLoading,
+	fetchingProtagonists,
+	onRef,
 }) => (
-	<Container id="mainTimeline">
+	<Container id="mainTimeline" ref={onRef}>
 		<LoadingContainer isLoading={isLoading}>
 			<LoadingIndicator />
 		</LoadingContainer>
-		{errors.map((error) => (error))}
+		{errors.map((error) => error)}
 		<MinimapContainer>
-			<Minimap
-				isLoading={isLoading}
-				events={minimapEvents}
-				documents={minimapDocuments}
-			/>
+			<Minimap isLoading={isLoading} items={minimapItems} />
 		</MinimapContainer>
-		<EventsContainer height={containerHeight}>
-			<TimelineItemsList
-				items={events}
-				ContainerComponent={Event}
-				SinglePillComponent={SingleEventPill}
-				MultiplePillsComponent={MultipleEventsPill}
-				DateComponent={EventDate}
-				TitleContainerComponent={EventTitleContainer}
-				TitleComponent={EventTitle}
+		<BubbleChartContainer>
+			<BubbleChart
+				isLoading={isLoading || fetchingProtagonists}
+				items={bubbleChartItems}
+				diameter={250}
+				bubblesPadding={5}
 			/>
-			<TimelineItemsList
-				items={documents}
-				ContainerComponent={Document}
-				SinglePillComponent={SingleDocumentPill}
-				MultiplePillsComponent={MultipleDocumentsPill}
-				DateComponent={EventDate}
-				TitleContainerComponent={EventTitleContainer}
-				TitleComponent={EventTitle}
-			/>
-		</EventsContainer>
+		</BubbleChartContainer>
+		<LegendContainer>
+			<DocumentLegend />
+			<EventLegend right />
+		</LegendContainer>
+		{timelineItems.map(({ year, months, ...yearKey }) => (
+			<ContainerWithStickyLabel label={year} {...yearKey} isYear>
+				{months.map(({ month, days, ...monthKey }) => (
+					<ContainerWithStickyLabel label={month} date={`${month} ${year}`} {...monthKey}>
+						{days.map(({
+							day,
+							key,
+							events,
+							documents,
+							...dayKey
+						}) => (
+							<EventContainer key={key}>
+								<Event {...dayKey}>
+									<EventDate>{day}</EventDate>
+									<Documents>
+										{documents.map(({ title, id, path }) => (
+											<EventTitleContainer key={id} className="timeline-event" data-id={id}>
+												<Tooltip id={id} itemType="document">
+													<EventTitle to={path}>{title}</EventTitle>
+												</Tooltip>
+											</EventTitleContainer>
+										))}
+									</Documents>
+									<Events>
+										{events.map(({ title, id, path }) => (
+											<EventTitleContainer key={id} className="timeline-event" data-id={id}>
+												<Tooltip id={id} itemType="event" position="left">
+													<EventTitle to={path}>{title}</EventTitle>
+												</Tooltip>
+											</EventTitleContainer>
+										))}
+									</Events>
+								</Event>
+							</EventContainer>
+						))}
+					</ContainerWithStickyLabel>
+				))}
+			</ContainerWithStickyLabel>
+		))}
 	</Container>
 );
 
 MainTimeline.propTypes = {
-	events: PropTypes.arrayOf(
-		PropTypes.arrayOf(PropTypes.shape({
-			id: PropTypes.string.isRequired,
-			title: PropTypes.string.isRequired,
-			yPosition: PropTypes.number.isRequired,
-			date: PropTypes.string.isRequired,
-		})),
+	timelineItems: PropTypes.arrayOf(
+		PropTypes.shape({
+			key: PropTypes.string.isRequired,
+			year: PropTypes.string.isRequired,
+			months: PropTypes.arrayOf(
+				PropTypes.shape({
+					key: PropTypes.string.isRequired,
+					month: PropTypes.string.isRequired,
+					days: PropTypes.arrayOf(
+						PropTypes.shape({
+							key: PropTypes.string.isRequired,
+							day: PropTypes.string.isRequired,
+							events: PropTypes.arrayOf(
+								PropTypes.shape({
+									id: PropTypes.string.isRequired,
+									title: PropTypes.string.isRequired,
+									date: PropTypes.instanceOf(Date).isRequired,
+								}),
+							),
+							documents: PropTypes.arrayOf(
+								PropTypes.shape({
+									id: PropTypes.string.isRequired,
+									title: PropTypes.string.isRequired,
+									date: PropTypes.instanceOf(Date).isRequired,
+								}),
+							),
+						}),
+					).isRequired,
+				}),
+			).isRequired,
+		}),
 	),
-	documents: PropTypes.arrayOf(
-		PropTypes.arrayOf(PropTypes.shape({
+	minimapItems: PropTypes.arrayOf(
+		PropTypes.shape({
 			id: PropTypes.string.isRequired,
-			title: PropTypes.string.isRequired,
-			yPosition: PropTypes.number.isRequired,
-			date: PropTypes.string.isRequired,
-		})),
+			density: PropTypes.number.isRequired,
+		}),
 	),
-	minimapEvents: PropTypes.arrayOf(PropTypes.shape({
-		id: PropTypes.string.isRequired,
-		density: PropTypes.number.isRequired,
-		position: PropTypes.number.isRequired,
-	})),
-	minimapDocuments: PropTypes.arrayOf(PropTypes.shape({
-		id: PropTypes.string.isRequired,
-		density: PropTypes.number.isRequired,
-		position: PropTypes.number.isRequired,
-	})),
-	containerHeight: PropTypes.number,
+	bubbleChartItems: PropTypes.objectOf(
+		PropTypes.arrayOf(
+			PropTypes.shape({
+				id: PropTypes.string.isRequired,
+				stakeholderFullName: PropTypes.string.isRequired,
+			}),
+		),
+	),
 	errors: PropTypes.arrayOf(PropTypes.string),
 	isLoading: PropTypes.bool,
+	fetchingProtagonists: PropTypes.bool,
+	onRef: PropTypes.func.isRequired,
 };
 
 MainTimeline.defaultProps = {
-	events: [],
-	minimapEvents: [],
-	documents: [],
-	minimapDocuments: [],
-	containerHeight: window.innerHeight,
+	timelineItems: [],
+	minimapItems: [],
+	bubbleChartItems: {},
 	errors: [],
 	isLoading: true,
+	fetchingProtagonists: false,
 };
 
 export default MainTimeline;

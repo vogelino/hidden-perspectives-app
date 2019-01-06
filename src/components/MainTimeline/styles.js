@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
 export const Container = styled.div`
-	padding: 0 0 0 6rem;
+	padding: 0 18rem 0 6rem;
 	width: 100vw;
 	height: calc(100vh - 4.5rem);
 	overflow-y: auto;
@@ -19,16 +19,29 @@ export const MinimapContainer = styled.div`
 	z-index: 1;
 `;
 
-export const EventsContainer = styled.div`
-	height: ${({ height }) => height}px;
-	position: relative;
-	margin: 2rem 0;
-	z-index: 2;
+export const BubbleChartContainer = styled.div`
+	align-items: center;
+	border-left: 1px solid ${({ theme }) => theme.commonBorderColor};
+	display: flex;
+	height: 100%;
+	justify-content: center;
+	position: fixed;
+	right: 0;
+	top: 0;
+	width: 18rem;
+	z-index: 1;
 `;
 
 export const Event = styled.div`
-	position: absolute;
-	padding-left: 1rem;
+	padding: 0;
+	font-size: .875rem;
+	line-height: 1.25rem;
+	font-weight: bold;
+	display: flex;
+	position: relative;
+`;
+
+export const EventContainer = styled.div`
 `;
 
 export const EventPill = styled.div`
@@ -41,50 +54,76 @@ export const EventPill = styled.div`
 export const SingleEventPill = styled(EventPill)`
 	width: 5px;
 	height: 5px;
-	top: 7px;
-	left: -3px;
+	top: calc(2rem + 1px);
+	left: 50%;
+	transform: translateX(-50%);
+	z-index: 2;
 `;
 
 export const MultipleEventsPill = styled(EventPill)`width: 17px;
-	height: 17px;
+	height: 11px;
+	width: 11px;
 	top: 0;
 	left: -9px;
 	box-shadow: 0 0 0 1px white;
-	font-size: 11px;
+	font-size: 8px;
 	font-weight: bold;
 	box-sizing: border-box;
 	text-align: center;
-	line-height: 17px;
+	line-height: 11px;
 	color: white;
 `;
 
 export const EventDate = styled.span`
 	color: ${({ theme }) => theme.gray600};
-	margin-right: .5rem;
-	width: 6rem;
-	float: left;
-`;
-
-export const EventTitleContainer = styled.span`
-	font-weight: bold;
-	max-width: calc((100vw - 32rem) / 2);
-	overflow: hidden;
-	float: left;
-	text-overflow: ellipsis;
+	position: absolute;
+	left: 50%;
+	top: 1.4rem;
+	transform: translateX(-50%);
+	background: white;
+	z-index: 1;
+	width: 1.5rem;
+	height: 1.5rem;
+	border-radius: 50%;
+	border: 1px solid ${({ theme }) => theme.commonBorderColor};
+	text-align: center;
+	padding: 1px 0;
+	font-size: 0.75rem;
 `;
 
 export const EventTitle = styled(Link)`
-	white-space: nowrap;
+	display: inline-block;
 	text-decoration: none;
 	color: ${({ theme }) => theme.gray900};
+	max-width: 20rem;
 
 	&:hover {
 		text-decoration: underline;
 	}
 `;
 
-export const Document = styled(Event)`
-	left: calc(12rem + ((100vw - 32rem) / 2));
+export const EventTitleContainer = styled.div`
+	padding: 0 1.5rem;
+	margin: 1rem 0;
+	position: relative;
+
+	&:after {
+		content: '■';
+		position: absolute;
+		top: 0.55rem;
+		right: .5rem;
+		transform: translate(50%, -50%);
+		color: ${({ theme }) => theme.gray800};
+	}
+
+	&:first-child {
+		margin-top: 0;
+	}
+
+	&:last-child {
+		border: none;
+		margin-bottom: 0;
+	}
 `;
 
 export const MultipleDocumentsPill = styled(MultipleEventsPill)`
@@ -96,29 +135,45 @@ export const MultipleDocumentsPill = styled(MultipleEventsPill)`
 	border: 1px solid ${({ theme }) => theme.gray900};
 	background: ${({ theme }) => theme.usBlue};
 	box-shadow: -1px -1px 0 0 white, -2px -2px 0 0 ${({ theme }) => theme.gray900};
-	text-indent: 100%;
-    white-space: nowrap;
-    overflow: hidden;
 `;
 
 export const SingleDocumentPill = styled(SingleEventPill)`
 	border-radius: 0;
 	height: .5rem;
 	width: .5rem;
-	top: calc(.5rem - 2px);
-	left: -.25rem;
+	top: 10px;
+	left: -1.25rem;
 	border: 1px solid ${({ theme }) => theme.gray900};
 	background: ${({ theme }) => theme.usBlue};
 `;
 
-export const LoadingContainer = styled.div`
+const Column = styled.div`
+	flex: 0 0 50%;
+	padding: 1.5rem;
+	position: relative;
+`;
+
+export const Events = styled(Column)`
+	position: static;
+
+	${EventTitleContainer}:after {
+		content: '●';
+		right: auto;
+		left: 0;
+	}
+`;
+
+export const Documents = styled(Column)`
+	border-right: 1px solid ${({ theme }) => theme.commonBorderColor};
+	text-align: right;
+`;
+
+export const LegendContainer = styled.div`
 	position: fixed;
-	width: 8rem;
-	height: 8rem;
-	top: 50vh;
-	left: 50vw;
-	transform: translate(-50%, -50%);
-	pointer-events: none;
-	opacity: ${({ isLoading }) => (isLoading ? 1 : 0)};
-	transition: opacity 200ms ease-out;
+	top: 4.5rem;
+	left: 0;
+	width: 100%;
+	height: 2.25rem;
+	padding: .5rem 19rem .5rem 7rem;
+	z-index: 10;
 `;

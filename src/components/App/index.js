@@ -1,35 +1,30 @@
 import React from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Head from '../Head';
-import Header from '../Header';
 import Theme from '../Theme';
 import Home from '../../pages/home';
 import Login from '../../pages/login';
-import CreatePage from '../../pages/create';
 import DocumentPage from '../../pages/document';
+import DocumentMetadataPage from '../../pages/documentMetadata';
 import EventPage from '../../pages/event';
-
-export const pages = [
-	{
-		path: '/create',
-		exact: true,
-		component: CreatePage,
-		title: '+ New document',
-		requiresAuthentication: true,
-		authorizedRoles: ['Editor', 'Admin'],
-	},
-];
+import EventMetadataPage from '../../pages/eventMetadata';
+import TranscriptPage from '../../pages/transcript';
+import OriginalPage from '../../pages/original';
 
 const App = () => (
 	<Router>
 		<Theme>
 			<div className="App">
 				<Head />
-				<Header pages={pages} />
 				<Route exact path="/" component={Home} />
-				{pages.map((page) => <Route key={page.path} {...page} />)}
-				<Route path="/document/:id" component={DocumentPage} />
-				<Route path="/event/:id" component={EventPage} />
+				<Route exact path="/document/context/:id" component={DocumentPage} />
+				<Route exact path="/document/transcript/:id" component={TranscriptPage} />
+				<Route exact path="/document/original/:id" component={OriginalPage} />
+				<Route exact path="/document/metadata/:id" component={DocumentMetadataPage} />
+				<Route exact path="/document/metadata/:id/edit" component={() => null} />
+				<Route exact path="/event/context/:id" component={EventPage} />
+				<Route exact path="/event/metadata/:id" component={EventMetadataPage} />
+				<Route exact path="/event/metadata/:id/edit" component={() => null} />
 				<Route exact path="/login" component={Login} />
 			</div>
 		</Theme>

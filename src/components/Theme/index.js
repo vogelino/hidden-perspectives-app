@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { transparentize, lighten } from 'polished';
+import { lighten, transparentize } from 'polished';
 import { ThemeProvider, css } from 'styled-components';
-import { theme as originalTheme } from '@smooth-ui/core-sc';
+import { theme as originalTheme, th } from '@smooth-ui/core-sc';
 
 const colors = {
-	primary: '#239F40',
+	primary: '#FFCC44',
 	commonBorderColor: originalTheme.gray300,
 	usBlue: '#2523A0',
 	usRed: '#D7062C',
@@ -35,15 +35,41 @@ const selectTheme = {
 	},
 };
 
+const buttons = {
+	btnPaddingX: '2rem',
+	btnPaddingY: '.5rem',
+	btnFontSize: '.875rem',
+	btnLineHeight: '.875rem',
+	btnFontWeight: 'bold',
+	btnBorderWidth: '1px',
+	btnPrimaryBackground: colors.primary,
+	btnSecondaryBackground: 'none',
+	btnPrimaryColor: colors.black,
+	btnSecondaryColor: colors.black,
+	btnPrimaryBorderColor: colors.primary,
+	btnSecondaryBorderColor: colors.commonBorderColor,
+};
+
+const typography = {
+	fontFamily: `"HP Sans", ${originalTheme.fontFamily}`,
+	h1FontSize: '2.5rem',
+	h2FontSize: '2rem',
+	h3FontSize: '1.75rem',
+	h4FontSize: '1.5rem',
+	h5FontSize: '1.125rem',
+	h6FontSize: '1rem',
+};
+
 const hpTheme = {
 	...originalTheme,
 	...colors,
-	fontFamily: `"HP Sans", ${originalTheme.fontFamily}`,
+	...typography,
+	...buttons,
 	selectTheme,
-	controlFocus: () => (color = 'primary') => css`
+	controlFocus: () => (baseColor = 'primary') => css`
 		outline: 0;
-		border-color: ${({ theme }) => theme[color]};
-		box-shadow: 0 0 0 2px ${({ theme }) => transparentize(0.8, theme[color])};
+		box-shadow: 0 0 .5rem ${th(baseColor, (color) => transparentize(0.6, color))},
+			0 0 0 1px ${th(baseColor)};
 	`,
 };
 

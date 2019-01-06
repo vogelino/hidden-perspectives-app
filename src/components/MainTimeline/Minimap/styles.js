@@ -38,19 +38,17 @@ export const ScrollIndicator = styled.div.attrs({
 	z-index: 2;
 `;
 
-export const EventsContainer = styled(Content)``;
-export const Event = styled.div.attrs({
-	style: ({ top }) => ({
-		top: `${top}px`,
+export const MonthsContainer = styled(Content)`
+	padding-left: 1rem;
+`;
+
+export const Month = styled.div.attrs({
+	style: ({ theme, density }) => ({
+		background: mix(density, theme.gray100, theme.gray900),
 	}),
 })`
-	position: absolute;
-	left: ${({ left }) => left}px;
-	width: 4px;
-	height: 4px;
-	border-radius: 50%;
-	transform: translateY(1px);
-	background: ${({ theme, density }) => mix(density, theme.gray200, theme.gray900)};
+	width: 1rem;
+	height: ${({ height }) => `${height}%`};
 	z-index: 1;
 `;
 

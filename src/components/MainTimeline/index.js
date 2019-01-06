@@ -3,127 +3,281 @@ import {
 	compose,
 	lifecycle,
 	withState,
+	withHandlers,
 } from 'recompose';
 import gql from 'graphql-tag';
-import { scaleTime } from 'd3-scale';
-import MainTimeline from './MainTimeline';
-import { withLoading, withErrors } from '../../utils/hocUtil';
 import {
-	getYPositionParser,
-	getTimelineHeightByDates,
-	toMinimapDots,
-	groupItemsBy,
-} from '../../utils/timelineUtil';
-import { TIMELINE_PADDING, MINIMAP_HEIGHT, MINIMAP_PADDING } from '../../state/constants';
-import { getFormattedDate } from '../../utils/dateUtil';
+	filter,
+	map,
+	groupBy,
+	union,
+} from 'ramda';
+import debounce from 'lodash.debounce';
+import MainTimeline from './MainTimeline';
+import { withLoading, withErrors, getErrorHandler } from '../../utils/hocUtil';
+import { getMinimap } from '../../utils/timelineUtil';
+import { ucFirst } from '../../utils/stringUtil';
+import isDocumentId from '../../utils/isDocumentId';
+import {
+	monthsLabels,
+	getDifferenceInYears,
+	formatYear,
+	ensureTwoDigits,
+	getFormattedDate,
+} from '../../utils/dateUtil';
 
 const ALL_EVENTS_AND_DOCUMENTS = gql`
 	{
-	allEvents(orderBy: eventStartDate_ASC) {
-		id
-		eventTitle
-		eventStartDate
+		allEvents(orderBy: eventStartDate_ASC) {
+			id
+			eventTitle
+			eventStartDate
+		}
+		allDocuments(orderBy: documentCreationDate_ASC) {
+			id
+			documentTitle
+			documentCreationDate
+		}
 	}
-	allDocuments(orderBy: documentCreationDate_ASC) {
-		id
-		documentTitle
-		documentCreationDate
-	}
-}
 `;
 
-const parseItems = ({
-	scaleFunction,
-	minimapScaleFunction,
+const getFilterArgsForQuery = (type, itemIds) => map(
+	(id) => `{ id: "${id}" }`,
+	itemIds,
+);
+
+const builtProtagonistQueryStringByType = (type, itemIds) => {
+	const stakeholdersFieldName = type === 'document' ? 'mentionedStakeholders' : 'eventStakeholders';
+	const query = `
+		all${ucFirst(type)}s(
+			filter: {
+				OR: [
+					${getFilterArgsForQuery(type, itemIds)}
+				]
+			}
+		) {
+			id
+			${type}Title
+			${stakeholdersFieldName} {
+				id
+				stakeholderFullName
+			}
+		}
+	`;
+	return query;
+};
+
+const protagonistQueries = (groupedItemIds) => Object.keys(groupedItemIds).map((key) => builtProtagonistQueryStringByType(key, groupedItemIds[key])); // eslint-disable-line
+const builtProtagonistQuery = (itemIds) => gql`
+	query {
+		${protagonistQueries(itemIds)}
+	}
+`;
+
+const normaliseItems = ({
 	items,
 	itemDateProperty,
 	itemTitleProperty,
 	itemType,
-}) => {
-	const parseYPosition = getYPositionParser(scaleFunction, minimapScaleFunction);
-	const parsedItems = items.map((props) => ({
-		id: props.id,
-		date: getFormattedDate(new Date(props[itemDateProperty])),
-		title: props[itemTitleProperty],
-		path: `/${itemType}/${props.id}`,
-		...parseYPosition(props[itemDateProperty]),
-	}));
+}) => items.map((props) => {
+	const date = new Date(props[itemDateProperty]);
+	const { id } = props;
 	return {
-		timelineItems: groupItemsBy(parsedItems, 'yPosition'),
-		minimapItems: toMinimapDots(groupItemsBy(parsedItems, 'minimapYPosition')),
+		id,
+		date,
+		dateString: getFormattedDate(date),
+		title: props[itemTitleProperty],
+		path: `/${itemType}/context/${id}`,
+		type: itemType,
 	};
+});
+
+const structureItems = ({
+	datesArray,
+	timelineEvents,
+	timelineDocuments,
+}) => {
+	const startYear = parseInt(formatYear(datesArray[0], 'YYYY'), 10);
+	const yearsAmount = getDifferenceInYears(...datesArray);
+	const items = [...Array(yearsAmount)].map((_, yearIdx) => {
+		const year = `${startYear + yearIdx}`;
+		return {
+			key: year,
+			year,
+			months: [...Array(12)].map((__, monthIdx) => {
+				const month = monthsLabels[monthIdx];
+				const monthNumber = ensureTwoDigits(monthIdx + 1);
+				return {
+					key: `${year}-${monthNumber}`,
+					month,
+					days: [...Array(31)].map((___, dayIdx) => {
+						const day = ensureTwoDigits(dayIdx + 1);
+						const dayId = `${year}-${monthNumber}-${day}`;
+						const filterDateString = filter(({ dateString }) => (
+							dateString === dayId
+						));
+						return {
+							key: dayId,
+							day: `${dayIdx + 1}`,
+							events: filterDateString(timelineEvents),
+							documents: filterDateString(timelineDocuments),
+						};
+					}).filter(({ events, documents }) => (
+						(events && events.length > 0)
+						|| (documents && documents.length > 0)
+					)),
+				};
+			}),
+		};
+	});
+	return items;
 };
 
-const getEventsAndDocuments = ({
-	setContainerHeight,
-	setEvents,
-	setDocuments,
-	stopLoading,
-	setMinimapEvents,
-	setMinimapDocuments,
-}) => ({ data: { allEvents, allDocuments } }) => {
-	const datesArray = [
-		new Date(allDocuments[0].documentCreationDate),
-		new Date(allDocuments[allDocuments.length - 1].documentCreationDate),
-	];
-	const height = getTimelineHeightByDates(...datesArray);
+const getClusteredProtagonists = ({ data: { allEvents: events, allDocuments: documents } }) => {
+	const combinedEventsAndDocuments = union(events, documents);
+	const protagonists = combinedEventsAndDocuments.map((item) => item.mentionedStakeholders || item.eventStakeholders); // eslint-disable-line
 
-	const scaleFunction = scaleTime()
-		.domain(datesArray).range([0, (height - (TIMELINE_PADDING * 2))]);
+	return protagonists
+		.reduce((acc, current) => {
+			const flattenedProtagonists = acc.concat(current);
+			return flattenedProtagonists;
+		}, [])
+		.reduce((acc, current) => {
+			const { id } = current;
+			return Object.assign(acc, {
+				[id]: (acc[id] || []).concat(current),
+			});
+		}, {});
+};
 
-	const minimapScaleFunction = scaleTime()
-		.domain([0, height]).range([0, MINIMAP_HEIGHT - (MINIMAP_PADDING * 2)]);
-
-	const { timelineItems: timelineEvents, minimapItems: minimapEvents } = parseItems({
-		scaleFunction,
-		minimapScaleFunction,
-		items: allEvents,
+const parseItems = ({ events, datesArray, documents }) => {
+	const timelineEvents = normaliseItems({
+		items: events,
 		itemDateProperty: 'eventStartDate',
 		itemTitleProperty: 'eventTitle',
 		itemType: 'event',
 	});
 
-	const { timelineItems: timelineDocuments, minimapItems: minimapDocuments } = parseItems({
-		scaleFunction,
-		minimapScaleFunction,
-		items: allDocuments,
+	const timelineDocuments = normaliseItems({
+		items: documents,
 		itemDateProperty: 'documentCreationDate',
 		itemTitleProperty: 'documentTitle',
 		itemType: 'document',
 	});
 
-	setContainerHeight(height);
-	setEvents(timelineEvents);
-	setMinimapEvents(minimapEvents);
-	setDocuments(timelineDocuments);
-	setMinimapDocuments(minimapDocuments);
+	return structureItems({
+		datesArray,
+		timelineEvents,
+		timelineDocuments,
+	});
+};
+
+const getEventsAndDocuments = ({
+	setTimelineItems,
+	stopLoading,
+	setMinimapItems,
+}) => ({ data: { allEvents: events, allDocuments: documents } }) => {
+	const items = parseItems({
+		events,
+		documents,
+		datesArray: [
+			new Date(documents[0].documentCreationDate),
+			new Date(documents[documents.length - 1].documentCreationDate),
+		],
+	});
+
+	setTimelineItems(items);
+	setMinimapItems(getMinimap(items));
 	stopLoading();
 };
 
-const handleErrors = ({ setErrors }) => ({ message, graphQLErrors }) => {
-	setErrors(message ? [message] : graphQLErrors);
+const isInViewport = (element, offset = 0) => {
+	if (!element) {
+		return false;
+	}
+
+	const { top } = element.getBoundingClientRect();
+	const isUnderUpperBound = (top + offset) >= 0;
+	const isAboveLowerBound = (top - offset) <= window.innerHeight;
+	return isUnderUpperBound && isAboveLowerBound;
+};
+
+const getEventIdsInViewport = (timelineElement) => {
+	const timelineEvents = timelineElement.getElementsByClassName('timeline-event');
+	const eventIds = [...timelineEvents]
+		.filter(isInViewport)
+		.map((timelineEvent) => timelineEvent.getAttribute('data-id'));
+
+	return eventIds;
+};
+
+const getProtagonistsInViewport = (timelineElement, props) => {
+	const {
+		setBubbleChartItems,
+		setFetchingProtagonists,
+	} = props;
+
+	const timelineEventIds = getEventIdsInViewport(timelineElement);
+
+	if (timelineEventIds.length > 0) {
+		const groupById = groupBy((id) => (isDocumentId(id) ? 'document' : 'event'));
+		const groupedItemIds = groupById(timelineEventIds);
+
+		setFetchingProtagonists(true);
+
+		props.client.query({
+			query: builtProtagonistQuery(groupedItemIds),
+		})
+			.then((response) => {
+				const clusteredProtagonists = getClusteredProtagonists(response);
+				setBubbleChartItems(clusteredProtagonists);
+				setFetchingProtagonists(false);
+			})
+			.catch(getErrorHandler(props));
+	} else {
+		setBubbleChartItems({});
+	}
+};
+
+const onRef = (props) => (ref) => {
+	if (ref) {
+		props.setTimelineContainer(ref);
+		ref.addEventListener('scroll', debounce((event) => getProtagonistsInViewport(event.target, props), 350));
+	}
 };
 
 export default compose(
 	withApollo,
 	withLoading,
 	withErrors,
-	withState('events', 'setEvents', []),
-	withState('documents', 'setDocuments', []),
-	withState('minimapEvents', 'setMinimapEvents', []),
-	withState('minimapDocuments', 'setMinimapDocuments', []),
-	withState('containerHeight', 'setContainerHeight', 800),
+	withState('timelineItems', 'setTimelineItems', []),
+	withState('minimapItems', 'setMinimapItems', []),
+	withState('bubbleChartItems', 'setBubbleChartItems', {}),
+	withState('timelineContainer', 'setTimelineContainer', null),
+	withState('fetchingProtagonists', 'setFetchingProtagonists', false),
+	withState('initialProtagonistsFetched', 'setInitialProtagonistsFetched', false),
+	withHandlers({
+		onRef,
+	}),
 	lifecycle({
 		componentDidMount() {
 			const { props } = this;
-
 			props.client.query({ query: ALL_EVENTS_AND_DOCUMENTS })
 				.then(getEventsAndDocuments(props))
-				.catch(handleErrors(props));
+				.catch(getErrorHandler(props));
+		},
+		componentDidUpdate() {
+			const { props } = this;
+
+			if (!props.initialProtagonistsFetched) {
+				props.setInitialProtagonistsFetched(true);
+				getProtagonistsInViewport(props.timelineContainer, props);
+			}
 		},
 		shouldComponentUpdate(nextProps) {
-			return (nextProps.events.length !== this.props.events.length)
-				|| (nextProps.containerHeight !== this.props.containerHeight)
+			return (nextProps.timelineItems.length !== this.props.timelineItems.length)
+				|| (nextProps.bubbleChartItems !== this.props.bubbleChartItems)
+				|| (nextProps.fetchingProtagonists !== this.props.fetchingProtagonists)
 				|| (nextProps.errors.length !== this.props.errors.length)
 				|| (nextProps.isLoading !== this.props.isLoading);
 		},
