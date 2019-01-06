@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { isEmpty } from 'ramda';
+import { getInitials } from '../../utils/stringUtil';
 import {
 	Bubble,
 	BubbleChartContainer,
@@ -36,7 +37,7 @@ const Bubbles = ({
 			key={`text-${name}`}
 			isLoading={isLoading}
 		>
-			{name}
+			{getInitials(name)}
 		</Text>,
 	]);
 });
