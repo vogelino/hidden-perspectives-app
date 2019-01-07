@@ -22,8 +22,11 @@ const Bubbles = ({
 		y,
 		r,
 	} = bubbleData;
-
 	const { name, id } = data;
+	const maxFontSize = 16;
+	const roundedRadius = Math.round(r);
+	const fontSize = roundedRadius <= maxFontSize ? roundedRadius : maxFontSize;
+
 	return (
 		<BubbleLink
 			xlinkHref={`/participant/context/${id}`}
@@ -42,6 +45,7 @@ const Bubbles = ({
 				y={y}
 				key={`text-${name}`}
 				isLoading={isLoading}
+				fontSize={fontSize}
 			>
 				{getInitials(name)}
 			</Text>
