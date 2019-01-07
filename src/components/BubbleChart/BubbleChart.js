@@ -28,6 +28,9 @@ const Bubbles = ({
 
 	const { name, id } = data;
 	const hovered = isHovered(data, hoveredElement, 'stakeholder');
+	const maxFontSize = 16;
+	const roundedRadius = Math.round(r);
+	const fontSize = roundedRadius <= maxFontSize ? roundedRadius : maxFontSize;
 
 	return (
 		<BubbleLink
@@ -50,6 +53,7 @@ const Bubbles = ({
 				key={`text-${name}`}
 				isLoading={isLoading}
 				isHovered={hovered}
+				fontSize={fontSize}
 			>
 				{getInitials(name)}
 			</Text>

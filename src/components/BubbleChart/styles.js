@@ -44,8 +44,8 @@ export const Bubble = styled.circle`
 
 export const Text = styled.text`
     alignment-baseline: central;
-	font-size: .875rem;
-	line-height: .875rem;
+    font-size: ${({ fontSize }) => fontSize}px;
+    line-height: ${({ fontSize }) => fontSize}px;
     opacity: ${({ isLoading }) => (isLoading ? 0 : 1)};
     pointer-events: none;
     text-anchor: middle;
