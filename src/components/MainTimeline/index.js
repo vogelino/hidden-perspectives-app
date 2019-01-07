@@ -4,6 +4,7 @@ import {
 	lifecycle,
 	withState,
 	withHandlers,
+	onlyUpdateForKeys,
 } from 'recompose';
 import gql from 'graphql-tag';
 import {
@@ -272,13 +273,13 @@ export default compose(
 				getProtagonistsInViewport(props.timelineContainer, props);
 			}
 		},
-		shouldComponentUpdate(nextProps) {
-			return (nextProps.timelineItems.length !== this.props.timelineItems.length)
-				|| (nextProps.bubbleChartItems !== this.props.bubbleChartItems)
-				|| (nextProps.fetchingProtagonists !== this.props.fetchingProtagonists)
-				|| (nextProps.errors.length !== this.props.errors.length)
-				|| (nextProps.isLoading !== this.props.isLoading)
-				|| (nextProps.hoveredElement !== this.props.hoveredElement);
-		},
 	}),
+	onlyUpdateForKeys([
+		'timelineItems',
+		'bubbleChartItems',
+		'fetchingProtagonists',
+		'errors',
+		'isLoading',
+		'hoveredElement',
+	]),
 )(MainTimeline);
