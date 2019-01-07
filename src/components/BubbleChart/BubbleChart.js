@@ -6,7 +6,7 @@ import { isHovered } from '../../utils/timelineUtil';
 import {
 	Bubble,
 	BubbleChartContainer,
-	BubblesWrapper,
+	BubblesSvg,
 	BubblesLoadingContainer,
 	BubbleLink,
 	Text,
@@ -70,10 +70,11 @@ const BubbleChart = ({
 	hoveredElement,
 	setHoveredElement,
 }) => (
-	<BubbleChartContainer>
-		<BubblesWrapper
+	<BubbleChartContainer diameter={diameter}>
+		<BubblesSvg
 			isLoading={isLoading}
-			diameter={diameter}
+			viewBox={`0 0 ${diameter} ${diameter}`}
+			preserveAspectRatio="xMidYMid meet"
 		>
 			{
 				isEmpty(bubbleLayoutItems) && !isLoading
@@ -87,7 +88,7 @@ const BubbleChart = ({
 						/>
 					)
 			}
-		</BubblesWrapper>
+		</BubblesSvg>
 		<BubblesLoadingContainer isLoading={isLoading}>
 			<LoadingIndicator />
 		</BubblesLoadingContainer>
