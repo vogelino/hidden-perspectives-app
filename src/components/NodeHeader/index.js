@@ -24,6 +24,7 @@ const getDocumentTabs = (props) => [
 
 const getStakeholderTabs = (props) => [
 	createTab(props, 'context'),
+	createTab(props, 'metadata'),
 ];
 
 const getTabs = (props) => {
@@ -32,7 +33,7 @@ const getTabs = (props) => {
 	switch (itemType) {
 	case 'event': return getEventTabs(props);
 	case 'document': return getDocumentTabs(props);
-	case 'stakeholder': return getStakeholderTabs(props);
+	case 'participant': return getStakeholderTabs(props);
 	default: return '';
 	}
 };
