@@ -28,7 +28,7 @@ export const BubblesLoadingContainer = styled.div`
 export const Bubble = styled.circle`
     align-items: center;
     height: ${({ r }) => r * 2}px;
-    fill: ${({ theme }) => theme.gray200};
+    fill: ${({ isActive, theme }) => (isActive ? 'black' : theme.gray200)};
     left: ${({ x }) => x}px;
     opacity: ${({ isLoading }) => (isLoading ? 0 : 1)};
     top: ${({ y }) => y}px;
@@ -42,6 +42,7 @@ export const Bubble = styled.circle`
 
 export const Text = styled.text`
     alignment-baseline: central;
+    fill: ${({ isActive }) => (isActive ? 'white' : 'black')};
     font-size: ${({ fontSize }) => fontSize}px;
     line-height: ${({ fontSize }) => fontSize}px;
     opacity: ${({ isLoading }) => (isLoading ? 0 : 1)};

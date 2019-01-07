@@ -22,7 +22,8 @@ const Bubbles = ({
 		y,
 		r,
 	} = bubbleData;
-	const { name, id } = data;
+	const { name, id, isActive } = data;
+
 	const maxFontSize = 16;
 	const roundedRadius = Math.round(r);
 	const fontSize = roundedRadius <= maxFontSize ? roundedRadius : maxFontSize;
@@ -39,12 +40,14 @@ const Bubbles = ({
 				cy={y}
 				r={r}
 				isLoading={isLoading}
+				isActive={isActive}
 			/>
 			<Text
 				x={x}
 				y={y}
 				key={`text-${name}`}
 				isLoading={isLoading}
+				isActive={isActive}
 				fontSize={fontSize}
 			>
 				{getInitials(name)}

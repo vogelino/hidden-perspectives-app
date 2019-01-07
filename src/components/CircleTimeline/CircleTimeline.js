@@ -164,6 +164,7 @@ const CircleTimeline = ({
 			diameter={300}
 			bubblesPadding={5}
 			isLoading={isLoading}
+			activeId={item.id}
 		/>
 	</CircleContainer>
 );
