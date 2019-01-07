@@ -174,7 +174,7 @@ CircleTimeline.propTypes = {
 		subtitle: PropTypes.string,
 		itemType: PropTypes.string.isRequired,
 		id: PropTypes.string.isRequired,
-	}).isRequired,
+	}),
 	documents: PropTypes.arrayOf(
 		PropTypes.arrayOf(PropTypes.shape({
 			id: PropTypes.string.isRequired,
@@ -196,6 +196,12 @@ CircleTimeline.propTypes = {
 };
 
 CircleTimeline.defaultProps = {
+	item: {
+		title: 'Title',
+		subtitle: 'Subtitle',
+		itemType: 'document',
+		id: 'woifjiwefopwejpfwe',
+	},
 	documents: [],
 	events: [],
 	protagonists: {},
