@@ -7,8 +7,6 @@ import {
 	EventContainer,
 	Event,
 	EventDate,
-	EventTitleContainer,
-	EventTitle,
 	Events,
 	Documents,
 	LegendContainer,
@@ -17,50 +15,13 @@ import OriginalMinimap from './Minimap';
 import BubbleChart from '../BubbleChart';
 import { LoadingContainer } from '../LoadingIndicator/styles';
 import LoadingIndicator from '../LoadingIndicator';
-import Tooltip from '../Tooltip';
 import ContainerWithStickyLabel from './ContainerWithStickyLabel';
+import TimelineElement from './TimelineElement';
 import { DocumentLegend, EventLegend } from '../Legend';
 
 const isHovered = (currentElementId, hoveredElement) => Boolean(
 	hoveredElement && (currentElementId === hoveredElement.id),
 );
-
-const TimelineElement = ({
-	itemType,
-	id,
-	hovered,
-	path,
-	title,
-	hoverHandler,
-}) => (
-	<EventTitleContainer
-		key={id}
-		className="timeline-event"
-		data-id={id}
-		right={itemType === 'document'}
-		onMouseEnter={() => hoverHandler({ id, itemType })}
-		onMouseLeave={() => hoverHandler(null)}
-	>
-		<Tooltip id={id} itemType={itemType} position="left">
-			<EventTitle
-				to={path}
-				className={hovered ? 'hovered' : ''}
-			>
-				{title}
-			</EventTitle>
-		</Tooltip>
-	</EventTitleContainer>
-);
-
-TimelineElement.propTypes = {
-	itemType: PropTypes.string.isRequired,
-	id: PropTypes.string.isRequired,
-	path: PropTypes.string.isRequired,
-	title: PropTypes.string.isRequired,
-	hoverHandler: PropTypes.func.isRequired,
-	hovered: PropTypes.bool.isRequired,
-};
-
 
 const TimelineItems = ({
 	timelineItems,
@@ -252,22 +213,23 @@ MainTimeline.propTypes = {
 	minimapItems: Minimap.propTypes.items,
 	bubbleChartItems: Stakholders.propTypes.items,
 	hoveredElement: TimelineItems.propTypes.hoveredElement,
-	setHoveredElement: TimelineItems.propTypes.setHoveredElement,
+	setHoveredElement: PropTypes.func,
 	errors: PropTypes.arrayOf(PropTypes.string),
 	isLoading: PropTypes.bool,
 	fetchingProtagonists: PropTypes.bool,
-	onRef: PropTypes.func.isRequired,
+	onRef: PropTypes.func,
 };
 
 MainTimeline.defaultProps = {
 	hoveredElement: TimelineItems.defaultProps.hoveredElement,
-	setHoveredElement: TimelineItems.defaultProps.setHoveredElement,
+	setHoveredElement: () => {},
 	timelineItems: TimelineItems.defaultProps.timelineItems,
 	bubbleChartItems: Stakholders.defaultProps.items,
 	minimapItems: Minimap.defaultProps.items,
 	errors: [],
 	isLoading: true,
 	fetchingProtagonists: true,
+	onRef: () => {},
 };
 
 export default MainTimeline;
