@@ -1,76 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-	Container,
-	MinimapContainer,
-	BubbleChartContainer,
-	LegendContainer,
-} from './styles';
-import OriginalMinimap from './Minimap';
-import BubbleChart from '../BubbleChart';
+import { Container } from './styles';
+import Minimap from './Minimap';
 import { LoadingContainer } from '../LoadingIndicator/styles';
 import LoadingIndicator from '../LoadingIndicator';
 import TimelineItems from './TimelineItems';
-import { DocumentLegend, EventLegend } from '../Legend';
-
-
-const Legend = () => (
-	<LegendContainer>
-		<DocumentLegend />
-		<EventLegend right />
-	</LegendContainer>
-);
-
-
-const Stakholders = (props) => (
-	<BubbleChartContainer>
-		<BubbleChart
-			{...props}
-			diameter={250}
-			bubblesPadding={5}
-		/>
-	</BubbleChartContainer>
-);
-
-Stakholders.propTypes = {
-	items: PropTypes.objectOf(
-		PropTypes.arrayOf(
-			PropTypes.shape({
-				id: PropTypes.string.isRequired,
-				stakeholderFullName: PropTypes.string.isRequired,
-			}),
-		),
-	),
-	isLoading: PropTypes.bool,
-};
-
-Stakholders.defaultProps = {
-	items: {},
-	isLoading: true,
-};
-
-
-const Minimap = (props) => (
-	<MinimapContainer>
-		<OriginalMinimap {...props} />
-	</MinimapContainer>
-);
-
-Minimap.propTypes = {
-	isLoading: PropTypes.bool,
-	items: PropTypes.arrayOf(
-		PropTypes.shape({
-			id: PropTypes.string.isRequired,
-			density: PropTypes.number.isRequired,
-		}),
-	),
-};
-
-Minimap.defaultProps = {
-	items: [],
-	isLoading: true,
-};
-
+import Stakeholders from './Stakeholders';
+import { MainTimelineLegend } from '../Legend';
 
 const MainTimeline = ({
 	timelineItems,
@@ -92,11 +28,11 @@ const MainTimeline = ({
 			isLoading={isLoading}
 			items={minimapItems}
 		/>
-		<Stakholders
+		<Stakeholders
 			isLoading={fetchingProtagonists}
 			items={bubbleChartItems}
 		/>
-		<Legend />
+		<MainTimelineLegend />
 		<TimelineItems
 			timelineItems={timelineItems}
 			hoveredElement={hoveredElement}
@@ -107,8 +43,11 @@ const MainTimeline = ({
 
 MainTimeline.propTypes = {
 	timelineItems: TimelineItems.propTypes.timelineItems,
-	minimapItems: Minimap.propTypes.items,
-	bubbleChartItems: Stakholders.propTypes.items,
+	minimapItems: PropTypes.arrayOf(PropTypes.shape({
+		id: PropTypes.string.isRequired,
+		density: PropTypes.number.isRequired,
+	})),
+	bubbleChartItems: Stakeholders.propTypes.items,
 	hoveredElement: TimelineItems.propTypes.hoveredElement,
 	setHoveredElement: PropTypes.func,
 	errors: PropTypes.arrayOf(PropTypes.string),
@@ -121,8 +60,8 @@ MainTimeline.defaultProps = {
 	hoveredElement: TimelineItems.defaultProps.hoveredElement,
 	setHoveredElement: () => {},
 	timelineItems: TimelineItems.defaultProps.timelineItems,
-	bubbleChartItems: Stakholders.defaultProps.items,
-	minimapItems: Minimap.defaultProps.items,
+	bubbleChartItems: Stakeholders.defaultProps.items,
+	minimapItems: [],
 	errors: [],
 	isLoading: true,
 	fetchingProtagonists: true,

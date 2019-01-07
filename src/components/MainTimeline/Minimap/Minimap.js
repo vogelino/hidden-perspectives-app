@@ -4,7 +4,8 @@ import { lifecycle } from 'recompose';
 import {
 	Content,
 	ScrollIndicator,
-	Container,
+	InnerContainer,
+	OuterContainer,
 	MonthsContainer,
 	Month,
 	Date,
@@ -43,13 +44,15 @@ const Minimap = ({
 	years,
 	isLoading,
 }) => (
-	<Container>
-		<Content>
-			{!isLoading && <ScrollIndicator height={height} top={top} />}
-			<OptimizedMonths items={items} />
-		</Content>
-		<OptimizedDates years={years} />
-	</Container>
+	<OuterContainer>
+		<InnerContainer>
+			<Content>
+				{!isLoading && <ScrollIndicator height={height} top={top} />}
+				<OptimizedMonths items={items} />
+			</Content>
+			<OptimizedDates years={years} />
+		</InnerContainer>
+	</OuterContainer>
 );
 
 Minimap.propTypes = {
