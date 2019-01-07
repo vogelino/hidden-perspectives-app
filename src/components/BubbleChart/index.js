@@ -23,6 +23,7 @@ const formatItems = (bubblesData) => {
 		id: key,
 		name: bubblesData[key][0].stakeholderFullName,
 		value: bubblesData[key].length,
+		id: key,
 	}));
 
 	return {

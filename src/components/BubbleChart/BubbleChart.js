@@ -8,6 +8,7 @@ import {
 	BubbleChartContainer,
 	BubblesWrapper,
 	BubblesLoadingContainer,
+	BubbleLink,
 	Text,
 } from './styles';
 import LoadingIndicator from '../LoadingIndicator';
@@ -25,29 +26,35 @@ const Bubbles = ({
 		r,
 	} = bubbleData;
 
-	const { name } = data;
+	const { name, id } = data;
 	const hovered = isHovered(data, hoveredElement, 'stakeholder');
-	return ([
-		<Bubble
-			key={`bubble-${name}`}
-			cx={x}
-			cy={y}
-			r={r}
-			isLoading={isLoading}
-			isHovered={hovered}
-			onMouseEnter={() => setHoveredElement({ itemType: 'stakeholder', ...data })}
-			onMouseLeave={() => setHoveredElement(null)}
-		/>,
-		<Text
-			x={x}
-			y={y}
-			key={`text-${name}`}
-			isLoading={isLoading}
-			isHovered={hovered}
+
+	return (
+		<BubbleLink
+			href={`/participant/context/${id}`}
+			key={`bubble-link-${name}`}
 		>
-			{getInitials(name)}
-		</Text>,
-	]);
+			<Bubble
+				key={`bubble-${name}`}
+				cx={x}
+				cy={y}
+				r={r}
+				isLoading={isLoading}
+				isHovered={hovered}
+				onMouseEnter={() => setHoveredElement({ itemType: 'stakeholder', ...data })}
+				onMouseLeave={() => setHoveredElement(null)}
+			/>
+			<Text
+				x={x}
+				y={y}
+				key={`text-${name}`}
+				isLoading={isLoading}
+				isHovered={hovered}
+			>
+				{getInitials(name)}
+			</Text>
+		</BubbleLink>
+	);
 });
 
 const BubbleChart = ({
