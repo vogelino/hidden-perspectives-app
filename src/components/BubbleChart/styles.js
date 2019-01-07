@@ -5,6 +5,8 @@ export const BubbleChartContainer = styled.div`
     position: absolute;
 `;
 
+export const BubbleLink = styled.a``;
+
 export const BubblesWrapper = styled.svg`
     display: block;
     height: ${({ diameter }) => diameter}px;
@@ -30,10 +32,11 @@ export const Bubble = styled.circle`
     left: ${({ x }) => x}px;
     opacity: ${({ isLoading }) => (isLoading ? 0 : 1)};
     top: ${({ y }) => y}px;
+    transition: fill 150ms;
     width: ${({ r }) => r * 2}px;
 
     &:hover {
-        fill: ${({ theme }) => theme.gray400};
+        fill: ${({ theme }) => theme.primary};
     }
 `;
 

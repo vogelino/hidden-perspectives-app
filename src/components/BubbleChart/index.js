@@ -21,6 +21,7 @@ const formatItems = (bubblesData) => {
 	const formattedData = Object.keys(bubblesData).map((key) => ({
 		name: bubblesData[key][0].stakeholderFullName,
 		value: bubblesData[key].length,
+		id: key,
 	}));
 
 	return {

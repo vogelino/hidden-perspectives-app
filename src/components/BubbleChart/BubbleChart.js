@@ -7,6 +7,7 @@ import {
 	BubbleChartContainer,
 	BubblesWrapper,
 	BubblesLoadingContainer,
+	BubbleLink,
 	Text,
 } from './styles';
 import LoadingIndicator from '../LoadingIndicator';
@@ -22,24 +23,30 @@ const Bubbles = ({
 		r,
 	} = bubbleData;
 
-	const { name } = data;
-	return ([
-		<Bubble
-			key={`bubble-${name}`}
-			cx={x}
-			cy={y}
-			r={r}
-			isLoading={isLoading}
-		/>,
-		<Text
-			x={x}
-			y={y}
-			key={`text-${name}`}
-			isLoading={isLoading}
+	const { name, id } = data;
+	return (
+		<BubbleLink
+			xlinkHref={`/participant/context/${id}`}
+			target="_top"
+			key={`bubble-link-${name}`}
 		>
-			{getInitials(name)}
-		</Text>,
-	]);
+			<Bubble
+				key={`bubble-${name}`}
+				cx={x}
+				cy={y}
+				r={r}
+				isLoading={isLoading}
+			/>
+			<Text
+				x={x}
+				y={y}
+				key={`text-${name}`}
+				isLoading={isLoading}
+			>
+				{getInitials(name)}
+			</Text>
+		</BubbleLink>
+	);
 });
 
 const BubbleChart = ({
