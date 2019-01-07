@@ -5,7 +5,7 @@ import { getInitials } from '../../utils/stringUtil';
 import {
 	Bubble,
 	BubbleChartContainer,
-	BubblesWrapper,
+	BubblesSvg,
 	BubblesLoadingContainer,
 	BubbleLink,
 	Text,
@@ -61,10 +61,11 @@ const BubbleChart = ({
 	isLoading,
 	diameter,
 }) => (
-	<BubbleChartContainer>
-		<BubblesWrapper
+	<BubbleChartContainer diameter={diameter}>
+		<BubblesSvg
 			isLoading={isLoading}
-			diameter={diameter}
+			viewBox={`0 0 ${diameter} ${diameter}`}
+			preserveAspectRatio="xMidYMid meet"
 		>
 			{
 				isEmpty(bubbleLayoutItems)
@@ -76,7 +77,7 @@ const BubbleChart = ({
 						/>
 					)
 			}
-		</BubblesWrapper>
+		</BubblesSvg>
 		<BubblesLoadingContainer isLoading={isLoading}>
 			<LoadingIndicator />
 		</BubblesLoadingContainer>

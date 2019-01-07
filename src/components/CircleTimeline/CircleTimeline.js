@@ -44,7 +44,7 @@ const CircleTimeline = ({
 		<CircleSvg
 			id="circleContainer"
 			viewBox={`0 0 ${DIAMETER_OUTER + (MARGIN * 2)} ${DIAMETER_OUTER + (MARGIN * 2)}`}
-			preserveAspectRatio="xMaxYMax meet"
+			preserveAspectRatio="xMidYMid meet"
 		>
 			<Circle
 				missingAngle={toRadian(20)}

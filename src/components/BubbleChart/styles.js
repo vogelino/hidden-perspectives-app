@@ -2,15 +2,20 @@ import styled from 'styled-components';
 
 export const BubbleChartContainer = styled.div`
     border-radius: 50%;
+    height: ${({ diameter }) => diameter}px;
     position: absolute;
+    width: ${({ diameter }) => diameter}px;
 `;
 
 export const BubbleLink = styled.a``;
 
-export const BubblesWrapper = styled.svg`
+export const BubblesSvg = styled.svg`
     display: block;
-    height: ${({ diameter }) => diameter}px;
-    width: ${({ diameter }) => diameter}px;
+    height: 100%;
+    position: absolute;
+    width: auto;
+    max-width: 100%;
+    max-height: 100%;
 `;
 
 export const BubblesLoadingContainer = styled.div`
@@ -27,13 +32,9 @@ export const BubblesLoadingContainer = styled.div`
 
 export const Bubble = styled.circle`
     align-items: center;
-    height: ${({ r }) => r * 2}px;
     fill: ${({ isActive, theme }) => (isActive ? 'black' : theme.gray200)};
-    left: ${({ x }) => x}px;
     opacity: ${({ isLoading }) => (isLoading ? 0 : 1)};
-    top: ${({ y }) => y}px;
     transition: fill 150ms;
-    width: ${({ r }) => r * 2}px;
 
     &:hover {
         fill: ${({ theme }) => theme.primary};
