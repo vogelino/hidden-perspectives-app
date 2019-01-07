@@ -13,7 +13,7 @@ import {
 	Documents,
 	LegendContainer,
 } from './styles';
-import Minimap from './Minimap';
+import OriginalMinimap from './Minimap';
 import BubbleChart from '../BubbleChart';
 import { LoadingContainer } from '../LoadingIndicator/styles';
 import LoadingIndicator from '../LoadingIndicator';
@@ -21,78 +21,96 @@ import Tooltip from '../Tooltip';
 import ContainerWithStickyLabel from './ContainerWithStickyLabel';
 import { DocumentLegend, EventLegend } from '../Legend';
 
-const MainTimeline = ({
-	timelineItems,
-	minimapItems,
-	bubbleChartItems,
-	errors,
-	isLoading,
-	fetchingProtagonists,
-	onRef,
+const isHovered = (currentElementId, hoveredElement) => Boolean(
+	hoveredElement && (currentElementId === hoveredElement.id),
+);
+
+const TimelineElement = ({
+	itemType,
+	id,
+	hovered,
+	path,
+	title,
+	hoverHandler,
 }) => (
-	<Container id="mainTimeline" ref={onRef}>
-		<LoadingContainer isLoading={isLoading}>
-			<LoadingIndicator />
-		</LoadingContainer>
-		{errors.map((error) => error)}
-		<MinimapContainer>
-			<Minimap isLoading={isLoading} items={minimapItems} />
-		</MinimapContainer>
-		<BubbleChartContainer>
-			<BubbleChart
-				isLoading={isLoading || fetchingProtagonists}
-				items={bubbleChartItems}
-				diameter={250}
-				bubblesPadding={5}
-			/>
-		</BubbleChartContainer>
-		<LegendContainer>
-			<DocumentLegend />
-			<EventLegend right />
-		</LegendContainer>
-		{timelineItems.map(({ year, months, ...yearKey }) => (
-			<ContainerWithStickyLabel label={year} {...yearKey} isYear>
-				{months.map(({ month, days, ...monthKey }) => (
-					<ContainerWithStickyLabel label={month} date={`${month} ${year}`} {...monthKey}>
-						{days.map(({
-							day,
-							key,
-							events,
-							documents,
-							...dayKey
-						}) => (
-							<EventContainer key={key}>
-								<Event {...dayKey}>
-									<EventDate>{day}</EventDate>
-									<Documents>
-										{documents.map(({ title, id, path }) => (
-											<EventTitleContainer key={id} className="timeline-event" data-id={id}>
-												<Tooltip id={id} itemType="document">
-													<EventTitle to={path}>{title}</EventTitle>
-												</Tooltip>
-											</EventTitleContainer>
-										))}
-									</Documents>
-									<Events>
-										{events.map(({ title, id, path }) => (
-											<EventTitleContainer key={id} className="timeline-event" data-id={id}>
-												<Tooltip id={id} itemType="event" position="left">
-													<EventTitle to={path}>{title}</EventTitle>
-												</Tooltip>
-											</EventTitleContainer>
-										))}
-									</Events>
-								</Event>
-							</EventContainer>
-						))}
-					</ContainerWithStickyLabel>
+	<EventTitleContainer
+		key={id}
+		className="timeline-event"
+		data-id={id}
+		right={itemType === 'document'}
+		onMouseEnter={() => hoverHandler({ id, itemType })}
+		onMouseLeave={() => hoverHandler(null)}
+	>
+		<Tooltip id={id} itemType={itemType} position="left">
+			<EventTitle
+				to={path}
+				className={hovered ? 'hovered' : ''}
+			>
+				{title}
+			</EventTitle>
+		</Tooltip>
+	</EventTitleContainer>
+);
+
+TimelineElement.propTypes = {
+	itemType: PropTypes.string.isRequired,
+	id: PropTypes.string.isRequired,
+	path: PropTypes.string.isRequired,
+	title: PropTypes.string.isRequired,
+	hoverHandler: PropTypes.func.isRequired,
+	hovered: PropTypes.bool.isRequired,
+};
+
+
+const TimelineItems = ({
+	timelineItems,
+	hoveredElement,
+	setHoveredElement,
+}) => timelineItems.map(({ year, months, ...yearKey }) => (
+	<ContainerWithStickyLabel label={year} {...yearKey} isYear>
+		{months.map(({ month, days, ...monthKey }) => (
+			<ContainerWithStickyLabel label={month} date={`${month} ${year}`} {...monthKey}>
+				{days.map(({
+					day,
+					key,
+					events,
+					documents,
+					...dayKey
+				}) => (
+					<EventContainer key={key}>
+						<Event {...dayKey}>
+							<EventDate>{day}</EventDate>
+							<Documents>
+								{documents.map((item) => (
+									<TimelineElement
+										key={item.id}
+										{...item}
+										itemType="document"
+										hovered={isHovered(item.id, hoveredElement)}
+										hoverHandler={setHoveredElement}
+									/>
+								))}
+							</Documents>
+							<Events>
+								{events.map((item) => (
+									<TimelineElement
+										key={item.id}
+										{...item}
+										itemType="event"
+										hovered={isHovered(item.id, hoveredElement)}
+										hoverHandler={setHoveredElement}
+									/>
+								))}
+							</Events>
+						</Event>
+					</EventContainer>
 				))}
 			</ContainerWithStickyLabel>
 		))}
-	</Container>
-);
+	</ContainerWithStickyLabel>
+));
 
-MainTimeline.propTypes = {
+TimelineItems.propTypes = {
 	timelineItems: PropTypes.arrayOf(
 		PropTypes.shape({
 			key: PropTypes.string.isRequired,
@@ -125,13 +143,39 @@ MainTimeline.propTypes = {
 			).isRequired,
 		}),
 	),
-	minimapItems: PropTypes.arrayOf(
-		PropTypes.shape({
-			id: PropTypes.string.isRequired,
-			density: PropTypes.number.isRequired,
-		}),
-	),
-	bubbleChartItems: PropTypes.objectOf(
+	hoveredElement: PropTypes.shape({
+		id: PropTypes.string.isRequired,
+		itemType: PropTypes.string.isRequired,
+	}),
+	setHoveredElement: PropTypes.func.isRequired,
+};
+
+TimelineItems.defaultProps = {
+	hoveredElement: null,
+	timelineItems: [],
+};
+
+
+const Legend = () => (
+	<LegendContainer>
+		<DocumentLegend />
+		<EventLegend right />
+	</LegendContainer>
+);
+
+
+const Stakholders = (props) => (
+	<BubbleChartContainer>
+		<BubbleChart
+			{...props}
+			diameter={250}
+			bubblesPadding={5}
+		/>
+	</BubbleChartContainer>
+);
+
+Stakholders.propTypes = {
+	items: PropTypes.objectOf(
 		PropTypes.arrayOf(
 			PropTypes.shape({
 				id: PropTypes.string.isRequired,
@@ -139,6 +183,76 @@ MainTimeline.propTypes = {
 			}),
 		),
 	),
+	isLoading: PropTypes.bool,
+};
+
+Stakholders.defaultProps = {
+	items: {},
+	isLoading: true,
+};
+
+
+const Minimap = (props) => (
+	<MinimapContainer>
+		<OriginalMinimap {...props} />
+	</MinimapContainer>
+);
+
+Minimap.propTypes = {
+	isLoading: PropTypes.bool,
+	items: PropTypes.arrayOf(
+		PropTypes.shape({
+			id: PropTypes.string.isRequired,
+			density: PropTypes.number.isRequired,
+		}),
+	),
+};
+
+Minimap.defaultProps = {
+	items: [],
+	isLoading: true,
+};
+
+
+const MainTimeline = ({
+	timelineItems,
+	minimapItems,
+	bubbleChartItems,
+	errors,
+	isLoading,
+	fetchingProtagonists,
+	onRef,
+	setHoveredElement,
+	hoveredElement,
+}) => (
+	<Container id="mainTimeline" ref={onRef}>
+		<LoadingContainer isLoading={isLoading}>
+			<LoadingIndicator />
+		</LoadingContainer>
+		{errors.map((error) => error)}
+		<Minimap
+			isLoading={isLoading}
+			items={minimapItems}
+		/>
+		<Stakholders
+			isLoading={fetchingProtagonists}
+			items={bubbleChartItems}
+		/>
+		<Legend />
+		<TimelineItems
+			timelineItems={timelineItems}
+			hoveredElement={hoveredElement}
+			setHoveredElement={setHoveredElement}
+		/>
+	</Container>
+);
+
+MainTimeline.propTypes = {
+	timelineItems: TimelineItems.propTypes.timelineItems,
+	minimapItems: Minimap.propTypes.items,
+	bubbleChartItems: Stakholders.propTypes.items,
+	hoveredElement: TimelineItems.propTypes.hoveredElement,
+	setHoveredElement: TimelineItems.propTypes.setHoveredElement,
 	errors: PropTypes.arrayOf(PropTypes.string),
 	isLoading: PropTypes.bool,
 	fetchingProtagonists: PropTypes.bool,
@@ -146,12 +260,14 @@ MainTimeline.propTypes = {
 };
 
 MainTimeline.defaultProps = {
-	timelineItems: [],
-	minimapItems: [],
-	bubbleChartItems: {},
+	hoveredElement: TimelineItems.defaultProps.hoveredElement,
+	setHoveredElement: TimelineItems.defaultProps.setHoveredElement,
+	timelineItems: TimelineItems.defaultProps.timelineItems,
+	bubbleChartItems: Stakholders.defaultProps.items,
+	minimapItems: Minimap.defaultProps.items,
 	errors: [],
 	isLoading: true,
-	fetchingProtagonists: false,
+	fetchingProtagonists: true,
 };
 
 export default MainTimeline;

@@ -92,13 +92,11 @@ export const EventDate = styled.span`
 `;
 
 export const EventTitle = styled(Link)`
-	display: inline-block;
 	text-decoration: none;
 	color: ${({ theme }) => theme.gray900};
-	max-width: 20rem;
 
-	&:hover {
-		text-decoration: underline;
+	&.hovered {
+		background: yellow;
 	}
 `;
 
@@ -106,6 +104,8 @@ export const EventTitleContainer = styled.div`
 	padding: 0 1.5rem;
 	margin: 1rem 0;
 	position: relative;
+	max-width: 20rem;
+	float: ${({ right }) => (right ? 'right' : 'left')};
 
 	&:after {
 		content: '■';

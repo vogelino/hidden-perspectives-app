@@ -11,6 +11,7 @@ import {
 	map,
 	groupBy,
 	union,
+	propEq,
 } from 'ramda';
 import debounce from 'lodash.debounce';
 import MainTimeline from './MainTimeline';
@@ -113,9 +114,7 @@ const structureItems = ({
 					days: [...Array(31)].map((___, dayIdx) => {
 						const day = ensureTwoDigits(dayIdx + 1);
 						const dayId = `${year}-${monthNumber}-${day}`;
-						const filterDateString = filter(({ dateString }) => (
-							dateString === dayId
-						));
+						const filterDateString = filter(propEq('dateString', dayId));
 						return {
 							key: dayId,
 							day: `${dayIdx + 1}`,
@@ -254,11 +253,10 @@ export default compose(
 	withState('minimapItems', 'setMinimapItems', []),
 	withState('bubbleChartItems', 'setBubbleChartItems', {}),
 	withState('timelineContainer', 'setTimelineContainer', null),
-	withState('fetchingProtagonists', 'setFetchingProtagonists', false),
+	withState('fetchingProtagonists', 'setFetchingProtagonists', true),
 	withState('initialProtagonistsFetched', 'setInitialProtagonistsFetched', false),
-	withHandlers({
-		onRef,
-	}),
+	withState('hoveredElement', 'setHoveredElement', null),
+	withHandlers({ onRef }),
 	lifecycle({
 		componentDidMount() {
 			const { props } = this;
@@ -279,7 +277,8 @@ export default compose(
 				|| (nextProps.bubbleChartItems !== this.props.bubbleChartItems)
 				|| (nextProps.fetchingProtagonists !== this.props.fetchingProtagonists)
 				|| (nextProps.errors.length !== this.props.errors.length)
-				|| (nextProps.isLoading !== this.props.isLoading);
+				|| (nextProps.isLoading !== this.props.isLoading)
+				|| (nextProps.hoveredElement !== this.props.hoveredElement);
 		},
 	}),
 )(MainTimeline);
