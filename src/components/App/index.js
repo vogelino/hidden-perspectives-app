@@ -9,6 +9,7 @@ import DocumentMetadataPage from '../../pages/documentMetadata';
 import EventPage from '../../pages/event';
 import EventMetadataPage from '../../pages/eventMetadata';
 import ParticipantPage from '../../pages/participant';
+import ParticipantMetadataPage from '../../pages/participantMetadata';
 import TranscriptPage from '../../pages/transcript';
 import OriginalPage from '../../pages/original';
 
@@ -27,6 +28,7 @@ const App = () => (
 				<Route exact path="/event/metadata/:id" component={EventMetadataPage} />
 				<Route exact path="/event/metadata/:id/edit" component={() => null} />
 				<Route exact path="/participant/context/:id" component={ParticipantPage} />
+				<Route exact path="/participant/metadata/:id" component={ParticipantMetadataPage} />
 				<Route exact path="/login" component={Login} />
 			</div>
 		</Theme>
