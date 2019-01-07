@@ -53,7 +53,7 @@ const BubbleChart = ({
 			diameter={diameter}
 		>
 			{
-				isEmpty(bubbleLayoutItems)
+				isEmpty(bubbleLayoutItems) && !isLoading
 					? <Text x={diameter / 2} y={diameter / 2}>no items</Text>
 					: (
 						<Bubbles
