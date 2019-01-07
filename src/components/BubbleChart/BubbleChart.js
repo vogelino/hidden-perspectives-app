@@ -26,7 +26,7 @@ const Bubbles = ({
 		r,
 	} = bubbleData;
 
-	const { name, id } = data;
+	const { name, id, isActive } = data;
 	const hovered = isHovered(data, hoveredElement, 'stakeholder');
 	const maxFontSize = 16;
 	const roundedRadius = Math.round(r);
@@ -46,6 +46,7 @@ const Bubbles = ({
 				isHovered={hovered}
 				onMouseEnter={() => setHoveredElement({ itemType: 'stakeholder', ...data })}
 				onMouseLeave={() => setHoveredElement(null)}
+				isActive={isActive}
 			/>
 			<Text
 				x={x}
@@ -53,6 +54,7 @@ const Bubbles = ({
 				key={`text-${name}`}
 				isLoading={isLoading}
 				isHovered={hovered}
+				isActive={isActive}
 				fontSize={fontSize}
 			>
 				{getInitials(name)}

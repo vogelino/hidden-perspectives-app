@@ -44,6 +44,7 @@ export const Bubble = styled.circle`
 
 export const Text = styled.text`
     alignment-baseline: central;
+    fill: ${({ isActive }) => (isActive ? 'white' : 'black')};
     font-size: ${({ fontSize }) => fontSize}px;
     line-height: ${({ fontSize }) => fontSize}px;
     opacity: ${({ isLoading }) => (isLoading ? 0 : 1)};
