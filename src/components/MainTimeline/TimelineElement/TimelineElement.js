@@ -15,7 +15,6 @@ const TimelineElement = ({
 	hoverHandler,
 }) => (
 	<EventTitleContainer
-		key={id}
 		className="timeline-event"
 		data-id={id}
 		right={itemType === 'document'}

@@ -4,7 +4,6 @@ import {
 	lifecycle,
 	withState,
 	withHandlers,
-	onlyUpdateForKeys,
 } from 'recompose';
 import gql from 'graphql-tag';
 import {
@@ -13,6 +12,11 @@ import {
 	groupBy,
 	union,
 	propEq,
+	either,
+	prop,
+	flatten,
+	reduce,
+	merge,
 } from 'ramda';
 import debounce from 'lodash.debounce';
 import MainTimeline from './MainTimeline';
@@ -135,19 +139,13 @@ const structureItems = ({
 
 const getClusteredProtagonists = ({ data: { allEvents: events, allDocuments: documents } }) => {
 	const combinedEventsAndDocuments = union(events, documents);
-	const protagonists = combinedEventsAndDocuments.map((item) => item.mentionedStakeholders || item.eventStakeholders); // eslint-disable-line
+	const protagonists = map(either(
+		prop('mentionedStakeholders'), prop('eventStakeholders'),
+	), combinedEventsAndDocuments);
 
-	return protagonists
-		.reduce((acc, current) => {
-			const flattenedProtagonists = acc.concat(current);
-			return flattenedProtagonists;
-		}, [])
-		.reduce((acc, current) => {
-			const { id } = current;
-			return Object.assign(acc, {
-				[id]: (acc[id] || []).concat(current),
-			});
-		}, {});
+	return reduce((acc, current) => merge(acc, {
+		[current.id]: (acc[current.id] || []).concat(current),
+	}), {}, flatten(protagonists));
 };
 
 const parseItems = ({ events, datesArray, documents }) => {
@@ -266,20 +264,24 @@ export default compose(
 				.catch(getErrorHandler(props));
 		},
 		componentDidUpdate() {
-			const { props } = this;
+			const {
+				initialProtagonistsFetched,
+				setInitialProtagonistsFetched,
+				timelineContainer,
+			} = this.props;
 
-			if (!props.initialProtagonistsFetched) {
-				props.setInitialProtagonistsFetched(true);
-				getProtagonistsInViewport(props.timelineContainer, props);
+			if (!initialProtagonistsFetched) {
+				setInitialProtagonistsFetched(true);
+				getProtagonistsInViewport(timelineContainer, this.props);
 			}
 		},
+		shouldComponentUpdate(nextProps) {
+			return (nextProps.timelineItems.length !== this.props.timelineItems.length)
+				|| (nextProps.bubbleChartItems !== this.props.bubbleChartItems)
+				|| (nextProps.fetchingProtagonists !== this.props.fetchingProtagonists)
+				|| (nextProps.errors.length !== this.props.errors.length)
+				|| (nextProps.isLoading !== this.props.isLoading)
+				|| (nextProps.hoveredElement !== this.props.hoveredElement);
+		},
 	}),
-	onlyUpdateForKeys([
-		'timelineItems',
-		'bubbleChartItems',
-		'fetchingProtagonists',
-		'errors',
-		'isLoading',
-		'hoveredElement',
-	]),
 )(MainTimeline);

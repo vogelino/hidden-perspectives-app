@@ -10,8 +10,8 @@ import {
 	Documents,
 } from './styles';
 
-const isHovered = (currentElementId, hoveredElement) => Boolean(
-	hoveredElement && (currentElementId === hoveredElement.id),
+const isHovered = (item, hoveredElement) => Boolean(
+	hoveredElement && (item.id === hoveredElement.id),
 );
 
 const TimelineItems = ({
@@ -21,42 +21,42 @@ const TimelineItems = ({
 }) => timelineItems.map(({ year, months, ...yearKey }) => (
 	<ContainerWithStickyLabel label={year} {...yearKey} isYear>
 		{months.map(({ month, days, ...monthKey }) => (
-			<ContainerWithStickyLabel label={month} date={`${month} ${year}`} {...monthKey}>
+			<ContainerWithStickyLabel
+				label={month}
+				date={`${month} ${year}`}
+				{...monthKey}
+			>
 				{days.map(({
 					day,
 					key,
 					events,
 					documents,
 					...dayKey
-				}) => (
-					<EventContainer key={key}>
-						<Event {...dayKey}>
-							<EventDate>{day}</EventDate>
-							<Documents>
-								{documents.map((item) => (
-									<TimelineElement
-										key={item.id}
-										{...item}
-										itemType="document"
-										hovered={isHovered(item.id, hoveredElement)}
-										hoverHandler={setHoveredElement}
-									/>
-								))}
-							</Documents>
-							<Events>
-								{events.map((item) => (
-									<TimelineElement
-										key={item.id}
-										{...item}
-										itemType="event"
-										hovered={isHovered(item.id, hoveredElement)}
-										hoverHandler={setHoveredElement}
-									/>
-								))}
-							</Events>
-						</Event>
-					</EventContainer>
-				))}
+				}) => {
+					const mapTimelineItem = (itemType) => (item) => (
+						<TimelineElement
+							key={item.id}
+							{...item}
+							itemType={itemType}
+							hoveredElement={hoveredElement}
+							hovered={isHovered(item, hoveredElement)}
+							hoverHandler={setHoveredElement}
+						/>
+					);
+					return (
+						<EventContainer key={key}>
+							<Event {...dayKey}>
+								<EventDate>{day}</EventDate>
+								<Documents>
+									{documents.map(mapTimelineItem('document'))}
+								</Documents>
+								<Events>
+									{events.map(mapTimelineItem('event'))}
+								</Events>
+							</Event>
+						</EventContainer>
+					);
+				})}
 			</ContainerWithStickyLabel>
 		))}
 	</ContainerWithStickyLabel>
