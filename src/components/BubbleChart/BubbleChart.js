@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { isEmpty } from 'ramda';
+import BubbleChartTooltip from './BubbleChartTooltip';
 import { getInitials } from '../../utils/stringUtil';
 import { isHovered } from '../../utils/timelineUtil';
 import {
@@ -12,6 +13,20 @@ import {
 	Text,
 } from './styles';
 import LoadingIndicator from '../LoadingIndicator';
+
+const hoverHandler = (name, item, setHoveredElement, type) => {
+	const { pageX, pageY } = item;
+	const visible = type === 'enter';
+
+	setHoveredElement({
+		position: {
+			x: pageX,
+			y: pageY,
+		},
+		text: name,
+		visible,
+	});
+};
 
 const Bubbles = ({
 	bubbleLayoutItems,
@@ -36,6 +51,8 @@ const Bubbles = ({
 		<BubbleLink
 			href={`/participant/context/${id}`}
 			key={`bubble-link-${name}`}
+			onMouseEnter={(item) => hoverHandler(name, item, setHoveredElement, 'enter')}
+			onMouseLeave={(item) => hoverHandler(name, item, setHoveredElement, 'leave')}
 		>
 			<Bubble
 				key={`bubble-${name}`}
@@ -92,6 +109,7 @@ const BubbleChart = ({
 		<BubblesLoadingContainer isLoading={isLoading}>
 			<LoadingIndicator />
 		</BubblesLoadingContainer>
+		<BubbleChartTooltip hoveredElement={hoveredElement} />
 	</BubbleChartContainer>
 );
 

@@ -8,6 +8,22 @@ export const BubbleChartContainer = styled.div`
     width: 100%;
 `;
 
+export const Tooltip = styled.div`
+    background: ${({ theme }) => theme.primary};
+    border: 2px solid white;
+    border-radius: 1rem;
+    font-size: .875rem;
+    line-height: 1.5rem;
+    left: ${({ position }) => position.x}px;
+    opacity: ${({ visible }) => (visible ? 1 : 0)};
+    padding: 0 .75rem;
+    pointer-events: none;
+    position: fixed;
+    top: ${({ position }) => position.y}px;
+    transform: translate(-50%, -50%);
+    transition: opacity 150ms ease-out;
+`;
+
 export const BubbleLink = styled(NavLink)``;
 
 export const BubblesSvg = styled.svg`
