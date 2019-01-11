@@ -2,9 +2,9 @@ import styled from 'styled-components';
 
 export const BubbleChartContainer = styled.div`
     border-radius: 50%;
-    height: ${({ diameter }) => diameter}px;
+    height: 100%;
     position: absolute;
-    width: ${({ diameter }) => diameter}px;
+    width: 100%;
 `;
 
 export const BubbleLink = styled.a``;
