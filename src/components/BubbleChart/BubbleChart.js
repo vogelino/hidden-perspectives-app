@@ -30,7 +30,7 @@ const Bubbles = ({
 
 	return (
 		<BubbleLink
-			xlinkHref={`/participant/context/${id}`}
+			to={`/participant/context/${id}`}
 			target="_top"
 			key={`bubble-link-${name}`}
 		>
