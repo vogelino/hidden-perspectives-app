@@ -35,7 +35,7 @@ export const Bubble = styled.circle`
     align-items: center;
     fill: ${({ isActive, theme }) => (isActive ? 'black' : theme.gray200)};
     opacity: ${({ isLoading }) => (isLoading ? 0 : 1)};
-    transition: fill 150ms;
+    transition: fill 150ms ease-out;
 
     &:hover {
         fill: ${({ theme }) => theme.primary};
