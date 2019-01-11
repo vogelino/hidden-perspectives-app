@@ -200,7 +200,7 @@ const getQuery = (item, itemType) => {
 };
 
 const getProtagonists = (item, itemType, allDocuments, allEvents) => {
-	const items = itemType === 'protagonist' ? union(allDocuments, allEvents) : [item];
+	const items = itemType === 'stakeholder' ? union(allDocuments, allEvents) : [item];
 
 	const protagonistsFromAllItems = items.map((currentItem) => {
 		const isEvent = has('eventStakeholders');
