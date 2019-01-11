@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { NavLink } from 'react-router-dom';
 
 export const BubbleChartContainer = styled.div`
     border-radius: 50%;
@@ -7,7 +8,7 @@ export const BubbleChartContainer = styled.div`
     width: 100%;
 `;
 
-export const BubbleLink = styled.a``;
+export const BubbleLink = styled(NavLink)``;
 
 export const BubblesSvg = styled.svg`
     display: block;
