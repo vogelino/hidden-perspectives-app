@@ -79,3 +79,10 @@ export const ConnectionLine = styled.line`
 	stroke-width: 1px;
 	stroke: ${({ theme }) => theme.commonBorderColor};
 `;
+
+export const BubbleChartContainer = styled.div`
+	height: 50%;
+	position: relative;
+	width: 50%;
+`;
+
