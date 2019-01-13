@@ -1,5 +1,5 @@
 import { mergeAll, map, prop } from 'ramda';
-import hoveredElement from './hoveredElement';
+import todos from './todos';
 
 export const combineResolver = (...resolverObjects) => {
 	const allDefaults = map(prop('defaults'), resolverObjects);
@@ -10,6 +10,6 @@ export const combineResolver = (...resolverObjects) => {
 };
 
 export const { defaults, resolvers } = combineResolver(
-	hoveredElement,
+	todos,
 );
 

@@ -10,44 +10,57 @@ import {
 	Documents,
 } from './styles';
 
+const isHovered = (item, hoveredElement) => Boolean(
+	hoveredElement && (item.id === hoveredElement.id),
+);
 
-const TimelineItems = ({ timelineItems }) => timelineItems
-	.map(({ year, months, ...yearKey }) => (
-		<ContainerWithStickyLabel label={year} {...yearKey} isYear>
-			{months.map(({ month, days, ...monthKey }) => (
-				<ContainerWithStickyLabel
-					label={month}
-					date={`${month} ${year}`}
-					{...monthKey}
-				>
-					{days.map(({
-						day,
-						key,
-						events,
-						documents,
-						...dayKey
-					}) => {
-						const mapTimelineItem = (itemType) => (item) => (
-							<TimelineElement key={item.id} {...item} itemType={itemType} />
-						);
-						return (
-							<EventContainer key={key}>
-								<Event {...dayKey}>
-									<EventDate>{day}</EventDate>
-									<Documents>
-										{documents.map(mapTimelineItem('document'))}
-									</Documents>
-									<Events>
-										{events.map(mapTimelineItem('event'))}
-									</Events>
-								</Event>
-							</EventContainer>
-						);
-					})}
-				</ContainerWithStickyLabel>
-			))}
-		</ContainerWithStickyLabel>
-	));
+const TimelineItems = ({
+	timelineItems,
+	hoveredElement,
+	setHoveredElement,
+}) => timelineItems.map(({ year, months, ...yearKey }) => (
+	<ContainerWithStickyLabel label={year} {...yearKey} isYear>
+		{months.map(({ month, days, ...monthKey }) => (
+			<ContainerWithStickyLabel
+				label={month}
+				date={`${month} ${year}`}
+				{...monthKey}
+			>
+				{days.map(({
+					day,
+					key,
+					events,
+					documents,
+					...dayKey
+				}) => {
+					const mapTimelineItem = (itemType) => (item) => (
+						<TimelineElement
+							key={item.id}
+							{...item}
+							itemType={itemType}
+							hoveredElement={hoveredElement}
+							hovered={isHovered(item, hoveredElement)}
+							hoverHandler={setHoveredElement}
+						/>
+					);
+					return (
+						<EventContainer key={key}>
+							<Event {...dayKey}>
+								<EventDate>{day}</EventDate>
+								<Documents>
+									{documents.map(mapTimelineItem('document'))}
+								</Documents>
+								<Events>
+									{events.map(mapTimelineItem('event'))}
+								</Events>
+							</Event>
+						</EventContainer>
+					);
+				})}
+			</ContainerWithStickyLabel>
+		))}
+	</ContainerWithStickyLabel>
+));
 
 TimelineItems.propTypes = {
 	timelineItems: PropTypes.arrayOf(

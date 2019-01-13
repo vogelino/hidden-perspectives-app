@@ -1,5 +1,3 @@
-import { identity } from 'ramda';
-import { graphql } from 'react-apollo';
 import {
 	compose,
 	withProps,
@@ -7,7 +5,6 @@ import {
 	withHandlers,
 	lifecycle,
 } from 'recompose';
-import { getHoveredElement, setHoveredElement } from '../state/queries/hoveredElement';
 
 export const withLoading = compose(
 	withState('isLoading', 'setLoading', true),
@@ -37,30 +34,3 @@ export const withoutReRender = lifecycle({
 		return false;
 	},
 });
-
-const defaultPropsMatcher = identity;
-
-export const withHoveredElement = (propsMapper = defaultPropsMatcher) => graphql(
-	getHoveredElement,
-	{
-		props: ({ ownProps, data: { hoveredElement }, error }) => propsMapper({
-			...ownProps,
-			error,
-			hoveredElement,
-		}),
-	},
-);
-
-export const withHoveredElementSetter = (propsMapper = defaultPropsMatcher) => graphql(
-	setHoveredElement,
-	{
-		options: ({ hoveredElement }) => ({
-			variables: hoveredElement,
-		}),
-		props: ({ ownProps, mutate }) => propsMapper({
-			...ownProps,
-			setHoveredElement: (hoveredElement) => mutate(hoveredElement),
-		}),
-	},
-);
-

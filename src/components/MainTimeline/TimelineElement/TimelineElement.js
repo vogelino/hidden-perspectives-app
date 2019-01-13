@@ -18,13 +18,13 @@ const TimelineElement = ({
 		className="timeline-event"
 		data-id={id}
 		right={itemType === 'document'}
+		onMouseEnter={() => hoverHandler({ id, itemType })}
+		onMouseLeave={() => hoverHandler(null)}
 	>
 		<Tooltip id={id} itemType={itemType} position="left">
 			<EventTitle
 				to={path}
 				className={hovered ? 'hovered' : ''}
-				onMouseEnter={() => hoverHandler({ id, itemType })}
-				onMouseLeave={() => hoverHandler({ id: null, itemType: null })}
 			>
 				{title}
 			</EventTitle>

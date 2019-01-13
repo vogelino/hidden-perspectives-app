@@ -16,6 +16,8 @@ const MainTimeline = ({
 	isLoading,
 	fetchingProtagonists,
 	onRef,
+	setHoveredElement,
+	hoveredElement,
 }) => (
 	<Container id="mainTimeline" ref={onRef}>
 		<LoadingContainer isLoading={isLoading}>
@@ -31,7 +33,11 @@ const MainTimeline = ({
 			items={bubbleChartItems}
 		/>
 		<MainTimelineLegend />
-		<TimelineItems timelineItems={timelineItems} />
+		<TimelineItems
+			timelineItems={timelineItems}
+			hoveredElement={hoveredElement}
+			setHoveredElement={setHoveredElement}
+		/>
 	</Container>
 );
 
@@ -42,6 +48,8 @@ MainTimeline.propTypes = {
 		density: PropTypes.number.isRequired,
 	})),
 	bubbleChartItems: Stakeholders.propTypes.items,
+	hoveredElement: TimelineItems.propTypes.hoveredElement,
+	setHoveredElement: PropTypes.func,
 	errors: PropTypes.arrayOf(PropTypes.string),
 	isLoading: PropTypes.bool,
 	fetchingProtagonists: PropTypes.bool,
@@ -49,6 +57,8 @@ MainTimeline.propTypes = {
 };
 
 MainTimeline.defaultProps = {
+	hoveredElement: TimelineItems.defaultProps.hoveredElement,
+	setHoveredElement: () => {},
 	timelineItems: TimelineItems.defaultProps.timelineItems,
 	bubbleChartItems: Stakeholders.defaultProps.items,
 	minimapItems: [],
