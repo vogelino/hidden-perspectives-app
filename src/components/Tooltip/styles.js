@@ -11,9 +11,10 @@ export const Container = styled.div`
 	height: auto;
 	padding: 1rem;
 	border-radius: .25rem;
-	background: ${({ theme }) => theme.gray100};
+	background: white;
 	z-index: 10;
 	text-align: left;
+	box-shadow: 0 .5rem 1rem rgba(0,0,0,.1); 
 `;
 
 export const Trigger = styled.div`
@@ -30,19 +31,11 @@ export const Thumbnail = styled.div`
 	display: none;
 `;
 
-export const Title = styled(Headline)`
-	font-size: 1rem;
-	line-height: 1.375rem;
-	font-weight: bold;
-	padding: .5rem 0 .375rem;
-	margin: 0;
-`;
-
 export const Subtitle = styled(Headline)`
 	color: ${({ theme }) => theme.gray600};
 	font-size: .875rem;
 	line-height: 1rem;
-	margin: 0;
+	margin: 0 0 .5rem 0;
 `;
 
 export const Summary = styled.p`

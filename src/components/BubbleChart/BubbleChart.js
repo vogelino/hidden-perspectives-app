@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { isEmpty } from 'ramda';
 import { getInitials } from '../../utils/stringUtil';
+import { isHovered } from '../../utils/timelineUtil';
 import {
 	Bubble,
 	BubbleChartContainer,
@@ -14,6 +15,8 @@ import LoadingIndicator from '../LoadingIndicator';
 const Bubbles = ({
 	bubbleLayoutItems,
 	isLoading,
+	hoveredElement,
+	setHoveredElement,
 }) => bubbleLayoutItems.map((bubbleData) => {
 	const {
 		data,
@@ -23,6 +26,7 @@ const Bubbles = ({
 	} = bubbleData;
 
 	const { name } = data;
+	const hovered = isHovered(data, hoveredElement, 'stakeholder');
 	return ([
 		<Bubble
 			key={`bubble-${name}`}
@@ -30,12 +34,16 @@ const Bubbles = ({
 			cy={y}
 			r={r}
 			isLoading={isLoading}
+			isHovered={hovered}
+			onMouseEnter={() => setHoveredElement({ itemType: 'stakeholder', ...data })}
+			onMouseLeave={() => setHoveredElement(null)}
 		/>,
 		<Text
 			x={x}
 			y={y}
 			key={`text-${name}`}
 			isLoading={isLoading}
+			isHovered={hovered}
 		>
 			{getInitials(name)}
 		</Text>,
@@ -46,6 +54,8 @@ const BubbleChart = ({
 	bubbleLayoutItems,
 	isLoading,
 	diameter,
+	hoveredElement,
+	setHoveredElement,
 }) => (
 	<BubbleChartContainer>
 		<BubblesWrapper
@@ -53,12 +63,14 @@ const BubbleChart = ({
 			diameter={diameter}
 		>
 			{
-				isEmpty(bubbleLayoutItems)
+				isEmpty(bubbleLayoutItems) && !isLoading
 					? <Text x={diameter / 2} y={diameter / 2}>no items</Text>
 					: (
 						<Bubbles
 							bubbleLayoutItems={bubbleLayoutItems}
 							isLoading={isLoading}
+							hoveredElement={hoveredElement}
+							setHoveredElement={setHoveredElement}
 						/>
 					)
 			}
@@ -72,18 +84,25 @@ const BubbleChart = ({
 BubbleChart.propTypes = {
 	isLoading: PropTypes.bool,
 	diameter: PropTypes.number,
+	setHoveredElement: PropTypes.func,
 	bubbleLayoutItems: PropTypes.arrayOf(
 		PropTypes.shape({
 			id: PropTypes.string,
 			stakeholderFullName: PropTypes.string,
 		}),
 	),
+	hoveredElement: PropTypes.shape({
+		id: PropTypes.string.isRequired,
+		itemType: PropTypes.string.isRequired,
+	}),
 };
 
 BubbleChart.defaultProps = {
 	isLoading: false,
 	diameter: 100,
 	bubbleLayoutItems: [],
+	hoveredElement: null,
+	setHoveredElement: () => {},
 };
 
 export default BubbleChart;

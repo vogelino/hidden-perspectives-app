@@ -19,6 +19,8 @@ const calcBubbleLayout = (data, diameter, padding) => {
 
 const formatItems = (bubblesData) => {
 	const formattedData = Object.keys(bubblesData).map((key) => ({
+		...bubblesData[key],
+		id: key,
 		name: bubblesData[key][0].stakeholderFullName,
 		value: bubblesData[key].length,
 	}));
