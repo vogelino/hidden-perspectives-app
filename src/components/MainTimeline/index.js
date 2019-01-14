@@ -21,7 +21,7 @@ import {
 import debounce from 'lodash.debounce';
 import MainTimeline from './MainTimeline';
 import { withLoading, withErrors, getErrorHandler } from '../../utils/hocUtil';
-import { getMinimap } from '../../utils/timelineUtil';
+import { getMinimap, isFullyInViewport } from '../../utils/timelineUtil';
 import { ucFirst } from '../../utils/stringUtil';
 import isDocumentId from '../../utils/isDocumentId';
 import {
@@ -196,21 +196,10 @@ const getEventsAndDocuments = ({
 	stopLoading();
 };
 
-const isInViewport = (element, offset = 0) => {
-	if (!element) {
-		return false;
-	}
-
-	const { top } = element.getBoundingClientRect();
-	const isUnderUpperBound = (top + offset) >= 0;
-	const isAboveLowerBound = (top - offset) <= window.innerHeight;
-	return isUnderUpperBound && isAboveLowerBound;
-};
-
 const getEventIdsInViewport = (timelineElement) => {
 	const timelineEvents = timelineElement.getElementsByClassName('timeline-event');
 	const eventIds = [...timelineEvents]
-		.filter(isInViewport)
+		.filter(isFullyInViewport)
 		.map((timelineEvent) => timelineEvent.getAttribute('data-id'));
 
 	return eventIds;

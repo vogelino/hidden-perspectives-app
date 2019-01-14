@@ -5,7 +5,7 @@ import {
 	withHandlers,
 	lifecycle,
 } from 'recompose';
-import { isInViewport } from './timelineUtil';
+import { isPartlyInViewport } from './timelineUtil';
 
 export const withLoading = compose(
 	withState('isLoading', 'setLoading', true),
@@ -44,7 +44,7 @@ export const renderOnlyIfInViewport = (originalShouldUpdate = defaultShouldUpdat
 	lifecycle({
 		shouldComponentUpdate(nextProps) {
 			const ref = nextProps.componentRef;
-			if (!isInViewport(ref)) return false;
+			if (!isPartlyInViewport(ref)) return false;
 			return originalShouldUpdate(this.props, nextProps);
 		},
 	}),
