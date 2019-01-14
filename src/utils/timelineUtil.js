@@ -55,3 +55,15 @@ export const groupItemsBy = (list, groupName) => pipe(
 const getUnitRouderByUnit = (unit) => (value) => value - (value % unit);
 export const roundToTimelineUnit = getUnitRouderByUnit(TIMELINE_EVENT_HEIGHT);
 export const roundToMinimapUnit = getUnitRouderByUnit(MINIMAP_EVENT_HEIGHT);
+
+export const isInViewport = (element, offset = 0) => {
+	if (!element) return false;
+	const { top, bottom } = element.getBoundingClientRect();
+	const topIsAboveUpperBound = (top + offset) < 0;
+	const bottomIsAboveUpperBound = (bottom + offset) < 0;
+	const topIsUnderLowerBound = (top + offset) > window.innerHeight;
+	const bottomIsUnderLowerBound = (bottom + offset) > window.innerHeight;
+	const isFullyOutOfTheView = (topIsAboveUpperBound && bottomIsAboveUpperBound)
+		|| (topIsUnderLowerBound && bottomIsUnderLowerBound);
+	return !isFullyOutOfTheView;
+};

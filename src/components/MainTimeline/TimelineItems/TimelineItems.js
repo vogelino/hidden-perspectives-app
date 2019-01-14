@@ -19,12 +19,18 @@ const TimelineItems = ({
 	hoveredElement,
 	setHoveredElement,
 }) => timelineItems.map(({ year, months, ...yearKey }) => (
-	<ContainerWithStickyLabel label={year} {...yearKey} isYear>
+	<ContainerWithStickyLabel
+		label={year}
+		{...yearKey}
+		isYear
+		hoveredElement={hoveredElement}
+	>
 		{months.map(({ month, days, ...monthKey }) => (
 			<ContainerWithStickyLabel
 				label={month}
 				date={`${month} ${year}`}
 				{...monthKey}
+				hoveredElement={hoveredElement}
 			>
 				{days.map(({
 					day,
