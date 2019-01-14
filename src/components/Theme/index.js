@@ -5,7 +5,9 @@ import { ThemeProvider, css } from 'styled-components';
 import { theme as originalTheme, th } from '@smooth-ui/core-sc';
 
 const colors = {
-	primary: '#FFCC44',
+	primary: '#F8B332',
+	primaryLight: '#FCDDA3',
+	primaryDark: '#924F00',
 	commonBorderColor: originalTheme.gray300,
 	usBlue: '#2523A0',
 	usRed: '#D7062C',
