@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { lighten, transparentize } from 'polished';
+import { lighten, darken, transparentize } from 'polished';
 import { ThemeProvider, css } from 'styled-components';
 import { theme as originalTheme, th } from '@smooth-ui/core-sc';
 
 const colors = {
-	primary: '#FFCC44',
+	primary: '#F8B332',
 	commonBorderColor: originalTheme.gray300,
 	usBlue: '#2523A0',
 	usRed: '#D7062C',
@@ -13,12 +13,15 @@ const colors = {
 	iranRed: '#D7062C',
 };
 
+colors.primaryLight = lighten(0.25, colors.primary);
+colors.primaryDark = darken(0.4, colors.primary);
+
 const selectTheme = {
 	colors: {
 		...colors,
 		primary75: lighten(0.1, colors.primary),
 		primary50: lighten(0.1, colors.primary),
-		primary25: lighten(0.55, colors.primary),
+		primary25: colors.primaryLight,
 		danger: originalTheme.red,
 		dangerLight: lighten(0.1, originalTheme.red),
 		neutral0: originalTheme.white,

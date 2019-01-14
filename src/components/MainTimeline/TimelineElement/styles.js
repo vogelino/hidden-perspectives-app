@@ -4,9 +4,11 @@ import { Link } from 'react-router-dom';
 export const EventTitle = styled(Link)`
 	text-decoration: none;
 	color: ${({ theme }) => theme.gray900};
+	transition: background 100ms ease-out, color 100ms ease-out;
 
 	&.hovered {
-		background: yellow;
+		color: ${({ theme }) => theme.primaryDark};
+		background: ${({ theme }) => theme.primaryLight};
 	}
 `;
 
