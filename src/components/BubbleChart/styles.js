@@ -26,15 +26,13 @@ export const BubblesLoadingContainer = styled.div`
 export const Bubble = styled.circle`
     align-items: center;
     height: ${({ r }) => r * 2}px;
-    fill: ${({ theme }) => theme.gray200};
+    fill: ${({ isHovered, theme }) => (isHovered ? theme.primaryLight : theme.gray200)};
     left: ${({ x }) => x}px;
     opacity: ${({ isLoading }) => (isLoading ? 0 : 1)};
     top: ${({ y }) => y}px;
     width: ${({ r }) => r * 2}px;
-
-    &:hover {
-        fill: ${({ theme }) => theme.gray400};
-    }
+    cursor: pointer;
+    transition: fill 400ms ease-out;
 `;
 
 export const Text = styled.text`
@@ -44,4 +42,6 @@ export const Text = styled.text`
     opacity: ${({ isLoading }) => (isLoading ? 0 : 1)};
     pointer-events: none;
     text-anchor: middle;
+    transition: fill 400ms ease-out;
+    fill: ${({ isHovered, theme }) => (isHovered ? theme.primaryDark : theme.gray900)};
 `;

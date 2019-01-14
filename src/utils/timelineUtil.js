@@ -67,3 +67,38 @@ export const isInViewport = (element, offset = 0) => {
 		|| (topIsUnderLowerBound && bottomIsUnderLowerBound);
 	return !isFullyOutOfTheView;
 };
+
+const isDocumentHovered = (item, hoveredElement) => {
+	if (hoveredElement.itemType === 'event') return false;
+	return !!item
+		.mentionedStakeholders.find(({ id }) => id === hoveredElement.id);
+};
+
+const isEventHovered = (item, hoveredElement) => {
+	if (hoveredElement.itemType === 'document') return false;
+	return !!item
+		.eventStakeholders.find(({ id }) => id === hoveredElement.id);
+};
+
+const isStakeholderHovered = (item, hoveredElement) => {
+	if (hoveredElement.itemType === 'document') {
+		return !!hoveredElement
+			.mentionedStakeholders.find(({ id }) => id === item.id);
+	}
+	if (hoveredElement.itemType === 'event') {
+		return !!hoveredElement
+			.eventStakeholders.find(({ id }) => id === item.id);
+	}
+	return false;
+};
+
+export const isHovered = (item, hoveredElement, itemType) => {
+	if (!hoveredElement) return false;
+	if (itemType === hoveredElement.itemType) return item.id === hoveredElement.id;
+	switch (itemType) {
+	case 'document': return isDocumentHovered(item, hoveredElement);
+	case 'event': return isEventHovered(item, hoveredElement);
+	case 'stakeholder': return isStakeholderHovered(item, hoveredElement);
+	default: return false;
+	}
+};

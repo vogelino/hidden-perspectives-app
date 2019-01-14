@@ -31,6 +31,8 @@ const MainTimeline = ({
 		<Stakeholders
 			isLoading={fetchingProtagonists}
 			items={bubbleChartItems}
+			hoveredElement={hoveredElement}
+			setHoveredElement={setHoveredElement}
 		/>
 		<MainTimelineLegend />
 		<TimelineItems

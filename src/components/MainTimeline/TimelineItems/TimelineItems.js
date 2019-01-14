@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ContainerWithStickyLabel from '../ContainerWithStickyLabel';
 import TimelineElement from '../TimelineElement';
+import { isHovered } from '../../../utils/timelineUtil';
 import {
 	EventContainer,
 	Event,
@@ -9,10 +10,6 @@ import {
 	Events,
 	Documents,
 } from './styles';
-
-const isHovered = (item, hoveredElement) => Boolean(
-	hoveredElement && (item.id === hoveredElement.id),
-);
 
 const TimelineItems = ({
 	timelineItems,
@@ -45,7 +42,7 @@ const TimelineItems = ({
 							{...item}
 							itemType={itemType}
 							hoveredElement={hoveredElement}
-							hovered={isHovered(item, hoveredElement)}
+							hovered={isHovered(item, hoveredElement, itemType)}
 							hoverHandler={setHoveredElement}
 						/>
 					);

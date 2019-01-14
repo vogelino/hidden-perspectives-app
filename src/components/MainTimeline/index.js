@@ -38,11 +38,17 @@ const ALL_EVENTS_AND_DOCUMENTS = gql`
 			id
 			eventTitle
 			eventStartDate
+			eventStakeholders {
+				id
+			}
 		}
 		allDocuments(orderBy: documentCreationDate_ASC) {
 			id
 			documentTitle
 			documentCreationDate
+			mentionedStakeholders {
+				id
+			}
 		}
 	}
 `;
@@ -89,6 +95,7 @@ const normaliseItems = ({
 	const date = new Date(props[itemDateProperty]);
 	const { id } = props;
 	return {
+		...props,
 		id,
 		date,
 		dateString: getFormattedDate(date),
