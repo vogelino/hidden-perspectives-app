@@ -1,20 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { lighten, darken, transparentize } from 'polished';
+import { lighten, transparentize } from 'polished';
 import { ThemeProvider, css } from 'styled-components';
 import { theme as originalTheme, th } from '@smooth-ui/core-sc';
 
 const colors = {
 	primary: '#F8B332',
+	primaryLight: '#FCDDA3',
+	primaryDark: '#924F00',
 	commonBorderColor: originalTheme.gray300,
 	usBlue: '#2523A0',
 	usRed: '#D7062C',
 	iranGreen: '#2523A0',
 	iranRed: '#D7062C',
 };
-
-colors.primaryLight = lighten(0.25, colors.primary);
-colors.primaryDark = darken(0.4, colors.primary);
 
 const selectTheme = {
 	colors: {
@@ -43,7 +42,7 @@ const buttons = {
 	btnPaddingY: '.5rem',
 	btnFontSize: '.875rem',
 	btnLineHeight: '.875rem',
-	btnFontWeight: 'bold',
+	btnFontWeight: 'normal',
 	btnBorderWidth: '1px',
 	btnPrimaryBackground: colors.primary,
 	btnSecondaryBackground: 'none',
@@ -54,7 +53,7 @@ const buttons = {
 };
 
 const typography = {
-	fontFamily: `"HP Sans", ${originalTheme.fontFamily}`,
+	fontFamily: `"Suisse Intl", ${originalTheme.fontFamily}`,
 	h1FontSize: '2.5rem',
 	h2FontSize: '2rem',
 	h3FontSize: '1.75rem',

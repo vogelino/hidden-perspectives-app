@@ -82,7 +82,6 @@ export const MultipleEventsPill = styled(EventPill)`width: 17px;
 	transform: translate(-50%, -50%);
 	box-shadow: 0 0 0 1px white;
 	font-size: 8px;
-	font-weight: bold;
 	box-sizing: border-box;
 	text-align: center;
 	line-height: 11px;

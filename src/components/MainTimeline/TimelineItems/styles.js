@@ -5,7 +5,6 @@ export const Event = styled.div`
 	padding: 0;
 	font-size: .875rem;
 	line-height: 1.25rem;
-	font-weight: bold;
 	display: flex;
 	position: relative;
 `;
@@ -26,7 +25,7 @@ export const EventDate = styled.span`
 	border-radius: 50%;
 	border: 1px solid ${({ theme }) => theme.commonBorderColor};
 	text-align: center;
-	padding: 1px 0;
+	padding: 3px 0;
 	font-size: 0.75rem;
 `;
 
@@ -43,6 +42,7 @@ export const Events = styled(Column)`
 		content: '●';
 		right: auto;
 		left: 0;
+		transform: translate(50%,-50%);
 	}
 `;
 

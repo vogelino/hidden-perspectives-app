@@ -22,9 +22,8 @@ const HeaderLink = styled(NavLink)`
 	font-family: inherit;
 	font-size: 1rem;
 	line-height: 1rem;
-	padding: .75rem;
+	padding: 0.8rem .75rem 0.7rem;
 	margin: 1rem;
-	font-weight: 600;
 	cursor: pointer;
 	outline: none;
 	text-decoration: none;

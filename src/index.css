@@ -11,7 +11,9 @@ body {
 
 * {
 	box-sizing: border-box;
-	font-family: 'HP Sans', 'Source Sans', 'Open Sans', arial, helvetica, sans-serif;
+	font-family: 'Suisse Intl', 'Source Sans', 'Open Sans', arial, helvetica, sans-serif;
 	-webkit-font-smoothing: antialiased;
+	font-stretch: normal;
+	letter-spacing: .01em;
 }
 
