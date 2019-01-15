@@ -100,8 +100,7 @@ const isStakeholderHovered = (item, hoveredElement) => {
 	return false;
 };
 
-export const isHovered = (item, hoveredElement, itemType) => {
-	if (!hoveredElement) return false;
+const isItemHovered = (item, hoveredElement, itemType) => {
 	if (itemType === hoveredElement.itemType) return item.id === hoveredElement.id;
 	switch (itemType) {
 	case 'document': return isDocumentHovered(item, hoveredElement);
@@ -109,4 +108,18 @@ export const isHovered = (item, hoveredElement, itemType) => {
 	case 'stakeholder': return isStakeholderHovered(item, hoveredElement);
 	default: return false;
 	}
+};
+
+export const isHovered = (item, hoveredElement, itemType) => {
+	if (!hoveredElement) return false;
+	if (Array.isArray(item) && Array.isArray(hoveredElement)) {
+		return item.some(
+			(el) => hoveredElement.some((hoveredEl) => isItemHovered(el, hoveredEl, itemType)),
+		);
+	}
+	if (Array.isArray(item)) return item.some((el) => isItemHovered(el, hoveredElement, itemType));
+	if (Array.isArray(hoveredElement)) {
+		return hoveredElement.some((hoveredEl) => isItemHovered(item, hoveredEl, itemType));
+	}
+	return isItemHovered(item, hoveredElement, itemType);
 };

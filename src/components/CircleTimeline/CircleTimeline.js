@@ -107,8 +107,11 @@ const CircleTimeline = ({
 						height={docSize}
 						angle={group[0].angle}
 						key={`document-${docId}`}
-						className={isHovered(group[0], hoveredElement, 'document') && 'hovered'}
-						onMouseEnter={() => setHoveredElement({ ...group[0], itemType: 'document' })}
+						className={isHovered(group, hoveredElement, 'document') && 'hovered'}
+						onMouseEnter={() => setHoveredElement(group.map((groupEl) => ({
+							...groupEl,
+							itemType: 'document',
+						})))}
 						onMouseLeave={() => setHoveredElement(null)}
 						{...CIRCLE_CENTER}
 					>
@@ -142,8 +145,11 @@ const CircleTimeline = ({
 						height={docSize}
 						angle={group[0].angle}
 						key={`event-${docId}`}
-						className={isHovered(group[0], hoveredElement, 'event') && 'hovered'}
-						onMouseEnter={() => setHoveredElement({ ...group[0], itemType: 'event' })}
+						className={isHovered(group, hoveredElement, 'event') && 'hovered'}
+						onMouseEnter={() => setHoveredElement(group.map((groupEl) => ({
+							...groupEl,
+							itemType: 'event',
+						})))}
 						onMouseLeave={() => setHoveredElement(null)}
 						{...CIRCLE_CENTER}
 					>
@@ -190,10 +196,18 @@ CircleTimeline.propTypes = {
 			stakeholderFullName: PropTypes.string,
 		})),
 	),
-	hoveredElement: PropTypes.shape({
-		id: PropTypes.string.isRequired,
-		itemType: PropTypes.string.isRequired,
-	}),
+	hoveredElement: PropTypes.oneOfType([
+		PropTypes.shape({
+			id: PropTypes.string.isRequired,
+			itemType: PropTypes.string.isRequired,
+		}),
+		PropTypes.arrayOf(
+			PropTypes.shape({
+				id: PropTypes.string.isRequired,
+				itemType: PropTypes.string.isRequired,
+			}),
+		),
+	]),
 	setHoveredElement: PropTypes.func,
 };
 
