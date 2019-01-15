@@ -14,3 +14,13 @@ export const LegendLabel = styled.span`
 		left: 0;
 	}
 `;
+
+export const MainTimelineContainer = styled.div`
+	position: fixed;
+	top: 4.5rem;
+	left: 0;
+	width: 100%;
+	height: 2.25rem;
+	padding: .5rem 19rem .5rem 7rem;
+	z-index: 10;
+`;

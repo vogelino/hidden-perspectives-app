@@ -20,7 +20,7 @@ const selectTheme = {
 		...colors,
 		primary75: lighten(0.1, colors.primary),
 		primary50: lighten(0.1, colors.primary),
-		primary25: lighten(0.55, colors.primary),
+		primary25: colors.primaryLight,
 		danger: originalTheme.red,
 		dangerLight: lighten(0.1, originalTheme.red),
 		neutral0: originalTheme.white,

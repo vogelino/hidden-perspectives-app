@@ -1,8 +1,6 @@
-import { lifecycle } from 'recompose';
+import { renderOnlyIfInViewport } from '../../../utils/hocUtil';
 import ContainerWithStickyLabel from './ContainerWithStickyLabel';
 
-export default lifecycle({
-	shouldComponentUpdate() {
-		return false;
-	},
-})(ContainerWithStickyLabel);
+export default renderOnlyIfInViewport(
+	(props, nextProps) => props.hoveredElement !== nextProps.hoveredElement,
+)(ContainerWithStickyLabel);

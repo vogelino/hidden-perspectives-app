@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Tooltip from '../Tooltip';
 import BubbleChart from '../BubbleChart';
 import { EventLegend, DocumentLegend } from '../Legend/Legend';
 import {
@@ -111,9 +110,7 @@ const CircleTimeline = ({
 						key={`document-${docId}`}
 						{...CIRCLE_CENTER}
 					>
-						<Tooltip id={docId} itemType="document">
-							{isStacked ? <MultipleDocumentsPill /> : <SingleDocumentPill />}
-						</Tooltip>
+						{isStacked ? <MultipleDocumentsPill /> : <SingleDocumentPill />}
 					</Document>,
 				];
 			})}
@@ -146,11 +143,9 @@ const CircleTimeline = ({
 						key={`event-${docId}`}
 						{...CIRCLE_CENTER}
 					>
-						<Tooltip id={docId} itemType="event">
-							{isStacked
-								? <MultipleEventsPill>{group.length}</MultipleEventsPill>
-								: <SingleEventPill />}
-						</Tooltip>
+						{isStacked
+							? <MultipleEventsPill>{group.length}</MultipleEventsPill>
+							: <SingleEventPill />}
 					</Document>,
 				];
 			})}
@@ -174,7 +169,7 @@ CircleTimeline.propTypes = {
 		subtitle: PropTypes.string,
 		itemType: PropTypes.string.isRequired,
 		id: PropTypes.string.isRequired,
-	}).isRequired,
+	}),
 	documents: PropTypes.arrayOf(
 		PropTypes.arrayOf(PropTypes.shape({
 			id: PropTypes.string.isRequired,
@@ -196,6 +191,12 @@ CircleTimeline.propTypes = {
 };
 
 CircleTimeline.defaultProps = {
+	item: {
+		title: 'Title',
+		subtitle: 'Subtitle',
+		itemType: 'document',
+		id: 'woifjiwefopwejpfwe',
+	},
 	documents: [],
 	events: [],
 	protagonists: {},

@@ -1,0 +1,14 @@
+import styled from 'styled-components';
+
+export const Container = styled.div`
+	align-items: center;
+	border-left: 1px solid ${({ theme }) => theme.commonBorderColor};
+	display: flex;
+	height: 100%;
+	justify-content: center;
+	position: fixed;
+	right: 0;
+	top: 0;
+	width: 18rem;
+	z-index: 1;
+`;

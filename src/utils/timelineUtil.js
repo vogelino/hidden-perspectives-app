@@ -55,3 +55,58 @@ export const groupItemsBy = (list, groupName) => pipe(
 const getUnitRouderByUnit = (unit) => (value) => value - (value % unit);
 export const roundToTimelineUnit = getUnitRouderByUnit(TIMELINE_EVENT_HEIGHT);
 export const roundToMinimapUnit = getUnitRouderByUnit(MINIMAP_EVENT_HEIGHT);
+
+export const isPartlyInViewport = (element) => {
+	if (!element) return false;
+	const { top, bottom } = element.getBoundingClientRect();
+	const topIsAboveUpperBound = (top) < 0;
+	const bottomIsAboveUpperBound = (bottom) < 0;
+	const topIsUnderLowerBound = (top) > window.innerHeight;
+	const bottomIsUnderLowerBound = (bottom) > window.innerHeight;
+	const isFullyOutOfTheView = (topIsAboveUpperBound && bottomIsAboveUpperBound)
+		|| (topIsUnderLowerBound && bottomIsUnderLowerBound);
+	return !isFullyOutOfTheView;
+};
+
+export const isFullyInViewport = (element) => {
+	if (!element) return false;
+	const { top, bottom } = element.getBoundingClientRect();
+	const topIsBelowUpperBound = (top) >= 0;
+	const bottomIsAboveLowerBound = (bottom) <= window.innerHeight;
+	return topIsBelowUpperBound && bottomIsAboveLowerBound;
+};
+
+const isDocumentHovered = (item, hoveredElement) => {
+	if (hoveredElement.itemType === 'event') return false;
+	return !!item
+		.mentionedStakeholders.find(({ id }) => id === hoveredElement.id);
+};
+
+const isEventHovered = (item, hoveredElement) => {
+	if (hoveredElement.itemType === 'document') return false;
+	return !!item
+		.eventStakeholders.find(({ id }) => id === hoveredElement.id);
+};
+
+const isStakeholderHovered = (item, hoveredElement) => {
+	if (hoveredElement.itemType === 'document') {
+		return !!hoveredElement
+			.mentionedStakeholders.find(({ id }) => id === item.id);
+	}
+	if (hoveredElement.itemType === 'event') {
+		return !!hoveredElement
+			.eventStakeholders.find(({ id }) => id === item.id);
+	}
+	return false;
+};
+
+export const isHovered = (item, hoveredElement, itemType) => {
+	if (!hoveredElement) return false;
+	if (itemType === hoveredElement.itemType) return item.id === hoveredElement.id;
+	switch (itemType) {
+	case 'document': return isDocumentHovered(item, hoveredElement);
+	case 'event': return isEventHovered(item, hoveredElement);
+	case 'stakeholder': return isStakeholderHovered(item, hoveredElement);
+	default: return false;
+	}
+};
