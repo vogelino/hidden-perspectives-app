@@ -205,6 +205,7 @@ export default compose(
 	withState('documents', 'setDocuments', []),
 	withState('events', 'setEvents', []),
 	withState('protagonists', 'setProtagonists', {}),
+	withState('hoveredElement', 'setHoveredElement', null),
 	lifecycle({
 		componentDidMount() {
 			const { id, client, itemType } = this.props;

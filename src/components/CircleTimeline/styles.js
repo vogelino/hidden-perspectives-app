@@ -34,10 +34,6 @@ export const ItemCircle = styled.circle`
 	fill: ${({ theme }) => theme.gray900};
 `;
 
-export const Document = styled.foreignObject`
-	position: relative;
-`;
-
 export const LegendObject = styled.foreignObject`
 	text-align: right;
 `;
@@ -57,59 +53,26 @@ export const DocumentLegendContainer = styled.span`
 	${legendContainerCSS}
 `;
 
-
-export const EventPill = styled.div`
-	position: absolute;
-	border-radius: 50%;
-	background: ${({ theme }) => theme.gray900};
-	box-shadow: 0 0 0 2px white;
+export const Symbol = styled.span`
+	font-size: .875rem;
+	transform: scale(${({ children }) => (children === '▲' ? 0.7 : 1)});
+	color: ${({ theme }) => theme.gray500};
+	pointer-events: none;
+	width: .875rem;
+	height: .875rem;
+	float: left;
+	line-height: ${({ children }) => (children === '▲' ? '.625rem' : '.75rem')};
+	text-shadow: -2px -2px 0 white, 2px -2px 0 white, -2px 2px 0 white, 2px 2px 0 white;
 `;
 
-export const SingleEventPill = styled(EventPill)`
-	width: 5px;
-	height: 5px;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	z-index: 2;
-`;
-
-export const MultipleEventsPill = styled(EventPill)`width: 17px;
-	height: 11px;
-	width: 11px;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	box-shadow: 0 0 0 1px white;
-	font-size: 8px;
-	font-weight: bold;
-	box-sizing: border-box;
+export const Document = styled.foreignObject`
+	position: relative;
 	text-align: center;
-	line-height: 11px;
-	color: white;
-`;
+	cursor: pointer;
 
-export const MultipleDocumentsPill = styled(MultipleEventsPill)`
-	border-radius: 0;
-	height: .5rem;
-	width: .5rem;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	border: 1px solid ${({ theme }) => theme.gray900};
-	background: ${({ theme }) => theme.usBlue};
-	box-shadow: -1px -1px 0 0 white, -2px -2px 0 0 ${({ theme }) => theme.gray900};
-`;
-
-export const SingleDocumentPill = styled(SingleEventPill)`
-	border-radius: 0;
-	height: .5rem;
-	width: .5rem;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	border: 1px solid ${({ theme }) => theme.gray900};
-	background: ${({ theme }) => theme.usBlue};
+	&.hovered ${Symbol} {
+		color: ${({ theme }) => theme.primary};
+	}
 `;
 
 export const ConnectionLine = styled.line`
