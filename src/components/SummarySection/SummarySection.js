@@ -21,7 +21,7 @@ const SummarySection = ({
 	setHoveredElement,
 }) => (
 	<Container>
-		<Items>
+		<Items id="summary-section">
 			{items.map((item) => {
 				const itemType = item.type === 'Event' ? 'event' : 'document';
 				const hovered = isHovered(item, hoveredElement, itemType);
@@ -29,6 +29,7 @@ const SummarySection = ({
 					<Item
 						key={item.id}
 						className={hovered && 'hovered'}
+						id={`summary-${item.id}`}
 					>
 						<SecondaryInfo variant="h6">
 							<ItemDate>{formatHumanDate(item.date)}</ItemDate>

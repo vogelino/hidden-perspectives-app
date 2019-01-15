@@ -14,6 +14,7 @@ export const Items = styled.div`
 	overflow-x: hidden;
 	overflow-y: auto;
 	padding: 2rem;
+	scroll-behavior: smooth;
 `;
 
 export const TitleWrapper = styled.div``;

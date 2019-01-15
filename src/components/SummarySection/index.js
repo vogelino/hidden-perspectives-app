@@ -1,4 +1,4 @@
-import { compose, withProps } from 'recompose';
+import { compose, withProps, lifecycle } from 'recompose';
 import {
 	flatten,
 	sortWith,
@@ -18,5 +18,19 @@ export default compose(
 			[...formatEvents(events), ...formatDocuments(documents)],
 		),
 	})),
+	lifecycle({
+		componentDidUpdate() {
+			const { hoveredElement } = this.props;
+			const hoveredElementIsArray = Array.isArray(hoveredElement);
+			if (hoveredElement && hoveredElementIsArray) {
+				const indexInMiddle = Math.round((hoveredElement.length - 1) / 2);
+				const idToScrollTo = hoveredElement[indexInMiddle].id;
+				const cssIdOfElement = `summary-${idToScrollTo}`;
+				document
+					.getElementById(cssIdOfElement)
+					.scrollIntoView({ behavior: 'smooth' });
+			}
+		},
+	}),
 )(SummarySection);
 
