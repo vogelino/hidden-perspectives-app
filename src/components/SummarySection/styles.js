@@ -17,10 +17,11 @@ export const Items = styled.div`
 	scroll-behavior: smooth;
 `;
 
-export const TitleWrapper = styled.div``;
+export const TitleWrapper = styled.div`
+	margin: .5rem 0 .3rem 0;
+`;
 
 export const Title = styled(Headline)`
-	margin: .5rem 0 .3rem 0;
 	display: inline;
 	cursor: pointer;
 `;
