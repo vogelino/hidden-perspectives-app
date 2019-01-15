@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { Button as SmoothUiButton } from '@smooth-ui/core-sc';
-import { NavLink as ReactRouterLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 const isPrimary = (variant) => (variant === 'primary');
 
@@ -23,6 +23,7 @@ export const Button = styled(SmoothUiButton)`
 		? theme.btnPrimaryBorderColor
 		: theme.btnSecondaryBorderColor
 	)};
+	padding: .6rem 2rem .4rem;
 
 	&,
 	&:hover,
@@ -32,6 +33,6 @@ export const Button = styled(SmoothUiButton)`
 	}
 `;
 
-export const Link = styled(ReactRouterLink)`
+export const Link = styled(NavLink)`
 	display: inline-block;
 `;

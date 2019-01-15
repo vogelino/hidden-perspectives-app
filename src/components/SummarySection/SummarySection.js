@@ -13,6 +13,7 @@ import {
 	ItemDate,
 	Type,
 	Summary,
+	Symbol,
 } from './styles';
 
 const SummarySection = ({
@@ -32,6 +33,7 @@ const SummarySection = ({
 						id={`summary-${item.id}`}
 					>
 						<SecondaryInfo variant="h6">
+							<Symbol isEvent={item.type === 'Event'} />
 							<ItemDate>{formatHumanDate(item.date)}</ItemDate>
 							<Type>{ucFirst(item.type)}</Type>
 						</SecondaryInfo>

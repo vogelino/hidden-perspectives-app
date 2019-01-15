@@ -13,7 +13,7 @@ export const Row = styled.div`
 export const Label = styled.span`
 	width: 10rem;
 	padding: .875rem 1rem .875rem 0;
-	font-size: 1rem;
+	font-size: .875rem;
 	line-height: 1.2rem;
 	color: ${({ theme }) => theme.gray600};
 	border-right: 1px solid ${({ theme }) => theme.commonBorderColor};
@@ -26,7 +26,7 @@ export const Content = styled.div`
 export const DisplayValue = styled.div`
 	padding: .875rem 1rem;
 	background-color: white;
-	font-size: 1rem;
+	font-size: .875rem;
 	line-height: 1.2rem;
 	color: ${({ theme }) => theme.black};
 `;

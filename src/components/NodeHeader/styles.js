@@ -36,7 +36,6 @@ export const Tab = styled(NavLink)`
 
 	&.active {
 		cursor: default;
-		font-weight: bold;
 	}
 
 	&:not(.active):hover {

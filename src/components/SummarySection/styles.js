@@ -20,14 +20,13 @@ export const Items = styled.div`
 export const TitleWrapper = styled.div``;
 
 export const Title = styled(Headline)`
-	font-weight: bold;
 	margin: .5rem 0 .3rem 0;
 	display: inline;
 	cursor: pointer;
 `;
 
 export const SecondaryInfo = styled(Headline)`
-	color: ${({ theme }) => theme.gray600};	
+	color: ${({ theme }) => theme.gray600};
 	font-size: .875rem;
 	margin: 0;
 `;
@@ -52,5 +51,18 @@ export const Item = styled.div`
 	&.hovered ${Title} {
 		background: ${({ theme }) => theme.primaryLight};
 		color: ${({ theme }) => theme.primaryDark};
+	}
+`;
+
+export const Symbol = styled.span`
+	font-size: ${({ isEvent }) => (isEvent ? '1rem' : '.675rem')};
+	margin-right: .5rem;
+	vertical-align: middle;
+	display: inline-block;
+	margin-top: -2px;
+	opacity: .8;
+	
+	&:before {
+		content: '${({ isEvent }) => (isEvent ? '●' : '▲')}';
 	}
 `;

@@ -15,9 +15,7 @@ export const Label = styled.header`
 	font-size: .875rem;
 	line-height: 1rem;
 	color: ${({ theme }) => theme.gray600};
-	font-weight: bold;
 	z-index: ${({ isYear }) => (isYear ? 4 : 3)};
-	font-weight: ${({ isYear }) => (isYear ? 'bold' : 'normal')};
 	/* border-bottom: 1px solid ${({ theme }) => theme.commonBorderColor}; */
 	/* box-shadow: 0 -1px 0 0 ${({ theme }) => theme.commonBorderColor}; */
 	display: flex;
