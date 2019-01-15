@@ -2,16 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import BubbleChart from '../BubbleChart';
 import { EventLegend, DocumentLegend } from '../Legend/Legend';
+import { isHovered } from '../../utils/timelineUtil';
 import {
 	CircleContainer,
 	CircleSvg,
 	Circle,
 	ItemCircle,
 	Document,
-	SingleDocumentPill,
-	MultipleDocumentsPill,
-	SingleEventPill,
-	MultipleEventsPill,
+	Symbol,
 	ConnectionLine,
 	LegendObject,
 	EventLegendContainer,
@@ -38,6 +36,8 @@ const CircleTimeline = ({
 	events,
 	protagonists,
 	isLoading,
+	hoveredElement,
+	setHoveredElement,
 }) => (
 	<CircleContainer>
 		<CircleSvg
@@ -86,8 +86,7 @@ const CircleTimeline = ({
 				const x = getXByAngle(RADIUS_INNER, angle);
 				const y = getYByAngle(RADIUS_INNER, angle);
 				const isCurrentElement = group.find(({ id }) => id === item.id);
-				const docSize = 18;
-				const isStacked = group.length > 1;
+				const docSize = 14;
 				return [
 					...(
 						isCurrentElement ? [
@@ -108,9 +107,15 @@ const CircleTimeline = ({
 						height={docSize}
 						angle={group[0].angle}
 						key={`document-${docId}`}
+						className={isHovered(group, hoveredElement, 'document') && 'hovered'}
+						onMouseEnter={() => setHoveredElement(group.map((groupEl) => ({
+							...groupEl,
+							itemType: 'document',
+						})))}
+						onMouseLeave={() => setHoveredElement(null)}
 						{...CIRCLE_CENTER}
 					>
-						{isStacked ? <MultipleDocumentsPill /> : <SingleDocumentPill />}
+						<Symbol>▲</Symbol>
 					</Document>,
 				];
 			})}
@@ -119,8 +124,7 @@ const CircleTimeline = ({
 				const x = getXByAngle(RADIUS_OUTER, angle);
 				const y = getYByAngle(RADIUS_OUTER, angle);
 				const isCurrentElement = group.find(({ id }) => id === item.id);
-				const docSize = 18;
-				const isStacked = group.length > 1;
+				const docSize = 14;
 				return [
 					...(
 						isCurrentElement ? [
@@ -141,11 +145,15 @@ const CircleTimeline = ({
 						height={docSize}
 						angle={group[0].angle}
 						key={`event-${docId}`}
+						className={isHovered(group, hoveredElement, 'event') && 'hovered'}
+						onMouseEnter={() => setHoveredElement(group.map((groupEl) => ({
+							...groupEl,
+							itemType: 'event',
+						})))}
+						onMouseLeave={() => setHoveredElement(null)}
 						{...CIRCLE_CENTER}
 					>
-						{isStacked
-							? <MultipleEventsPill>{group.length}</MultipleEventsPill>
-							: <SingleEventPill />}
+						<Symbol>●</Symbol>
 					</Document>,
 				];
 			})}
@@ -188,6 +196,19 @@ CircleTimeline.propTypes = {
 			stakeholderFullName: PropTypes.string,
 		})),
 	),
+	hoveredElement: PropTypes.oneOfType([
+		PropTypes.shape({
+			id: PropTypes.string.isRequired,
+			itemType: PropTypes.string.isRequired,
+		}),
+		PropTypes.arrayOf(
+			PropTypes.shape({
+				id: PropTypes.string.isRequired,
+				itemType: PropTypes.string.isRequired,
+			}),
+		),
+	]),
+	setHoveredElement: PropTypes.func,
 };
 
 CircleTimeline.defaultProps = {
@@ -200,6 +221,8 @@ CircleTimeline.defaultProps = {
 	documents: [],
 	events: [],
 	protagonists: {},
+	hoveredElement: null,
+	setHoveredElement: () => {},
 };
 
 export default CircleTimeline;

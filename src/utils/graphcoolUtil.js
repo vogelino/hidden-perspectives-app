@@ -5,7 +5,9 @@ export const formatGraphcoolEvent = ({
 	eventTitle,
 	eventStartDate,
 	eventDescription,
+	...rest
 }) => ({
+	...rest,
 	id,
 	title: eventTitle,
 	date: new Date(eventStartDate),
@@ -20,7 +22,9 @@ export const formatGraphcoolDocument = ({
 	documentDescription,
 	documentKind,
 	documentFiles,
+	...rest
 }) => ({
+	...rest,
 	id,
 	title: documentTitle,
 	date: new Date(documentCreationDate),

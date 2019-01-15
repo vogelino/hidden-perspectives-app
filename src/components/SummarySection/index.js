@@ -1,4 +1,4 @@
-import { compose, mapProps } from 'recompose';
+import { compose, withProps, lifecycle } from 'recompose';
 import {
 	flatten,
 	sortWith,
@@ -12,11 +12,25 @@ const formatEvents = (events) => flatten(events).map(formatGraphcoolEvent);
 const formatDocuments = (documents) => flatten(documents).map(formatGraphcoolDocument);
 
 export default compose(
-	mapProps(({ events, documents }) => ({
+	withProps(({ events, documents }) => ({
 		items: sortWith(
 			[ascend(prop('date')), ascend(prop('title'))],
 			[...formatEvents(events), ...formatDocuments(documents)],
 		),
 	})),
+	lifecycle({
+		componentDidUpdate() {
+			const { hoveredElement } = this.props;
+			const hoveredElementIsArray = Array.isArray(hoveredElement);
+			if (hoveredElement && hoveredElementIsArray) {
+				const indexInMiddle = Math.round((hoveredElement.length - 1) / 2);
+				const idToScrollTo = hoveredElement[indexInMiddle].id;
+				const cssIdOfElement = `summary-${idToScrollTo}`;
+				document
+					.getElementById(cssIdOfElement)
+					.scrollIntoView({ behavior: 'smooth' });
+			}
+		},
+	}),
 )(SummarySection);
 

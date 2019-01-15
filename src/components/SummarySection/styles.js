@@ -14,14 +14,16 @@ export const Items = styled.div`
 	overflow-x: hidden;
 	overflow-y: auto;
 	padding: 2rem;
+	scroll-behavior: smooth;
 `;
 
-export const Item = styled.div`
-	margin-bottom: 2rem;
+export const TitleWrapper = styled.div`
+	margin: .5rem 0 .3rem 0;
 `;
 
 export const Title = styled(Headline)`
-	margin: .5rem 0 .3rem 0;
+	display: inline;
+	cursor: pointer;
 `;
 
 export const SecondaryInfo = styled(Headline)`
@@ -42,6 +44,15 @@ export const Summary = styled.p`
 	font-size: .875rem;
 	line-height: 1.25rem;
 	margin: 0;
+`;
+
+export const Item = styled.div`
+	margin-bottom: 2rem;
+
+	&.hovered ${Title} {
+		background: ${({ theme }) => theme.primaryLight};
+		color: ${({ theme }) => theme.primaryDark};
+	}
 `;
 
 export const Symbol = styled.span`
