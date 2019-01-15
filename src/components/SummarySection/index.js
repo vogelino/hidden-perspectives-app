@@ -1,4 +1,4 @@
-import { compose, mapProps } from 'recompose';
+import { compose, withProps } from 'recompose';
 import {
 	flatten,
 	sortWith,
@@ -12,7 +12,7 @@ const formatEvents = (events) => flatten(events).map(formatGraphcoolEvent);
 const formatDocuments = (documents) => flatten(documents).map(formatGraphcoolDocument);
 
 export default compose(
-	mapProps(({ events, documents }) => ({
+	withProps(({ events, documents }) => ({
 		items: sortWith(
 			[ascend(prop('date')), ascend(prop('title'))],
 			[...formatEvents(events), ...formatDocuments(documents)],

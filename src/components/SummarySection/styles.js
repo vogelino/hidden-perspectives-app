@@ -16,13 +16,13 @@ export const Items = styled.div`
 	padding: 2rem;
 `;
 
-export const Item = styled.div`
-	margin-bottom: 2rem;
-`;
+export const TitleWrapper = styled.div``;
 
 export const Title = styled(Headline)`
 	font-weight: bold;
 	margin: .5rem 0 .3rem 0;
+	display: inline;
+	cursor: pointer;
 `;
 
 export const SecondaryInfo = styled(Headline)`
@@ -45,3 +45,11 @@ export const Summary = styled.p`
 	margin: 0;
 `;
 
+export const Item = styled.div`
+	margin-bottom: 2rem;
+
+	&.hovered ${Title} {
+		background: ${({ theme }) => theme.primaryLight};
+		color: ${({ theme }) => theme.primaryDark};
+	}
+`;
