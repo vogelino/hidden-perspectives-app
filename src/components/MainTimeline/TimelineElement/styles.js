@@ -1,6 +1,17 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
+export const Container = styled.div`
+	width: 100%;
+	margin-bottom: 1rem;
+
+	&::after {
+		content: "";
+		clear: both;
+		display: table;
+	}
+`;
+
 export const EventTitle = styled(Link)`
 	text-decoration: none;
 	color: ${({ theme }) => theme.gray900};

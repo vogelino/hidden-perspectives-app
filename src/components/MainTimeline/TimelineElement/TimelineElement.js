@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Tooltip from '../../Tooltip';
 import {
+	Container,
 	EventTitleContainer,
 	EventTitle,
 } from './styles';
@@ -15,22 +16,24 @@ const TimelineElement = ({
 	hoverHandler,
 	...itemProps
 }) => (
-	<EventTitleContainer
-		className="timeline-event"
-		data-id={id}
-		right={itemType === 'document'}
-		onMouseEnter={() => hoverHandler({ id, itemType, ...itemProps })}
-		onMouseLeave={() => hoverHandler(null)}
-	>
-		<Tooltip id={id} itemType={itemType} position={itemType === 'document' ? 'right' : 'left'}>
-			<EventTitle
-				to={path}
-				className={hovered ? 'hovered' : ''}
-			>
-				{title}
-			</EventTitle>
-		</Tooltip>
-	</EventTitleContainer>
+	<Container>
+		<EventTitleContainer
+			className="timeline-event"
+			data-id={id}
+			right={itemType === 'document'}
+			onMouseEnter={() => hoverHandler({ id, itemType, ...itemProps })}
+			onMouseLeave={() => hoverHandler(null)}
+		>
+			<Tooltip id={id} itemType={itemType} position={itemType === 'document' ? 'right' : 'left'}>
+				<EventTitle
+					to={path}
+					className={hovered ? 'hovered' : ''}
+				>
+					{title}
+				</EventTitle>
+			</Tooltip>
+		</EventTitleContainer>
+	</Container>
 );
 
 TimelineElement.propTypes = {
