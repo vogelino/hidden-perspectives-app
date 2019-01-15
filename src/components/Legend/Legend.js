@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { LegendLabel } from './styles';
+import { LegendLabel, MainTimelineContainer } from './styles';
 
 export const DocumentLegend = ({ right }) => (
 	<LegendLabel symbol="■" right={right}>Documents</LegendLabel>
@@ -8,6 +8,13 @@ export const DocumentLegend = ({ right }) => (
 
 export const EventLegend = ({ right }) => (
 	<LegendLabel symbol="●" right={right}>Events</LegendLabel>
+);
+
+export const MainTimelineLegend = () => (
+	<MainTimelineContainer>
+		<DocumentLegend />
+		<EventLegend right />
+	</MainTimelineContainer>
 );
 
 const legendProptypes = {

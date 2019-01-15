@@ -11,11 +11,17 @@ import {
 	map,
 	groupBy,
 	union,
+	propEq,
+	either,
+	prop,
+	flatten,
+	reduce,
+	merge,
 } from 'ramda';
 import debounce from 'lodash.debounce';
 import MainTimeline from './MainTimeline';
 import { withLoading, withErrors, getErrorHandler } from '../../utils/hocUtil';
-import { getMinimap } from '../../utils/timelineUtil';
+import { getMinimap, isFullyInViewport } from '../../utils/timelineUtil';
 import { ucFirst } from '../../utils/stringUtil';
 import isDocumentId from '../../utils/isDocumentId';
 import {
@@ -32,11 +38,17 @@ const ALL_EVENTS_AND_DOCUMENTS = gql`
 			id
 			eventTitle
 			eventStartDate
+			eventStakeholders {
+				id
+			}
 		}
 		allDocuments(orderBy: documentCreationDate_ASC) {
 			id
 			documentTitle
 			documentCreationDate
+			mentionedStakeholders {
+				id
+			}
 		}
 	}
 `;
@@ -83,6 +95,7 @@ const normaliseItems = ({
 	const date = new Date(props[itemDateProperty]);
 	const { id } = props;
 	return {
+		...props,
 		id,
 		date,
 		dateString: getFormattedDate(date),
@@ -113,9 +126,7 @@ const structureItems = ({
 					days: [...Array(31)].map((___, dayIdx) => {
 						const day = ensureTwoDigits(dayIdx + 1);
 						const dayId = `${year}-${monthNumber}-${day}`;
-						const filterDateString = filter(({ dateString }) => (
-							dateString === dayId
-						));
+						const filterDateString = filter(propEq('dateString', dayId));
 						return {
 							key: dayId,
 							day: `${dayIdx + 1}`,
@@ -135,19 +146,13 @@ const structureItems = ({
 
 const getClusteredProtagonists = ({ data: { allEvents: events, allDocuments: documents } }) => {
 	const combinedEventsAndDocuments = union(events, documents);
-	const protagonists = combinedEventsAndDocuments.map((item) => item.mentionedStakeholders || item.eventStakeholders); // eslint-disable-line
+	const protagonists = map(either(
+		prop('mentionedStakeholders'), prop('eventStakeholders'),
+	), combinedEventsAndDocuments);
 
-	return protagonists
-		.reduce((acc, current) => {
-			const flattenedProtagonists = acc.concat(current);
-			return flattenedProtagonists;
-		}, [])
-		.reduce((acc, current) => {
-			const { id } = current;
-			return Object.assign(acc, {
-				[id]: (acc[id] || []).concat(current),
-			});
-		}, {});
+	return reduce((acc, current) => merge(acc, {
+		[current.id]: (acc[current.id] || []).concat(current),
+	}), {}, flatten(protagonists));
 };
 
 const parseItems = ({ events, datesArray, documents }) => {
@@ -191,21 +196,10 @@ const getEventsAndDocuments = ({
 	stopLoading();
 };
 
-const isInViewport = (element, offset = 0) => {
-	if (!element) {
-		return false;
-	}
-
-	const { top } = element.getBoundingClientRect();
-	const isUnderUpperBound = (top + offset) >= 0;
-	const isAboveLowerBound = (top - offset) <= window.innerHeight;
-	return isUnderUpperBound && isAboveLowerBound;
-};
-
 const getEventIdsInViewport = (timelineElement) => {
 	const timelineEvents = timelineElement.getElementsByClassName('timeline-event');
 	const eventIds = [...timelineEvents]
-		.filter(isInViewport)
+		.filter(isFullyInViewport)
 		.map((timelineEvent) => timelineEvent.getAttribute('data-id'));
 
 	return eventIds;
@@ -254,11 +248,10 @@ export default compose(
 	withState('minimapItems', 'setMinimapItems', []),
 	withState('bubbleChartItems', 'setBubbleChartItems', {}),
 	withState('timelineContainer', 'setTimelineContainer', null),
-	withState('fetchingProtagonists', 'setFetchingProtagonists', false),
+	withState('fetchingProtagonists', 'setFetchingProtagonists', true),
 	withState('initialProtagonistsFetched', 'setInitialProtagonistsFetched', false),
-	withHandlers({
-		onRef,
-	}),
+	withState('hoveredElement', 'setHoveredElement', null),
+	withHandlers({ onRef }),
 	lifecycle({
 		componentDidMount() {
 			const { props } = this;
@@ -267,11 +260,15 @@ export default compose(
 				.catch(getErrorHandler(props));
 		},
 		componentDidUpdate() {
-			const { props } = this;
+			const {
+				initialProtagonistsFetched,
+				setInitialProtagonistsFetched,
+				timelineContainer,
+			} = this.props;
 
-			if (!props.initialProtagonistsFetched) {
-				props.setInitialProtagonistsFetched(true);
-				getProtagonistsInViewport(props.timelineContainer, props);
+			if (!initialProtagonistsFetched) {
+				setInitialProtagonistsFetched(true);
+				getProtagonistsInViewport(timelineContainer, this.props);
 			}
 		},
 		shouldComponentUpdate(nextProps) {
@@ -279,7 +276,8 @@ export default compose(
 				|| (nextProps.bubbleChartItems !== this.props.bubbleChartItems)
 				|| (nextProps.fetchingProtagonists !== this.props.fetchingProtagonists)
 				|| (nextProps.errors.length !== this.props.errors.length)
-				|| (nextProps.isLoading !== this.props.isLoading);
+				|| (nextProps.isLoading !== this.props.isLoading)
+				|| (nextProps.hoveredElement !== this.props.hoveredElement);
 		},
 	}),
 )(MainTimeline);
