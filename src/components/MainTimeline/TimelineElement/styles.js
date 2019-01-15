@@ -16,11 +16,6 @@ export const EventTitle = styled(Link)`
 	text-decoration: none;
 	color: ${({ theme }) => theme.gray900};
 	transition: background 100ms ease-out, color 100ms ease-out;
-
-	&.hovered {
-		color: ${({ theme }) => theme.primaryDark};
-		background: ${({ theme }) => theme.primaryLight};
-	}
 `;
 
 export const EventTitleContainer = styled.div`
@@ -31,12 +26,13 @@ export const EventTitleContainer = styled.div`
 	float: ${({ right }) => (right ? 'right' : 'left')};
 
 	&:after {
-		content: '■';
+		content: '▲';
 		position: absolute;
 		top: 0.55rem;
 		right: .5rem;
-		transform: translate(50%, -50%);
-		color: ${({ theme }) => theme.gray800};
+		transition: color 200ms ease-out;
+		transform: translate(50%, -50%) scale(.7);
+		color: ${({ theme }) => theme.gray500};
 	}
 
 	&:first-child {
@@ -46,5 +42,14 @@ export const EventTitleContainer = styled.div`
 	&:last-child {
 		border: none;
 		margin-bottom: 0;
+	}
+
+	&.hovered::after {
+		color: ${({ theme }) => theme.primary};
+	}
+
+	&.hovered ${EventTitle} {
+		color: ${({ theme }) => theme.primaryDark};
+		background: ${({ theme }) => theme.primaryLight};
 	}
 `;

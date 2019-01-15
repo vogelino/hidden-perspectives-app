@@ -23,6 +23,7 @@ export const Button = styled(SmoothUiButton)`
 		? theme.btnPrimaryBorderColor
 		: theme.btnSecondaryBorderColor
 	)};
+	padding: .6rem 2rem .4rem;
 
 	&,
 	&:hover,

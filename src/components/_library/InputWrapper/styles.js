@@ -13,7 +13,7 @@ const withSymbol = (symbol) => `
 		content: '${symbol}';
 		font-family: 'Georgia';
 		font-style: italic;
-		font-weight: bold;
+		font-weight: normal;
 		position: absolute;
 		top: 0;
 		left: 0;

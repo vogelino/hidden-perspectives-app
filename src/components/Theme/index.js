@@ -42,7 +42,7 @@ const buttons = {
 	btnPaddingY: '.5rem',
 	btnFontSize: '.875rem',
 	btnLineHeight: '.875rem',
-	btnFontWeight: 'bold',
+	btnFontWeight: 'normal',
 	btnBorderWidth: '1px',
 	btnPrimaryBackground: colors.primary,
 	btnSecondaryBackground: 'none',
@@ -53,7 +53,7 @@ const buttons = {
 };
 
 const typography = {
-	fontFamily: `"HP Sans", ${originalTheme.fontFamily}`,
+	fontFamily: `"Suisse Intl", ${originalTheme.fontFamily}`,
 	h1FontSize: '2.5rem',
 	h2FontSize: '2rem',
 	h3FontSize: '1.75rem',

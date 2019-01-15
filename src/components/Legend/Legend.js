@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { LegendLabel, MainTimelineContainer } from './styles';
+import { LegendLabel, MainTimelineContainer, Right } from './styles';
 
 export const DocumentLegend = ({ right }) => (
-	<LegendLabel symbol="■" right={right}>Documents</LegendLabel>
+	<LegendLabel right={right}>Documents</LegendLabel>
 );
 
 export const EventLegend = ({ right }) => (
@@ -13,7 +13,9 @@ export const EventLegend = ({ right }) => (
 export const MainTimelineLegend = () => (
 	<MainTimelineContainer>
 		<DocumentLegend />
-		<EventLegend right />
+		<Right>
+			<EventLegend />
+		</Right>
 	</MainTimelineContainer>
 );
 

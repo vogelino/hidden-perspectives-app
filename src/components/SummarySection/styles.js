@@ -21,7 +21,6 @@ export const Item = styled.div`
 `;
 
 export const Title = styled(Headline)`
-	font-weight: bold;
 	margin: .5rem 0 .3rem 0;
 `;
 
