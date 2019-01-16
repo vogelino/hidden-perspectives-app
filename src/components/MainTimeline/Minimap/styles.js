@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { mix, transparentize } from 'polished';
+import { mix } from 'polished';
 import { MINIMAP_HEIGHT, MINIMAP_PADDING } from '../../../state/constants';
 
 export const OuterContainer = styled.div`
@@ -32,22 +32,6 @@ export const Content = styled.div`
 	margin: ${MINIMAP_PADDING}px 0;
 `;
 
-export const ScrollIndicator = styled.div.attrs({
-	style: ({ top, height }) => ({
-		top: `${top}%`,
-		height: `${height}%`,
-	}),
-})`
-	width: 100%;
-	position: absolute;
-	left: 0;
-	border-radius: 3px;
-	border: 1px solid ${({ theme }) => theme.gray900};
-	background: ${({ theme }) => transparentize(0.7, theme.gray600)};
-	box-shadow: 0 0 0 1px white, inset 0 0 0 1px rgba(255,255,255,.3), 0 0 4px 0 rgba(0,0,0,.25);
-	z-index: 2;
-`;
-
 export const MonthsContainer = styled(Content)`
 	padding-left: 1rem;
 `;
@@ -59,7 +43,10 @@ export const Month = styled.div.attrs({
 })`
 	width: 1rem;
 	height: ${({ height }) => `${height}%`};
-	z-index: 1;
+	z-index: ${({ isActive }) => (isActive ? 10 : 1)};
+	border-radius: ${({ isActive }) => (isActive ? 1 : 0)}px;
+	position: relative;
+	${({ isActive }) => isActive && 'box-shadow: 0 0 0 2px black, inset 0 0 0 1px rgba(255,255,255,.1);'}
 `;
 
 export const DatesContainer = styled(Content)`

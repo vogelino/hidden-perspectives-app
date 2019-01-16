@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { lifecycle } from 'recompose';
 import {
 	Content,
-	ScrollIndicator,
 	InnerContainer,
 	OuterContainer,
 	MonthsContainer,
@@ -13,16 +12,25 @@ import {
 } from './styles';
 
 const OptimizedMonths = lifecycle({
-	shouldComponentUpdate({ items }) {
-		return items.length !== this.props.items.length;
+	shouldComponentUpdate({ items, activeYear }) {
+		return items.length !== this.props.items.length
+			|| activeYear !== this.props.activeYear;
 	},
-})(({ items }) => {
+})(({ items, activeYear }) => {
 	const monthHeight = (100 / items.length);
 	return (
 		<MonthsContainer>
-			{items.map(({ id, density }) => (
-				<Month key={id} density={density} height={monthHeight} />
-			))}
+			{items.map(({ id, density }) => {
+				const [year] = id.split('-');
+				return (
+					<Month
+						key={id}
+						density={density}
+						height={monthHeight}
+						isActive={activeYear === year}
+					/>
+				);
+			})}
 		</MonthsContainer>
 	);
 });
@@ -38,38 +46,33 @@ const OptimizedDates = lifecycle({
 ));
 
 const Minimap = ({
-	height,
-	top,
 	items,
 	years,
 	isLoading,
+	activeYear,
 }) => (
 	<OuterContainer>
 		<InnerContainer>
 			<Content>
-				{!isLoading && <ScrollIndicator height={height} top={top} />}
-				<OptimizedMonths items={items} />
+				<OptimizedMonths items={items} activeYear={activeYear} />
 			</Content>
-			<OptimizedDates years={years} />
+			{!isLoading && <OptimizedDates years={years} />}
 		</InnerContainer>
 	</OuterContainer>
 );
 
 Minimap.propTypes = {
-	height: PropTypes.number,
-	top: PropTypes.number,
 	items: PropTypes.arrayOf(PropTypes.shape({
 		id: PropTypes.string.isRequired,
 		density: PropTypes.number.isRequired,
 	})),
 	years: PropTypes.arrayOf(PropTypes.string),
 	isLoading: PropTypes.bool,
+	activeYear: PropTypes.string,
 };
 
 Minimap.defaultProps = {
 	isLoading: false,
-	height: 100,
-	top: 0,
 	items: [],
 	years: [
 		'1975',
@@ -79,6 +82,7 @@ Minimap.defaultProps = {
 		'1994',
 		'1999',
 	],
+	activeYear: undefined,
 };
 
 export default Minimap;
