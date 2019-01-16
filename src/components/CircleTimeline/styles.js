@@ -82,6 +82,7 @@ export const ConnectionLine = styled.line`
 
 export const BubbleChartContainer = styled.div`
 	height: 50%;
+	pointer-events: none;
 	position: relative;
 	width: 50%;
 `;

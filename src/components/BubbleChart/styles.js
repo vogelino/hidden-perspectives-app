@@ -6,6 +6,12 @@ export const BubbleChartContainer = styled.div`
     height: 100%;
     position: absolute;
     width: 100%;
+
+    &:before{
+        content: '';
+        display: block;
+        margin-top: 100%;
+    }
 `;
 
 export const Tooltip = styled.div`
@@ -23,7 +29,9 @@ export const Tooltip = styled.div`
     transition: opacity 150ms ease-out;
 `;
 
-export const BubbleLink = styled(NavLink)``;
+export const BubbleLink = styled(NavLink)`
+    pointer-events: all;
+`;
 
 export const BubblesSvg = styled.svg`
     display: block;
