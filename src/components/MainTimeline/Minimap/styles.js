@@ -37,7 +37,7 @@ export const MonthsContainer = styled(Content)`
 `;
 
 export const MonthTooltip = styled.span`
-	padding: .4rem .625rem .3rem .625rem;
+	padding: .5rem .625rem .2rem .625rem;
 	font-size: .75rem;
 	line-height: .75rem;
 	border-radius: 1rem;
