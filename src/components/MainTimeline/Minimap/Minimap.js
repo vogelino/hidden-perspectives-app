@@ -9,6 +9,7 @@ import {
 	Month,
 	Date,
 	DatesContainer,
+	MonthTooltip,
 } from './styles';
 
 const scrollToYear = (year) => {
@@ -34,7 +35,11 @@ const OptimizedMonths = lifecycle({
 						height={monthHeight}
 						isActive={activeYear === year}
 						onClick={() => scrollToYear(year)}
-					/>
+					>
+						<MonthTooltip>
+							{year}
+						</MonthTooltip>
+					</Month>
 				);
 			})}
 		</MonthsContainer>

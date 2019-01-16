@@ -36,6 +36,21 @@ export const MonthsContainer = styled(Content)`
 	padding-left: 1rem;
 `;
 
+export const MonthTooltip = styled.span`
+	padding: .4rem .625rem .3rem .625rem;
+	font-size: .75rem;
+	line-height: .75rem;
+	border-radius: 1rem;
+	background: ${({ theme }) => theme.primaryLight};
+	color: ${({ theme }) => theme.primaryDark};
+	position: absolute;
+	top: 50%;
+	left: calc(100% + .5rem);
+	transform: translateY(-20%);
+	opacity: 0;
+	transition: opacity 200ms ease-out, transform 200ms ease-out;
+`;
+
 export const Month = styled.div.attrs({
 	style: ({ theme, density }) => ({
 		background: mix(density, theme.gray100, theme.gray900),
@@ -55,6 +70,11 @@ export const Month = styled.div.attrs({
 		box-shadow: 0 0 0 2px ${({ theme }) => theme.primary}, inset 0 0 0 1px rgba(255,255,255,.2);
 		border-radius: 1px;
 		z-index: 10;
+	}
+
+	&:hover ${MonthTooltip} {
+		transform: translateY(-50%);
+		opacity: 1;
 	}
 `;
 
