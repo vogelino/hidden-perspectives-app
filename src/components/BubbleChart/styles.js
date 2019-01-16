@@ -10,7 +10,6 @@ export const BubbleChartContainer = styled.div`
 
 export const Tooltip = styled.div`
     background: ${({ theme }) => theme.primary};
-    border: 2px solid white;
     border-radius: 1rem;
     font-size: .875rem;
     line-height: 1.5rem;
@@ -29,10 +28,13 @@ export const BubbleLink = styled(NavLink)``;
 export const BubblesSvg = styled.svg`
     display: block;
     height: 100%;
-    position: absolute;
-    width: auto;
-    max-width: 100%;
+    left: 50%;
     max-height: 100%;
+    max-width: 100%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: auto;
 `;
 
 export const BubblesLoadingContainer = styled.div`
