@@ -1,7 +1,6 @@
 import {
 	compose,
 	withProps,
-	withState,
 } from 'recompose';
 import * as d3 from 'd3';
 import BubbleChart from './BubbleChart';
@@ -24,7 +23,6 @@ const formatItems = (bubblesData, activeId) => {
 		id: key,
 		name: bubblesData[key][0].stakeholderFullName,
 		value: bubblesData[key].length,
-		id: key,
 		isActive: key === activeId,
 	}));
 
@@ -35,14 +33,6 @@ const formatItems = (bubblesData, activeId) => {
 };
 
 export default compose(
-	withState('hoveredElement', 'setHoveredElement', {
-		position: {
-			x: 0,
-			y: 0,
-		},
-		text: '',
-		visible: false,
-	}),
 	withProps(({
 		items,
 		diameter,

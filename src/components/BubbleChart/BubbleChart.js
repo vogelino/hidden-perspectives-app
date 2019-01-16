@@ -14,20 +14,6 @@ import {
 } from './styles';
 import LoadingIndicator from '../LoadingIndicator';
 
-const hoverHandler = (name, item, setHoveredElement, type) => {
-	const { pageX, pageY } = item;
-	const visible = type === 'enter';
-
-	setHoveredElement({
-		position: {
-			x: pageX,
-			y: pageY,
-		},
-		text: name,
-		visible,
-	});
-};
-
 const Bubbles = ({
 	bubbleLayoutItems,
 	isLoading,
@@ -49,10 +35,10 @@ const Bubbles = ({
 
 	return (
 		<BubbleLink
-			href={`/participant/context/${id}`}
+			to={`/participant/context/${id}`}
 			key={`bubble-link-${name}`}
-			onMouseEnter={(item) => hoverHandler(name, item, setHoveredElement, 'enter')}
-			onMouseLeave={(item) => hoverHandler(name, item, setHoveredElement, 'leave')}
+			onMouseEnter={() => setHoveredElement({ itemType: 'stakeholder', ...data })}
+			onMouseLeave={() => setHoveredElement(null)}
 		>
 			<Bubble
 				key={`bubble-${name}`}
@@ -61,8 +47,6 @@ const Bubbles = ({
 				r={r}
 				isLoading={isLoading}
 				isHovered={hovered}
-				onMouseEnter={() => setHoveredElement({ itemType: 'stakeholder', ...data })}
-				onMouseLeave={() => setHoveredElement(null)}
 				isActive={isActive}
 			/>
 			<Text
