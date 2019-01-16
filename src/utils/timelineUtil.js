@@ -18,7 +18,7 @@ const groupsOf = curry(function group(n, list) {
 
 export const getMinimap = (timelineItems) => {
 	const allMonths = timelineItems.reduce((acc, { months }) => [...acc, ...months], []);
-	const groupedMonts = groupsOf(6, allMonths);
+	const groupedMonts = groupsOf(12, allMonths);
 	const getEventsAndDocumentsLength = ({ events, documents }) => (
 		events.length + documents.length
 	);
