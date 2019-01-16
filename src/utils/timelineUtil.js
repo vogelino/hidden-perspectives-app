@@ -56,13 +56,14 @@ const getUnitRouderByUnit = (unit) => (value) => value - (value % unit);
 export const roundToTimelineUnit = getUnitRouderByUnit(TIMELINE_EVENT_HEIGHT);
 export const roundToMinimapUnit = getUnitRouderByUnit(MINIMAP_EVENT_HEIGHT);
 
+const HEAD_OFFSET = 108;
 export const isPartlyInViewport = (element) => {
 	if (!element) return false;
 	const { top, bottom } = element.getBoundingClientRect();
-	const topIsAboveUpperBound = (top) < 0;
-	const bottomIsAboveUpperBound = (bottom) < 0;
-	const topIsUnderLowerBound = (top) > window.innerHeight;
-	const bottomIsUnderLowerBound = (bottom) > window.innerHeight;
+	const topIsAboveUpperBound = top < HEAD_OFFSET;
+	const bottomIsAboveUpperBound = bottom < HEAD_OFFSET;
+	const topIsUnderLowerBound = top > window.innerHeight;
+	const bottomIsUnderLowerBound = bottom > window.innerHeight;
 	const isFullyOutOfTheView = (topIsAboveUpperBound && bottomIsAboveUpperBound)
 		|| (topIsUnderLowerBound && bottomIsUnderLowerBound);
 	return !isFullyOutOfTheView;
@@ -71,8 +72,8 @@ export const isPartlyInViewport = (element) => {
 export const isFullyInViewport = (element) => {
 	if (!element) return false;
 	const { top, bottom } = element.getBoundingClientRect();
-	const topIsBelowUpperBound = (top) >= 0;
-	const bottomIsAboveLowerBound = (bottom) <= window.innerHeight;
+	const topIsBelowUpperBound = top >= HEAD_OFFSET;
+	const bottomIsAboveLowerBound = bottom <= window.innerHeight;
 	return topIsBelowUpperBound && bottomIsAboveLowerBound;
 };
 

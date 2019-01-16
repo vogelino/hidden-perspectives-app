@@ -46,7 +46,16 @@ export const Month = styled.div.attrs({
 	z-index: ${({ isActive }) => (isActive ? 10 : 1)};
 	border-radius: ${({ isActive }) => (isActive ? 1 : 0)}px;
 	position: relative;
-	${({ isActive }) => isActive && 'box-shadow: 0 0 0 2px black, inset 0 0 0 1px rgba(255,255,255,.1);'}
+	transition: box-shadow 200ms ease-out, border-radius 200ms ease-out;
+	box-shadow: 0 0 0 0 ${({ theme }) => theme.primary}, inset 0 0 0 0 rgba(255,255,255,.2);
+	${({ isActive }) => isActive && 'box-shadow: 0 0 0 2px black, inset 0 0 0 1px rgba(255,255,255,.2);'}
+	cursor: pointer;
+
+	&:hover {
+		box-shadow: 0 0 0 2px ${({ theme }) => theme.primary}, inset 0 0 0 1px rgba(255,255,255,.2);
+		border-radius: 1px;
+		z-index: 10;
+	}
 `;
 
 export const DatesContainer = styled(Content)`

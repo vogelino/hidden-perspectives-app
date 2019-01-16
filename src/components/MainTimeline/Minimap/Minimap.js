@@ -11,6 +11,11 @@ import {
 	DatesContainer,
 } from './styles';
 
+const scrollToYear = (year) => {
+	const yearElement = document.getElementById(`timeline-year-${year}`);
+	yearElement.scrollIntoView();
+};
+
 const OptimizedMonths = lifecycle({
 	shouldComponentUpdate({ items, activeYear }) {
 		return items.length !== this.props.items.length
@@ -28,6 +33,7 @@ const OptimizedMonths = lifecycle({
 						density={density}
 						height={monthHeight}
 						isActive={activeYear === year}
+						onClick={() => scrollToYear(year)}
 					/>
 				);
 			})}
