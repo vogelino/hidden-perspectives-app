@@ -26,22 +26,19 @@ const OptimizedMonths = lifecycle({
 	const monthHeight = (100 / items.length);
 	return (
 		<MonthsContainer>
-			{items.map(({ id, density }) => {
-				const [year] = id.split('-');
-				return (
-					<Month
-						key={id}
-						density={density}
-						height={monthHeight}
-						isActive={activeYear === year}
-						onClick={() => scrollToYear(year)}
-					>
-						<MonthTooltip>
-							{year}
-						</MonthTooltip>
-					</Month>
-				);
-			})}
+			{items.map(({ id, year, density }) => (
+				<Month
+					key={id}
+					density={density}
+					height={monthHeight}
+					isActive={activeYear === year}
+					onClick={() => scrollToYear(year)}
+				>
+					<MonthTooltip>
+						{year}
+					</MonthTooltip>
+				</Month>
+			))}
 		</MonthsContainer>
 	);
 });
@@ -56,9 +53,12 @@ const OptimizedDates = lifecycle({
 	</DatesContainer>
 ));
 
+const getYears = (items) => items
+	.map(({ year }) => year)
+	.filter((_, idx) => idx % Math.round(items.length / 5) === 0);
+
 const Minimap = ({
 	items,
-	years,
 	isLoading,
 	activeYear,
 }) => (
@@ -67,7 +67,7 @@ const Minimap = ({
 			<Content>
 				<OptimizedMonths items={items} activeYear={activeYear} />
 			</Content>
-			{!isLoading && <OptimizedDates years={years} />}
+			{!isLoading && <OptimizedDates years={getYears(items)} />}
 		</InnerContainer>
 	</OuterContainer>
 );
@@ -77,7 +77,6 @@ Minimap.propTypes = {
 		id: PropTypes.string.isRequired,
 		density: PropTypes.number.isRequired,
 	})),
-	years: PropTypes.arrayOf(PropTypes.string),
 	isLoading: PropTypes.bool,
 	activeYear: PropTypes.string,
 };
@@ -85,14 +84,6 @@ Minimap.propTypes = {
 Minimap.defaultProps = {
 	isLoading: false,
 	items: [],
-	years: [
-		'1975',
-		'1980',
-		'1985',
-		'1989',
-		'1994',
-		'1999',
-	],
 	activeYear: undefined,
 };
 

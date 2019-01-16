@@ -88,6 +88,7 @@ export const DatesContainer = styled(Content)`
 	width: 100%;
 	padding: 0 1rem;
 	color: ${({ theme }) => theme.gray500};
+	pointer-events: none;
 `;
 
 export const Date = styled.div`
