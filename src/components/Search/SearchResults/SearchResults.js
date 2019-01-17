@@ -5,7 +5,10 @@ import {
 	Content,
 	Results,
 	Result,
+	LoadingResult,
 } from './styles';
+
+const loadingResults = Object.keys([...Array(3)]);
 
 const SearchResults = ({
 	searchQuery,
@@ -18,9 +21,11 @@ const SearchResults = ({
 	<Container show={!!searchQuery}>
 		<Content>
 			{activeTab}
-			{isLoading}
 			<Results>
-				{searchResults.map(({ id, title, type }) => (
+				{isLoading && loadingResults.map((key) => (
+					<LoadingResult key={key}>&nbsp;</LoadingResult>
+				))}
+				{!isLoading && searchResults.map(({ id, title, type }) => (
 					<Result
 						key={id}
 						type={type}

@@ -2,6 +2,7 @@ import { compose, withState, withHandlers } from 'recompose';
 import { withApollo } from 'react-apollo';
 import gql from 'graphql-tag';
 import { sortBy, prop } from 'ramda';
+import debounce from 'lodash.debounce';
 import { withLoading, withErrors, getErrorHandler } from '../../utils/hocUtil';
 import Search from './Search';
 
@@ -75,8 +76,17 @@ const handleSearchResults = (props) => ({ data }) => {
 
 	stopLoading();
 	setSearchResults(searchResults);
-	setActiveResult(searchResults[0].id);
+	setActiveResult(searchResults.length ? searchResults[0].id : undefined);
 };
+
+const performQuery = debounce((client, newSearchQuery, props) => {
+	client.query({
+		query: SEARCH_QUERY,
+		variables: { searchQuery: newSearchQuery },
+	})
+		.then(handleSearchResults(props))
+		.catch(getErrorHandler(props));
+}, 350);
 
 export default compose(
 	withApollo,
@@ -100,12 +110,7 @@ export default compose(
 			if (searchQuery && newSearchQuery.includes(searchQuery) && searchResults.length === 0) return;
 
 			startLoading();
-			client.query({
-				query: SEARCH_QUERY,
-				variables: { searchQuery: newSearchQuery },
-			})
-				.then(handleSearchResults(props))
-				.catch(getErrorHandler(props));
+			performQuery(client, newSearchQuery, props);
 		},
 	}),
 )(Search);

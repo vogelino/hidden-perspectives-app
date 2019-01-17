@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 export const Container = styled.div`
 	width: 100vw;
@@ -45,5 +45,31 @@ export const Result = styled.li`
 		border-color: ${({ theme }) => theme.primary};
 		box-shadow: 0 6px 20px -6px rgba(0, 0, 0, 0.2),
 			inset 0 0 0 1px ${({ theme }) => theme.primary};
+	}
+`;
+
+const pulse = keyframes`
+	0% {
+		opacity: 1;
+	}
+	50% {
+		opacity: .3;
+	}
+	100% {
+		opacity: 1;
+	}
+`;
+
+export const LoadingResult = styled(Result)`
+	background-image: none;
+	animation: ${pulse} 1.2s infinite;
+	animation-timing-function: ease-in-out;
+
+	&:nth-child(2) {
+		animation-delay: 200ms;
+	}
+
+	&:nth-child(3) {
+		animation-delay: 400ms;
 	}
 `;
