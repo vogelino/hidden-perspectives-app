@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { isEmpty } from 'ramda';
-import BubbleChartTooltip from './BubbleChartTooltip';
 import { getInitials } from '../../utils/stringUtil';
 import { isHovered } from '../../utils/timelineUtil';
 import {
@@ -12,7 +11,32 @@ import {
 	BubbleLink,
 	Text,
 } from './styles';
+import BubbleChartTooltip from './BubbleChartTooltip';
 import LoadingIndicator from '../LoadingIndicator';
+
+const Tooltips = ({
+	bubbleLayoutItems,
+	hoveredElement,
+}) => bubbleLayoutItems.map((bubbleData) => {
+	const {
+		data,
+		x,
+		y,
+	} = bubbleData;
+
+	const { name } = data;
+	const hovered = isHovered(data, hoveredElement, 'stakeholder');
+
+	return (
+		<BubbleChartTooltip
+			key={`tooltip-${name}`}
+			visible={hovered}
+			x={x}
+			y={y}
+			text={name}
+		/>
+	);
+});
 
 const Bubbles = ({
 	bubbleLayoutItems,
@@ -29,7 +53,7 @@ const Bubbles = ({
 
 	const { name, id, isActive } = data;
 	const hovered = isHovered(data, hoveredElement, 'stakeholder');
-	const maxFontSize = 16;
+	const maxFontSize = 12;
 	const roundedRadius = Math.round(r);
 	const fontSize = roundedRadius <= maxFontSize ? roundedRadius : maxFontSize;
 
@@ -93,7 +117,10 @@ const BubbleChart = ({
 		<BubblesLoadingContainer isLoading={isLoading}>
 			<LoadingIndicator />
 		</BubblesLoadingContainer>
-		<BubbleChartTooltip hoveredElement={hoveredElement} />
+		<Tooltips
+			bubbleLayoutItems={bubbleLayoutItems}
+			hoveredElement={hoveredElement}
+		/>
 	</BubbleChartContainer>
 );
 

@@ -2,27 +2,33 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Tooltip } from './styles';
 
-const BubbleChartTooltip = ({ text, visible, position }) => (
-	<Tooltip visible={visible} position={position}>{text}</Tooltip>
+const BubbleChartTooltip = ({
+	text,
+	visible,
+	x,
+	y,
+}) => (
+	<Tooltip
+		visible={visible}
+		x={x}
+		y={y}
+	>
+		{text}
+	</Tooltip>
 );
 
 BubbleChartTooltip.propTypes = {
-	position: PropTypes.shape({
-		x: PropTypes.number,
-		y: PropTypes.number,
-	}),
+	x: PropTypes.number,
+	y: PropTypes.number,
 	text: PropTypes.string,
 	visible: PropTypes.bool,
 };
 
 BubbleChartTooltip.defaultProps = {
-	position: {
-		x: 0,
-		y: 0,
-	},
+	x: 0,
+	y: 0,
 	text: '',
 	visible: false,
 };
 
 export default BubbleChartTooltip;
-

@@ -2,8 +2,9 @@ import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
 
 export const BubbleChartContainer = styled.div`
-    border-radius: 50%;
-    height: 100%;
+    border: 2px solid red;
+    // border-radius: 50%;
+    height: auto;
     position: absolute;
     width: 100%;
 
@@ -14,26 +15,12 @@ export const BubbleChartContainer = styled.div`
     }
 `;
 
-export const Tooltip = styled.div`
-    background: ${({ theme }) => theme.primary};
-    border-radius: 1rem;
-    font-size: .875rem;
-    line-height: 1.5rem;
-    left: ${({ position }) => position.x}px;
-    opacity: ${({ visible }) => (visible ? 1 : 0)};
-    padding: 0 .75rem;
-    pointer-events: none;
-    position: fixed;
-    top: ${({ position }) => position.y}px;
-    transform: translate(-50%, -50%);
-    transition: opacity 150ms ease-out;
-`;
-
 export const BubbleLink = styled(NavLink)`
     pointer-events: all;
 `;
 
 export const BubblesSvg = styled.svg`
+    border: 2px solid green;
     display: block;
     height: 100%;
     left: 50%;
@@ -61,7 +48,6 @@ export const Bubble = styled.circle`
     align-items: center;
     height: ${({ r }) => r * 2}px;
     fill: ${({ isHovered, theme }) => (isHovered ? theme.primaryLight : theme.gray200)};
-    left: ${({ x }) => x}px;
     opacity: ${({ isLoading }) => (isLoading ? 0 : 1)};
 `;
 
