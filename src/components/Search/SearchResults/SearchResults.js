@@ -11,9 +11,27 @@ import {
 	Tab,
 	TabHint,
 	Key,
+	Highlight,
 } from './styles';
 
 const loadingResults = Object.keys([...Array(3)]);
+
+const getFormattedTitle = (title, searchQuery) => {
+	const index = title.toLowerCase().indexOf(searchQuery.toLowerCase());
+	let formattedTitle = title;
+
+	if (index >= 0) {
+		formattedTitle = (
+			<span>
+				{title.substring(0, index)}
+				<Highlight>{title.substring(index, index + searchQuery.length)}</Highlight>
+				{title.substring(index + searchQuery.length)}
+			</span>
+		);
+	}
+
+	return <span>{formattedTitle}</span>;
+};
 
 const SearchResults = ({
 	searchQuery,
@@ -56,7 +74,7 @@ const SearchResults = ({
 						className={activeResult === id && 'highlighted'}
 						onMouseEnter={() => setActiveResult(id)}
 					>
-						{title}
+						{getFormattedTitle(title, searchQuery)}
 					</Result>
 				))}
 			</Results>

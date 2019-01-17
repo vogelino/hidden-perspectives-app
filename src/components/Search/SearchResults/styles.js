@@ -129,3 +129,10 @@ export const Key = styled.span`
 		0 0 2px rgba(0, 0, 0, .06);
 	display: inline-block;
 `;
+
+export const Highlight = styled.span`
+	background: ${({ theme }) => theme.primaryLight};
+	color: ${({ theme }) => theme.primaryDark};
+	padding: 0 0.25rem;
+	border-radius: 2px;
+`;
