@@ -17,22 +17,25 @@ import LoadingIndicator from '../LoadingIndicator';
 const Tooltips = ({
 	bubbleLayoutItems,
 	hoveredElement,
+	diameter,
 }) => bubbleLayoutItems.map((bubbleData) => {
 	const {
 		data,
 		x,
 		y,
+		r,
 	} = bubbleData;
 
 	const { name } = data;
 	const hovered = isHovered(data, hoveredElement, 'stakeholder');
+	const toRelativePosition = (pos) => pos * 100 / diameter;
 
 	return (
 		<BubbleChartTooltip
 			key={`tooltip-${name}`}
 			visible={hovered}
-			x={x}
-			y={y}
+			x={toRelativePosition(x)}
+			y={toRelativePosition(y + r)}
 			text={name}
 		/>
 	);
@@ -120,6 +123,7 @@ const BubbleChart = ({
 		<Tooltips
 			bubbleLayoutItems={bubbleLayoutItems}
 			hoveredElement={hoveredElement}
+			diameter={diameter}
 		/>
 	</BubbleChartContainer>
 );
