@@ -20,6 +20,7 @@ export const Content = styled.div`
 export const Results = styled.ul`
 	list-style: none;
 	padding: 0;
+	margin: 0;
 `;
 
 export const Result = styled.li`
@@ -71,5 +72,35 @@ export const LoadingResult = styled(Result)`
 
 	&:nth-child(3) {
 		animation-delay: 400ms;
+	}
+`;
+
+export const TabsContainer = styled.div`
+	padding: 1.5rem 0 1rem 0;
+`;
+
+export const Tabs = styled.ul`
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	font-size: .875rem;
+	line-height: .875rem;
+	color: ${({ theme }) => theme.gray600};
+`;
+
+export const Tab = styled.li`
+	display: inline-block;
+	margin-right: 1rem;
+	transition: color 200ms ease-out;
+	cursor: default;
+
+	&.active,
+	&:hover {
+		color: black;
+	}
+
+	&:not(.active):hover {
+		text-decoration: underline;
+		cursor: pointer;
 	}
 `;

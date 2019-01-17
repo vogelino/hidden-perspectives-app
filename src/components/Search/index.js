@@ -95,6 +95,7 @@ export default compose(
 	withState('searchQuery', 'setSearchQuery', ''),
 	withState('searchResults', 'setSearchResults', []),
 	withState('activeResult', 'setActiveResult', undefined),
+	withState('activeTab', 'setActiveTab', 'all'),
 	withHandlers({
 		onSearch: (props) => (newSearchQuery) => {
 			const {
@@ -107,7 +108,10 @@ export default compose(
 
 			setSearchQuery(newSearchQuery);
 
-			if (searchQuery && newSearchQuery.includes(searchQuery) && searchResults.length === 0) return;
+			const prevQueryAlreadyGaveNoResults = searchQuery
+				&& newSearchQuery.includes(searchQuery)
+				&& searchResults.length === 0;
+			if (prevQueryAlreadyGaveNoResults) return;
 
 			startLoading();
 			performQuery(client, newSearchQuery, props);
