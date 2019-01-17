@@ -10,6 +10,7 @@ export const Container = styled.div`
 	transition: opacity 200ms ease-out;
 	opacity: ${({ show }) => (show ? 1 : 0)};
 	text-align: left;
+	${({ show }) => (!show && 'pointer-events: none;')}
 `;
 
 export const Content = styled.div`
