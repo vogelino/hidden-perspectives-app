@@ -18,8 +18,7 @@ const SEARCH_QUERY = gql`
 					} }
 				]
 			}
-			orderBy: eventStartDate_ASC
-			first: 5
+			first: 10
 		) {
 			id
 			eventTitle
@@ -34,8 +33,7 @@ const SEARCH_QUERY = gql`
 					} }
 				]
 			}
-			orderBy: documentCreationDate_ASC
-			first: 5
+			first: 10
 		) {
 			id
 			documentTitle
@@ -47,8 +45,7 @@ const SEARCH_QUERY = gql`
 					{ stakeholderDescription_contains: $searchQuery }
 				]
 			}
-			orderBy: stakeholderFullName_ASC
-			first: 5
+			first: 10
 		) {
 			id
 			stakeholderFullName
@@ -65,14 +62,19 @@ const getElementParser = (type, titleKey) => (items) => items.map((item) => ({
 const parseDocuments = getElementParser('document', 'documentTitle');
 const parseEvents = getElementParser('event', 'eventTitle');
 const parseStakeholders = getElementParser('stakeholder', 'stakeholderFullName');
+const contains = (container, containment) => container.toLowerCase()
+	.includes(containment.toLowerCase());
 
-const handleSearchResults = (props) => ({ data }) => {
+const handleSearchResults = (props, value) => ({ data }) => {
 	const { stopLoading, setSearchResults, setActiveResult } = props;
 	const documents = parseDocuments(data.allDocuments);
 	const events = parseEvents(data.allEvents);
 	const stakeholders = parseStakeholders(data.allStakeholders);
 	const unorderedSearchResults = [...stakeholders, ...documents, ...events];
-	const searchResults = sortBy(prop('title'), unorderedSearchResults);
+	const allSearchResults = sortBy(prop('title'), unorderedSearchResults);
+	const withHighlights = allSearchResults.filter(({ title }) => contains(title, value));
+	const withoutHighlights = allSearchResults.filter(({ title }) => !contains(title, value));
+	const searchResults = [...withHighlights, ...withoutHighlights];
 
 	stopLoading();
 	setSearchResults(searchResults);
@@ -85,8 +87,8 @@ const performQuery = debounce((client, props) => {
 		query: SEARCH_QUERY,
 		variables: { searchQuery: value },
 	})
-		.then(handleSearchResults(props))
-		.catch(getErrorHandler(props));
+		.then(handleSearchResults(props, value))
+		.catch(getErrorHandler(props, value));
 }, 350, { leading: false, trailing: true });
 
 export default compose(
