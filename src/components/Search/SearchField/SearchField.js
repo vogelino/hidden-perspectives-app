@@ -16,7 +16,7 @@ const SearchField = ({
 		{searchQuery && (
 			<ClearButton
 				onClick={() => onSearch('')}
-				spellcheck="false"
+				spellCheck="false"
 			>
 				{'✕'}
 			</ClearButton>

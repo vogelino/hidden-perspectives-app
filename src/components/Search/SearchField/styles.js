@@ -1,6 +1,10 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
+	position: relative;
+	height: 100%;
+	width: 100%;
+	z-index: 2;
 `;
 
 export const Field = styled.input`

@@ -1,32 +1,38 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import SearchField from './SearchField';
-import SearchResults from './SearchResults';
 import { Container } from './styles';
 
-const Search = (props) => (
-	<Container>
-		<SearchField {...props} />
-		<SearchResults {...props} />
+const SearchResults = ({
+	searchQuery,
+	isLoading,
+	searchResults,
+	activeTab,
+}) => (
+	<Container show={!!searchQuery}>
+		{activeTab}
+		{isLoading}
+		{searchResults.map(({ id, title }) => (
+			<span key={id}>{title}</span>
+		))}
 	</Container>
 );
 
-Search.propTypes = {
+SearchResults.propTypes = {
 	searchQuery: PropTypes.string,
-	onSearch: PropTypes.func,
 	isLoading: PropTypes.bool,
 	searchResults: PropTypes.arrayOf(PropTypes.shape({
 		id: PropTypes.string.isRequired,
 		title: PropTypes.string.isRequired,
 		type: PropTypes.oneOf(['event', 'document', 'stakeholder', 'location']).isRequired,
 	})),
+	activeTab: PropTypes.oneOf(['all', 'event', 'document', 'stakeholder', 'location']),
 };
 
-Search.defaultProps = {
+SearchResults.defaultProps = {
 	searchQuery: '',
-	onSearch: () => {},
-	isLoading: false,
+	isLoading: true,
 	searchResults: [],
+	activeTab: 'all',
 };
 
-export default Search;
+export default SearchResults;
