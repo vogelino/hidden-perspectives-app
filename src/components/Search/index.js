@@ -66,7 +66,7 @@ const parseEvents = getElementParser('event', 'eventTitle');
 const parseStakeholders = getElementParser('stakeholder', 'stakeholderFullName');
 
 const handleSearchResults = (props) => ({ data }) => {
-	const { stopLoading, setSearchResults } = props;
+	const { stopLoading, setSearchResults, setActiveResult } = props;
 	const documents = parseDocuments(data.allDocuments);
 	const events = parseEvents(data.allEvents);
 	const stakeholders = parseStakeholders(data.allStakeholders);
@@ -75,6 +75,7 @@ const handleSearchResults = (props) => ({ data }) => {
 
 	stopLoading();
 	setSearchResults(searchResults);
+	setActiveResult(searchResults[0].id);
 };
 
 export default compose(
@@ -83,6 +84,7 @@ export default compose(
 	withErrors,
 	withState('searchQuery', 'setSearchQuery', ''),
 	withState('searchResults', 'setSearchResults', []),
+	withState('activeResult', 'setActiveResult', undefined),
 	withHandlers({
 		onSearch: (props) => (newSearchQuery) => {
 			const {
@@ -95,7 +97,7 @@ export default compose(
 
 			setSearchQuery(newSearchQuery);
 
-			if (newSearchQuery.includes(searchQuery) && searchResults.length === 0) return;
+			if (searchQuery && newSearchQuery.includes(searchQuery) && searchResults.length === 0) return;
 
 			startLoading();
 			client.query({

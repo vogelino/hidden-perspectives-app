@@ -16,7 +16,7 @@ export const Field = styled.input`
 	border: 1px solid ${({ theme }) => theme.commonBorderColor};
 	border-top-color: transparent;
 	border-bottom-color: transparent;
-	background: ${({ value }) => (value ? 'none' : 'url("/loup.svg")')};
+	background: ${({ value }) => (value ? 'none' : 'url("/icons/loup.svg")')};
 	background-position: 3.5rem center;
 	background-size: 1.5rem 1.5rem;
 	background-repeat: no-repeat;
