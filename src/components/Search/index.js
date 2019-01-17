@@ -2,6 +2,7 @@ import { compose, withState, withHandlers } from 'recompose';
 import { withApollo } from 'react-apollo';
 import gql from 'graphql-tag';
 import { sortBy, prop } from 'ramda';
+import { withRouter } from 'react-router-dom';
 import debounce from 'lodash.debounce';
 import { withLoading, withErrors, getErrorHandler } from '../../utils/hocUtil';
 import Search from './Search';
@@ -95,6 +96,7 @@ export default compose(
 	withApollo,
 	withLoading,
 	withErrors,
+	withRouter,
 	withState('searchQuery', 'setSearchQuery', ''),
 	withState('searchResults', 'setSearchResults', []),
 	withState('activeResult', 'setActiveResult', undefined),
@@ -118,6 +120,10 @@ export default compose(
 
 			startLoading();
 			performQuery(client, props);
+		},
+		onResultClick: ({ setSearchQuery, history }) => ({ id, type }) => {
+			setSearchQuery('');
+			history.push(`/${type}/context/${id}`);
 		},
 	}),
 )(Search);

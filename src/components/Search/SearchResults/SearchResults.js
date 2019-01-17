@@ -43,6 +43,7 @@ const SearchResults = ({
 	activeResult,
 	setActiveResult,
 	setActiveTab,
+	onResultClick,
 }) => (searchResults.length === 0 ? (
 	<Container show={!!searchQuery}>
 		<Content>
@@ -82,6 +83,7 @@ const SearchResults = ({
 						type={type}
 						className={activeResult === id && 'highlighted'}
 						onMouseEnter={() => setActiveResult(id)}
+						onClick={() => onResultClick({ id, type })}
 					>
 						{getFormattedTitle(title, searchQuery)}
 					</Result>
@@ -97,6 +99,7 @@ SearchResults.propTypes = {
 	isLoading: PropTypes.bool,
 	setActiveResult: PropTypes.func,
 	setActiveTab: PropTypes.func,
+	onResultClick: PropTypes.func,
 	searchResults: PropTypes.arrayOf(PropTypes.shape({
 		id: PropTypes.string.isRequired,
 		title: PropTypes.string.isRequired,
@@ -117,6 +120,7 @@ SearchResults.defaultProps = {
 	activeResult: undefined,
 	setActiveResult: () => {},
 	setActiveTab: () => {},
+	onResultClick: () => {},
 	tabs: [
 		{ key: 'all', title: 'All' },
 		{ key: 'event', title: 'Events' },
