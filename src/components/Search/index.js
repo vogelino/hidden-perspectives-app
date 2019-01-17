@@ -79,14 +79,15 @@ const handleSearchResults = (props) => ({ data }) => {
 	setActiveResult(searchResults.length ? searchResults[0].id : undefined);
 };
 
-const performQuery = debounce((client, newSearchQuery, props) => {
+const performQuery = debounce((client, props) => {
+	const { value } = document.getElementById('search-bar');
 	client.query({
 		query: SEARCH_QUERY,
-		variables: { searchQuery: newSearchQuery },
+		variables: { searchQuery: value },
 	})
 		.then(handleSearchResults(props))
 		.catch(getErrorHandler(props));
-}, 350);
+}, 350, { leading: false, trailing: true });
 
 export default compose(
 	withApollo,
@@ -114,7 +115,7 @@ export default compose(
 			if (prevQueryAlreadyGaveNoResults) return;
 
 			startLoading();
-			performQuery(client, newSearchQuery, props);
+			performQuery(client, props);
 		},
 	}),
 )(Search);

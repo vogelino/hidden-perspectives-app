@@ -12,6 +12,7 @@ const SearchField = ({
 			value={searchQuery}
 			placeholder="Search for documents, events, locations or participants"
 			onChange={(evt) => onSearch(evt.target.value)}
+			id="search-bar"
 		/>
 		{searchQuery && (
 			<ClearButton
