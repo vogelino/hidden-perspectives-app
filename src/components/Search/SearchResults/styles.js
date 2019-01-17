@@ -136,3 +136,11 @@ export const Highlight = styled.span`
 	padding: 0 0.25rem;
 	border-radius: 2px;
 `;
+
+export const NoResults = styled.div`
+	text-align: center;
+	font-size: 1.5rem;
+	line-height: 2rem;
+	color: ${({ theme }) => theme.gray600};
+	padding: 3rem 0;
+`;

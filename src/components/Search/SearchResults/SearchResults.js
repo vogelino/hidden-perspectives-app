@@ -12,6 +12,7 @@ import {
 	TabHint,
 	Key,
 	Highlight,
+	NoResults,
 } from './styles';
 
 const loadingResults = Object.keys([...Array(3)]);
@@ -42,7 +43,15 @@ const SearchResults = ({
 	activeResult,
 	setActiveResult,
 	setActiveTab,
-}) => (
+}) => (searchResults.length === 0 ? (
+	<Container show={!!searchQuery}>
+		<Content>
+			<NoResults>
+				{`No results found for “${searchQuery}”.`}
+			</NoResults>
+		</Content>
+	</Container>
+) : (
 	<Container show={!!searchQuery}>
 		<Content>
 			<TabsContainer>
@@ -80,7 +89,7 @@ const SearchResults = ({
 			</Results>
 		</Content>
 	</Container>
-);
+));
 
 SearchResults.propTypes = {
 	searchQuery: PropTypes.string,
