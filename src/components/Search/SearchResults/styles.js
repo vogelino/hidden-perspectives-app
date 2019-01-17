@@ -77,6 +77,7 @@ export const LoadingResult = styled(Result)`
 
 export const TabsContainer = styled.div`
 	padding: 1.5rem 0 1rem 0;
+	position: relative;
 `;
 
 export const Tabs = styled.ul`
@@ -103,4 +104,28 @@ export const Tab = styled.li`
 		text-decoration: underline;
 		cursor: pointer;
 	}
+`;
+
+export const TabHint = styled.span`
+	padding: .4rem .625rem;
+	border-radius: 1rem;
+	background: ${({ theme }) => theme.gray300};
+	color: ${({ theme }) => theme.gray600};
+	font-size: .75rem;
+	line-height: .625rem;
+	position: absolute;
+	top: 1rem;
+	right: 0;
+`;
+
+export const Key = styled.span`
+	padding: 4px 3px 0;
+	background: white;
+	color: black;
+	border-radius: 2px;
+	margin: 0 0.25rem;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, .12),
+		0 2px 2px rgba(0, 0, 0, .08),
+		0 0 2px rgba(0, 0, 0, .06);
+	display: inline-block;
 `;

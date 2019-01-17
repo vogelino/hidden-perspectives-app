@@ -9,6 +9,8 @@ import {
 	TabsContainer,
 	Tabs,
 	Tab,
+	TabHint,
+	Key,
 } from './styles';
 
 const loadingResults = Object.keys([...Array(3)]);
@@ -37,6 +39,11 @@ const SearchResults = ({
 						</Tab>
 					))}
 				</Tabs>
+				<TabHint>
+					{'Press Tab'}
+					<Key>⇥</Key>
+					{'to toggle through categories'}
+				</TabHint>
 			</TabsContainer>
 			<Results>
 				{isLoading && loadingResults.map((key) => (
