@@ -44,7 +44,7 @@ const SearchResults = ({
 	setActiveResult,
 	setActiveTab,
 	onResultClick,
-}) => (searchResults.length === 0 ? (
+}) => (searchResults.length === 0 && !isLoading ? (
 	<Container show={!!searchQuery}>
 		<Content>
 			<NoResults>

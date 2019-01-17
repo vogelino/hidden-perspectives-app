@@ -1,7 +1,18 @@
-import { compose, withState, withHandlers } from 'recompose';
+import {
+	compose,
+	withState,
+	withHandlers,
+	lifecycle,
+	mapProps,
+} from 'recompose';
+import {
+	propEq,
+	sortBy,
+	prop,
+	findIndex,
+} from 'ramda';
 import { withApollo } from 'react-apollo';
 import gql from 'graphql-tag';
-import { sortBy, prop } from 'ramda';
 import { withRouter } from 'react-router-dom';
 import debounce from 'lodash.debounce';
 import { withLoading, withErrors, getErrorHandler } from '../../utils/hocUtil';
@@ -98,16 +109,31 @@ export default compose(
 	withErrors,
 	withRouter,
 	withState('searchQuery', 'setSearchQuery', ''),
-	withState('searchResults', 'setSearchResults', []),
+	withState('allSearchResults', 'setSearchResults', []),
 	withState('activeResult', 'setActiveResult', undefined),
 	withState('activeTab', 'setActiveTab', 'all'),
+	mapProps((props) => {
+		const searchResults = props.activeTab === 'all'
+			? props.allSearchResults
+			: props.allSearchResults.filter(propEq('type', props.activeTab));
+		return {
+			...props,
+			searchResults,
+			tabs: [
+				{ key: 'all', title: 'All' },
+				{ key: 'event', title: 'Events' },
+				{ key: 'document', title: 'Documents' },
+				{ key: 'stakeholder', title: 'Participants' },
+			],
+		};
+	}),
 	withHandlers({
 		onSearch: (props) => (newSearchQuery) => {
 			const {
 				setSearchQuery,
 				startLoading,
 				searchQuery,
-				searchResults,
+				allSearchResults,
 				client,
 			} = props;
 
@@ -115,7 +141,7 @@ export default compose(
 
 			const prevQueryAlreadyGaveNoResults = searchQuery
 				&& newSearchQuery.includes(searchQuery)
-				&& searchResults.length === 0;
+				&& allSearchResults.length === 0;
 			if (prevQueryAlreadyGaveNoResults) return;
 
 			startLoading();
@@ -124,6 +150,61 @@ export default compose(
 		onResultClick: ({ setSearchQuery, history }) => ({ id, type }) => {
 			setSearchQuery('');
 			history.push(`/${type}/context/${id}`);
+		},
+		onTab: (props) => (evt) => {
+			evt.preventDefault();
+			const {
+				setActiveResult,
+				activeTab,
+				setActiveTab,
+				tabs,
+				allSearchResults,
+			} = props;
+			const indexOfCurrent = findIndex(propEq('key', activeTab), tabs);
+			const newIndex = indexOfCurrent + 1;
+			if (newIndex > (tabs.length - 1)) {
+				setActiveTab(tabs[0].key);
+				return;
+			}
+			const newTab = tabs[newIndex].key;
+			setActiveTab(newTab);
+			if (newTab === 'all') return;
+			const filteredResults = allSearchResults.filter(propEq('type', newTab));
+			if (filteredResults.length) setActiveResult(filteredResults[0].id);
+		},
+		onArrow: (props) => (evt) => {
+			evt.preventDefault();
+			const { activeResult, setActiveResult, searchResults } = props;
+			const indexOfCurrent = findIndex(propEq('id', activeResult), searchResults);
+			const newIndex = indexOfCurrent + (evt.code === 'ArrowDown' ? 1 : -1);
+			if (newIndex > (searchResults.length - 1)) {
+				setActiveResult(searchResults[0].id);
+				return;
+			}
+			if (newIndex < 0) {
+				setActiveResult(searchResults[searchResults.length - 1].id);
+				return;
+			}
+			setActiveResult(searchResults[newIndex].id);
+		},
+		onEnter: (props) => (evt) => {
+			evt.preventDefault();
+			const { history, searchResults, activeResult } = props;
+			const activeResultObj = searchResults.find(propEq('id', activeResult));
+			if (!activeResultObj) return;
+			const { id, type } = activeResultObj;
+			history.push(`/${type}/context/${id}`);
+		},
+	}),
+	lifecycle({
+		componentDidMount() {
+			const { onTab, onArrow, onEnter } = this.props;
+			document.addEventListener('keydown', (evt) => {
+				if (evt.code === 'Tab') return onTab(evt);
+				if (evt.code === 'Enter') return onEnter(evt);
+				if (evt.code === 'ArrowDown' || evt.code === 'ArrowUp') return onArrow(evt);
+				return undefined;
+			});
 		},
 	}),
 )(Search);

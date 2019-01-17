@@ -31,7 +31,7 @@ export const Result = styled.li`
 	background: white;
 	border-radius: .25rem;
 	font-size: .875rem;
-	line-height: .875rem;
+	line-height: 1rem;
 	border: 1px solid ${({ theme }) => theme.commonBorderColor};
 	cursor: pointer;
 	background-image: url("${({ type }) => `/icons/${type}.svg`}");
