@@ -32,11 +32,11 @@ export const Content = styled.div`
 	margin: ${MINIMAP_PADDING}px 0;
 `;
 
-export const MonthsContainer = styled(Content)`
+export const YearsContainer = styled(Content)`
 	padding-left: 1rem;
 `;
 
-export const MonthTooltip = styled.span`
+export const YearTooltip = styled.span`
 	padding: .5rem .625rem .2rem .625rem;
 	font-size: .75rem;
 	line-height: .75rem;
@@ -51,7 +51,7 @@ export const MonthTooltip = styled.span`
 	transition: opacity 200ms ease-out, transform 200ms ease-out;
 `;
 
-export const Month = styled.div.attrs({
+export const Year = styled.div.attrs({
 	style: ({ theme, density }) => ({
 		background: mix(density, theme.gray100, theme.gray900),
 	}),
@@ -72,7 +72,7 @@ export const Month = styled.div.attrs({
 		z-index: 10;
 	}
 
-	&:hover ${MonthTooltip} {
+	&:hover ${YearTooltip} {
 		transform: translateY(-50%);
 		opacity: 1;
 	}

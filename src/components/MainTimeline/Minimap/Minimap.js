@@ -5,11 +5,11 @@ import {
 	Content,
 	InnerContainer,
 	OuterContainer,
-	MonthsContainer,
-	Month,
+	YearsContainer,
+	Year,
 	Date,
 	DatesContainer,
-	MonthTooltip,
+	YearTooltip,
 } from './styles';
 
 const scrollToYear = (year) => {
@@ -17,29 +17,29 @@ const scrollToYear = (year) => {
 	yearElement.scrollIntoView();
 };
 
-const OptimizedMonths = lifecycle({
+const OptimizedYears = lifecycle({
 	shouldComponentUpdate({ items, activeYear }) {
 		return items.length !== this.props.items.length
 			|| activeYear !== this.props.activeYear;
 	},
 })(({ items, activeYear }) => {
-	const monthHeight = (100 / items.length);
+	const yearHeight = (100 / items.length);
 	return (
-		<MonthsContainer>
+		<YearsContainer>
 			{items.map(({ id, year, density }) => (
-				<Month
+				<Year
 					key={id}
 					density={density}
-					height={monthHeight}
+					height={yearHeight}
 					isActive={activeYear === year}
 					onClick={() => scrollToYear(year)}
 				>
-					<MonthTooltip>
+					<YearTooltip>
 						{year}
-					</MonthTooltip>
-				</Month>
+					</YearTooltip>
+				</Year>
 			))}
-		</MonthsContainer>
+		</YearsContainer>
 	);
 });
 
@@ -65,7 +65,7 @@ const Minimap = ({
 	<OuterContainer>
 		<InnerContainer>
 			<Content>
-				<OptimizedMonths items={items} activeYear={activeYear} />
+				<OptimizedYears items={items} activeYear={activeYear} />
 			</Content>
 			{!isLoading && <OptimizedDates years={getYears(items)} />}
 		</InnerContainer>
