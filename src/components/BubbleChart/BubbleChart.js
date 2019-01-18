@@ -54,8 +54,8 @@ const Bubbles = ({
 		y,
 		r,
 	} = bubbleData;
-
 	const { name, id, isActive } = data;
+
 	const hovered = isHovered(data, hoveredElement, 'stakeholder');
 	const maxFontSize = 12;
 	const roundedRadius = Math.round(r);

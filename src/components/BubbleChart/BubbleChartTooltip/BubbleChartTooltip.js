@@ -32,7 +32,7 @@ BubbleChartTooltip.defaultProps = {
 	y: 0,
 	text: '',
 	visible: false,
-	value: 1,
+	value: 0,
 };
 
 export default BubbleChartTooltip;
