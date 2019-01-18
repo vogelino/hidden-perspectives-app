@@ -58,7 +58,7 @@ export const Month = styled.div.attrs({
 })`
 	width: 1rem;
 	height: ${({ height }) => `${height}%`};
-	z-index: ${({ isActive }) => (isActive ? 10 : 1)};
+	z-index: ${({ isActive }) => (isActive ? 2 : 1)};
 	border-radius: ${({ isActive }) => (isActive ? 1 : 0)}px;
 	position: relative;
 	transition: z-index 100ms step-end, box-shadow 200ms ease-out, border-radius 200ms ease-out;
