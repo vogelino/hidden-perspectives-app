@@ -30,7 +30,6 @@ export const ListElement = styled.li`
 export const Title = styled.h1`
 	font-size: 18px;
 	line-height: 24px;
-	font-weight: bold;
 	margin: 0;
 `;
 

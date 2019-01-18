@@ -1,11 +1,4 @@
 import styled, { css } from 'styled-components';
-import {
-	SingleDocumentPill as OriginalSingleDocumentPill,
-	MultipleDocumentsPill as OriginalMultipleDocumentsPill,
-	SingleEventPill as OriginalSingleEventPill,
-	MultipleEventsPill as OriginalMultipleEventsPill,
-} from '../MainTimeline/styles';
-
 
 export const CircleContainer = styled.div`
 	align-items: center;
@@ -41,10 +34,6 @@ export const ItemCircle = styled.circle`
 	fill: ${({ theme }) => theme.gray900};
 `;
 
-export const Document = styled.foreignObject`
-	position: relative;
-`;
-
 export const LegendObject = styled.foreignObject`
 	text-align: right;
 `;
@@ -64,28 +53,26 @@ export const DocumentLegendContainer = styled.span`
 	${legendContainerCSS}
 `;
 
-export const SingleDocumentPill = styled(OriginalSingleDocumentPill)`
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
+export const Symbol = styled.span`
+	font-size: .875rem;
+	transform: scale(${({ children }) => (children === '▲' ? 0.7 : 1)});
+	color: ${({ theme }) => theme.gray500};
+	pointer-events: none;
+	width: .875rem;
+	height: .875rem;
+	float: left;
+	line-height: ${({ children }) => (children === '▲' ? '.625rem' : '.75rem')};
+	text-shadow: -2px -2px 0 white, 2px -2px 0 white, -2px 2px 0 white, 2px 2px 0 white;
 `;
 
-export const MultipleDocumentsPill = styled(OriginalMultipleDocumentsPill)`
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-`;
+export const Document = styled.foreignObject`
+	position: relative;
+	text-align: center;
+	cursor: pointer;
 
-export const SingleEventPill = styled(OriginalSingleEventPill)`
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-`;
-
-export const MultipleEventsPill = styled(OriginalMultipleEventsPill)`
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
+	&.hovered ${Symbol} {
+		color: ${({ theme }) => theme.primary};
+	}
 `;
 
 export const ConnectionLine = styled.line`
@@ -95,7 +82,9 @@ export const ConnectionLine = styled.line`
 
 export const BubbleChartContainer = styled.div`
 	height: 50%;
+	pointer-events: none;
 	position: relative;
 	width: 50%;
+	max-width: 350px;
 `;
 

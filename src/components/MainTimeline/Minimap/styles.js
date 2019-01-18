@@ -2,7 +2,17 @@ import styled from 'styled-components';
 import { mix, transparentize } from 'polished';
 import { MINIMAP_HEIGHT, MINIMAP_PADDING } from '../../../state/constants';
 
-export const Container = styled.div`
+export const OuterContainer = styled.div`
+	width: 6rem;
+	height: 100%;
+	position: fixed;
+	top: 4.5rem;
+	left: 0;
+	border-right: 1px solid ${({ theme }) => theme.commonBorderColor};
+	z-index: 1;
+`;
+
+export const InnerContainer = styled.div`
 	height: ${MINIMAP_HEIGHT + 4}px;
 	width: calc(6rem - 1px);
 	position: fixed;

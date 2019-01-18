@@ -6,8 +6,9 @@ const ContainerWithStickyLabel = ({
 	label,
 	children,
 	isYear,
+	setComponentRef,
 }) => (
-	<Container>
+	<Container ref={setComponentRef}>
 		<Label
 			isYear={isYear}
 			className={`timeline-item ${isYear ? 'timeline-year' : 'timeline-month'}`}
@@ -23,12 +24,14 @@ ContainerWithStickyLabel.propTypes = {
 	label: PropTypes.string,
 	children: PropTypes.node,
 	isYear: PropTypes.bool,
+	setComponentRef: PropTypes.func,
 };
 
 ContainerWithStickyLabel.defaultProps = {
 	label: '—',
 	children: null,
 	isYear: false,
+	setComponentRef: () => {},
 };
 
 export default ContainerWithStickyLabel;

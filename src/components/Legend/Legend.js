@@ -1,13 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { LegendLabel } from './styles';
+import { LegendLabel, MainTimelineContainer, Right } from './styles';
 
 export const DocumentLegend = ({ right }) => (
-	<LegendLabel symbol="■" right={right}>Documents</LegendLabel>
+	<LegendLabel right={right}>Documents</LegendLabel>
 );
 
 export const EventLegend = ({ right }) => (
 	<LegendLabel symbol="●" right={right}>Events</LegendLabel>
+);
+
+export const MainTimelineLegend = () => (
+	<MainTimelineContainer>
+		<DocumentLegend />
+		<Right>
+			<EventLegend />
+		</Right>
+	</MainTimelineContainer>
 );
 
 const legendProptypes = {

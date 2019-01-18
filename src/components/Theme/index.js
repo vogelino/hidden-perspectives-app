@@ -5,7 +5,11 @@ import { ThemeProvider, css } from 'styled-components';
 import { theme as originalTheme, th } from '@smooth-ui/core-sc';
 
 const colors = {
-	primary: '#FFCC44',
+	primary: '#F8B332',
+	primaryLight: '#FCDDA3',
+	primaryDark: '#924F00',
+	primaryDark10: transparentize(0.9, '#924F00'),
+	primaryDark25: transparentize(0.75, '#924F00'),
 	commonBorderColor: originalTheme.gray300,
 	usBlue: '#2523A0',
 	usRed: '#D7062C',
@@ -18,7 +22,7 @@ const selectTheme = {
 		...colors,
 		primary75: lighten(0.1, colors.primary),
 		primary50: lighten(0.1, colors.primary),
-		primary25: lighten(0.55, colors.primary),
+		primary25: colors.primaryLight,
 		danger: originalTheme.red,
 		dangerLight: lighten(0.1, originalTheme.red),
 		neutral0: originalTheme.white,
@@ -40,7 +44,7 @@ const buttons = {
 	btnPaddingY: '.5rem',
 	btnFontSize: '.875rem',
 	btnLineHeight: '.875rem',
-	btnFontWeight: 'bold',
+	btnFontWeight: 'normal',
 	btnBorderWidth: '1px',
 	btnPrimaryBackground: colors.primary,
 	btnSecondaryBackground: 'none',
@@ -51,7 +55,7 @@ const buttons = {
 };
 
 const typography = {
-	fontFamily: `"HP Sans", ${originalTheme.fontFamily}`,
+	fontFamily: `"Suisse Intl", ${originalTheme.fontFamily}`,
 	h1FontSize: '2.5rem',
 	h2FontSize: '2rem',
 	h3FontSize: '1.75rem',

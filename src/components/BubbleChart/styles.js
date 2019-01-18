@@ -3,36 +3,34 @@ import { NavLink } from 'react-router-dom';
 
 export const BubbleChartContainer = styled.div`
     border-radius: 50%;
-    height: 100%;
+    height: auto;
+    left: 50%;
     position: absolute;
-    width: 100%;
-`;
-
-export const Tooltip = styled.div`
-    background: ${({ theme }) => theme.primary};
-    border: 2px solid white;
-    border-radius: 1rem;
-    font-size: .875rem;
-    line-height: 1.5rem;
-    left: ${({ position }) => position.x}px;
-    opacity: ${({ visible }) => (visible ? 1 : 0)};
-    padding: 0 .75rem;
-    pointer-events: none;
-    position: fixed;
-    top: ${({ position }) => position.y}px;
+    top: 50%;
     transform: translate(-50%, -50%);
-    transition: opacity 150ms ease-out;
+    width: 100%;
+
+    &:before{
+        content: '';
+        display: block;
+        margin-top: 100%;
+    }
 `;
 
-export const BubbleLink = styled(NavLink)``;
+export const BubbleLink = styled(NavLink)`
+    pointer-events: all;
+`;
 
 export const BubblesSvg = styled.svg`
     display: block;
     height: 100%;
-    position: absolute;
-    width: auto;
-    max-width: 100%;
+    left: 50%;
     max-height: 100%;
+    max-width: 100%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: auto;
 `;
 
 export const BubblesLoadingContainer = styled.div`
@@ -49,21 +47,18 @@ export const BubblesLoadingContainer = styled.div`
 
 export const Bubble = styled.circle`
     align-items: center;
-    fill: ${({ isActive, theme }) => (isActive ? 'black' : theme.gray200)};
+    height: ${({ r }) => r * 2}px;
+    fill: ${({ isHovered, theme }) => (isHovered ? theme.primaryLight : theme.gray200)};
     opacity: ${({ isLoading }) => (isLoading ? 0 : 1)};
-    transition: fill 150ms ease-out;
-
-    &:hover {
-        fill: ${({ theme }) => theme.primary};
-    }
 `;
 
 export const Text = styled.text`
     alignment-baseline: central;
-    fill: ${({ isActive }) => (isActive ? 'white' : 'black')};
+    fill: ${({ isHovered, theme }) => (isHovered ? theme.primaryDark : theme.gray900)};
     font-size: ${({ fontSize }) => fontSize}px;
     line-height: ${({ fontSize }) => fontSize}px;
     opacity: ${({ isLoading }) => (isLoading ? 0 : 1)};
     pointer-events: none;
     text-anchor: middle;
+    transition: fill 400ms ease-out;
 `;

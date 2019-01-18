@@ -13,6 +13,7 @@ import {
 	has,
 	flatten,
 	union,
+	sortBy,
 } from 'ramda';
 import DetailView from './DetailView';
 import { withLoading, withErrors, getErrorHandler } from '../../utils/hocUtil';
@@ -251,6 +252,7 @@ const getContextParser = (props, item) => ({ data: { allEvents, allDocuments } }
 			};
 		}),
 		(items) => groupItemsBy(items, 'angle'),
+		sortBy(prop('date')),
 	)(allDocuments);
 
 	const parsedEvents = pipe(
@@ -266,6 +268,7 @@ const getContextParser = (props, item) => ({ data: { allEvents, allDocuments } }
 			};
 		}),
 		(items) => groupItemsBy(items, 'angle'),
+		sortBy(prop('date')),
 	)(allEvents);
 
 	setDocuments(parsedDocuments);
@@ -302,6 +305,7 @@ export default compose(
 	withState('documents', 'setDocuments', []),
 	withState('events', 'setEvents', []),
 	withState('protagonists', 'setProtagonists', {}),
+	withState('hoveredElement', 'setHoveredElement', null),
 	lifecycle({
 		componentDidMount() {
 			const { id, client, itemType } = this.props;

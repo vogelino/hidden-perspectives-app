@@ -15,7 +15,6 @@ import {
 	Trigger,
 	Container,
 	Thumbnail,
-	Title,
 	Subtitle,
 	Summary,
 } from './styles';
@@ -32,7 +31,6 @@ const getSummary = ifElse(isBiggerThanMax, shortenToMax, identity);
 
 const Tooltip = ({
 	id,
-	title,
 	subtitle,
 	summary,
 	thumbnailUrl,
@@ -41,17 +39,13 @@ const Tooltip = ({
 }) => (
 	<Container id={`tooltip-${id}`} position={position}>
 		{!isLoading && <Thumbnail>{thumbnailUrl}</Thumbnail>}
-		{!isLoading && <Subtitle variant="h6">{subtitle}</Subtitle>}
-		<Title variant="h5">
-			{isLoading ? 'loading...' : title}
-		</Title>
+		<Subtitle variant="h6">{isLoading ? 'Loading...' : subtitle}</Subtitle>
 		{!isLoading && <Summary>{getSummary(summary)}</Summary>}
 	</Container>
 );
 
 Tooltip.propTypes = {
 	id: PropTypes.string,
-	title: PropTypes.string,
 	subtitle: PropTypes.string,
 	summary: PropTypes.string,
 	thumbnailUrl: PropTypes.string,
@@ -61,7 +55,6 @@ Tooltip.propTypes = {
 
 Tooltip.defaultProps = {
 	id: undefined,
-	title: undefined,
 	subtitle: undefined,
 	summary: undefined,
 	thumbnailUrl: undefined,

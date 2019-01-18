@@ -16,13 +16,17 @@ export const Content = styled.div`
 
 export const Transcript = styled.pre`
 	white-space: pre-line;
-	font-family: 'Courier', monospace;
-	font-size: 1rem;
-	line-height: 1.5rem;
-	font-weight: normal;
 	padding: 3rem;
 	border: 1px solid ${({ theme }) => theme.commonBorderColor};
 	border-radius: 3px;
+
+	* {
+		font-family: 'Suisse Intl Mono', 'Courier', monospace;
+		font-size: .875rem;
+		line-height: 1.2rem;
+		font-weight: normal;
+		letter-spacing: -.04em;
+	}
 `;
 
 export const Line = styled.div``;

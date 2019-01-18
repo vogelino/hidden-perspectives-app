@@ -12,7 +12,7 @@ export const Container = styled.span`
 export const Text = styled.span`
 	font-size: .875rem;
 	line-height: .875rem;
-	padding: 0.5rem 0 0;
+	padding: .6rem 0 0;
 	display: inline-block;
 `;
 
@@ -32,7 +32,7 @@ export const Circle = styled.span`
 	text-align: center;
 	font-size: .75rem;
 	line-height: .75rem;
-	padding: .625rem 0;
+	padding: .7rem 0;
 
 	&:before {
 		content: '';

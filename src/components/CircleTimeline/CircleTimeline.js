@@ -1,18 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Tooltip from '../Tooltip';
 import BubbleChart from '../BubbleChart';
 import { EventLegend, DocumentLegend } from '../Legend/Legend';
+import { isHovered } from '../../utils/timelineUtil';
 import {
 	CircleContainer,
 	CircleSvg,
 	Circle,
 	ItemCircle,
 	Document,
-	SingleDocumentPill,
-	MultipleDocumentsPill,
-	SingleEventPill,
-	MultipleEventsPill,
+	Symbol,
 	ConnectionLine,
 	LegendObject,
 	EventLegendContainer,
@@ -40,6 +37,8 @@ const CircleTimeline = ({
 	events,
 	protagonists,
 	isLoading,
+	hoveredElement,
+	setHoveredElement,
 }) => (
 	<CircleContainer>
 		<CircleSvg
@@ -88,8 +87,7 @@ const CircleTimeline = ({
 				const x = getXByAngle(RADIUS_INNER, angle);
 				const y = getYByAngle(RADIUS_INNER, angle);
 				const isCurrentElement = group.find(({ id }) => id === item.id);
-				const docSize = 18;
-				const isStacked = group.length > 1;
+				const docSize = 14;
 				return [
 					...(
 						isCurrentElement ? [
@@ -110,11 +108,15 @@ const CircleTimeline = ({
 						height={docSize}
 						angle={group[0].angle}
 						key={`document-${docId}`}
+						className={isHovered(group, hoveredElement, 'document') && 'hovered'}
+						onMouseEnter={() => setHoveredElement(group.map((groupEl) => ({
+							...groupEl,
+							itemType: 'document',
+						})))}
+						onMouseLeave={() => setHoveredElement(null)}
 						{...CIRCLE_CENTER}
 					>
-						<Tooltip id={docId} itemType="document">
-							{isStacked ? <MultipleDocumentsPill /> : <SingleDocumentPill />}
-						</Tooltip>
+						<Symbol>▲</Symbol>
 					</Document>,
 				];
 			})}
@@ -123,8 +125,7 @@ const CircleTimeline = ({
 				const x = getXByAngle(RADIUS_OUTER, angle);
 				const y = getYByAngle(RADIUS_OUTER, angle);
 				const isCurrentElement = group.find(({ id }) => id === item.id);
-				const docSize = 18;
-				const isStacked = group.length > 1;
+				const docSize = 14;
 				return [
 					...(
 						isCurrentElement ? [
@@ -145,13 +146,15 @@ const CircleTimeline = ({
 						height={docSize}
 						angle={group[0].angle}
 						key={`event-${docId}`}
+						className={isHovered(group, hoveredElement, 'event') && 'hovered'}
+						onMouseEnter={() => setHoveredElement(group.map((groupEl) => ({
+							...groupEl,
+							itemType: 'event',
+						})))}
+						onMouseLeave={() => setHoveredElement(null)}
 						{...CIRCLE_CENTER}
 					>
-						<Tooltip id={docId} itemType="event">
-							{isStacked
-								? <MultipleEventsPill>{group.length}</MultipleEventsPill>
-								: <SingleEventPill />}
-						</Tooltip>
+						<Symbol>●</Symbol>
 					</Document>,
 				];
 			})}
@@ -167,6 +170,8 @@ const CircleTimeline = ({
 				bubblesPadding={5}
 				isLoading={isLoading}
 				activeId={item.id}
+				hoveredElement={hoveredElement}
+				setHoveredElement={setHoveredElement}
 			/>
 		</BubbleChartContainer>
 	</CircleContainer>
@@ -178,7 +183,7 @@ CircleTimeline.propTypes = {
 		subtitle: PropTypes.string,
 		itemType: PropTypes.string.isRequired,
 		id: PropTypes.string.isRequired,
-	}).isRequired,
+	}),
 	documents: PropTypes.arrayOf(
 		PropTypes.arrayOf(PropTypes.shape({
 			id: PropTypes.string.isRequired,
@@ -197,12 +202,33 @@ CircleTimeline.propTypes = {
 			stakeholderFullName: PropTypes.string,
 		})),
 	),
+	hoveredElement: PropTypes.oneOfType([
+		PropTypes.shape({
+			id: PropTypes.string.isRequired,
+			itemType: PropTypes.string.isRequired,
+		}),
+		PropTypes.arrayOf(
+			PropTypes.shape({
+				id: PropTypes.string.isRequired,
+				itemType: PropTypes.string.isRequired,
+			}),
+		),
+	]),
+	setHoveredElement: PropTypes.func,
 };
 
 CircleTimeline.defaultProps = {
+	item: {
+		title: 'Title',
+		subtitle: 'Subtitle',
+		itemType: 'document',
+		id: 'woifjiwefopwejpfwe',
+	},
 	documents: [],
 	events: [],
 	protagonists: {},
+	hoveredElement: null,
+	setHoveredElement: () => {},
 };
 
 export default CircleTimeline;

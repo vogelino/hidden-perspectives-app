@@ -20,9 +20,10 @@ const calcBubbleLayout = (data, diameter, padding) => {
 
 const formatItems = (bubblesData, activeId) => {
 	const formattedData = Object.keys(bubblesData).map((key) => ({
+		...bubblesData[key],
+		id: key,
 		name: bubblesData[key][0].stakeholderFullName,
 		value: bubblesData[key].length,
-		id: key,
 		isActive: key === activeId,
 	}));
 

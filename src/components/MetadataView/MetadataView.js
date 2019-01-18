@@ -19,8 +19,13 @@ const MetadataView = ({ data, isLoading }) => (
 					{values.map(({ label, ValueComponent = defaultValueComponent, value }) => (
 						<MetadataRow key={label} label={label}>
 							{Array.isArray(value)
-								? value.map(({ name }) => <ValueComponent key={name} value={name} />)
-								: <ValueComponent value={value} />}
+								? value.map(({ name, ...props }) => (
+									<ValueComponent
+										{...props}
+										key={name}
+										value={name}
+									/>
+								)) : <ValueComponent value={value} />}
 						</MetadataRow>
 					))}
 				</Fieldset>
