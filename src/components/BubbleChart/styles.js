@@ -26,7 +26,7 @@ export const BubblesSvg = styled.svg`
     height: 100%;
     left: 50%;
     max-height: 100%;
-    max-width: 400px;
+    max-width: 100%;
     position: absolute;
     top: 50%;
     transform: translate(-50%, -50%);
@@ -54,12 +54,11 @@ export const Bubble = styled.circle`
 
 export const Text = styled.text`
     alignment-baseline: central;
-    fill: ${({ isActive }) => (isActive ? 'white' : 'black')};
+    fill: ${({ isHovered, theme }) => (isHovered ? theme.primaryDark : theme.gray900)};
     font-size: ${({ fontSize }) => fontSize}px;
     line-height: ${({ fontSize }) => fontSize}px;
     opacity: ${({ isLoading }) => (isLoading ? 0 : 1)};
     pointer-events: none;
     text-anchor: middle;
     transition: fill 400ms ease-out;
-    fill: ${({ isHovered, theme }) => (isHovered ? theme.primaryDark : theme.gray900)};
 `;

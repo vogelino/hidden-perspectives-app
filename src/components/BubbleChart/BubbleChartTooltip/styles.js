@@ -4,6 +4,7 @@ export const Tooltip = styled.div`
     background: ${({ theme }) => theme.primaryLight};
     border: 1px solid white;
     border-radius: 1rem;
+    color: ${({ theme }) => theme.primaryDark};
     font-size: .75rem;
     left: ${({ x }) => x}%;
     line-height: 1.5rem;
