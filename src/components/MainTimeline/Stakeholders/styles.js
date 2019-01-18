@@ -12,3 +12,8 @@ export const Container = styled.div`
 	width: 18rem;
 	z-index: 1;
 `;
+
+export const BubbleChartWrapper = styled.div`
+	position: relative;
+	width: 80%;
+`;

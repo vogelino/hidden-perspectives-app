@@ -13,7 +13,7 @@ const ParticipantPage = ({ match }) => (
 				itemType="stakeholder"
 			/>
 		</Header>
-		<NodeHeader id={match.params.id} itemType="participant" />
+		<NodeHeader id={match.params.id} itemType="stakeholder" />
 		<DetailView id={match.params.id} itemType="stakeholder" />
 	</div>
 );
@@ -27,4 +27,3 @@ ParticipantPage.propTypes = {
 };
 
 export default ParticipantPage;
-
