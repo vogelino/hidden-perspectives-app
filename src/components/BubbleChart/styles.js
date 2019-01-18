@@ -2,10 +2,12 @@ import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
 
 export const BubbleChartContainer = styled.div`
-    border: 2px solid red;
-    // border-radius: 50%;
+    border-radius: 50%;
     height: auto;
+    left: 50%;
     position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
     width: 100%;
 
     &:before{
@@ -20,12 +22,11 @@ export const BubbleLink = styled(NavLink)`
 `;
 
 export const BubblesSvg = styled.svg`
-    border: 2px solid green;
     display: block;
     height: 100%;
     left: 50%;
     max-height: 100%;
-    max-width: 100%;
+    max-width: 400px;
     position: absolute;
     top: 50%;
     transform: translate(-50%, -50%);

@@ -1,14 +1,15 @@
 import styled from 'styled-components';
 
 export const Tooltip = styled.div`
-    background: ${({ theme }) => theme.primary};
+    background: ${({ theme }) => theme.primaryLight};
     border: 1px solid white;
     border-radius: 1rem;
     font-size: .75rem;
     left: ${({ x }) => x}%;
     line-height: 1.5rem;
     opacity: ${({ visible }) => (visible ? 1 : 0)};
-    padding: 3px .75rem 0 .75rem;
+    overflow: hidden;
+    padding: 4px 0 0 .85rem;
     pointer-events: none;
     position: absolute;
     top: ${({ y }) => y}%;
@@ -16,4 +17,11 @@ export const Tooltip = styled.div`
     transition: opacity 150ms ease-out;
     white-space: nowrap;
     z-index: 2;
+`;
+
+export const TooltipNumber = styled.span`
+    background: ${({ theme }) => theme.primaryDark10};
+    border-left: 1px solid ${({ theme }) => theme.primaryDark25};
+    margin-left: .75rem;
+    padding: 0.5rem 0.75rem 0.5rem 0.65rem;
 `;

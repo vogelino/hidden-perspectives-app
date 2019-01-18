@@ -26,7 +26,7 @@ const Tooltips = ({
 		r,
 	} = bubbleData;
 
-	const { name } = data;
+	const { name, value } = data;
 	const hovered = isHovered(data, hoveredElement, 'stakeholder');
 	const toRelativePosition = (pos) => pos * 100 / diameter;
 
@@ -37,6 +37,7 @@ const Tooltips = ({
 			x={toRelativePosition(x)}
 			y={toRelativePosition(y + r)}
 			text={name}
+			value={value}
 		/>
 	);
 });

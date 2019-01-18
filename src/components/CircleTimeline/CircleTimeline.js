@@ -170,6 +170,8 @@ const CircleTimeline = ({
 				bubblesPadding={5}
 				isLoading={isLoading}
 				activeId={item.id}
+				hoveredElement={hoveredElement}
+				setHoveredElement={setHoveredElement}
 			/>
 		</BubbleChartContainer>
 	</CircleContainer>
