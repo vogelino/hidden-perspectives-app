@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import initials from 'initials';
 import { isEmpty } from 'ramda';
-import { getInitials } from '../../utils/stringUtil';
 import { isHovered } from '../../utils/timelineUtil';
 import {
 	Bubble,
@@ -86,7 +86,7 @@ const Bubbles = ({
 				isActive={isActive}
 				fontSize={fontSize}
 			>
-				{getInitials(name)}
+				{initials(name)}
 			</Text>
 		</BubbleLink>
 	);
