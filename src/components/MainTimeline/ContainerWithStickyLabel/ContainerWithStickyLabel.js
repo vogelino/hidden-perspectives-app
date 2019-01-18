@@ -12,6 +12,8 @@ const ContainerWithStickyLabel = ({
 		<Label
 			isYear={isYear}
 			className={`timeline-item ${isYear ? 'timeline-year' : 'timeline-month'}`}
+			id={isYear ? `timeline-year-${label}` : `timeline-month-${label}`}
+			data-value={label}
 		>
 			<Split hasContent={!isYear}>{!isYear && label}</Split>
 			<Split hasContent={isYear}>{isYear && label}</Split>

@@ -3,26 +3,29 @@ import {
 	withState,
 	lifecycle,
 } from 'recompose';
+import { isPartlyInViewport } from '../../../utils/timelineUtil';
 import Minimap from './Minimap';
 
 const getTimelineElement = () => document.getElementById('mainTimeline');
 
 export default compose(
-	withState('height', 'setHeight', 100),
-	withState('top', 'setTop', 0),
+	withState('activeYear', 'setActiveYear', undefined),
 	lifecycle({
 		componentDidMount() {
 			const { props } = this;
-
 			let minimapUpdateFrame;
 			function minimapUpdater() {
 				const container = getTimelineElement();
-				if (!container) return;
-
-				const { scrollTop, offsetHeight, scrollHeight } = container;
-				props.setHeight((offsetHeight / scrollHeight) * 100);
-				props.setTop((scrollTop / scrollHeight) * 100);
-
+				if (container) {
+					const yearElements = [...container.getElementsByClassName('timeline-year')];
+					const visibleYear = yearElements.find(isPartlyInViewport);
+					if (visibleYear) {
+						const year = visibleYear.getAttribute('data-value');
+						if (props.activeYear !== year) {
+							props.setActiveYear(year);
+						}
+					}
+				}
 				minimapUpdateFrame = window.requestAnimationFrame(minimapUpdater);
 			}
 			minimapUpdater();
@@ -35,13 +38,11 @@ export default compose(
 		},
 		shouldComponentUpdate(nextProps) {
 			const {
-				height,
-				top,
+				activeYear,
 				items,
 				isLoading,
 			} = this.props;
-			return (nextProps.height !== height)
-				|| (nextProps.top !== top)
+			return (nextProps.activeYear !== activeYear)
 				|| (nextProps.items.length !== items.length)
 				|| (nextProps.isLoading !== isLoading);
 		},

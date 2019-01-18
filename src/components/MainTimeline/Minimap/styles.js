@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { mix, transparentize } from 'polished';
+import { mix } from 'polished';
 import { MINIMAP_HEIGHT, MINIMAP_PADDING } from '../../../state/constants';
 
 export const OuterContainer = styled.div`
@@ -32,34 +32,51 @@ export const Content = styled.div`
 	margin: ${MINIMAP_PADDING}px 0;
 `;
 
-export const ScrollIndicator = styled.div.attrs({
-	style: ({ top, height }) => ({
-		top: `${top}%`,
-		height: `${height}%`,
-	}),
-})`
-	width: 100%;
-	position: absolute;
-	left: 0;
-	border-radius: 3px;
-	border: 1px solid ${({ theme }) => theme.gray900};
-	background: ${({ theme }) => transparentize(0.7, theme.gray600)};
-	box-shadow: 0 0 0 1px white, inset 0 0 0 1px rgba(255,255,255,.3), 0 0 4px 0 rgba(0,0,0,.25);
-	z-index: 2;
-`;
-
-export const MonthsContainer = styled(Content)`
+export const YearsContainer = styled(Content)`
 	padding-left: 1rem;
 `;
 
-export const Month = styled.div.attrs({
+export const YearTooltip = styled.span`
+	padding: .5rem .625rem .2rem .625rem;
+	font-size: .75rem;
+	line-height: .75rem;
+	border-radius: 1rem;
+	background: ${({ theme }) => theme.primaryLight};
+	color: ${({ theme }) => theme.primaryDark};
+	position: absolute;
+	top: 50%;
+	left: calc(100% + .5rem);
+	transform: translateY(-20%);
+	opacity: 0;
+	transition: opacity 200ms ease-out, transform 200ms ease-out;
+`;
+
+export const Year = styled.div.attrs({
 	style: ({ theme, density }) => ({
 		background: mix(density, theme.gray100, theme.gray900),
 	}),
 })`
 	width: 1rem;
 	height: ${({ height }) => `${height}%`};
-	z-index: 1;
+	z-index: ${({ isActive }) => (isActive ? 2 : 1)};
+	border-radius: ${({ isActive }) => (isActive ? 1 : 0)}px;
+	position: relative;
+	transition: z-index 100ms step-end, box-shadow 200ms ease-out, border-radius 200ms ease-out;
+	${({ isActive }) => isActive && 'transition: z-index 100ms step-start, box-shadow 200ms ease-out, border-radius 200ms ease-out;'}
+	box-shadow: 0 0 0 0 ${({ theme }) => theme.primary}, inset 0 0 0 0 rgba(255,255,255,.2);
+	${({ isActive }) => isActive && 'box-shadow: 0 0 0 2px black, inset 0 0 0 1px rgba(255,255,255,.2);'}
+	cursor: pointer;
+
+	&:hover {
+		box-shadow: 0 0 0 2px ${({ theme }) => theme.primary}, inset 0 0 0 1px rgba(255,255,255,.2);
+		border-radius: 1px;
+		z-index: 10;
+	}
+
+	&:hover ${YearTooltip} {
+		transform: translateY(-50%);
+		opacity: 1;
+	}
 `;
 
 export const DatesContainer = styled(Content)`
@@ -72,6 +89,7 @@ export const DatesContainer = styled(Content)`
 	width: 100%;
 	padding: 0 1rem;
 	color: ${({ theme }) => theme.gray500};
+	pointer-events: none;
 `;
 
 export const Date = styled.div`
