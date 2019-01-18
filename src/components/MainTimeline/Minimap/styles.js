@@ -58,10 +58,11 @@ export const Year = styled.div.attrs({
 })`
 	width: 1rem;
 	height: ${({ height }) => `${height}%`};
-	z-index: ${({ isActive }) => (isActive ? 10 : 1)};
+	z-index: ${({ isActive }) => (isActive ? 2 : 1)};
 	border-radius: ${({ isActive }) => (isActive ? 1 : 0)}px;
 	position: relative;
-	transition: box-shadow 200ms ease-out, border-radius 200ms ease-out;
+	transition: z-index 100ms step-end, box-shadow 200ms ease-out, border-radius 200ms ease-out;
+	${({ isActive }) => isActive && 'transition: z-index 100ms step-start, box-shadow 200ms ease-out, border-radius 200ms ease-out;'}
 	box-shadow: 0 0 0 0 ${({ theme }) => theme.primary}, inset 0 0 0 0 rgba(255,255,255,.2);
 	${({ isActive }) => isActive && 'box-shadow: 0 0 0 2px black, inset 0 0 0 1px rgba(255,255,255,.2);'}
 	cursor: pointer;
