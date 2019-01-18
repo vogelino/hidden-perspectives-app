@@ -22,6 +22,8 @@ export const Results = styled.ul`
 	list-style: none;
 	padding: 0;
 	margin: 0;
+	max-height: calc(100vh - 7.875rem);
+	overflow-y: auto;
 `;
 
 export const Result = styled.li`

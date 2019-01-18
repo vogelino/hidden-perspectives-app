@@ -77,7 +77,10 @@ const parseStakeholders = getElementParser('stakeholder', 'stakeholderFullName')
 const contains = (container, containment) => container.toLowerCase()
 	.includes(containment.toLowerCase());
 
-const handleSearchResults = (props, value) => ({ data }) => {
+
+let lastRequestTime;
+const handleSearchResults = (props, value, requestTime) => ({ data }) => {
+	if (requestTime !== lastRequestTime) return;
 	const { stopLoading, setSearchResults, setActiveResult } = props;
 	const documents = parseDocuments(data.allDocuments);
 	const events = parseEvents(data.allEvents);
@@ -92,15 +95,16 @@ const handleSearchResults = (props, value) => ({ data }) => {
 	setSearchResults(searchResults);
 	setActiveResult(searchResults.length ? searchResults[0].id : undefined);
 };
-
 const performQuery = debounce((client, props) => {
 	const { value } = document.getElementById('search-bar');
+	const requestTime = Date.now();
+	lastRequestTime = requestTime;
 	client.query({
 		query: SEARCH_QUERY,
 		variables: { searchQuery: value },
 	})
-		.then(handleSearchResults(props, value))
-		.catch(getErrorHandler(props, value));
+		.then(handleSearchResults(props, value, requestTime))
+		.catch(getErrorHandler(props, value, requestTime));
 }, 350, { leading: false, trailing: true });
 
 export default compose(
