@@ -8,6 +8,8 @@ const colors = {
 	primary: '#F8B332',
 	primaryLight: '#FCDDA3',
 	primaryDark: '#924F00',
+	primaryDark10: transparentize(0.9, '#924F00'),
+	primaryDark25: transparentize(0.75, '#924F00'),
 	commonBorderColor: originalTheme.gray300,
 	usBlue: '#2523A0',
 	usRed: '#D7062C',

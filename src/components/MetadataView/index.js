@@ -76,11 +76,40 @@ const EVENT_QUERY = gql`
 	}
 `;
 
+const STAKEHOLDER_QUERY = gql`
+	query GetStakeholder($id: ID!) {
+		Stakeholder(id: $id) {
+			id
+			documents {
+				id
+				documentTitle
+			}
+			documentsMentionedIn {
+				id
+				documentTitle
+			}
+			eventsInvolvedIn {
+				id
+				eventTitle
+			}
+			stakeholderDescription
+			stakeholderFullName
+			stakeholderWikipediaUri
+		}
+	}
+`;
+
 const mapStakeholder = ({ id, stakeholderFullName }) => ({
 	id, name: stakeholderFullName,
 });
 const mapLocation = ({ id, locationName }) => ({
 	id, name: locationName,
+});
+const mapDocuments = ({ id, documentTitle }) => ({
+	id, name: documentTitle,
+});
+const mapEvents = ({ id, eventTitle }) => ({
+	id, name: eventTitle,
 });
 
 const propHasValue = (propName) => pipe(
@@ -194,11 +223,78 @@ const structureEventData = (data) => {
 	].filter(hasValues);
 };
 
+const structureStakeholderData = (data) => {
+	const {
+		documents,
+		documentsMentionedIn,
+		eventsInvolvedIn,
+		stakeholderDescription,
+		stakeholderFullName,
+		stakeholderWikipediaUri,
+	} = data;
+
+	const coreInformation = {
+		groupLabel: 'Core information',
+		values: [
+			{ label: 'Title', value: stakeholderFullName },
+			{ label: 'Description', value: stakeholderDescription },
+			{ label: 'Wikipedia', value: stakeholderWikipediaUri },
+		].filter(hasValue),
+	};
+
+	const authored = {
+		groupLabel: 'Authored',
+		values: [
+			{
+				label: 'Documents',
+				value: documents.map(mapDocuments),
+			},
+		].filter(hasValue),
+	};
+
+	const appearences = {
+		groupLabel: 'Appearences',
+		values: [
+			{
+				label: 'Documents',
+				value: documentsMentionedIn.map(mapDocuments),
+			},
+			{
+				label: 'Events',
+				value: eventsInvolvedIn.map(mapEvents),
+			},
+		].filter(hasValue),
+	};
+
+	return [
+		coreInformation,
+		authored,
+		appearences,
+	].filter(hasValues);
+};
+
+const getStructuredData = (data, itemType) => {
+	switch (itemType) {
+	case 'event': return structureEventData(data.Event);
+	case 'document': return structureDocumentData(data.Document);
+	case 'stakeholder': return structureStakeholderData(data.Stakeholder);
+	default: return '';
+	}
+};
+
 const getDataParser = ({ stopLoading, setData, itemType }) => ({ data }) => {
 	stopLoading();
-	const structuredData = itemType === 'event'
-		? structureEventData(data.Event) : structureDocumentData(data.Document);
+	const structuredData = getStructuredData(data, itemType);
 	setData(structuredData);
+};
+
+const getItemQuery = (itemType) => {
+	switch (itemType) {
+	case 'event': return EVENT_QUERY;
+	case 'document': return DOCUMENT_QUERY;
+	case 'stakeholder': return STAKEHOLDER_QUERY;
+	default: return '';
+	}
 };
 
 export default compose(
@@ -210,7 +306,7 @@ export default compose(
 		componentDidMount() {
 			const { id, client, itemType } = this.props;
 			client.query({
-				query: itemType === 'event' ? EVENT_QUERY : DOCUMENT_QUERY,
+				query: getItemQuery(itemType),
 				variables: { id },
 			})
 				.then(getDataParser(this.props))
