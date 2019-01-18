@@ -13,7 +13,7 @@ const ParticipantMetadataPage = ({ match }) => (
 				itemType="stakeholder"
 			/>
 		</Header>
-		<NodeHeader id={match.params.id} itemType="participant" />
+		<NodeHeader id={match.params.id} itemType="stakeholder" />
 		<MetadataView id={match.params.id} itemType="stakeholder" />
 	</div>
 );

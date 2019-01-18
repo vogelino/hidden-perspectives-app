@@ -1,15 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import BubbleChart from '../../BubbleChart';
-import { Container } from './styles';
+import { Container, BubbleChartWrapper } from './styles';
 
 const Stakeholders = (props) => (
 	<Container>
-		<BubbleChart
-			{...props}
-			diameter={250}
-			bubblesPadding={5}
-		/>
+		<BubbleChartWrapper>
+			<BubbleChart
+				{...props}
+				diameter={250}
+				bubblesPadding={5}
+			/>
+		</BubbleChartWrapper>
 	</Container>
 );
 

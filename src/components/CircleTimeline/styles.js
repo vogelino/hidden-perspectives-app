@@ -85,6 +85,6 @@ export const BubbleChartContainer = styled.div`
 	pointer-events: none;
 	position: relative;
 	width: 50%;
-	max-width: 350px;
+	max-width: 300px;
 `;
 
