@@ -30,6 +30,10 @@ const EVENT_QUERY = gql`
 				id
 				name
 			}
+			eventStakeholders {
+				id
+				stakeholderFullName
+			}
 		}
 	}
 `;
@@ -47,6 +51,11 @@ const DOCUMENT_QUERY = gql`
 				id
 				name
 			}
+			mentionedStakeholders {
+				id
+				stakeholderFullName
+			}
+
 		}
 	}
 `;
@@ -189,9 +198,31 @@ const getQuery = (item, itemType) => {
 	return query;
 };
 
-// TODO: Handle empty documents and/or events
-const getContextParser = (props) => ({ data: { allEvents, allDocuments } }) => {
+const getProtagonists = (item, itemType, allDocuments, allEvents) => {
+	const items = itemType === 'stakeholder' ? union(allDocuments, allEvents) : [item];
+
+	const protagonistsFromAllItems = items.map((currentItem) => {
+		const isEvent = has('eventStakeholders');
+		const stakeholdersFieldName = isEvent(currentItem) ? 'eventStakeholders' : 'mentionedStakeholders';
+		return currentItem[stakeholdersFieldName];
+	});
+
+	const flattenedProtagonists = flatten(protagonistsFromAllItems);
+	const clusterProtagonists = (data) => data
+		.reduce((acc, current) => {
+			const { id } = current;
+			return Object.assign(acc, {
+				[id]: (acc[id] || []).concat(current),
+			});
+		}, {});
+	const parsedProtagonists = clusterProtagonists(flattenedProtagonists);
+
+	return parsedProtagonists;
+};
+
+const getContextParser = (props, item) => ({ data: { allEvents, allDocuments } }) => {
 	const {
+		itemType,
 		stopLoading,
 		setDocuments,
 		setEvents,
@@ -237,24 +268,9 @@ const getContextParser = (props) => ({ data: { allEvents, allDocuments } }) => {
 		(items) => groupItemsBy(items, 'angle'),
 	)(allEvents);
 
-	const protagonists = union(allDocuments, allEvents).map((item) => {
-		const isEvent = has('eventStakeholders');
-		const stakeholdersFieldName = isEvent(item) ? 'eventStakeholders' : 'mentionedStakeholders';
-		return item[stakeholdersFieldName];
-	});
-	const flattenedProtagonists = flatten(protagonists);
-	const clusterProtagonists = (data) => data
-		.reduce((acc, current) => {
-			const { id } = current;
-			return Object.assign(acc, {
-				[id]: (acc[id] || []).concat(current),
-			});
-		}, {});
-	const parsedProtagonists = clusterProtagonists(flattenedProtagonists);
-
 	setDocuments(parsedDocuments);
 	setEvents(parsedEvents);
-	setProtagonists(parsedProtagonists);
+	setProtagonists(getProtagonists(item, itemType, allDocuments, allEvents));
 
 	stopLoading();
 };
@@ -274,7 +290,7 @@ const getItemParser = (props) => ({ data }) => {
 	client.query({
 		query: getQuery(item, itemType),
 	})
-		.then(getContextParser(props))
+		.then(getContextParser(props, item))
 		.catch(getErrorHandler(props));
 };
 

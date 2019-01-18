@@ -93,3 +93,9 @@ export const ConnectionLine = styled.line`
 	stroke: ${({ theme }) => theme.commonBorderColor};
 `;
 
+export const BubbleChartContainer = styled.div`
+	height: 50%;
+	position: relative;
+	width: 50%;
+`;
+

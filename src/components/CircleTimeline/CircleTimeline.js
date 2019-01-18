@@ -17,6 +17,7 @@ import {
 	LegendObject,
 	EventLegendContainer,
 	DocumentLegendContainer,
+	BubbleChartContainer,
 } from './styles';
 
 const toRadian = (angle) => angle * (Math.PI / 180);
@@ -44,7 +45,7 @@ const CircleTimeline = ({
 		<CircleSvg
 			id="circleContainer"
 			viewBox={`0 0 ${DIAMETER_OUTER + (MARGIN * 2)} ${DIAMETER_OUTER + (MARGIN * 2)}`}
-			preserveAspectRatio="xMaxYMax meet"
+			preserveAspectRatio="xMidYMid meet"
 		>
 			<Circle
 				missingAngle={toRadian(20)}
@@ -159,12 +160,15 @@ const CircleTimeline = ({
 				r={8}
 			/>
 		</CircleSvg>
-		<BubbleChart
-			items={protagonists}
-			diameter={300}
-			bubblesPadding={5}
-			isLoading={isLoading}
-		/>
+		<BubbleChartContainer>
+			<BubbleChart
+				items={protagonists}
+				diameter={300}
+				bubblesPadding={5}
+				isLoading={isLoading}
+				activeId={item.id}
+			/>
+		</BubbleChartContainer>
 	</CircleContainer>
 );
 

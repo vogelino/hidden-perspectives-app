@@ -1,16 +1,38 @@
 import styled from 'styled-components';
+import { NavLink } from 'react-router-dom';
 
 export const BubbleChartContainer = styled.div`
     border-radius: 50%;
+    height: 100%;
     position: absolute;
+    width: 100%;
 `;
 
-export const BubbleLink = styled.a``;
+export const Tooltip = styled.div`
+    background: ${({ theme }) => theme.primary};
+    border: 2px solid white;
+    border-radius: 1rem;
+    font-size: .875rem;
+    line-height: 1.5rem;
+    left: ${({ position }) => position.x}px;
+    opacity: ${({ visible }) => (visible ? 1 : 0)};
+    padding: 0 .75rem;
+    pointer-events: none;
+    position: fixed;
+    top: ${({ position }) => position.y}px;
+    transform: translate(-50%, -50%);
+    transition: opacity 150ms ease-out;
+`;
 
-export const BubblesWrapper = styled.svg`
+export const BubbleLink = styled(NavLink)``;
+
+export const BubblesSvg = styled.svg`
     display: block;
-    height: ${({ diameter }) => diameter}px;
-    width: ${({ diameter }) => diameter}px;
+    height: 100%;
+    position: absolute;
+    width: auto;
+    max-width: 100%;
+    max-height: 100%;
 `;
 
 export const BubblesLoadingContainer = styled.div`
@@ -27,13 +49,9 @@ export const BubblesLoadingContainer = styled.div`
 
 export const Bubble = styled.circle`
     align-items: center;
-    height: ${({ r }) => r * 2}px;
-    fill: ${({ theme }) => theme.gray200};
-    left: ${({ x }) => x}px;
+    fill: ${({ isActive, theme }) => (isActive ? 'black' : theme.gray200)};
     opacity: ${({ isLoading }) => (isLoading ? 0 : 1)};
-    top: ${({ y }) => y}px;
-    transition: fill 150ms;
-    width: ${({ r }) => r * 2}px;
+    transition: fill 150ms ease-out;
 
     &:hover {
         fill: ${({ theme }) => theme.primary};
@@ -42,8 +60,9 @@ export const Bubble = styled.circle`
 
 export const Text = styled.text`
     alignment-baseline: central;
-	font-size: .875rem;
-	line-height: .875rem;
+    fill: ${({ isActive }) => (isActive ? 'white' : 'black')};
+    font-size: ${({ fontSize }) => fontSize}px;
+    line-height: ${({ fontSize }) => fontSize}px;
     opacity: ${({ isLoading }) => (isLoading ? 0 : 1)};
     pointer-events: none;
     text-anchor: middle;
