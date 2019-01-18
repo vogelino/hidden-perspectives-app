@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { NavLink } from 'react-router-dom';
 import { formatHumanDate } from '../../utils/dateUtil';
 import { ucFirst } from '../../utils/stringUtil';
 import { isHovered } from '../../utils/timelineUtil';
@@ -43,7 +44,9 @@ const SummarySection = ({
 								onMouseEnter={() => setHoveredElement({ ...item, itemType })}
 								onMouseLeave={() => setHoveredElement(null)}
 							>
-								{item.title}
+								<NavLink to={`/${itemType}/context/${item.id}`}>
+									{item.title}
+								</NavLink>
 							</Title>
 						</TitleWrapper>
 						{item.summary && <Summary>{item.summary}</Summary>}

@@ -63,6 +63,7 @@ export const Symbol = styled.span`
 	float: left;
 	line-height: ${({ children }) => (children === '▲' ? '.625rem' : '.75rem')};
 	text-shadow: -2px -2px 0 white, 2px -2px 0 white, -2px 2px 0 white, 2px 2px 0 white;
+	text-decoration: none;
 `;
 
 export const Document = styled.foreignObject`

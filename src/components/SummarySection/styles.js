@@ -24,6 +24,11 @@ export const TitleWrapper = styled.div`
 export const Title = styled(Headline)`
 	display: inline;
 	cursor: pointer;
+
+	a {
+		text-decoration: none;
+		color: inherit;
+	}
 `;
 
 export const SecondaryInfo = styled(Headline)`

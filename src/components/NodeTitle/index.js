@@ -43,17 +43,32 @@ const getDataParser = ({ itemType, setTitle, setSubtitle }) => ({ data }) => {
 	setSubtitle(subtitle);
 };
 
+const performQuery = (props) => {
+	const { id, client, itemType } = props;
+	client.query({
+		query: itemType === 'event' ? EVENT_QUERY : DOCUMENT_QUERY,
+		variables: { id },
+	}).then(getDataParser(props));
+};
+
 export default compose(
 	withApollo,
 	withState('title', 'setTitle', ''),
 	withState('subtitle', 'setSubtitle', ''),
 	lifecycle({
 		componentDidMount() {
-			const { id, client, itemType } = this.props;
-			client.query({
-				query: itemType === 'event' ? EVENT_QUERY : DOCUMENT_QUERY,
-				variables: { id },
-			}).then(getDataParser(this.props));
+			performQuery(this.props);
+		},
+		shouldComponentUpdate(nextProps) {
+			if (this.props.id !== nextProps.id) {
+				performQuery(nextProps);
+			}
+			const { id, title, subtitle } = this.props;
+			return (
+				id !== nextProps.id
+				|| title !== nextProps.title
+				|| subtitle !== nextProps.subtitle
+			);
 		},
 	}),
 )(NodeTitle);
