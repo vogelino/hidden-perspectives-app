@@ -39,6 +39,7 @@ const CircleTimeline = ({
 	isLoading,
 	hoveredElement,
 	setHoveredElement,
+	history,
 }) => (
 	<CircleContainer>
 		<CircleSvg
@@ -115,6 +116,7 @@ const CircleTimeline = ({
 						})))}
 						onMouseLeave={() => setHoveredElement(null)}
 						{...CIRCLE_CENTER}
+						onClick={() => history.push(`/document/context/${docId}`)}
 					>
 						<Symbol>▲</Symbol>
 					</Document>,
@@ -153,6 +155,7 @@ const CircleTimeline = ({
 						})))}
 						onMouseLeave={() => setHoveredElement(null)}
 						{...CIRCLE_CENTER}
+						onClick={() => history.push(`/event/context/${docId}`)}
 					>
 						<Symbol>●</Symbol>
 					</Document>,

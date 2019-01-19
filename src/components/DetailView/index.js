@@ -6,6 +6,7 @@ import {
 import { withApollo } from 'react-apollo';
 import gql from 'graphql-tag';
 import { scaleLinear } from 'd3-scale';
+import { withRouter } from 'react-router-dom';
 import {
 	map,
 	prop,
@@ -297,10 +298,27 @@ const getItemParser = (props) => ({ data }) => {
 		.catch(getErrorHandler(props));
 };
 
+const performQuery = (props) => {
+	const {
+		id,
+		client,
+		itemType,
+		startLoading,
+	} = props;
+	startLoading();
+	client.query({
+		query: getQueryByItemId(itemType),
+		variables: { id },
+	})
+		.then(getItemParser(props))
+		.catch(getErrorHandler(props));
+};
+
 export default compose(
 	withApollo,
 	withLoading,
 	withErrors,
+	withRouter,
 	withState('item', 'setItem', undefined),
 	withState('documents', 'setDocuments', []),
 	withState('events', 'setEvents', []),
@@ -308,13 +326,23 @@ export default compose(
 	withState('hoveredElement', 'setHoveredElement', null),
 	lifecycle({
 		componentDidMount() {
-			const { id, client, itemType } = this.props;
-			client.query({
-				query: getQueryByItemId(itemType),
-				variables: { id },
-			})
-				.then(getItemParser(this.props))
-				.catch(getErrorHandler(this.props));
+			performQuery(this.props);
+		},
+		shouldComponentUpdate(nextProps) {
+			const { id } = this.props;
+			if (nextProps.id !== id) {
+				performQuery(nextProps);
+			}
+			return (
+				this.props.item !== nextProps.item
+				|| this.props.documents !== nextProps.documents
+				|| this.props.events !== nextProps.events
+				|| this.props.protagonists !== nextProps.protagonists
+				|| this.props.hoveredElement !== nextProps.hoveredElement
+				|| this.props.isLoading !== nextProps.isLoading
+				|| this.props.itemType !== nextProps.itemType
+				|| this.props.errors !== nextProps.errors
+			);
 		},
 	}),
 )(DetailView);
