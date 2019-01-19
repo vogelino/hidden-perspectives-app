@@ -18,7 +18,9 @@ import {
 const loadingResults = Object.keys([...Array(3)]);
 
 const getFormattedTitle = (title, searchQuery) => {
-	const index = title.toLowerCase().indexOf(searchQuery.toLowerCase());
+	const titleLowercased = title.toLowerCase();
+	const searchQueryLowercased = title.toLowerCase().
+	const index = titleLowercased.indexOf(searchQueryLowercased);
 	let formattedTitle = title;
 
 	if (index >= 0) {
