@@ -1,5 +1,5 @@
 import { withProps } from 'recompose';
-import { propEq, ifElse, curry } from 'ramda';
+import { curry } from 'ramda';
 import { ucFirst } from '../../utils/stringUtil';
 import NodeHeader from './NodeHeader';
 
@@ -22,9 +22,23 @@ const getDocumentTabs = (props) => [
 	createTab(props, 'metadata'),
 ];
 
-const isEvent = propEq('itemType', 'event');
+const getStakeholderTabs = (props) => [
+	createTab(props, 'context'),
+	createTab(props, 'metadata'),
+];
+
+const getTabs = (props) => {
+	const { itemType } = props;
+
+	switch (itemType) {
+	case 'event': return getEventTabs(props);
+	case 'document': return getDocumentTabs(props);
+	case 'stakeholder': return getStakeholderTabs(props);
+	default: return '';
+	}
+};
+
 const createEditUrl = (props) => `${createUrl(props, 'metadata')}/edit`;
-const getTabs = ifElse(isEvent, getEventTabs, getDocumentTabs);
 const createProps = (props) => ({
 	tabs: getTabs(props),
 	editUrl: createEditUrl(props),

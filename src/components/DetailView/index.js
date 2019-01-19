@@ -32,6 +32,10 @@ const EVENT_QUERY = gql`
 				id
 				name
 			}
+			eventStakeholders {
+				id
+				stakeholderFullName
+			}
 		}
 	}
 `;
@@ -49,9 +53,32 @@ const DOCUMENT_QUERY = gql`
 				id
 				name
 			}
+			mentionedStakeholders {
+				id
+				stakeholderFullName
+			}
+
 		}
 	}
 `;
+
+const STAKEHOLDER_QUERY = gql`
+	query GetStakholder($id: ID!) {
+		Stakeholder(id: $id) {
+			id
+			stakeholderFullName
+		}
+	}
+`;
+
+const getQueryByItemId = (itemType) => {
+	switch (itemType) {
+	case 'event': return EVENT_QUERY;
+	case 'document': return DOCUMENT_QUERY;
+	case 'stakeholder': return STAKEHOLDER_QUERY;
+	default: return '';
+	}
+};
 
 const formatTagsForQuery = (type, tagIds) => map(
 	(tagId) => `{ ${type}Tags_some: { id: "${tagId}" } }`,
@@ -105,8 +132,99 @@ const builtTagsQuery = (tagIds) => gql`
 	}
 `;
 
-const getContextParser = (props) => ({ data: { allEvents, allDocuments } }) => {
+const builtQueryStringByItemId = (type, { id }) => {
+	const orderBy = getOrderBy(type);
+	const additionalReturnValues = getAdditionalReturnValuesByType(type);
+	const stakeholdersFieldName = type === 'document' ? 'mentionedStakeholders' : 'eventStakeholders';
+	const query = `
+		all${ucFirst(type)}s(
+			filter: {
+				${stakeholdersFieldName}_some: { id: "${id}" }
+			}
+			orderBy: ${orderBy}
+		) {
+			id
+			${type}Title
+			${additionalReturnValues}
+			${type}Tags {
+				id
+				name
+			}
+			${type}Description
+			${stakeholdersFieldName} {
+				id
+				stakeholderFullName
+			}
+		}
+	`;
+	return query;
+};
+
+const builtMentionedInQuery = (item) => gql`
+	query {
+		${builtQueryStringByItemId('event', item)}
+		${builtQueryStringByItemId('document', item)}
+	}
+`;
+
+const getResponseProp = (key, type, item) => {
+	switch (type) {
+	case 'event':
+	case 'document': return prop(`${type}${ucFirst(key)}`, item);
+	case 'stakeholder': return item.stakeholderFullName;
+	default: return '';
+	}
+};
+
+const getItemSubtitle = (item, itemType) => {
+	switch (itemType) {
+	case 'event': return getFormattedDate(new Date(item.eventStartDate));
+	case 'document': return item.documentKind && item.documentKind.name;
+	case 'stakeholder': return 'stakeholder';
+	default: return '';
+	}
+};
+
+const getQuery = (item, itemType) => {
+	let query;
+
+	if (itemType === 'event' || itemType === 'document') {
+		const tags = getResponseProp('tags', itemType, item);
+		const tagsQuery = builtTagsQuery(map(prop('id'), tags));
+		query = tagsQuery;
+	} else if (itemType === 'stakeholder') {
+		const mentionedInQuery = builtMentionedInQuery(item);
+		query = mentionedInQuery;
+	}
+
+	return query;
+};
+
+const getProtagonists = (item, itemType, allDocuments, allEvents) => {
+	const items = itemType === 'stakeholder' ? union(allDocuments, allEvents) : [item];
+
+	const protagonistsFromAllItems = items.map((currentItem) => {
+		const isEvent = has('eventStakeholders');
+		const stakeholdersFieldName = isEvent(currentItem) ? 'eventStakeholders' : 'mentionedStakeholders';
+		return currentItem[stakeholdersFieldName];
+	});
+
+	const flattenedProtagonists = flatten(protagonistsFromAllItems);
+	const clusterProtagonists = (data) => data
+		.reduce((acc, current) => {
+			const { id } = current;
+			return Object.assign(acc, {
+				[id]: (acc[id] || []).concat(current),
+			});
+		}, {});
+	const parsedProtagonists = clusterProtagonists(flattenedProtagonists);
+
+	return parsedProtagonists;
+};
+
+const getContextParser = (props, item) => ({ data: { allEvents, allDocuments } }) => {
 	const {
+		itemType,
 		stopLoading,
 		setDocuments,
 		setEvents,
@@ -154,29 +272,12 @@ const getContextParser = (props) => ({ data: { allEvents, allDocuments } }) => {
 		sortBy(prop('date')),
 	)(allEvents);
 
-	const protagonists = union(allDocuments, allEvents).map((item) => {
-		const isEvent = has('eventStakeholders');
-		const stakeholdersFieldName = isEvent(item) ? 'eventStakeholders' : 'mentionedStakeholders';
-		return item[stakeholdersFieldName];
-	});
-	const flattenedProtagonists = flatten(protagonists);
-	const clusterProtagonists = (data) => data
-		.reduce((acc, current) => {
-			const { id } = current;
-			return Object.assign(acc, {
-				[id]: (acc[id] || []).concat(current),
-			});
-		}, {});
-	const parsedProtagonists = clusterProtagonists(flattenedProtagonists);
-
 	setDocuments(parsedDocuments);
 	setEvents(parsedEvents);
-	setProtagonists(parsedProtagonists);
+	setProtagonists(getProtagonists(item, itemType, allDocuments, allEvents));
 
 	stopLoading();
 };
-
-const getResponseProp = (key, type, item) => prop(`${type}${ucFirst(key)}`, item);
 
 const getItemParser = (props) => ({ data }) => {
 	const { client, setItem, itemType } = props;
@@ -186,18 +287,14 @@ const getItemParser = (props) => ({ data }) => {
 	setItem({
 		id: item.id,
 		title: getResponseProp('title', itemType, item),
-		subtitle: itemType === 'document'
-			? item.documentKind && item.documentKind.name
-			: getFormattedDate(new Date(item.eventStartDate)),
+		subtitle: getItemSubtitle(item, itemType),
 		itemType,
 	});
 
-	const tags = getResponseProp('tags', itemType, item);
-	const tagsQuery = builtTagsQuery(map(prop('id'), tags));
 	client.query({
-		query: tagsQuery,
+		query: getQuery(item, itemType),
 	})
-		.then(getContextParser(props))
+		.then(getContextParser(props, item))
 		.catch(getErrorHandler(props));
 };
 
@@ -210,7 +307,7 @@ const performQuery = (props) => {
 	} = props;
 	startLoading();
 	client.query({
-		query: itemType === 'event' ? EVENT_QUERY : DOCUMENT_QUERY,
+		query: getQueryByItemId(itemType),
 		variables: { id },
 	})
 		.then(getItemParser(props))

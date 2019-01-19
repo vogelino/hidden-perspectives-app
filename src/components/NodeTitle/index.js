@@ -28,16 +28,51 @@ const DOCUMENT_QUERY = gql`
 	}
 `;
 
+const STAKEHOLDER_QUERY = gql`
+	query GetStakholder($id: ID!) {
+		Stakeholder(id: $id) {
+			id
+			stakeholderFullName
+		}
+	}
+`;
+
 const getEventSubtitle = ({ eventStartDate }) => formatHumanDate(eventStartDate);
 const getDocumentSubtitle = ({ documentKind }) => ucFirst(documentKind.name);
+const getStakeholderSubtitle = () => 'Participant';
+
+const getQueryByItemId = (itemType) => {
+	switch (itemType) {
+	case 'event': return EVENT_QUERY;
+	case 'document': return DOCUMENT_QUERY;
+	case 'stakeholder': return STAKEHOLDER_QUERY;
+	default: return '';
+	}
+};
+
+const getTitleByItemType = (item, itemType) => {
+	switch (itemType) {
+	case 'event': return item.eventTitle;
+	case 'document': return item.documentTitle;
+	case 'stakeholder': return item.stakeholderFullName;
+	default: return '';
+	}
+};
+
+const getSubtitleByItemType = (item, itemType) => {
+	switch (itemType) {
+	case 'event': return getEventSubtitle(item);
+	case 'document': return getDocumentSubtitle(item);
+	case 'stakeholder': return getStakeholderSubtitle(item);
+	default: return '';
+	}
+};
 
 const getDataParser = ({ itemType, setTitle, setSubtitle }) => ({ data }) => {
 	const dataItemName = ucFirst(itemType);
 	const item = data[dataItemName];
-	const title = item[`${itemType}Title`];
-	const subtitle = itemType === 'event'
-		? getEventSubtitle(item)
-		: getDocumentSubtitle(item);
+	const title = getTitleByItemType(item, itemType);
+	const subtitle = getSubtitleByItemType(item, itemType);
 
 	setTitle(title);
 	setSubtitle(subtitle);
@@ -46,7 +81,7 @@ const getDataParser = ({ itemType, setTitle, setSubtitle }) => ({ data }) => {
 const performQuery = (props) => {
 	const { id, client, itemType } = props;
 	client.query({
-		query: itemType === 'event' ? EVENT_QUERY : DOCUMENT_QUERY,
+		query: getQueryByItemId(itemType),
 		variables: { id },
 	}).then(getDataParser(props));
 };

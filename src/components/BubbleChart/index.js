@@ -17,12 +17,13 @@ const calcBubbleLayout = (data, diameter, padding) => {
 	return bubbleLayout(rootNode);
 };
 
-const formatItems = (bubblesData) => {
+const formatItems = (bubblesData, activeId) => {
 	const formattedData = Object.keys(bubblesData).map((key) => ({
 		...bubblesData[key],
 		id: key,
 		name: bubblesData[key][0].stakeholderFullName,
 		value: bubblesData[key].length,
+		isActive: key === activeId,
 	}));
 
 	return {
@@ -36,8 +37,9 @@ export default compose(
 		items,
 		diameter,
 		bubblesPadding,
+		activeId,
 	}) => {
-		const formattedItems = formatItems(items);
+		const formattedItems = formatItems(items, activeId);
 		const bubbleLayoutItems = calcBubbleLayout(
 			formattedItems,
 			diameter,
