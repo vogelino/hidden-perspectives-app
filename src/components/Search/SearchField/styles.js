@@ -52,6 +52,7 @@ export const ClearButton = styled.span`
 	color: ${({ theme }) => theme.gray500};
 	cursor: pointer;
 	transition: color 200ms ease-out;
+	padding-top: .25rem;
 
 	&:hover {
 		color: ${({ theme }) => theme.gray800};
