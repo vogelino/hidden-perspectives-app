@@ -30,10 +30,6 @@ export const Circle = styled.circle`
 	transform: rotate(-90deg);
 `;
 
-export const ItemCircle = styled.circle`
-	fill: ${({ theme }) => theme.gray900};
-`;
-
 export const LegendObject = styled.foreignObject`
 	text-align: right;
 `;
@@ -56,29 +52,27 @@ export const DocumentLegendContainer = styled.span`
 export const Symbol = styled.span`
 	font-size: .875rem;
 	transform: scale(${({ children }) => (children === '▲' ? 0.7 : 1)});
-	color: ${({ theme }) => theme.gray500};
 	pointer-events: none;
 	width: .875rem;
 	height: .875rem;
-	float: left;
 	line-height: ${({ children }) => (children === '▲' ? '.625rem' : '.75rem')};
-	text-shadow: -2px -2px 0 white, 2px -2px 0 white, -2px 2px 0 white, 2px 2px 0 white;
 	text-decoration: none;
+	float: left;
+	padding-top: 2px;
 `;
 
 export const Document = styled.foreignObject`
 	position: relative;
 	text-align: center;
 	cursor: pointer;
+	border-radius: 50%;
+	background: ${({ current, theme }) => (current ? theme.primary : 'white')};
+	color: ${({ current, theme }) => (current ? 'white' : theme.gray500)};
 
-	&.hovered ${Symbol} {
-		color: ${({ theme }) => theme.primary};
+	&.hovered {
+		color: ${({ current, theme }) => (current ? theme.primaryDark : theme.primary)};
+		background: ${({ current, theme }) => (current ? theme.primaryLight : 'white')};
 	}
-`;
-
-export const ConnectionLine = styled.line`
-	stroke-width: 1px;
-	stroke: ${({ theme }) => theme.commonBorderColor};
 `;
 
 export const BubbleChartContainer = styled.div`
