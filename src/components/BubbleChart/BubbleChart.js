@@ -68,7 +68,7 @@ const BubbleChart = ({
 		>
 			{
 				isEmpty(bubbleLayoutItems) && !isLoading
-					? <Text x={diameter / 2} y={diameter / 2}>no items</Text>
+					? <Text x={diameter / 2} y={diameter / 2}>No participants</Text>
 					: (
 						<Bubbles
 							bubbleLayoutItems={bubbleLayoutItems}
