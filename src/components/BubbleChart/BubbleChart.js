@@ -100,10 +100,18 @@ BubbleChart.propTypes = {
 			stakeholderFullName: PropTypes.string,
 		}),
 	),
-	hoveredElement: PropTypes.shape({
-		id: PropTypes.string.isRequired,
-		itemType: PropTypes.string.isRequired,
-	}),
+	hoveredElement: PropTypes.oneOfType([
+		PropTypes.shape({
+			id: PropTypes.string.isRequired,
+			itemType: PropTypes.string.isRequired,
+		}),
+		PropTypes.arrayOf(
+			PropTypes.shape({
+				id: PropTypes.string.isRequired,
+				itemType: PropTypes.string.isRequired,
+			}),
+		),
+	]),
 };
 
 BubbleChart.defaultProps = {
