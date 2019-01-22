@@ -71,11 +71,21 @@ const STAKEHOLDER_QUERY = gql`
 	}
 `;
 
+const LOCATION_QUERY = gql`
+	query GetLocation($id: ID!) {
+		Location(id: $id) {
+			id
+			locationName
+		}
+	}
+`;
+
 const getQueryByItemId = (itemType) => {
 	switch (itemType) {
 	case 'event': return EVENT_QUERY;
 	case 'document': return DOCUMENT_QUERY;
 	case 'stakeholder': return STAKEHOLDER_QUERY;
+	case 'location': return LOCATION_QUERY;
 	default: return '';
 	}
 };
@@ -132,7 +142,7 @@ const builtTagsQuery = (tagIds) => gql`
 	}
 `;
 
-const builtQueryStringByItemId = (type, { id }) => {
+const builtStakeholderQueryStringByItemId = (type, { id }) => {
 	const orderBy = getOrderBy(type);
 	const additionalReturnValues = getAdditionalReturnValuesByType(type);
 	const stakeholdersFieldName = type === 'document' ? 'mentionedStakeholders' : 'eventStakeholders';
@@ -160,10 +170,45 @@ const builtQueryStringByItemId = (type, { id }) => {
 	return query;
 };
 
-const builtMentionedInQuery = (item) => gql`
+const builtLocationQueryStringByItemId = (type, { id }) => {
+	const orderBy = getOrderBy(type);
+	const additionalReturnValues = getAdditionalReturnValuesByType(type);
+	const locationsFieldName = type === 'document' ? 'mentionedLocations' : 'eventLocations';
+	const query = `
+		all${ucFirst(type)}s(
+			filter: {
+				${locationsFieldName}_some: { id: "${id}" }
+			}
+			orderBy: ${orderBy}
+		) {
+			id
+			${type}Title
+			${additionalReturnValues}
+			${type}Tags {
+				id
+				name
+			}
+			${type}Description
+			${locationsFieldName} {
+				id
+				locationName
+			}
+		}
+	`;
+	return query;
+};
+
+const builtStakeholderMentionedInQuery = (item) => gql`
 	query {
-		${builtQueryStringByItemId('event', item)}
-		${builtQueryStringByItemId('document', item)}
+		${builtStakeholderQueryStringByItemId('event', item)}
+		${builtStakeholderQueryStringByItemId('document', item)}
+	}
+`;
+
+const builtLocationMentionedInQuery = (item) => gql`
+	query {
+		${builtLocationQueryStringByItemId('event', item)}
+		${builtLocationQueryStringByItemId('document', item)}
 	}
 `;
 
@@ -172,6 +217,7 @@ const getResponseProp = (key, type, item) => {
 	case 'event':
 	case 'document': return prop(`${type}${ucFirst(key)}`, item);
 	case 'stakeholder': return item.stakeholderFullName;
+	case 'location': return item.locationName;
 	default: return '';
 	}
 };
@@ -181,6 +227,7 @@ const getItemSubtitle = (item, itemType) => {
 	case 'event': return getFormattedDate(new Date(item.eventStartDate));
 	case 'document': return item.documentKind && item.documentKind.name;
 	case 'stakeholder': return 'stakeholder';
+	case 'location': return 'location';
 	default: return '';
 	}
 };
@@ -193,7 +240,10 @@ const getQuery = (item, itemType) => {
 		const tagsQuery = builtTagsQuery(map(prop('id'), tags));
 		query = tagsQuery;
 	} else if (itemType === 'stakeholder') {
-		const mentionedInQuery = builtMentionedInQuery(item);
+		const mentionedInQuery = builtStakeholderMentionedInQuery(item);
+		query = mentionedInQuery;
+	} else if (itemType === 'location') {
+		const mentionedInQuery = builtLocationMentionedInQuery(item);
 		query = mentionedInQuery;
 	}
 
@@ -201,7 +251,7 @@ const getQuery = (item, itemType) => {
 };
 
 const getProtagonists = (item, itemType, allDocuments, allEvents) => {
-	const items = itemType === 'stakeholder' ? union(allDocuments, allEvents) : [item];
+	const items = itemType === 'stakeholder' || itemType === 'location' ? union(allDocuments, allEvents) : [item];
 
 	const protagonistsFromAllItems = items.map((currentItem) => {
 		const isEvent = has('eventStakeholders');
