@@ -261,6 +261,7 @@ const getProtagonists = (item, itemType, allDocuments, allEvents) => {
 
 	const flattenedProtagonists = flatten(protagonistsFromAllItems);
 	const clusterProtagonists = (data) => data
+		.filter((d) => d)
 		.reduce((acc, current) => {
 			const { id } = current;
 			return Object.assign(acc, {
@@ -280,10 +281,14 @@ const getContextParser = (props, item) => ({ data: { allEvents, allDocuments } }
 		setEvents,
 		setProtagonists,
 	} = props;
-	const dateExtremes = [
-		new Date(allDocuments[0].documentCreationDate),
-		new Date(allDocuments[allDocuments.length - 1].documentCreationDate),
-	];
+
+	const extremesStart = allDocuments[0]
+		? new Date(allDocuments[0].documentCreationDate)
+		: new Date();
+	const extremesEnd = allDocuments[0]
+		? new Date(allDocuments[allDocuments.length - 1].documentCreationDate)
+		: new Date();
+	const dateExtremes = [extremesStart, extremesEnd];
 	const angleScaleFunction = scaleLinear()
 		.domain(dateExtremes)
 		.range([0, 320]);
