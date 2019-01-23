@@ -28,7 +28,6 @@ export const BubbleCircle = styled.circle.attrs({
 
 export const BubbleText = styled(Text)`
 	${({ hasImage, isHovered }) => hasImage && isHovered && `
-		fill: white;
-		text-shadow: 0 1px 6px rgba(0, 0, 0, .9);
+		opacity: 0;
 	`}
 `;
