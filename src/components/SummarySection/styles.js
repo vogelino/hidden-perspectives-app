@@ -5,6 +5,7 @@ export const Container = styled.div`
 	flex: 0 0 32rem;
 	height: calc(100vh - 8rem);
 	background: white;
+	position: relative;
 `;
 
 export const Items = styled.div`
@@ -71,4 +72,16 @@ export const Symbol = styled.span`
 	&:before {
 		content: '${({ isEvent }) => (isEvent ? '●' : '▲')}';
 	}
+`;
+
+export const LoadingContainer = styled.div`
+	position: absolute;
+	width: 8rem;
+	height: 8rem;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	pointer-events: none;
+	opacity: ${({ isLoading }) => (isLoading ? 1 : 0)};
+	transition: opacity 200ms ease-out;
 `;

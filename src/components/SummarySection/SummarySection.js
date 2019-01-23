@@ -4,6 +4,7 @@ import { NavLink } from 'react-router-dom';
 import { formatHumanDate } from '../../utils/dateUtil';
 import { ucFirst } from '../../utils/stringUtil';
 import { isHovered } from '../../utils/timelineUtil';
+import LoadingIndicator from '../LoadingIndicator';
 import {
 	Container,
 	Items,
@@ -15,14 +16,19 @@ import {
 	Type,
 	Summary,
 	Symbol,
+	LoadingContainer,
 } from './styles';
 
 const SummarySection = ({
 	items,
 	hoveredElement,
 	setHoveredElement,
+	isLoading,
 }) => (
 	<Container>
+		<LoadingContainer isLoading={isLoading}>
+			<LoadingIndicator />
+		</LoadingContainer>
 		<Items id="summary-section">
 			{items.map((item) => {
 				const itemType = item.type === 'Event' ? 'event' : 'document';
@@ -78,12 +84,14 @@ SummarySection.propTypes = {
 		),
 	]),
 	setHoveredElement: PropTypes.func,
+	isLoading: PropTypes.bool,
 };
 
 SummarySection.defaultProps = {
 	items: [],
 	hoveredElement: null,
 	setHoveredElement: () => { },
+	isLoading: true,
 };
 
 export default SummarySection;

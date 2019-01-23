@@ -48,6 +48,6 @@ export const Text = styled.text`
     opacity: ${({ isLoading }) => (isLoading ? 0 : 1)};
     pointer-events: none;
     text-anchor: middle;
-    transition: fill 400ms ease-out;
+    transition: fill 100ms ease-out;
     transform-origin: 50% 50%;
 `;
