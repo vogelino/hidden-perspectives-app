@@ -7,10 +7,8 @@ import {
 	CircleContainer,
 	CircleSvg,
 	Circle,
-	ItemCircle,
 	Document,
 	Symbol,
-	ConnectionLine,
 	LegendObject,
 	EventLegendContainer,
 	DocumentLegendContainer,
@@ -89,19 +87,7 @@ const CircleTimeline = ({
 				const y = getYByAngle(RADIUS_INNER, angle);
 				const isCurrentElement = group.find(({ id }) => id === item.id);
 				const docSize = 14;
-				return [
-					...(
-						isCurrentElement ? [
-							<ConnectionLine
-								key={`line-${docId}`}
-								x1={CIRCLE_CENTER.cx}
-								y1={CIRCLE_CENTER.cy}
-								x2={x}
-								y2={y}
-								shapeRendering="crisp-edges"
-							/>,
-						] : []
-					),
+				return (
 					<Document
 						x={x - (docSize / 2)}
 						y={y - (docSize / 2)}
@@ -117,10 +103,11 @@ const CircleTimeline = ({
 						onMouseLeave={() => setHoveredElement(null)}
 						{...CIRCLE_CENTER}
 						onClick={() => history.push(`/document/context/${docId}`)}
+						current={isCurrentElement}
 					>
 						<Symbol>▲</Symbol>
-					</Document>,
-				];
+					</Document>
+				);
 			})}
 			{events.map((group) => {
 				const { angle, id: docId } = group[0];
@@ -128,19 +115,7 @@ const CircleTimeline = ({
 				const y = getYByAngle(RADIUS_OUTER, angle);
 				const isCurrentElement = group.find(({ id }) => id === item.id);
 				const docSize = 14;
-				return [
-					...(
-						isCurrentElement ? [
-							<ConnectionLine
-								key={`line-${docId}`}
-								x1={CIRCLE_CENTER.cx}
-								y1={CIRCLE_CENTER.cy}
-								x2={x}
-								y2={y}
-								shapeRendering="crisp-edges"
-							/>,
-						] : []
-					),
+				return (
 					<Document
 						x={x - (docSize / 2)}
 						y={y - (docSize / 2)}
@@ -156,15 +131,12 @@ const CircleTimeline = ({
 						onMouseLeave={() => setHoveredElement(null)}
 						{...CIRCLE_CENTER}
 						onClick={() => history.push(`/event/context/${docId}`)}
+						current={isCurrentElement}
 					>
 						<Symbol>●</Symbol>
-					</Document>,
-				];
+					</Document>
+				);
 			})}
-			<ItemCircle
-				{...CIRCLE_CENTER}
-				r={8}
-			/>
 		</CircleSvg>
 		<BubbleChartContainer>
 			<BubbleChart

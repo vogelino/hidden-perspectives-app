@@ -98,10 +98,18 @@ TimelineItems.propTypes = {
 			).isRequired,
 		}),
 	),
-	hoveredElement: PropTypes.shape({
-		id: PropTypes.string.isRequired,
-		itemType: PropTypes.string.isRequired,
-	}),
+	hoveredElement: PropTypes.oneOfType([
+		PropTypes.shape({
+			id: PropTypes.string.isRequired,
+			itemType: PropTypes.string.isRequired,
+		}),
+		PropTypes.arrayOf(
+			PropTypes.shape({
+				id: PropTypes.string.isRequired,
+				itemType: PropTypes.string.isRequired,
+			}),
+		),
+	]),
 	setHoveredElement: PropTypes.func,
 };
 

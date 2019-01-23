@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { NavLink } from 'react-router-dom';
 
 export const BubbleChartContainer = styled.div`
     border-radius: 50%;
@@ -15,10 +14,6 @@ export const BubbleChartContainer = styled.div`
         display: block;
         margin-top: 100%;
     }
-`;
-
-export const BubbleLink = styled(NavLink)`
-    pointer-events: all;
 `;
 
 export const BubblesSvg = styled.svg`
@@ -45,13 +40,6 @@ export const BubblesLoadingContainer = styled.div`
 	transition: opacity 200ms ease-out;
 `;
 
-export const Bubble = styled.circle`
-    align-items: center;
-    height: ${({ r }) => r * 2}px;
-    fill: ${({ isHovered, theme }) => (isHovered ? theme.primaryLight : theme.gray200)};
-    opacity: ${({ isLoading }) => (isLoading ? 0 : 1)};
-`;
-
 export const Text = styled.text`
     alignment-baseline: central;
     fill: ${({ isHovered, theme }) => (isHovered ? theme.primaryDark : theme.gray900)};
@@ -60,5 +48,6 @@ export const Text = styled.text`
     opacity: ${({ isLoading }) => (isLoading ? 0 : 1)};
     pointer-events: none;
     text-anchor: middle;
-    transition: fill 400ms ease-out;
+    transition: fill 100ms ease-out, opacity 100ms ease-out;
+    transform-origin: 50% 50%;
 `;
