@@ -17,6 +17,7 @@ const Bubble = ({
 	setHoveredElement,
 	textNodeWidth,
 	isLoading,
+	image,
 }) => {
 	const { name, id, isActive } = data;
 
@@ -44,6 +45,7 @@ const Bubble = ({
 				isLoading={isLoading}
 				isHovered={hovered}
 				isActive={isActive}
+				fill={image ? `url(#image-def-${id})` : undefined}
 			/>
 			<BubbleText
 				x={x}
@@ -52,8 +54,9 @@ const Bubble = ({
 				isLoading={isLoading}
 				isHovered={hovered}
 				isActive={isActive}
-				fontSize={fontSize}
+				fontSize={fontSize > 0 ? fontSize : 0}
 				ref={setComponentRef}
+				hasImage={Boolean(image)}
 			>
 				{initials}
 			</BubbleText>
@@ -75,6 +78,11 @@ Bubble.propTypes = {
 	hovered: PropTypes.bool,
 	setComponentRef: PropTypes.func,
 	setHoveredElement: PropTypes.func,
+	image: PropTypes.shape({
+		id: PropTypes.string.isRequired,
+		url: PropTypes.string,
+		size: PropTypes.number.isRequired,
+	}),
 };
 
 Bubble.defaultProps = {
@@ -83,6 +91,7 @@ Bubble.defaultProps = {
 	setComponentRef: () => {},
 	setHoveredElement: () => {},
 	textNodeWidth: undefined,
+	image: undefined,
 };
 
 export default Bubble;

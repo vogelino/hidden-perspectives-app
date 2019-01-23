@@ -222,6 +222,32 @@ const getProtagonists = (item, itemType, allDocuments, allEvents) => {
 	return parsedProtagonists;
 };
 
+const getDocOrEventParser = (getAngle) => pipe(
+	map(({ date, ...item }) => ({
+		...item,
+		date,
+		angle: getAngle(date),
+	})),
+	(items) => groupItemsBy(items, 'angle'),
+	sortBy(prop('date')),
+);
+
+const normalizeItems = (dateKey, items) => map((item) => ({
+	...item,
+	date: new Date(item[dateKey]),
+}), items);
+
+const mapAllItemsDates = ({ allDocuments, allEvents }) => {
+	const normalizedDocuments = normalizeItems('documentCreationDate', allDocuments);
+	const normalizedEvents = normalizeItems('eventStartDate', allEvents);
+	const allItems = sortBy(prop('date'), union(normalizedDocuments, normalizedEvents));
+	return {
+		allItems,
+		documents: normalizedDocuments,
+		events: normalizedEvents,
+	};
+};
+
 const getContextParser = (props, item) => ({ data: { allEvents, allDocuments } }) => {
 	const {
 		itemType,
@@ -230,9 +256,19 @@ const getContextParser = (props, item) => ({ data: { allEvents, allDocuments } }
 		setEvents,
 		setProtagonists,
 	} = props;
+
+	if (allDocuments.length === 0 && allEvents.length === 0) {
+		setDocuments([]);
+		setEvents([]);
+		stopLoading();
+		return;
+	}
+
+	const { allItems, documents, events } = mapAllItemsDates({ allDocuments, allEvents });
+
 	const dateExtremes = [
-		new Date(allDocuments[0].documentCreationDate),
-		new Date(allDocuments[allDocuments.length - 1].documentCreationDate),
+		allItems[0].date,
+		allItems[allItems.length - 1].date,
 	];
 	const angleScaleFunction = scaleLinear()
 		.domain(dateExtremes)
@@ -240,37 +276,9 @@ const getContextParser = (props, item) => ({ data: { allEvents, allDocuments } }
 
 	const roundAngle = (angle) => angle - (angle % 4);
 	const getAngle = pipe(angleScaleFunction, roundAngle);
-	const parsedDocuments = pipe(
-		map((document) => {
-			const { id, documentCreationDate } = document;
-			const date = new Date(documentCreationDate);
-			const angle = getAngle(date);
-			return {
-				...document,
-				id,
-				date,
-				angle,
-			};
-		}),
-		(items) => groupItemsBy(items, 'angle'),
-		sortBy(prop('date')),
-	)(allDocuments);
-
-	const parsedEvents = pipe(
-		map((event) => {
-			const { id, eventStartDate } = event;
-			const date = new Date(eventStartDate);
-			const angle = getAngle(date);
-			return {
-				...event,
-				id,
-				date,
-				angle,
-			};
-		}),
-		(items) => groupItemsBy(items, 'angle'),
-		sortBy(prop('date')),
-	)(allEvents);
+	const itemParser = getDocOrEventParser(getAngle);
+	const parsedDocuments = itemParser(documents);
+	const parsedEvents = itemParser(events);
 
 	setDocuments(parsedDocuments);
 	setEvents(parsedEvents);
