@@ -58,12 +58,13 @@ export default compose(
 	}),
 	withHandlers({
 		fetchImages: (props) => (prevProps) => {
-			const { items: { children: newItems } } = props;
-			const { items: { children: oldItems } } = prevProps;
-			const itemsChanged = oldItems.length === 0 && newItems.length > 0;
-			const activeIdChanged = prevProps.activeId !== props.activeId;
-			if (itemsChanged || activeIdChanged) {
+			const { bubbleLayoutItems: newItems } = props;
+			const { bubbleLayoutItems: oldItems } = prevProps;
+			const isFirstRender = (!oldItems || oldItems.length === 0) && (newItems && newItems.length);
+			const isSecondRender = !isFirstRender && oldItems && oldItems.length !== newItems.length;
+			if (isFirstRender || isSecondRender) {
 				const { bubbleLayoutItems, setImages } = props;
+				setImages([]);
 				const loadAllImages = bubbleLayoutItems.map((item) => {
 					const { id, name } = item.data;
 					const size = Math.ceil(item.r * 2);

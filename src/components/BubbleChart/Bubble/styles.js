@@ -6,9 +6,12 @@ export const BubbleLink = styled(NavLink)`
 	pointer-events: all;
 `;
 
-export const BubbleCircle = styled.circle`
+export const BubbleCircle = styled.circle.attrs({
+	style: ({ r }) => ({
+		height: `${r * 2}px`,
+	}),
+})`
 	align-items: center;
-	height: ${({ r }) => r * 2}px;
 	${({ fill, isHovered, theme }) => {
 		if (fill) return '';
 		const colorFill = (isHovered ? theme.primaryLight : theme.gray200);
