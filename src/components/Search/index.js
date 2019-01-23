@@ -40,6 +40,7 @@ const SEARCH_QUERY = gql`
 				OR: [
 					{ documentTitle_contains: $searchQuery }
 					{ documentDescription_contains: $searchQuery }
+					{ documentTranscript_contains: $searchQuery }
 					{ mentionedStakeholders_some: {
 						stakeholderFullName_contains: $searchQuery
 					} }
