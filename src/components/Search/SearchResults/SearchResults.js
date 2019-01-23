@@ -19,7 +19,7 @@ const loadingResults = Object.keys([...Array(3)]);
 
 const getFormattedTitle = (title, searchQuery) => {
 	const titleLowercased = title.toLowerCase();
-	const searchQueryLowercased = title.toLowerCase().
+	const searchQueryLowercased = title.toLowerCase();
 	const index = titleLowercased.indexOf(searchQueryLowercased);
 	let formattedTitle = title;
 
