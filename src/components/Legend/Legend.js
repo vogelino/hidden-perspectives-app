@@ -6,17 +6,34 @@ const getCountSuffix = (label, count, isLoading) => (
 	isLoading ? label : `${label} (${count})`
 );
 
-export const DocumentLegend = ({ right, itemCount, isLoading }) => (
-	<LegendLabel right={right}>
-		{getCountSuffix('Documents', itemCount, isLoading)}
-	</LegendLabel>
-);
+const legendProptypes = {
+	right: PropTypes.bool,
+	itemCount: PropTypes.number,
+	isLoading: PropTypes.bool,
+};
 
-export const EventLegend = ({ right, itemCount, isLoading }) => (
-	<LegendLabel symbol="●" right={right}>
-		{getCountSuffix('Events', itemCount, isLoading)}
-	</LegendLabel>
-);
+const legendDefaultProps = {
+	right: false,
+	itemCount: 0,
+	isLoading: true,
+};
+
+const createLegendComponent = (label, symbol) => {
+	const Legend = ({ right, itemCount, isLoading }) => (
+		<LegendLabel symbol={symbol} right={right}>
+			{getCountSuffix(label, itemCount, isLoading)}
+		</LegendLabel>
+	);
+
+	Legend.propTypes = legendProptypes;
+	Legend.defaultProps = legendDefaultProps;
+
+	return Legend;
+};
+
+export const DocumentLegend = createLegendComponent('Documents');
+export const EventLegend = createLegendComponent('Events', '●');
+export const ProtagonistLegend = createLegendComponent('Protagonists', '⚯');
 
 export const MainTimelineLegend = ({ documentsCount, eventsCount, isLoading }) => (
 	<MainTimelineContainer>
@@ -32,24 +49,6 @@ export const MainTimelineLegend = ({ documentsCount, eventsCount, isLoading }) =
 		</Right>
 	</MainTimelineContainer>
 );
-
-const legendProptypes = {
-	right: PropTypes.bool,
-	itemCount: PropTypes.number,
-	isLoading: PropTypes.bool,
-};
-
-const legendDefaultProps = {
-	right: false,
-	itemCount: 0,
-	isLoading: true,
-};
-
-DocumentLegend.propTypes = legendProptypes;
-EventLegend.propTypes = legendProptypes;
-
-DocumentLegend.defaultProps = legendDefaultProps;
-EventLegend.defaultProps = legendDefaultProps;
 
 MainTimelineLegend.propTypes = {
 	documentsCount: legendProptypes.itemCount,
