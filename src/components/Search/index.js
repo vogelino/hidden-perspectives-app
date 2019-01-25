@@ -128,7 +128,7 @@ export default compose(
 				{ key: 'all', title: 'All' },
 				{ key: 'event', title: 'Events' },
 				{ key: 'document', title: 'Documents' },
-				{ key: 'stakeholder', title: 'Participants' },
+				{ key: 'stakeholder', title: 'Protagonists' },
 			],
 		};
 	}),
@@ -198,7 +198,7 @@ export default compose(
 			const activeResultObj = searchResults.find(propEq('id', activeResult));
 			if (!activeResultObj) return;
 			const { id, type } = activeResultObj;
-			const itemType = type === 'stakeholder' ? 'participant' : type;
+			const itemType = type === 'stakeholder' ? 'protagonist' : type;
 			history.push(`/${itemType}/context/${id}`);
 		},
 		onEscape: (props) => (evt) => {
