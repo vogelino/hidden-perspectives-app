@@ -68,7 +68,7 @@ const CircleTimeline = ({
 				y={0}
 			>
 				<EventLegendContainer>
-					<EventLegend />
+					<EventLegend itemCount={documents.length} />
 				</EventLegendContainer>
 			</LegendObject>
 			<LegendObject
@@ -78,7 +78,7 @@ const CircleTimeline = ({
 				y={RADIUS_OUTER - RADIUS_INNER}
 			>
 				<DocumentLegendContainer>
-					<DocumentLegend />
+					<DocumentLegend itemCount={events.length} />
 				</DocumentLegendContainer>
 			</LegendObject>
 			{documents.map((group) => {
