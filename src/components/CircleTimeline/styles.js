@@ -49,6 +49,16 @@ export const DocumentLegendContainer = styled.span`
 	${legendContainerCSS}
 `;
 
+export const DateLabel = styled.span`
+	color: black;
+	left: 17px;
+	font-size: .6rem;
+	display: none;
+	position: absolute;
+	top: 1px;
+	white-space: nowrap;
+`;
+
 export const Symbol = styled.span`
 	font-size: .875rem;
 	transform: scale(${({ children }) => (children === '▲' ? 0.7 : 1)});
@@ -73,6 +83,10 @@ export const Document = styled.foreignObject`
 	&.hovered {
 		color: ${({ current, theme }) => (current ? theme.primaryDark : theme.primary)};
 		background: ${({ current, theme }) => (current ? theme.primaryLight : 'white')};
+
+		${DateLabel} {
+			display: block;
+		}
 	}
 `;
 
@@ -83,4 +97,3 @@ export const BubbleChartContainer = styled.div`
 	width: 50%;
 	max-width: 300px;
 `;
-

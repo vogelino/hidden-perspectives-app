@@ -9,6 +9,7 @@ import {
 	Circle,
 	Document,
 	Symbol,
+	DateLabel,
 	LegendObject,
 	EventLegendContainer,
 	DocumentLegendContainer,
@@ -28,6 +29,17 @@ const getXByAngle = (radius, angle) => (radius * Math.sin(toRadian(angle)))
 	+ RADIUS_OUTER + MARGIN;
 const getYByAngle = (radius, angle) => (radius * -Math.cos(toRadian(angle)))
 	+ RADIUS_OUTER + MARGIN;
+
+const getFormattedGroupDate = (group) => {
+	const groupDate = group[0].date;
+	const formattedGroupDate = `
+		${groupDate.getDate()}.
+		${groupDate.getMonth() + 1}.
+		${groupDate.getFullYear()}
+	`;
+
+	return formattedGroupDate;
+};
 
 const CircleTimeline = ({
 	item,
@@ -87,6 +99,7 @@ const CircleTimeline = ({
 				const y = getYByAngle(RADIUS_INNER, angle);
 				const isCurrentElement = group.find(({ id }) => id === item.id);
 				const docSize = 14;
+
 				return (
 					<Document
 						x={x - (docSize / 2)}
@@ -106,6 +119,7 @@ const CircleTimeline = ({
 						current={isCurrentElement}
 					>
 						<Symbol>▲</Symbol>
+						<DateLabel>{getFormattedGroupDate(group)}</DateLabel>
 					</Document>
 				);
 			})}
@@ -134,6 +148,7 @@ const CircleTimeline = ({
 						current={isCurrentElement}
 					>
 						<Symbol>●</Symbol>
+						<DateLabel>{getFormattedGroupDate(group)}</DateLabel>
 					</Document>
 				);
 			})}
