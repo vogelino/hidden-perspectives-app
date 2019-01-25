@@ -306,6 +306,7 @@ const getContextParser = (props, item) => ({ data: { allEvents, allDocuments } }
 		setDocuments,
 		setEvents,
 		setProtagonists,
+		setItemCounts,
 	} = props;
 
 	if (allDocuments.length === 0 && allEvents.length === 0) {
@@ -331,6 +332,7 @@ const getContextParser = (props, item) => ({ data: { allEvents, allDocuments } }
 	const parsedDocuments = itemParser(documents);
 	const parsedEvents = itemParser(events);
 
+	setItemCounts({ documentsCount: allDocuments.length, eventsCount: allEvents.length });
 	setDocuments(parsedDocuments);
 	setEvents(parsedEvents);
 	setProtagonists(getProtagonists(item, itemType, allDocuments, allEvents));
@@ -382,6 +384,7 @@ export default compose(
 	withState('documents', 'setDocuments', []),
 	withState('events', 'setEvents', []),
 	withState('protagonists', 'setProtagonists', {}),
+	withState('itemCounts', 'setItemCounts', { eventsCount: 0, documentsCount: 0 }),
 	withState('hoveredElement', 'setHoveredElement', null),
 	lifecycle({
 		componentDidMount() {

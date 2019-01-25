@@ -38,6 +38,7 @@ const CircleTimeline = ({
 	hoveredElement,
 	setHoveredElement,
 	history,
+	itemCounts,
 }) => (
 	<CircleContainer>
 		<CircleSvg
@@ -68,7 +69,10 @@ const CircleTimeline = ({
 				y={0}
 			>
 				<EventLegendContainer>
-					<EventLegend itemCount={documents.length} />
+					<EventLegend
+						itemCount={itemCounts.eventsCount}
+						isLoading={isLoading}
+					/>
 				</EventLegendContainer>
 			</LegendObject>
 			<LegendObject
@@ -78,7 +82,10 @@ const CircleTimeline = ({
 				y={RADIUS_OUTER - RADIUS_INNER}
 			>
 				<DocumentLegendContainer>
-					<DocumentLegend itemCount={events.length} />
+					<DocumentLegend
+						itemCount={itemCounts.documentsCount}
+						isLoading={isLoading}
+					/>
 				</DocumentLegendContainer>
 			</LegendObject>
 			{documents.map((group) => {
@@ -190,6 +197,10 @@ CircleTimeline.propTypes = {
 		),
 	]),
 	setHoveredElement: PropTypes.func,
+	itemCounts: PropTypes.shape({
+		eventsCount: PropTypes.number.isRequired,
+		documentsCount: PropTypes.number.isRequired,
+	}).isRequired,
 };
 
 CircleTimeline.defaultProps = {
