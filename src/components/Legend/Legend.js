@@ -2,19 +2,33 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { LegendLabel, MainTimelineContainer, Right } from './styles';
 
-export const DocumentLegend = ({ right, itemCount }) => (
-	<LegendLabel right={right}>{`Documents (${itemCount})`}</LegendLabel>
+const getCountSuffix = (label, count, isLoading) => (
+	isLoading ? label : `${label} (${count})`
 );
 
-export const EventLegend = ({ right, itemCount }) => (
-	<LegendLabel symbol="●" right={right}>{`Events (${itemCount})`}</LegendLabel>
+export const DocumentLegend = ({ right, itemCount, isLoading }) => (
+	<LegendLabel right={right}>
+		{getCountSuffix('Documents', itemCount, isLoading)}
+	</LegendLabel>
 );
 
-export const MainTimelineLegend = () => (
+export const EventLegend = ({ right, itemCount, isLoading }) => (
+	<LegendLabel symbol="●" right={right}>
+		{getCountSuffix('Events', itemCount, isLoading)}
+	</LegendLabel>
+);
+
+export const MainTimelineLegend = ({ documentsCount, eventsCount, isLoading }) => (
 	<MainTimelineContainer>
-		<DocumentLegend />
+		<DocumentLegend
+			itemCount={documentsCount}
+			isLoading={isLoading}
+		/>
 		<Right>
-			<EventLegend />
+			<EventLegend
+				itemCount={eventsCount}
+				isLoading={isLoading}
+			/>
 		</Right>
 	</MainTimelineContainer>
 );
@@ -22,11 +36,13 @@ export const MainTimelineLegend = () => (
 const legendProptypes = {
 	right: PropTypes.bool,
 	itemCount: PropTypes.number,
+	isLoading: PropTypes.bool,
 };
 
 const legendDefaultProps = {
 	right: false,
 	itemCount: 0,
+	isLoading: true,
 };
 
 DocumentLegend.propTypes = legendProptypes;
@@ -34,3 +50,15 @@ EventLegend.propTypes = legendProptypes;
 
 DocumentLegend.defaultProps = legendDefaultProps;
 EventLegend.defaultProps = legendDefaultProps;
+
+MainTimelineLegend.propTypes = {
+	documentsCount: legendProptypes.itemCount,
+	eventsCount: legendProptypes.itemCount,
+	isLoading: legendProptypes.isLoading,
+};
+
+MainTimelineLegend.defaultProps = {
+	documentsCount: legendDefaultProps.itemCount,
+	eventsCount: legendDefaultProps.itemCount,
+	isLoading: legendDefaultProps.isLoading,
+};
