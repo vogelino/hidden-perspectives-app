@@ -197,6 +197,7 @@ const getEventsAndDocuments = ({
 	setItemCounts({
 		eventsCount: events.length,
 		documentsCount: documents.length,
+		protagonistsCount: 0,
 	});
 	stopLoading();
 };
@@ -214,6 +215,7 @@ const getProtagonistsInViewport = (timelineElement, props) => {
 	const {
 		setBubbleChartItems,
 		setFetchingProtagonists,
+		setItemCounts,
 	} = props;
 
 	const timelineEventIds = getEventIdsInViewport(timelineElement);
@@ -229,6 +231,9 @@ const getProtagonistsInViewport = (timelineElement, props) => {
 		})
 			.then((response) => {
 				const clusteredProtagonists = getClusteredProtagonists(response);
+				setItemCounts({
+					protagonistsCount: Object.keys(clusteredProtagonists).length,
+				});
 				setBubbleChartItems(clusteredProtagonists);
 				setFetchingProtagonists(false);
 			})
@@ -250,14 +255,19 @@ export default compose(
 	withLoading,
 	withErrors,
 	withState('timelineItems', 'setTimelineItems', []),
-	withState('itemCounts', 'setItemCounts', { eventsCount: 0, documentsCount: 0 }),
+	withState('itemCounts', 'setItemCountObject', { eventsCount: 0, documentsCount: 0, protagonistsCount: 0 }),
 	withState('minimapItems', 'setMinimapItems', []),
 	withState('bubbleChartItems', 'setBubbleChartItems', {}),
 	withState('timelineContainer', 'setTimelineContainer', null),
 	withState('fetchingProtagonists', 'setFetchingProtagonists', true),
 	withState('initialProtagonistsFetched', 'setInitialProtagonistsFetched', false),
 	withState('hoveredElement', 'setHoveredElement', null),
-	withHandlers({ onRef }),
+	withHandlers({
+		onRef,
+		setItemCounts: ({ itemCounts, setItemCountObject }) => (countObj) => setItemCountObject(
+			{ ...itemCounts, ...countObj },
+		),
+	}),
 	lifecycle({
 		componentDidMount() {
 			const { props } = this;
