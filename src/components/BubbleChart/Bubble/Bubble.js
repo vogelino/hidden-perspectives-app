@@ -33,7 +33,7 @@ const Bubble = ({
 	}
 	return (
 		<BubbleLink
-			to={`/participant/context/${id}`}
+			to={`/protagonist/context/${id}`}
 			onMouseEnter={() => setHoveredElement({ itemType: 'stakeholder', ...data })}
 			onMouseLeave={() => setHoveredElement(null)}
 		>

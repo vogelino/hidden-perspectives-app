@@ -10,7 +10,7 @@ const SearchField = ({
 		<Field
 			type="text"
 			value={searchQuery}
-			placeholder="Search for documents, events, locations or participants"
+			placeholder="Search for documents, events, locations or protagonists"
 			onChange={(evt) => onSearch(evt.target.value)}
 			id="search-bar"
 		/>
