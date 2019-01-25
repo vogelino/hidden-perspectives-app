@@ -18,7 +18,9 @@ const MainTimeline = ({
 	onRef,
 	setHoveredElement,
 	hoveredElement,
-	itemCounts,
+	eventsCount,
+	documentsCount,
+	protagonistsCount,
 }) => (
 	<Container id="mainTimeline" ref={onRef}>
 		<LoadingContainer isLoading={isLoading}>
@@ -35,7 +37,12 @@ const MainTimeline = ({
 			hoveredElement={hoveredElement}
 			setHoveredElement={setHoveredElement}
 		/>
-		<MainTimelineLegend {...itemCounts} isLoading={isLoading} />
+		<MainTimelineLegend
+			isLoading={isLoading}
+			eventsCount={eventsCount}
+			documentsCount={documentsCount}
+			protagonistsCount={protagonistsCount}
+		/>
 		<TimelineItems
 			timelineItems={timelineItems}
 			hoveredElement={hoveredElement}
@@ -50,10 +57,9 @@ MainTimeline.propTypes = {
 		id: PropTypes.string.isRequired,
 		density: PropTypes.number.isRequired,
 	})),
-	itemCounts: PropTypes.shape({
-		eventsCount: PropTypes.number.isRequired,
-		documentsCount: PropTypes.number.isRequired,
-	}).isRequired,
+	eventsCount: PropTypes.number.isRequired,
+	documentsCount: PropTypes.number.isRequired,
+	protagonistsCount: PropTypes.number.isRequired,
 	bubbleChartItems: Protagonists.propTypes.items,
 	hoveredElement: TimelineItems.propTypes.hoveredElement,
 	setHoveredElement: PropTypes.func,
