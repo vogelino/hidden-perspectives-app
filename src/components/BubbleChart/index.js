@@ -61,7 +61,10 @@ export default compose(
 			const { bubbleLayoutItems: newItems } = props;
 			const { bubbleLayoutItems: oldItems } = prevProps;
 			const isFirstRender = (!oldItems || oldItems.length === 0) && (newItems && newItems.length);
-			const isSecondRender = !isFirstRender && oldItems && oldItems.length !== newItems.length;
+			const isSecondRender = !isFirstRender
+				&& oldItems
+				&& newItems
+				&& oldItems.length !== newItems.length;
 			if (isFirstRender || isSecondRender) {
 				const { bubbleLayoutItems, setImages } = props;
 				setImages([]);

@@ -5,7 +5,7 @@ import Minimap from './Minimap';
 import { LoadingContainer } from '../LoadingIndicator/styles';
 import LoadingIndicator from '../LoadingIndicator';
 import TimelineItems from './TimelineItems';
-import Stakeholders from './Stakeholders';
+import Protagonists from './Protagonists';
 import { MainTimelineLegend } from '../Legend';
 
 const MainTimeline = ({
@@ -29,7 +29,7 @@ const MainTimeline = ({
 			isLoading={isLoading}
 			items={minimapItems}
 		/>
-		<Stakeholders
+		<Protagonists
 			isLoading={fetchingProtagonists}
 			items={bubbleChartItems}
 			hoveredElement={hoveredElement}
@@ -54,7 +54,7 @@ MainTimeline.propTypes = {
 		eventsCount: PropTypes.number.isRequired,
 		documentsCount: PropTypes.number.isRequired,
 	}).isRequired,
-	bubbleChartItems: Stakeholders.propTypes.items,
+	bubbleChartItems: Protagonists.propTypes.items,
 	hoveredElement: TimelineItems.propTypes.hoveredElement,
 	setHoveredElement: PropTypes.func,
 	errors: PropTypes.arrayOf(PropTypes.string),
@@ -67,7 +67,7 @@ MainTimeline.defaultProps = {
 	hoveredElement: TimelineItems.defaultProps.hoveredElement,
 	setHoveredElement: () => {},
 	timelineItems: TimelineItems.defaultProps.timelineItems,
-	bubbleChartItems: Stakeholders.defaultProps.items,
+	bubbleChartItems: Protagonists.defaultProps.items,
 	minimapItems: [],
 	errors: [],
 	isLoading: true,

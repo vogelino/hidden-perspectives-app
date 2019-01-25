@@ -1,6 +1,9 @@
 import wiki from 'wikijs';
 
-export const getWikipediaImage = (pageName) => wiki().page(pageName)
+export const getWikipediaImage = (pageName) => wiki(({
+	apiUrl: 'https://en.wikipedia.org/w/api.php',
+	origin: '*',
+})).page(pageName)
 	.then((page) => page.mainImage())
 	.then((mainImage) => new Promise((resolve) => {
 		const image = new Image();

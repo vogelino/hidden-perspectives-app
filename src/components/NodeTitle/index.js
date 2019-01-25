@@ -48,7 +48,7 @@ const LOCATION_QUERY = gql`
 
 const getEventSubtitle = ({ eventStartDate }) => formatHumanDate(eventStartDate);
 const getDocumentSubtitle = ({ documentKind }) => ucFirst(documentKind.name);
-const getStakeholderSubtitle = () => 'Participant';
+const getStakeholderSubtitle = () => 'Protagonist';
 const getLocationSubtitle = () => 'Location';
 
 const getQueryByItemId = (itemType) => {

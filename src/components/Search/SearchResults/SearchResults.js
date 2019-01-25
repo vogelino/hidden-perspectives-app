@@ -127,7 +127,7 @@ SearchResults.defaultProps = {
 		{ key: 'all', title: 'All' },
 		{ key: 'event', title: 'Events' },
 		{ key: 'document', title: 'Documents' },
-		{ key: 'stakeholder', title: 'Participants' },
+		{ key: 'stakeholder', title: 'Protagonists' },
 	],
 };
 
