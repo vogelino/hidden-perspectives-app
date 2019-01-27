@@ -181,6 +181,7 @@ const getEventsAndDocuments = ({
 	setTimelineItems,
 	stopLoading,
 	setMinimapItems,
+	setItemCounts,
 }) => ({ data: { allEvents: events, allDocuments: documents } }) => {
 	const items = parseItems({
 		events,
@@ -193,6 +194,10 @@ const getEventsAndDocuments = ({
 
 	setTimelineItems(items);
 	setMinimapItems(getMinimap(items));
+	setItemCounts({
+		eventsCount: events.length,
+		documentsCount: documents.length,
+	});
 	stopLoading();
 };
 
@@ -245,6 +250,7 @@ export default compose(
 	withLoading,
 	withErrors,
 	withState('timelineItems', 'setTimelineItems', []),
+	withState('itemCounts', 'setItemCounts', { eventsCount: 0, documentsCount: 0 }),
 	withState('minimapItems', 'setMinimapItems', []),
 	withState('bubbleChartItems', 'setBubbleChartItems', {}),
 	withState('timelineContainer', 'setTimelineContainer', null),
