@@ -15,6 +15,8 @@ const TimelineItems = ({
 	timelineItems,
 	hoveredElement,
 	setHoveredElement,
+	pinnedElement,
+	setPinnedElement,
 }) => timelineItems.map(({ year, months, ...yearKey }) => (
 	<ContainerWithStickyLabel
 		label={year}
@@ -28,6 +30,7 @@ const TimelineItems = ({
 				date={`${month} ${year}`}
 				{...monthKey}
 				hoveredElement={hoveredElement}
+				pinnedElement={pinnedElement}
 			>
 				{days.map(({
 					day,
@@ -36,16 +39,25 @@ const TimelineItems = ({
 					documents,
 					...dayKey
 				}) => {
-					const mapTimelineItem = (itemType) => (item) => (
-						<TimelineElement
-							key={item.id}
-							{...item}
-							itemType={itemType}
-							hoveredElement={hoveredElement}
-							hovered={isHovered(item, hoveredElement, itemType)}
-							hoverHandler={setHoveredElement}
-						/>
-					);
+					const mapTimelineItem = (itemType) => (item) => {
+						const hovered = isHovered(item, hoveredElement, itemType);
+						const pinned = isHovered(item, pinnedElement, itemType);
+						return (
+							<TimelineElement
+								key={item.id}
+								{...item}
+								itemType={itemType}
+								hoveredElement={hoveredElement}
+								hovered={hovered}
+								pinned={!hoveredElement && pinned}
+								hoverHandler={setHoveredElement}
+								clickHandler={(pinEl) => {
+									if (pinnedElement && pinEl.id === pinnedElement.id) return setPinnedElement(null);
+									return setPinnedElement(pinEl);
+								}}
+							/>
+						);
+					};
 					return (
 						<EventContainer key={key}>
 							<Event {...dayKey}>
@@ -111,12 +123,27 @@ TimelineItems.propTypes = {
 		),
 	]),
 	setHoveredElement: PropTypes.func,
+	pinnedElement: PropTypes.oneOfType([
+		PropTypes.shape({
+			id: PropTypes.string.isRequired,
+			itemType: PropTypes.string.isRequired,
+		}),
+		PropTypes.arrayOf(
+			PropTypes.shape({
+				id: PropTypes.string.isRequired,
+				itemType: PropTypes.string.isRequired,
+			}),
+		),
+	]),
+	setPinnedElement: PropTypes.func,
 };
 
 TimelineItems.defaultProps = {
 	hoveredElement: null,
+	pinnedElement: null,
 	timelineItems: [],
 	setHoveredElement: () => {},
+	setPinnedElement: () => {},
 };
 
 export default TimelineItems;

@@ -214,8 +214,10 @@ const getProtagonistsInViewport = (timelineElement, props) => {
 	const {
 		setBubbleChartItems,
 		setFetchingProtagonists,
+		setPinnedElement,
 	} = props;
 
+	setPinnedElement(null);
 	const timelineEventIds = getEventIdsInViewport(timelineElement);
 
 	if (timelineEventIds.length > 0) {
@@ -257,6 +259,7 @@ export default compose(
 	withState('fetchingProtagonists', 'setFetchingProtagonists', true),
 	withState('initialProtagonistsFetched', 'setInitialProtagonistsFetched', false),
 	withState('hoveredElement', 'setHoveredElement', null),
+	withState('pinnedElement', 'setPinnedElement', null),
 	withHandlers({ onRef }),
 	lifecycle({
 		componentDidMount() {
@@ -283,7 +286,8 @@ export default compose(
 				|| (nextProps.fetchingProtagonists !== this.props.fetchingProtagonists)
 				|| (nextProps.errors.length !== this.props.errors.length)
 				|| (nextProps.isLoading !== this.props.isLoading)
-				|| (nextProps.hoveredElement !== this.props.hoveredElement);
+				|| (nextProps.hoveredElement !== this.props.hoveredElement)
+				|| (nextProps.pinnedElement !== this.props.pinnedElement);
 		},
 	}),
 )(MainTimeline);
