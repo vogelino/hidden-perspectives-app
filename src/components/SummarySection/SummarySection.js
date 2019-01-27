@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { NavLink } from 'react-router-dom';
 import { formatHumanDate } from '../../utils/dateUtil';
 import { ucFirst } from '../../utils/stringUtil';
 import { isHovered } from '../../utils/timelineUtil';
@@ -23,6 +22,8 @@ const SummarySection = ({
 	items,
 	hoveredElement,
 	setHoveredElement,
+	pinnedElement,
+	setPinnedElement,
 	isLoading,
 }) => (
 	<Container>
@@ -33,10 +34,14 @@ const SummarySection = ({
 			{items.map((item) => {
 				const itemType = item.type === 'Event' ? 'event' : 'document';
 				const hovered = isHovered(item, hoveredElement, itemType);
+				const pinned = isHovered(item, pinnedElement, itemType);
 				return (
 					<Item
 						key={item.id}
-						className={hovered && 'hovered'}
+						className={[
+							hovered ? 'hovered' : '',
+							!hoveredElement && pinned ? 'pinned' : '',
+						].join(' ')}
 						id={`summary-${item.id}`}
 					>
 						<SecondaryInfo variant="h6">
@@ -49,10 +54,20 @@ const SummarySection = ({
 								variant="h5"
 								onMouseEnter={() => setHoveredElement({ ...item, itemType })}
 								onMouseLeave={() => setHoveredElement(null)}
+								onClick={() => {
+									if (
+										pinnedElement && (
+											pinnedElement.id === item.id
+											|| (Array.isArray(pinnedElement)
+												&& pinnedElement.find((el) => el.id === item.id))
+										)
+									) {
+										return setPinnedElement(null);
+									}
+									return setPinnedElement({ ...item, itemType });
+								}}
 							>
-								<NavLink to={`/${itemType}/context/${item.id}`}>
-									{item.title}
-								</NavLink>
+								{item.title}
 							</Title>
 						</TitleWrapper>
 						{item.summary && <Summary>{item.summary}</Summary>}
@@ -84,6 +99,19 @@ SummarySection.propTypes = {
 		),
 	]),
 	setHoveredElement: PropTypes.func,
+	pinnedElement: PropTypes.oneOfType([
+		PropTypes.shape({
+			id: PropTypes.string.isRequired,
+			itemType: PropTypes.string.isRequired,
+		}),
+		PropTypes.arrayOf(
+			PropTypes.shape({
+				id: PropTypes.string.isRequired,
+				itemType: PropTypes.string.isRequired,
+			}),
+		),
+	]),
+	setPinnedElement: PropTypes.func,
 	isLoading: PropTypes.bool,
 };
 
@@ -91,6 +119,8 @@ SummarySection.defaultProps = {
 	items: [],
 	hoveredElement: null,
 	setHoveredElement: () => { },
+	pinnedElement: null,
+	setPinnedElement: () => { },
 	isLoading: true,
 };
 

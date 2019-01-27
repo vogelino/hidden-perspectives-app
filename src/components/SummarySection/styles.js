@@ -55,6 +55,7 @@ export const Summary = styled.p`
 export const Item = styled.div`
 	margin-bottom: 2rem;
 
+	&.pinned ${Title},
 	&.hovered ${Title} {
 		background: ${({ theme }) => theme.primaryLight};
 		color: ${({ theme }) => theme.primaryDark};
