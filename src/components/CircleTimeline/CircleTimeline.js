@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import BubbleChart from '../BubbleChart';
 import { EventLegend, DocumentLegend } from '../Legend/Legend';
 import { isHovered } from '../../utils/timelineUtil';
+import { formatHumanDate } from '../../utils/dateUtil';
 import {
 	CircleContainer,
 	CircleSvg,
@@ -30,17 +31,6 @@ const getXByAngle = (radius, angle) => (radius * Math.sin(toRadian(angle)))
 	+ RADIUS_OUTER + MARGIN;
 const getYByAngle = (radius, angle) => (radius * -Math.cos(toRadian(angle)))
 	+ RADIUS_OUTER + MARGIN;
-
-const getFormattedGroupDate = (group) => {
-	const groupDate = group[0].date;
-	const formattedGroupDate = `
-		${groupDate.getDate()}.
-		${groupDate.getMonth() + 1}.
-		${groupDate.getFullYear()}
-	`;
-
-	return formattedGroupDate;
-};
 
 const getDateLabelPosition = (itemX, itemY, radius, angle) => {
 	const x = itemX - getXByAngle(radius, angle);
@@ -111,6 +101,7 @@ const CircleTimeline = ({
 					RADIUS_INNER + (RADIUS_INNER - RADIUS_OUTER) - LABEL_MARGIN,
 					angle,
 				);
+				const labelIsActive = angle === 0 || angle === 320;
 				const isCurrentElement = group.find(({ id }) => id === item.id);
 				const docSize = 14;
 
@@ -136,8 +127,10 @@ const CircleTimeline = ({
 						<DateLabel
 							position={labelPosition}
 							rotate={angle}
+							margin={LABEL_MARGIN + (RADIUS_OUTER - RADIUS_INNER)}
+							active={labelIsActive}
 						>
-							{getFormattedGroupDate(group)}
+							{formatHumanDate(group[0].date)}
 						</DateLabel>
 					</Document>
 				);
@@ -147,8 +140,10 @@ const CircleTimeline = ({
 				const x = getXByAngle(RADIUS_OUTER, angle);
 				const y = getYByAngle(RADIUS_OUTER, angle);
 				const labelPosition = getDateLabelPosition(x, y, RADIUS_OUTER - LABEL_MARGIN, angle);
+				const labelIsActive = angle === 0 || angle === 320;
 				const isCurrentElement = group.find(({ id }) => id === item.id);
 				const docSize = 14;
+
 				return (
 					<Document
 						x={x - (docSize / 2)}
@@ -171,8 +166,10 @@ const CircleTimeline = ({
 						<DateLabel
 							position={labelPosition}
 							rotate={angle}
+							margin={LABEL_MARGIN}
+							active={labelIsActive}
 						>
-							{getFormattedGroupDate(group)}
+							{formatHumanDate(group[0].date)}
 						</DateLabel>
 					</Document>
 				);

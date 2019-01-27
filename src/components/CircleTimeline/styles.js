@@ -53,7 +53,7 @@ export const DateLabel = styled.span`
 	color: black;
 	left: 50%;
 	font-size: .6rem;
-	opacity: 0;
+	opacity: ${({ active }) => (active ? 1 : 0)};
 	pointer-events: none;
 	position: absolute;
 	top: 50%;
@@ -65,7 +65,20 @@ export const DateLabel = styled.span`
 		rotate(${rotate}deg)
 	`};
 	white-space: nowrap;
-`
+
+	&:before {
+		background-color: ${({ theme }) => theme.commonBorderColor};
+		bottom: 0;
+		content: '';
+		height: 1px;
+		left: 50%;
+		opacity: ${({ active }) => (active && 0)};
+		position: absolute;
+		transform: rotate(90deg);
+		transform-origin: left bottom;
+		width: ${({ margin }) => `${margin - 12}px`}
+	}
+`;
 
 export const Symbol = styled.span`
 	font-size: .875rem;
@@ -94,6 +107,10 @@ export const Document = styled.foreignObject`
 
 		${DateLabel} {
 			opacity: 1;
+
+			&::before {
+				opacity: 1;
+			}
 		}
 	}
 `;
