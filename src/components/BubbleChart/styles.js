@@ -2,13 +2,30 @@ import styled from 'styled-components';
 
 export const BubbleChartContainer = styled.div`
     border-radius: 50%;
+    height: auto;
+    left: 50%;
     position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+
+    &:before{
+        content: '';
+        display: block;
+        margin-top: 100%;
+    }
 `;
 
-export const BubblesWrapper = styled.svg`
+export const BubblesSvg = styled.svg`
     display: block;
-    height: ${({ diameter }) => diameter}px;
-    width: ${({ diameter }) => diameter}px;
+    height: 100%;
+    left: 50%;
+    max-height: 100%;
+    max-width: 100%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: auto;
 `;
 
 export const BubblesLoadingContainer = styled.div`
@@ -23,25 +40,14 @@ export const BubblesLoadingContainer = styled.div`
 	transition: opacity 200ms ease-out;
 `;
 
-export const Bubble = styled.circle`
-    align-items: center;
-    height: ${({ r }) => r * 2}px;
-    fill: ${({ isHovered, theme }) => (isHovered ? theme.primaryLight : theme.gray200)};
-    left: ${({ x }) => x}px;
-    opacity: ${({ isLoading }) => (isLoading ? 0 : 1)};
-    top: ${({ y }) => y}px;
-    width: ${({ r }) => r * 2}px;
-    cursor: pointer;
-    transition: fill 400ms ease-out;
-`;
-
 export const Text = styled.text`
     alignment-baseline: central;
-	font-size: .875rem;
-	line-height: .875rem;
+    fill: ${({ isHovered, theme }) => (isHovered ? theme.primaryDark : theme.gray900)};
+    font-size: ${({ fontSize }) => fontSize}px;
+    line-height: ${({ fontSize }) => fontSize}px;
     opacity: ${({ isLoading }) => (isLoading ? 0 : 1)};
     pointer-events: none;
     text-anchor: middle;
-    transition: fill 400ms ease-out;
-    fill: ${({ isHovered, theme }) => (isHovered ? theme.primaryDark : theme.gray900)};
+    transition: fill 100ms ease-out, opacity 100ms ease-out;
+    transform-origin: 50% 50%;
 `;

@@ -26,9 +26,9 @@ export default compose(
 				const indexInMiddle = Math.round((hoveredElement.length - 1) / 2);
 				const idToScrollTo = hoveredElement[indexInMiddle].id;
 				const cssIdOfElement = `summary-${idToScrollTo}`;
-				document
-					.getElementById(cssIdOfElement)
-					.scrollIntoView({ behavior: 'smooth' });
+				const element = document.getElementById(cssIdOfElement);
+				if (!element) return;
+				element.scrollIntoView({ behavior: 'smooth' });
 			}
 		},
 	}),

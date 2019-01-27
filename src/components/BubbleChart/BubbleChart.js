@@ -1,22 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { isEmpty } from 'ramda';
-import { getInitials } from '../../utils/stringUtil';
 import { isHovered } from '../../utils/timelineUtil';
 import {
-	Bubble,
 	BubbleChartContainer,
-	BubblesWrapper,
+	BubblesSvg,
 	BubblesLoadingContainer,
 	Text,
 } from './styles';
+import Bubble from './Bubble';
+import BubbleChartTooltip from './BubbleChartTooltip';
 import LoadingIndicator from '../LoadingIndicator';
 
-const Bubbles = ({
+const Tooltips = ({
 	bubbleLayoutItems,
-	isLoading,
 	hoveredElement,
-	setHoveredElement,
+	diameter,
 }) => bubbleLayoutItems.map((bubbleData) => {
 	const {
 		data,
@@ -25,30 +24,36 @@ const Bubbles = ({
 		r,
 	} = bubbleData;
 
-	const { name } = data;
+	const { name, value } = data;
 	const hovered = isHovered(data, hoveredElement, 'stakeholder');
-	return ([
-		<Bubble
-			key={`bubble-${name}`}
-			cx={x}
-			cy={y}
-			r={r}
-			isLoading={isLoading}
-			isHovered={hovered}
-			onMouseEnter={() => setHoveredElement({ itemType: 'stakeholder', ...data })}
-			onMouseLeave={() => setHoveredElement(null)}
-		/>,
-		<Text
-			x={x}
-			y={y}
-			key={`text-${name}`}
-			isLoading={isLoading}
-			isHovered={hovered}
-		>
-			{getInitials(name)}
-		</Text>,
-	]);
+	const toRelativePosition = (pos) => pos * 100 / diameter;
+
+	return (
+		<BubbleChartTooltip
+			key={`tooltip-${name}`}
+			visible={hovered}
+			x={toRelativePosition(x)}
+			y={toRelativePosition(y + r)}
+			text={name}
+			value={value}
+		/>
+	);
 });
+
+const Bubbles = ({
+	bubbleLayoutItems,
+	hoveredElement,
+	images,
+	...props
+}) => bubbleLayoutItems.map((bubbleData) => (
+	<Bubble
+		key={`bubble-link-${bubbleData.data.name}`}
+		hovered={isHovered(bubbleData.data, hoveredElement, 'stakeholder')}
+		image={images.find(({ id }) => id === bubbleData.data.id)}
+		{...bubbleData}
+		{...props}
+	/>
+));
 
 const BubbleChart = ({
 	bubbleLayoutItems,
@@ -56,28 +61,114 @@ const BubbleChart = ({
 	diameter,
 	hoveredElement,
 	setHoveredElement,
+	images,
 }) => (
-	<BubbleChartContainer>
-		<BubblesWrapper
+	<BubbleChartContainer diameter={diameter}>
+		<BubblesSvg
 			isLoading={isLoading}
-			diameter={diameter}
+			viewBox={`0 0 ${diameter} ${diameter}`}
+			preserveAspectRatio="xMidYMid meet"
 		>
+			<defs>
+				<filter id="image-color-filter">
+					<feColorMatrix
+						type="matrix"
+						values="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 0 0 0 1 0"
+						in="SourceGraphic"
+						result="colormatrix"
+					/>
+					<feComponentTransfer in="colormatrix" result="componentTransfer">
+						<feFuncR type="table" tableValues="0.31 0.92" />
+						<feFuncG type="table" tableValues="0.31 0.92" />
+						<feFuncB type="table" tableValues="0.31 0.92" />
+						<feFuncA type="table" tableValues="0 1" />
+					</feComponentTransfer>
+					<feBlend
+						mode="normal"
+						in="componentTransfer"
+						in2="SourceGraphic"
+						result="blend"
+					/>
+				</filter>
+				<filter
+					id="image-color-filter-hover"
+					x="-10%"
+					y="-10%"
+					width="120%"
+					height="120%"
+					filterUnits="objectBoundingBox"
+					primitiveUnits="userSpaceOnUse"
+					colorInterpolationFilters="sRGB"
+				>
+					<feColorMatrix
+						type="matrix"
+						values="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 0 0 0 1 0"
+						in="SourceGraphic"
+						result="colormatrix"
+					/>
+					<feComponentTransfer in="colormatrix" result="componentTransfer">
+						<feFuncR type="table" tableValues="0.57 0.99" />
+						<feFuncG type="table" tableValues="0.31 0.87" />
+						<feFuncB type="table" tableValues="0 0.64" />
+						<feFuncA type="table" tableValues="0 1" />
+					</feComponentTransfer>
+					<feBlend
+						mode="normal"
+						in="componentTransfer"
+						in2="SourceGraphic"
+						result="blend"
+					/>
+				</filter>
+
+				{images.map(({
+					id,
+					url,
+					size,
+					x,
+					y,
+				}) => (
+					<pattern
+						key={id}
+						id={`image-def-${id}`}
+						x={x}
+						y={y}
+						patternUnits="userSpaceOnUse"
+						height={size}
+						width={size}
+					>
+						<image
+							x="0"
+							y="0"
+							xlinkHref={url}
+							preserveAspectRatio="xMinYMin slice"
+							width={size}
+							height={size}
+						/>
+					</pattern>
+				))}
+			</defs>
 			{
 				isEmpty(bubbleLayoutItems) && !isLoading
-					? <Text x={diameter / 2} y={diameter / 2}>no items</Text>
+					? <Text x={diameter / 2} y={diameter / 2}>No protagonists</Text>
 					: (
 						<Bubbles
 							bubbleLayoutItems={bubbleLayoutItems}
 							isLoading={isLoading}
 							hoveredElement={hoveredElement}
 							setHoveredElement={setHoveredElement}
+							images={images}
 						/>
 					)
 			}
-		</BubblesWrapper>
+		</BubblesSvg>
 		<BubblesLoadingContainer isLoading={isLoading}>
 			<LoadingIndicator />
 		</BubblesLoadingContainer>
+		<Tooltips
+			bubbleLayoutItems={bubbleLayoutItems}
+			hoveredElement={hoveredElement}
+			diameter={diameter}
+		/>
 	</BubbleChartContainer>
 );
 
@@ -91,16 +182,31 @@ BubbleChart.propTypes = {
 			stakeholderFullName: PropTypes.string,
 		}),
 	),
-	hoveredElement: PropTypes.shape({
-		id: PropTypes.string.isRequired,
-		itemType: PropTypes.string.isRequired,
-	}),
+	images: PropTypes.arrayOf(
+		PropTypes.shape({
+			id: PropTypes.string.isRequired,
+			url: PropTypes.string,
+		}),
+	),
+	hoveredElement: PropTypes.oneOfType([
+		PropTypes.shape({
+			id: PropTypes.string.isRequired,
+			itemType: PropTypes.string.isRequired,
+		}),
+		PropTypes.arrayOf(
+			PropTypes.shape({
+				id: PropTypes.string.isRequired,
+				itemType: PropTypes.string.isRequired,
+			}),
+		),
+	]),
 };
 
 BubbleChart.defaultProps = {
 	isLoading: false,
 	diameter: 100,
 	bubbleLayoutItems: [],
+	images: [],
 	hoveredElement: null,
 	setHoveredElement: () => {},
 };

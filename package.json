@@ -79,7 +79,8 @@
     "react-select": "^2.1.1",
     "recompose": "^0.30.0",
     "styled-components": "^4.0.2",
-    "subscriptions-transport-ws": "^0.9.15"
+    "subscriptions-transport-ws": "^0.9.15",
+    "wikijs": "^5.0.0-alpha.1"
   },
   "devDependencies": {
     "@babel/core": "^7.1.2",
