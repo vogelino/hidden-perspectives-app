@@ -8,7 +8,7 @@ export const OuterContainer = styled.div`
 	top: 4.5rem;
 	left: 0;
 	border-right: 1px solid ${({ theme }) => theme.commonBorderColor};
-	z-index: 1;
+	z-index: 4;
 `;
 
 export const InnerContainer = styled.div`
@@ -33,7 +33,6 @@ export const YearsContainer = styled(Content)`
 `;
 
 export const YearTooltip = styled.span`
-	padding: .5rem .625rem .2rem .625rem;
 	font-size: .75rem;
 	line-height: .75rem;
 	border-radius: 1rem;
@@ -45,6 +44,22 @@ export const YearTooltip = styled.span`
 	transform: translateY(-20%);
 	opacity: 0;
 	transition: opacity 200ms ease-out, transform 200ms ease-out;
+	white-space: nowrap;
+`;
+
+const TooltipSpan = styled.span`
+	padding: .5rem .625rem .2rem .625rem;
+	display: inline-block;
+`;
+
+export const YearName = styled(TooltipSpan)`
+	width: 51px;
+`;
+
+export const YearCount = styled(TooltipSpan)`
+	background: ${({ theme }) => theme.primaryDark10};
+	border-left: 1px solid ${({ theme }) => theme.primaryDark25};
+	border-radius: 0 1rem 1rem 0;
 `;
 
 export const Year = styled.div.attrs({

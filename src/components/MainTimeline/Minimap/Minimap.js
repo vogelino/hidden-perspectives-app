@@ -10,6 +10,8 @@ import {
 	Date,
 	DatesContainer,
 	YearTooltip,
+	YearCount,
+	YearName,
 } from './styles';
 
 const scrollToYear = (year) => {
@@ -26,7 +28,12 @@ const OptimizedYears = lifecycle({
 	const yearHeight = (100 / items.length);
 	return (
 		<YearsContainer>
-			{items.map(({ id, year, density }) => (
+			{items.map(({
+				id,
+				year,
+				density,
+				count,
+			}) => (
 				<Year
 					key={id}
 					density={density}
@@ -35,7 +42,8 @@ const OptimizedYears = lifecycle({
 					onClick={() => scrollToYear(year)}
 				>
 					<YearTooltip>
-						{year}
+						<YearName>{year}</YearName>
+						<YearCount>{count}</YearCount>
 					</YearTooltip>
 				</Year>
 			))}
@@ -55,8 +63,7 @@ const OptimizedDates = lifecycle({
 	</DatesContainer>
 ));
 
-const getYears = (items) => items
-	.map(({ year }) => year);
+const getYears = (items) => items.map(({ year }) => year);
 
 const Minimap = ({
 	items,
