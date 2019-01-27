@@ -51,13 +51,21 @@ export const DocumentLegendContainer = styled.span`
 
 export const DateLabel = styled.span`
 	color: black;
-	left: 17px;
+	left: 50%;
 	font-size: .6rem;
-	display: none;
+	opacity: 0;
+	pointer-events: none;
 	position: absolute;
-	top: 1px;
+	top: 50%;
+	transform: ${({ position: { x, y }, rotate }) => `
+		translate(
+			calc(-50% + ${x}px),
+			calc(-50% + ${y}px)
+		)
+		rotate(${rotate}deg)
+	`};
 	white-space: nowrap;
-`;
+`
 
 export const Symbol = styled.span`
 	font-size: .875rem;
@@ -85,7 +93,7 @@ export const Document = styled.foreignObject`
 		background: ${({ current, theme }) => (current ? theme.primaryLight : 'white')};
 
 		${DateLabel} {
-			display: block;
+			opacity: 1;
 		}
 	}
 `;

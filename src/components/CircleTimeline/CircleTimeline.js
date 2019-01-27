@@ -24,6 +24,7 @@ const DIAMETER_INNER = (DIAMETER_OUTER / 100) * 80;
 const RADIUS_OUTER = DIAMETER_OUTER / 2;
 const RADIUS_INNER = DIAMETER_INNER / 2;
 const CIRCLE_CENTER = { cx: RADIUS_OUTER + MARGIN, cy: RADIUS_OUTER + MARGIN };
+const LABEL_MARGIN = 25;
 
 const getXByAngle = (radius, angle) => (radius * Math.sin(toRadian(angle)))
 	+ RADIUS_OUTER + MARGIN;
@@ -39,6 +40,13 @@ const getFormattedGroupDate = (group) => {
 	`;
 
 	return formattedGroupDate;
+};
+
+const getDateLabelPosition = (itemX, itemY, radius, angle) => {
+	const x = itemX - getXByAngle(radius, angle);
+	const y = itemY - getYByAngle(radius, angle);
+
+	return { x, y };
 };
 
 const CircleTimeline = ({
@@ -97,6 +105,12 @@ const CircleTimeline = ({
 				const { angle, id: docId } = group[0];
 				const x = getXByAngle(RADIUS_INNER, angle);
 				const y = getYByAngle(RADIUS_INNER, angle);
+				const labelPosition = getDateLabelPosition(
+					x,
+					y,
+					RADIUS_INNER + (RADIUS_INNER - RADIUS_OUTER) - LABEL_MARGIN,
+					angle,
+				);
 				const isCurrentElement = group.find(({ id }) => id === item.id);
 				const docSize = 14;
 
@@ -119,7 +133,12 @@ const CircleTimeline = ({
 						current={isCurrentElement}
 					>
 						<Symbol>▲</Symbol>
-						<DateLabel>{getFormattedGroupDate(group)}</DateLabel>
+						<DateLabel
+							position={labelPosition}
+							rotate={angle}
+						>
+							{getFormattedGroupDate(group)}
+						</DateLabel>
 					</Document>
 				);
 			})}
@@ -127,6 +146,7 @@ const CircleTimeline = ({
 				const { angle, id: docId } = group[0];
 				const x = getXByAngle(RADIUS_OUTER, angle);
 				const y = getYByAngle(RADIUS_OUTER, angle);
+				const labelPosition = getDateLabelPosition(x, y, RADIUS_OUTER - LABEL_MARGIN, angle);
 				const isCurrentElement = group.find(({ id }) => id === item.id);
 				const docSize = 14;
 				return (
@@ -148,7 +168,12 @@ const CircleTimeline = ({
 						current={isCurrentElement}
 					>
 						<Symbol>●</Symbol>
-						<DateLabel>{getFormattedGroupDate(group)}</DateLabel>
+						<DateLabel
+							position={labelPosition}
+							rotate={angle}
+						>
+							{getFormattedGroupDate(group)}
+						</DateLabel>
 					</Document>
 				);
 			})}
