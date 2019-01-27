@@ -47,15 +47,16 @@ const OptimizedDates = lifecycle({
 	shouldComponentUpdate({ years }) {
 		return years.length !== this.props.years.length;
 	},
-})(({ years }) => (
+})(({ years, items }) => (
 	<DatesContainer>
-		{years.map((year) => <Date key={year}>{year}</Date>)}
+		{years.map((year) => (
+			<Date key={year} h={(100 / items.length)}>{year}</Date>
+		))}
 	</DatesContainer>
 ));
 
 const getYears = (items) => items
-	.map(({ year }) => year)
-	.filter((_, idx) => idx % Math.round(items.length / 5) === 0);
+	.map(({ year }) => year);
 
 const Minimap = ({
 	items,
@@ -67,7 +68,9 @@ const Minimap = ({
 			<Content>
 				<OptimizedYears items={items} activeYear={activeYear} />
 			</Content>
-			{!isLoading && <OptimizedDates years={getYears(items)} />}
+			{!isLoading && (
+				<OptimizedDates years={getYears(items)} items={items} />
+			)}
 		</InnerContainer>
 	</OuterContainer>
 );

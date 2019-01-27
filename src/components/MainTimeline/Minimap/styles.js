@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { mix } from 'polished';
-import { MINIMAP_HEIGHT, MINIMAP_PADDING } from '../../../state/constants';
 
 export const OuterContainer = styled.div`
 	width: 6rem;
@@ -13,27 +12,24 @@ export const OuterContainer = styled.div`
 `;
 
 export const InnerContainer = styled.div`
-	height: ${MINIMAP_HEIGHT + 4}px;
+	height: calc(100vh - 4.5rem);
 	width: calc(6rem - 1px);
 	position: fixed;
-	top: calc(50vh - 7rem);
+	top: 4.5rem;
 	left: 0;
-	background: ${({ theme }) => theme.gray100};
-	border: 1px solid ${({ theme }) => theme.commonBorderColor};
-	border-right: none;
-	border-left: none;
+	/* background: ${({ theme }) => theme.gray100}; */
 	z-index: 1;
 `;
 
 export const Content = styled.div`
 	position: relative;
 	width: 100%;
-	height: ${MINIMAP_HEIGHT + 4 - (MINIMAP_PADDING * 2)}px;
-	margin: ${MINIMAP_PADDING}px 0;
+	height: 100%;
+	padding: 1rem 0;
 `;
 
 export const YearsContainer = styled(Content)`
-	padding-left: 1rem;
+	padding: 0 0 0 1rem;
 `;
 
 export const YearTooltip = styled.span`
@@ -56,7 +52,7 @@ export const Year = styled.div.attrs({
 		background: mix(density, theme.gray100, theme.gray900),
 	}),
 })`
-	width: 1rem;
+	width: 1.25rem;
 	height: ${({ height }) => `${height}%`};
 	z-index: ${({ isActive }) => (isActive ? 2 : 1)};
 	border-radius: ${({ isActive }) => (isActive ? 1 : 0)}px;
@@ -82,19 +78,28 @@ export const Year = styled.div.attrs({
 export const DatesContainer = styled(Content)`
 	display: flex;
 	flex-direction: column;
-	margin-top: -${MINIMAP_HEIGHT + 4 - MINIMAP_PADDING}px;
-	height: ${MINIMAP_HEIGHT + 4 - (MINIMAP_PADDING * 2)}px;
+	height: 100%;
 	justify-content: space-between;
 	text-align: right;
 	width: 100%;
-	padding: 0 1rem;
+	padding: 1rem 1rem 1rem 0;
 	color: ${({ theme }) => theme.gray500};
 	pointer-events: none;
+	position: absolute;
+	top: 0;
+	left: 0;
 `;
 
 export const Date = styled.div`
 	font-size: .875rem;
-	line-height: .875rem;
-	height: .875rem;
-	flex: 0 0 .875rem;
+	height: ${({ h }) => `${h}%`};
+	flex: 0 0 ${({ h }) => `${h}%`};
+	padding-top: .25rem;
+	opacity: 0;
+
+	&:first-child,
+	&:last-child,
+	&:nth-child(6n) {
+		opacity: 1;
+	}
 `;
