@@ -29,6 +29,11 @@ export default compose(
 				element.scrollIntoView({ behavior: 'smooth' });
 			}
 		},
+		componentDidUpdate() {
+			if (!this.props.hoveredElement) {
+				document.getElementById('summary-section').scroll();
+			}
+		},
 	}),
 )(SummarySection);
 
