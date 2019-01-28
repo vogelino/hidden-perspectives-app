@@ -126,3 +126,9 @@ export const isHovered = (item, hoveredElement, itemType) => {
 	}
 	return isItemHovered(item, hoveredElement, itemType);
 };
+
+const getSummaryElementById = (id) => document.getElementById(`summary-${id}`);
+export const getHoveredSummary = (hoveredElement) => {
+	const indexInMiddle = Math.round((hoveredElement.length - 1) / 2);
+	return getSummaryElementById(hoveredElement[indexInMiddle].id);
+};

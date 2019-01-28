@@ -18,6 +18,8 @@ const MainTimeline = ({
 	onRef,
 	setHoveredElement,
 	hoveredElement,
+	setPinnedElement,
+	pinnedElement,
 	eventsCount,
 	documentsCount,
 	protagonistsCount,
@@ -36,6 +38,8 @@ const MainTimeline = ({
 			items={bubbleChartItems}
 			hoveredElement={hoveredElement}
 			setHoveredElement={setHoveredElement}
+			pinnedElement={pinnedElement}
+			setPinnedElement={setPinnedElement}
 		/>
 		<MainTimelineLegend
 			isLoading={isLoading}
@@ -47,6 +51,8 @@ const MainTimeline = ({
 			timelineItems={timelineItems}
 			hoveredElement={hoveredElement}
 			setHoveredElement={setHoveredElement}
+			pinnedElement={pinnedElement}
+			setPinnedElement={setPinnedElement}
 		/>
 	</Container>
 );
@@ -62,7 +68,9 @@ MainTimeline.propTypes = {
 	protagonistsCount: PropTypes.number.isRequired,
 	bubbleChartItems: Protagonists.propTypes.items,
 	hoveredElement: TimelineItems.propTypes.hoveredElement,
+	pinnedElement: TimelineItems.propTypes.pinnedElement,
 	setHoveredElement: PropTypes.func,
+	setPinnedElement: PropTypes.func,
 	errors: PropTypes.arrayOf(PropTypes.string),
 	isLoading: PropTypes.bool,
 	fetchingProtagonists: PropTypes.bool,
@@ -71,7 +79,9 @@ MainTimeline.propTypes = {
 
 MainTimeline.defaultProps = {
 	hoveredElement: TimelineItems.defaultProps.hoveredElement,
+	pinnedElement: TimelineItems.defaultProps.pinnedElement,
 	setHoveredElement: () => {},
+	setPinnedElement: () => {},
 	timelineItems: TimelineItems.defaultProps.timelineItems,
 	bubbleChartItems: Protagonists.defaultProps.items,
 	minimapItems: [],

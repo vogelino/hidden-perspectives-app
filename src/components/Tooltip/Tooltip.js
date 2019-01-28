@@ -14,9 +14,11 @@ import {
 import {
 	Trigger,
 	Container,
+	Content,
 	Thumbnail,
 	Subtitle,
 	Summary,
+	ExploreButton,
 } from './styles';
 
 const SUMMARY_MAX_LEN = 200;
@@ -36,11 +38,26 @@ const Tooltip = ({
 	thumbnailUrl,
 	isLoading,
 	position,
+	itemTypeName,
+	path,
+	noSubtitle,
+	...rest
 }) => (
-	<Container id={`tooltip-${id}`} position={position}>
-		{!isLoading && <Thumbnail>{thumbnailUrl}</Thumbnail>}
-		<Subtitle variant="h6">{isLoading ? 'Loading...' : subtitle}</Subtitle>
-		{!isLoading && <Summary>{getSummary(summary)}</Summary>}
+	<Container id={`tooltip-${id}`} position={position} {...rest}>
+		<Content>
+			{!isLoading && <Thumbnail>{thumbnailUrl}</Thumbnail>}
+			{!noSubtitle && <Subtitle variant="h6">{isLoading ? 'Loading...' : subtitle}</Subtitle>}
+			{!isLoading && <Summary>{getSummary(summary)}</Summary>}
+			{path && (
+				<ExploreButton
+					to={path}
+					primary
+					onClick={(evt) => evt.stopPropagation()}
+				>
+					{`Explore ${itemTypeName}`}
+				</ExploreButton>
+			)}
+		</Content>
 	</Container>
 );
 
@@ -49,8 +66,11 @@ Tooltip.propTypes = {
 	subtitle: PropTypes.string,
 	summary: PropTypes.string,
 	thumbnailUrl: PropTypes.string,
+	path: PropTypes.string,
 	isLoading: PropTypes.bool,
+	noSubtitle: PropTypes.bool,
 	position: PropTypes.oneOf(['left', 'right']),
+	itemTypeName: PropTypes.oneOf(['Event', 'Document', 'Protagonist']),
 };
 
 Tooltip.defaultProps = {
@@ -58,8 +78,11 @@ Tooltip.defaultProps = {
 	subtitle: undefined,
 	summary: undefined,
 	thumbnailUrl: undefined,
+	path: '',
 	isLoading: true,
+	noSubtitle: false,
 	position: 'right',
+	itemTypeName: 'Document',
 };
 
 const TooltipTrigger = ({

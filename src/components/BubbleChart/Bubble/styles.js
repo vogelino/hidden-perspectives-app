@@ -1,9 +1,9 @@
 import styled from 'styled-components';
-import { NavLink } from 'react-router-dom';
 import { Text } from '../styles';
 
-export const BubbleLink = styled(NavLink)`
+export const Container = styled.g`
 	pointer-events: all;
+	cursor: pointer;
 `;
 
 export const BubbleCircle = styled.circle.attrs({
@@ -12,22 +12,23 @@ export const BubbleCircle = styled.circle.attrs({
 	}),
 })`
 	align-items: center;
-	${({ fill, isHovered, theme }) => {
+	${({
+		fill,
+		isHovered,
+		isPinned,
+		theme,
+	}) => {
 		if (fill) return '';
-		const colorFill = (isHovered ? theme.primaryLight : theme.gray200);
+		const colorFill = ((isHovered || isPinned) ? theme.primaryLight : theme.gray200);
 		return `fill: ${colorFill};`;
 	}}
 	opacity: ${({ isLoading }) => (isLoading ? 0 : 1)};
-	filter: url('#image-color-filter');
+	filter: url(${({ isHovered, isPinned }) => ((isHovered || isPinned) ? '#image-color-filter-hover' : '#image-color-filter')});
 	font-weight: bold;
-
-    &:hover {
-        filter: url('#image-color-filter-hover');
-    }
 `;
 
 export const BubbleText = styled(Text)`
-	${({ hasImage, isHovered }) => hasImage && isHovered && `
+	${({ hasImage, isHovered, isPinned }) => hasImage && (isHovered || isPinned) && `
 		opacity: 0;
 	`}
 `;
