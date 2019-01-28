@@ -34,7 +34,7 @@ const SummarySection = ({
 						date={formatHumanDate(item.date)}
 						itemType={itemType}
 						hovered={isHovered(item, hoveredElement, itemType)}
-						pinned={isHovered(item, pinnedElement, itemType)}
+						pinned={!hoveredElement && isHovered(item, pinnedElement, itemType)}
 						hoverHandler={setHoveredElement}
 						clickHandler={(pinEl) => {
 							const { id } = pinEl;
