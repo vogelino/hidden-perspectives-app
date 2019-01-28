@@ -26,6 +26,7 @@ export const MainTimelineContainer = styled.div`
 	height: 2.25rem;
 	padding: 0 0 0 6rem;
 	z-index: 10;
+	pointer-events: none;
 `;
 
 export const LegendContainer = styled.span`
