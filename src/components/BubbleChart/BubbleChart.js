@@ -132,12 +132,6 @@ const BubbleChart = ({
 					green="0.15 0.57 0.93"
 					blue="0.06 0.33 0.78"
 				/>
-				<GradientMapFilter
-					id="image-color-filter-active"
-					red="0.36 0.89 1"
-					green="0.14 0.49 0.95"
-					blue="0.07 0.18 0.85"
-				/>
 
 				{images.map(({
 					id,

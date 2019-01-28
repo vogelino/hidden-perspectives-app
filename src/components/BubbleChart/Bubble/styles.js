@@ -8,7 +8,6 @@ export const Container = styled.g`
 
 const getFilterUrl = ({ isHovered, isPinned, isActive }) => {
 	if (isHovered || isPinned) return '#image-color-filter-hover';
-	// if (isActive) return '#image-color-filter-active';
 	if (isActive) return 'none';
 	return '#image-color-filter';
 };
