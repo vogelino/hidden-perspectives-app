@@ -26,6 +26,7 @@ export const Trigger = styled.div`
 	position: relative;
 	width: 100%;
 	height: 100%;
+	cursor: pointer;
 
 	&:hover ${Container} {
 		opacity: 1;
@@ -49,6 +50,7 @@ export const Summary = styled.p`
 	font-size: .875rem;
 	line-height: 1.125rem;
 	font-weight: normal;
+	color: ${({ theme }) => theme.gray900};
 `;
 
 export const ExploreButton = styled(Button)`

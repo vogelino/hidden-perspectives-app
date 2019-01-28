@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Tooltip from '../../Tooltip';
 import {
 	Item,
 	TitleWrapper,
@@ -32,29 +33,34 @@ const Summary = ({
 		pinned,
 		date,
 		title,
+		summary,
 	} = item;
 	return (
 		<Item
-			key={id}
 			className={getSummaryClass({ hovered, pinned, hoveredElement })}
 			id={`summary-${id}`}
 			ref={setComponentRef}
+			onMouseEnter={() => hoverHandler({ ...item, itemType })}
+			onMouseLeave={() => hoverHandler(null)}
+			onClick={() => clickHandler({ ...item, itemType })}
 		>
-			<SecondaryInfo variant="h6">
-				<Symbol isEvent={itemType === 'event'} />
-				<ItemDate>{date}</ItemDate>
-				<Type>{type}</Type>
-			</SecondaryInfo>
-			<TitleWrapper>
-				<Title
-					variant="h5"
-					onMouseEnter={() => hoverHandler({ ...item, itemType })}
-					onMouseLeave={() => hoverHandler(null)}
-					onClick={() => clickHandler({ ...item, itemType })}
-				>
-					{title}
-				</Title>
-			</TitleWrapper>
+			<Tooltip
+				id={id}
+				itemType={itemType}
+				position="left"
+				prefetchedData={{ summary, subtitle: '' }}
+			>
+				<SecondaryInfo variant="h6">
+					<Symbol isEvent={itemType === 'event'} />
+					<ItemDate>{date}</ItemDate>
+					<Type>{type}</Type>
+				</SecondaryInfo>
+				<TitleWrapper>
+					<Title variant="h5">
+						{title}
+					</Title>
+				</TitleWrapper>
+			</Tooltip>
 		</Item>
 	);
 };
@@ -63,6 +69,7 @@ Summary.propTypes = {
 	id: PropTypes.string.isRequired,
 	itemType: PropTypes.oneOf(['event', 'document']),
 	type: PropTypes.string,
+	summary: PropTypes.string,
 	hovered: PropTypes.bool,
 	pinned: PropTypes.bool,
 	hoveredElement: PropTypes.oneOfType([
@@ -101,6 +108,7 @@ Summary.defaultProps = {
 	type: '',
 	title: '',
 	date: '',
+	summary: '',
 	hoveredElement: null,
 	pinnedElement: null,
 	hovered: false,

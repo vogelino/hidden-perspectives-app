@@ -66,6 +66,11 @@ const getDataParser = ({
 	stopLoading();
 };
 
+const getPrefetchedData = (prop, prefetchedData) => (
+	prefetchedData && prefetchedData[prop]
+		? prefetchedData[prop] : undefined
+);
+
 export default compose(
 	withLoading,
 	withErrors,
@@ -75,9 +80,19 @@ export default compose(
 	withState('subtitle', 'setSubtitle', undefined),
 	withState('thumbnailUrl', 'setThumbnailUrl', undefined),
 	withState('summary', 'setSummary', undefined),
-	withProps(({ itemType, id }) => ({
+	withProps(({
+		itemType,
+		id,
+		prefetchedData,
+		subtitle,
+		summary,
+		isLoading,
+	}) => ({
 		path: `/${itemType}/context/${id}`,
 		itemTypeName: ucFirst(itemType),
+		subtitle: subtitle || getPrefetchedData('subtitle', prefetchedData),
+		summary: summary || getPrefetchedData('summary', prefetchedData),
+		isLoading: !prefetchedData && isLoading,
 	})),
 	withHandlers({
 		onMouseEnter: ({ setWasHovered }) => () => setWasHovered(true),
@@ -89,9 +104,10 @@ export default compose(
 				client,
 				id,
 				itemType,
+				prefetchedData,
 			} = this.props;
 
-			if (!prevProps.wasHovered && wasHovered) {
+			if (!prevProps.wasHovered && wasHovered && !prefetchedData) {
 				client.query({
 					query: itemType === 'event' ? EVENT_QUERY : DOCUMENT_QUERY,
 					variables: { id },

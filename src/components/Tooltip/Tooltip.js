@@ -40,13 +40,23 @@ const Tooltip = ({
 	position,
 	itemTypeName,
 	path,
+	noSubtitle,
+	...rest
 }) => (
-	<Container id={`tooltip-${id}`} position={position}>
+	<Container id={`tooltip-${id}`} position={position} {...rest}>
 		<Content>
 			{!isLoading && <Thumbnail>{thumbnailUrl}</Thumbnail>}
-			<Subtitle variant="h6">{isLoading ? 'Loading...' : subtitle}</Subtitle>
+			{!noSubtitle && <Subtitle variant="h6">{isLoading ? 'Loading...' : subtitle}</Subtitle>}
 			{!isLoading && <Summary>{getSummary(summary)}</Summary>}
-			{path && <ExploreButton to={path} primary>{`Explore ${itemTypeName}`}</ExploreButton>}
+			{path && (
+				<ExploreButton
+					to={path}
+					primary
+					onClick={(evt) => evt.stopPropagation()}
+				>
+					{`Explore ${itemTypeName}`}
+				</ExploreButton>
+			)}
 		</Content>
 	</Container>
 );
@@ -58,6 +68,7 @@ Tooltip.propTypes = {
 	thumbnailUrl: PropTypes.string,
 	path: PropTypes.string,
 	isLoading: PropTypes.bool,
+	noSubtitle: PropTypes.bool,
 	position: PropTypes.oneOf(['left', 'right']),
 	itemTypeName: PropTypes.oneOf(['Event', 'Document', 'Protagonist']),
 };
@@ -69,6 +80,7 @@ Tooltip.defaultProps = {
 	thumbnailUrl: undefined,
 	path: '',
 	isLoading: true,
+	noSubtitle: false,
 	position: 'right',
 	itemTypeName: 'Document',
 };
