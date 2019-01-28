@@ -331,11 +331,16 @@ const getContextParser = (props, item) => ({ data: { allEvents, allDocuments } }
 	const itemParser = getDocOrEventParser(getAngle);
 	const parsedDocuments = itemParser(documents);
 	const parsedEvents = itemParser(events);
+	const protagonists = getProtagonists(item, itemType, allDocuments, allEvents);
 
-	setItemCounts({ documentsCount: allDocuments.length, eventsCount: allEvents.length });
+	setItemCounts({
+		documentsCount: allDocuments.length,
+		eventsCount: allEvents.length,
+		protagonistsCount: protagonists.length,
+	});
 	setDocuments(parsedDocuments);
 	setEvents(parsedEvents);
-	setProtagonists(getProtagonists(item, itemType, allDocuments, allEvents));
+	setProtagonists(protagonists);
 
 	stopLoading();
 };
@@ -384,7 +389,7 @@ export default compose(
 	withState('documents', 'setDocuments', []),
 	withState('events', 'setEvents', []),
 	withState('protagonists', 'setProtagonists', {}),
-	withState('itemCounts', 'setItemCounts', { eventsCount: 0, documentsCount: 0 }),
+	withState('itemCounts', 'setItemCounts', { eventsCount: 0, documentsCount: 0, protagonistsCount: 0 }),
 	withState('hoveredElement', 'setHoveredElement', null),
 	lifecycle({
 		componentDidMount() {

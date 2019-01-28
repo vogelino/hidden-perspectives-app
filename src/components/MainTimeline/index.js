@@ -181,7 +181,8 @@ const getEventsAndDocuments = ({
 	setTimelineItems,
 	stopLoading,
 	setMinimapItems,
-	setItemCounts,
+	setDocumentsCount,
+	setEventsCount,
 }) => ({ data: { allEvents: events, allDocuments: documents } }) => {
 	const items = parseItems({
 		events,
@@ -194,10 +195,8 @@ const getEventsAndDocuments = ({
 
 	setTimelineItems(items);
 	setMinimapItems(getMinimap(items));
-	setItemCounts({
-		eventsCount: events.length,
-		documentsCount: documents.length,
-	});
+	setDocumentsCount(documents.length);
+	setEventsCount(events.length);
 	stopLoading();
 };
 
@@ -214,6 +213,7 @@ const getProtagonistsInViewport = (timelineElement, props) => {
 	const {
 		setBubbleChartItems,
 		setFetchingProtagonists,
+		setProtagonistsCount,
 	} = props;
 
 	const timelineEventIds = getEventIdsInViewport(timelineElement);
@@ -229,6 +229,7 @@ const getProtagonistsInViewport = (timelineElement, props) => {
 		})
 			.then((response) => {
 				const clusteredProtagonists = getClusteredProtagonists(response);
+				setProtagonistsCount(Object.keys(clusteredProtagonists).length);
 				setBubbleChartItems(clusteredProtagonists);
 				setFetchingProtagonists(false);
 			})
@@ -250,7 +251,9 @@ export default compose(
 	withLoading,
 	withErrors,
 	withState('timelineItems', 'setTimelineItems', []),
-	withState('itemCounts', 'setItemCounts', { eventsCount: 0, documentsCount: 0 }),
+	withState('eventsCount', 'setEventsCount', 0),
+	withState('documentsCount', 'setDocumentsCount', 0),
+	withState('protagonistsCount', 'setProtagonistsCount', 0),
 	withState('minimapItems', 'setMinimapItems', []),
 	withState('bubbleChartItems', 'setBubbleChartItems', {}),
 	withState('timelineContainer', 'setTimelineContainer', null),
@@ -283,6 +286,9 @@ export default compose(
 				|| (nextProps.fetchingProtagonists !== this.props.fetchingProtagonists)
 				|| (nextProps.errors.length !== this.props.errors.length)
 				|| (nextProps.isLoading !== this.props.isLoading)
+				|| (nextProps.eventsCount !== this.props.eventsCount)
+				|| (nextProps.documentsCount !== this.props.documentsCount)
+				|| (nextProps.protagonistsCount !== this.props.protagonistsCount)
 				|| (nextProps.hoveredElement !== this.props.hoveredElement);
 		},
 	}),
