@@ -29,12 +29,6 @@ export const Type = styled.span`
 	
 `;
 
-export const SummaryText = styled.p`
-	font-size: .875rem;
-	line-height: 1.25rem;
-	margin: 0;
-`;
-
 export const Item = styled.div`
 	margin-bottom: 2rem;
 

@@ -8,7 +8,6 @@ import {
 	ItemDate,
 	Type,
 	Symbol,
-	SummaryText,
 } from './styles';
 
 const classIf = (className, predicate) => (predicate && className) || '';
@@ -32,7 +31,6 @@ const Summary = ({
 		hovered,
 		pinned,
 		date,
-		summary,
 		title,
 	} = item;
 	return (
@@ -57,7 +55,6 @@ const Summary = ({
 					{title}
 				</Title>
 			</TitleWrapper>
-			{summary && <SummaryText>{summary}</SummaryText>}
 		</Item>
 	);
 };
@@ -96,7 +93,6 @@ Summary.propTypes = {
 	hoverHandler: PropTypes.func,
 	clickHandler: PropTypes.func,
 	setComponentRef: PropTypes.func,
-	summary: PropTypes.string,
 	title: PropTypes.string,
 };
 
@@ -104,7 +100,6 @@ Summary.defaultProps = {
 	itemType: 'document',
 	type: '',
 	title: '',
-	summary: '',
 	date: '',
 	hoveredElement: null,
 	pinnedElement: null,
