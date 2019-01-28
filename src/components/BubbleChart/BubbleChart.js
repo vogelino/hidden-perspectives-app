@@ -45,6 +45,7 @@ const Bubbles = ({
 	pinnedElement,
 	images,
 	setPinnedElement,
+	activeElementId,
 	...props
 }) => bubbleLayoutItems.map((bubbleData) => {
 	const hovered = isHovered(bubbleData.data, hoveredElement, 'stakeholder');
@@ -54,6 +55,7 @@ const Bubbles = ({
 			key={`bubble-link-${bubbleData.data.name}`}
 			hovered={hovered}
 			pinned={!hoveredElement && pinned}
+			isActive={activeElementId === bubbleData.data.id}
 			image={images.find(({ id }) => id === bubbleData.data.id)}
 			clickHandler={(pinEl) => {
 				if (pinnedElement && pinnedElement.id === pinEl.id) return setPinnedElement(null);
@@ -108,6 +110,7 @@ const BubbleChart = ({
 	setHoveredElement,
 	pinnedElement,
 	setPinnedElement,
+	activeElementId,
 	images,
 }) => (
 	<BubbleChartContainer diameter={diameter}>
@@ -168,6 +171,7 @@ const BubbleChart = ({
 					? <Text x={diameter / 2} y={diameter / 2}>No protagonists</Text>
 					: (
 						<Bubbles
+							activeElementId={activeElementId}
 							bubbleLayoutItems={bubbleLayoutItems}
 							isLoading={isLoading}
 							hoveredElement={hoveredElement}
@@ -196,6 +200,7 @@ BubbleChart.propTypes = {
 	diameter: PropTypes.number,
 	setHoveredElement: PropTypes.func,
 	setPinnedElement: PropTypes.func,
+	activeElementId: PropTypes.string,
 	bubbleLayoutItems: PropTypes.arrayOf(
 		PropTypes.shape({
 			id: PropTypes.string,
@@ -241,6 +246,7 @@ BubbleChart.defaultProps = {
 	images: [],
 	hoveredElement: null,
 	pinnedElement: null,
+	activeElementId: '',
 	setHoveredElement: () => {},
 	setPinnedElement: () => {},
 };
