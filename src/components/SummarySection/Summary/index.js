@@ -1,5 +1,5 @@
 import { compose, withState, lifecycle } from 'recompose';
-import { isPartlyInViewport, getHoveredSummary } from '../../../utils/timelineUtil';
+import { getHoveredSummary } from '../../../utils/timelineUtil';
 import Summary from './Summary';
 
 const originalShouldUpdate = (props, nextProps) => (
@@ -33,15 +33,13 @@ export default compose(
 			const shouldUpdate = originalShouldUpdate(this.props, nextProps);
 
 			if (!shouldUpdate) return false;
-			const isVisible = isPartlyInViewport(ref);
 			const willScrollIntoView = willScroll(hoveredElement);
-			if (shouldUpdate && !willScrollIntoView) return isVisible;
-			if (shouldUpdate && !isVisible && willScrollIntoView) {
+			if (willScrollIntoView) {
 				const mightAppearInView = mightBeInViewPort(ref, hoveredElement);
-				const willBeInViewport = willScrollIntoView && mightAppearInView;
+				const willBeInViewport = mightAppearInView;
 				return willBeInViewport;
 			}
-			return shouldUpdate;
+			return true;
 		},
 	}),
 )(Summary);
