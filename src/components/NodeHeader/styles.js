@@ -6,9 +6,11 @@ export const Container = styled.header`
 	position: ${({ isStatic }) => (isStatic ? 'static' : 'fixed')};
 	top: 4.5rem;
 	left: 0;
-	height: 7rem;
-	background: ${({ theme }) => theme.primaryLight};
+	height: 7.8rem;
 	width: 100%;
+	z-index: 1;
+	background: rgba(255,255,255,.95);
+	box-shadow: 0 .5rem 2rem .5rem rgba(255,255,255,.6);
 `;
 
 export const TabsContainer = styled.nav`
@@ -20,13 +22,15 @@ export const TabsContainer = styled.nav`
 `;
 
 export const NodeTitleContainer = styled.header`
-	height: 3.5rem;
+	height: 4.3rem;
 	display: flex;
+	position: relative;
+	z-index: 2;
 `;
 
 export const Tabs = styled.nav`
 	list-style: none;
-	padding-top: .25rem;
+	padding-top: .125rem;
 `;
 
 export const Tab = styled(NavLink)`
@@ -39,10 +43,9 @@ export const Tab = styled(NavLink)`
 	border-radius: 2rem;
 
 	&.active {
-		background: ${({ theme }) => theme.primary};
-		color: white;
+		background: ${({ theme }) => theme.primaryLight};
+		color: ${({ theme }) => theme.primaryDark};
 		cursor: default;
-		font-weight: bold;
 	}
 
 	&:not(.active):hover {
@@ -55,10 +58,6 @@ export const Tab = styled(NavLink)`
 	}
 `;
 
-const HeaderButton = styled(Button)`
-	background: none;
-`;
+export const BackButton = styled(Button)``;
 
-export const BackButton = styled(HeaderButton)``;
-
-export const EditButton = styled(HeaderButton)``;
+export const EditButton = styled(Button)``;

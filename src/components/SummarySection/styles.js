@@ -3,18 +3,18 @@ import Headline from '../_library/Headline';
 
 export const Container = styled.div`
 	flex: 0 0 32rem;
-	height: calc(100vh - 11.5rem);
+	height: calc(100vh - 4.5rem);
 	background: white;
 	position: relative;
 `;
 
 export const Items = styled.div`
 	width: 100%;
-	height: calc(100vh - 11.5rem);
+	height: calc(100vh - 4.5rem);
 	position: relative;
 	overflow-x: hidden;
 	overflow-y: auto;
-	padding: 2rem;
+	padding: 11.8rem 2rem 2rem;
 	scroll-behavior: smooth;
 `;
 

@@ -2,8 +2,9 @@ import styled from 'styled-components';
 
 export const Container = styled.div`
 	overflow-y: auto;
-	height: calc(100vh - 11.5rem);
-	margin-top: 11.5rem;
+	height: calc(100vh - 4.5rem);
+	margin-top: 4.5rem;
+	padding-top: 7.8rem;
 	width: 100%;
 `;
 

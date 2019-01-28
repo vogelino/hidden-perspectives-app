@@ -24,13 +24,13 @@ const NodeHeader = ({
 			<NodeTitle id={id} itemType={itemType} />
 		</NodeTitleContainer>
 		<TabsContainer>
-			<BackButton primary to="/">Back to Timeline</BackButton>
+			<BackButton to="/">Back to Timeline</BackButton>
 			<Tabs>
 				{tabs.map(({ label, url }) => (
 					<Tab key={label} to={url}>{label}</Tab>
 				))}
 			</Tabs>
-			<EditButton primary to={editUrl}>{editText}</EditButton>
+			<EditButton to={editUrl}>{editText}</EditButton>
 		</TabsContainer>
 	</Container>
 );

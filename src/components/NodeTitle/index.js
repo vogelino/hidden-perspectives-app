@@ -1,5 +1,10 @@
 import gql from 'graphql-tag';
-import { compose, lifecycle, withState } from 'recompose';
+import {
+	compose,
+	lifecycle,
+	withState,
+	withProps,
+} from 'recompose';
 import { withApollo } from 'react-apollo';
 import { ucFirst } from '../../utils/stringUtil';
 import { formatHumanDate } from '../../utils/dateUtil';
@@ -103,6 +108,9 @@ export default compose(
 	withApollo,
 	withState('title', 'setTitle', ''),
 	withState('subtitle', 'setSubtitle', ''),
+	withProps(({ itemType }) => ({
+		symbol: itemType === 'document' ? '▲' : '●',
+	})),
 	lifecycle({
 		componentDidMount() {
 			performQuery(this.props);

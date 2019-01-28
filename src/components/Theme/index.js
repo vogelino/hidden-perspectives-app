@@ -5,11 +5,11 @@ import { ThemeProvider, css } from 'styled-components';
 import { theme as originalTheme, th } from '@smooth-ui/core-sc';
 
 const colors = {
-	primary: '#F8B332',
-	primaryLight: '#FCDDA3',
-	primaryDark: '#924F00',
-	primaryDark10: transparentize(0.9, '#924F00'),
-	primaryDark25: transparentize(0.75, '#924F00'),
+	primary: '#FFA344',
+	primaryLight: '#FFD18B',
+	primaryDark: '#8F4B00',
+	primaryDark10: '#FFC784',
+	primaryDark25: '#FFB96F',
 	commonBorderColor: originalTheme.gray300,
 	usBlue: '#2523A0',
 	usRed: '#D7062C',

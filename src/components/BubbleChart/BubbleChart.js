@@ -55,6 +55,41 @@ const Bubbles = ({
 	/>
 ));
 
+const GradientMapFilter = ({
+	id,
+	red,
+	green,
+	blue,
+}) => (
+	<filter id={id}>
+		<feColorMatrix
+			type="matrix"
+			values="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 0 0 0 1 0"
+			in="SourceGraphic"
+			result="colormatrix"
+		/>
+		<feComponentTransfer in="colormatrix" result="componentTransfer">
+			<feFuncR type="table" tableValues={red} />
+			<feFuncG type="table" tableValues={green} />
+			<feFuncB type="table" tableValues={blue} />
+			<feFuncA type="table" tableValues="0 1" />
+		</feComponentTransfer>
+		<feBlend
+			mode="normal"
+			in="componentTransfer"
+			in2="SourceGraphic"
+			result="blend"
+		/>
+	</filter>
+);
+
+GradientMapFilter.propTypes = {
+	id: PropTypes.string.isRequired,
+	red: PropTypes.string.isRequired,
+	green: PropTypes.string.isRequired,
+	blue: PropTypes.string.isRequired,
+};
+
 const BubbleChart = ({
 	bubbleLayoutItems,
 	isLoading,
@@ -70,55 +105,24 @@ const BubbleChart = ({
 			preserveAspectRatio="xMidYMid meet"
 		>
 			<defs>
-				<filter id="image-color-filter">
-					<feColorMatrix
-						type="matrix"
-						values="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 0 0 0 1 0"
-						in="SourceGraphic"
-						result="colormatrix"
-					/>
-					<feComponentTransfer in="colormatrix" result="componentTransfer">
-						<feFuncR type="table" tableValues="0.31 0.92" />
-						<feFuncG type="table" tableValues="0.31 0.92" />
-						<feFuncB type="table" tableValues="0.31 0.92" />
-						<feFuncA type="table" tableValues="0 1" />
-					</feComponentTransfer>
-					<feBlend
-						mode="normal"
-						in="componentTransfer"
-						in2="SourceGraphic"
-						result="blend"
-					/>
-				</filter>
-				<filter
+				<GradientMapFilter
+					id="image-color-filter"
+					red="0.31 0.92"
+					green="0.31 0.92"
+					blue="0.31 0.92"
+				/>
+				<GradientMapFilter
 					id="image-color-filter-hover"
-					x="-10%"
-					y="-10%"
-					width="120%"
-					height="120%"
-					filterUnits="objectBoundingBox"
-					primitiveUnits="userSpaceOnUse"
-					colorInterpolationFilters="sRGB"
-				>
-					<feColorMatrix
-						type="matrix"
-						values="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 0 0 0 1 0"
-						in="SourceGraphic"
-						result="colormatrix"
-					/>
-					<feComponentTransfer in="colormatrix" result="componentTransfer">
-						<feFuncR type="table" tableValues="0.57 0.99" />
-						<feFuncG type="table" tableValues="0.31 0.87" />
-						<feFuncB type="table" tableValues="0 0.64" />
-						<feFuncA type="table" tableValues="0 1" />
-					</feComponentTransfer>
-					<feBlend
-						mode="normal"
-						in="componentTransfer"
-						in2="SourceGraphic"
-						result="blend"
-					/>
-				</filter>
+					red="0.39 0.8 1"
+					green="0.15 0.57 0.93"
+					blue="0.06 0.33 0.78"
+				/>
+				<GradientMapFilter
+					id="image-color-filter-active"
+					red="0.36 0.89 1"
+					green="0.14 0.49 0.95"
+					blue="0.07 0.18 0.85"
+				/>
 
 				{images.map(({
 					id,
