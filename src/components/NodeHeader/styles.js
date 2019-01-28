@@ -26,25 +26,23 @@ export const NodeTitleContainer = styled.header`
 
 export const Tabs = styled.nav`
 	list-style: none;
+	padding-top: .25rem;
 `;
 
 export const Tab = styled(NavLink)`
 	display: inline-block;
 	font-size: .875rem;
 	line-height: .875rem;
-	padding: .5rem;
+	padding: .5rem 1rem .4rem;
 	text-decoration: none;
-	color: ${({ theme }) => theme.primaryDark};
-	border-radius: .125rem;
-
-	&.active,
-	&:hover,
-	&:focus {
-		color: ${({ theme }) => theme.black};
-	}
+	color: ${({ theme }) => theme.gray900};
+	border-radius: 2rem;
 
 	&.active {
+		background: ${({ theme }) => theme.primary};
+		color: white;
 		cursor: default;
+		font-weight: bold;
 	}
 
 	&:not(.active):hover {
@@ -53,7 +51,7 @@ export const Tab = styled(NavLink)`
 
 	&:focus {
 		outline: none;
-		box-shadow: inset 0 0 0 2px ${({ theme }) => theme.gray700};
+		background: ${({ theme }) => theme.primaryDark10};
 	}
 `;
 

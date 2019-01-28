@@ -10,8 +10,8 @@ export const Container = styled.div`
 `;
 
 export const Title = styled(Headline)`
-	font-size: 1rem;
-	line-height: 1.25rem;
+	font-size: 1.125rem;
+	line-height: 1.4rem;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
