@@ -7,7 +7,9 @@ export const Container = styled.div`
 	${({ position }) => position}: 0;
 	opacity: 0;
 	pointer-events: none;
-	width: 20rem;
+	width: 100%;
+	min-width: 20rem;
+	max-width: 30rem;
 	height: auto;
 	padding: 1rem 0 0;
 	z-index: 10;
