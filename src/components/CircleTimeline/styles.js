@@ -88,6 +88,7 @@ export const Symbol = styled.span`
 		transform: ${({ rotation }) => `rotate(${rotation - 90}deg)`};
 		transform-origin: left;
 		width: ${({ labelMargin }) => `${labelMargin - 3}px`};
+		z-index: -1;
 	}
 `;
 
