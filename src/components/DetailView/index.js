@@ -234,9 +234,10 @@ const getItemSubtitle = (item, itemType) => {
 
 const getQuery = (item, itemType) => {
 	let query;
+	let tags = [];
 
 	if (itemType === 'event' || itemType === 'document') {
-		const tags = getResponseProp('tags', itemType, item);
+		tags = getResponseProp('tags', itemType, item);
 		const tagsQuery = builtTagsQuery(map(prop('id'), tags));
 		query = tagsQuery;
 	} else if (itemType === 'stakeholder') {
@@ -247,7 +248,7 @@ const getQuery = (item, itemType) => {
 		query = mentionedInQuery;
 	}
 
-	return query;
+	return { query, tags };
 };
 
 const getProtagonists = (item, itemType, allDocuments, allEvents) => {
@@ -283,14 +284,23 @@ const getDocOrEventParser = (getAngle) => pipe(
 	sortBy(prop('date')),
 );
 
-const normalizeItems = (dateKey, items) => map((item) => ({
+const normalizeItems = (keysMap, items, tags) => map((item) => ({
 	...item,
-	date: new Date(item[dateKey]),
+	date: new Date(item[keysMap.date]),
+	commonTags: item[keysMap.tags].filter((itemTag) => tags.some(({ id }) => id === itemTag.id)),
 }), items);
 
-const mapAllItemsDates = ({ allDocuments, allEvents }) => {
-	const normalizedDocuments = normalizeItems('documentCreationDate', allDocuments);
-	const normalizedEvents = normalizeItems('eventStartDate', allEvents);
+const mapAllItemsDates = ({ allDocuments, allEvents, tags }) => {
+	const documentKeysMap = {
+		date: 'documentCreationDate',
+		tags: 'documentTags',
+	};
+	const eventKeysMap = {
+		date: 'eventStartDate',
+		tags: 'eventTags',
+	};
+	const normalizedDocuments = normalizeItems(documentKeysMap, allDocuments, tags);
+	const normalizedEvents = normalizeItems(eventKeysMap, allEvents, tags);
 	const allItems = sortBy(prop('date'), union(normalizedDocuments, normalizedEvents));
 	return {
 		allItems,
@@ -299,7 +309,7 @@ const mapAllItemsDates = ({ allDocuments, allEvents }) => {
 	};
 };
 
-const getContextParser = (props, item) => ({ data: { allEvents, allDocuments } }) => {
+const getContextParser = (props, item, tags) => ({ data: { allEvents, allDocuments } }) => {
 	const {
 		itemType,
 		stopLoading,
@@ -316,7 +326,7 @@ const getContextParser = (props, item) => ({ data: { allEvents, allDocuments } }
 		return;
 	}
 
-	const { allItems, documents, events } = mapAllItemsDates({ allDocuments, allEvents });
+	const { allItems, documents, events } = mapAllItemsDates({ allDocuments, allEvents, tags });
 
 	const dateExtremes = [
 		allItems[0].date,
@@ -357,10 +367,9 @@ const getItemParser = (props) => ({ data }) => {
 		itemType,
 	});
 
-	client.query({
-		query: getQuery(item, itemType),
-	})
-		.then(getContextParser(props, item))
+	const { query, tags } = getQuery(item, itemType);
+	client.query({ query })
+		.then(getContextParser(props, item, tags))
 		.catch(getErrorHandler(props));
 };
 
