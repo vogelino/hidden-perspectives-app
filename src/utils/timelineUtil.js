@@ -42,6 +42,7 @@ export const getMinimap = (timelineItems) => {
 		.range([1, 0.1, 0]);
 
 	return monthGoups.map(({ months, count }) => ({
+		count,
 		density: minimapColorScale(count),
 		id: months.join('-'),
 		year: months[0].split('-')[0],
