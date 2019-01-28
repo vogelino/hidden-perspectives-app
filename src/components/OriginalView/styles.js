@@ -2,9 +2,8 @@ import styled from 'styled-components';
 
 export const Container = styled.div`
 	overflow-y: auto;
-	height: calc(100vh - 8rem);
-	margin-top: 3.5rem;
-	float: left;
+	height: calc(100vh - 11.5rem);
+	margin-top: 11.5rem;
 	width: 100%;
 `;
 

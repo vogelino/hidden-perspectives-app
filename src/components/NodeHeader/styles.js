@@ -6,13 +6,22 @@ export const Container = styled.header`
 	position: ${({ isStatic }) => (isStatic ? 'static' : 'fixed')};
 	top: 4.5rem;
 	left: 0;
-	height: 3.5rem;
-	background: ${({ theme }) => theme.gray100};
+	height: 7rem;
+	background: ${({ theme }) => theme.primaryLight};
+	width: 100%;
+`;
+
+export const TabsContainer = styled.nav`
 	padding: .75rem 1rem;
 	display: flex;
 	justify-content: space-between;
-	width: 100%;
 	z-index: 1;
+	height: 3.5rem;
+`;
+
+export const NodeTitleContainer = styled.header`
+	height: 3.5rem;
+	display: flex;
 `;
 
 export const Tabs = styled.nav`
@@ -25,7 +34,7 @@ export const Tab = styled(NavLink)`
 	line-height: .875rem;
 	padding: .5rem;
 	text-decoration: none;
-	color: ${({ theme }) => theme.gray600};
+	color: ${({ theme }) => theme.primaryDark};
 	border-radius: .125rem;
 
 	&.active,
@@ -48,6 +57,10 @@ export const Tab = styled(NavLink)`
 	}
 `;
 
-export const BackButton = styled(Button)``;
+const HeaderButton = styled(Button)`
+	background: none;
+`;
 
-export const EditButton = styled(Button)``;
+export const BackButton = styled(HeaderButton)``;
+
+export const EditButton = styled(HeaderButton)``;

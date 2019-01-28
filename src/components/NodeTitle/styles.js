@@ -22,5 +22,5 @@ export const Subtitle = styled(Headline)`
 	font-size: .875rem;
 	line-height: .875rem;
 	margin: 0 0 .25rem;
-	color: ${({ theme }) => theme.gray600};
+	color: ${({ theme }) => theme.primaryDark};
 `;

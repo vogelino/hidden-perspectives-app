@@ -1,11 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import NodeTitle from '../NodeTitle';
 import {
 	Container,
 	BackButton,
 	Tabs,
 	Tab,
 	EditButton,
+	NodeTitleContainer,
+	TabsContainer,
 } from './styles';
 
 const NodeHeader = ({
@@ -13,19 +16,28 @@ const NodeHeader = ({
 	editUrl,
 	editText,
 	isStatic,
+	id,
+	itemType,
 }) => (
 	<Container isStatic={isStatic}>
-		<BackButton to="/">Back to Timeline</BackButton>
-		<Tabs>
-			{tabs.map(({ label, url }) => (
-				<Tab key={label} to={url}>{label}</Tab>
-			))}
-		</Tabs>
-		<EditButton to={editUrl}>{editText}</EditButton>
+		<NodeTitleContainer>
+			<NodeTitle id={id} itemType={itemType} />
+		</NodeTitleContainer>
+		<TabsContainer>
+			<BackButton primary to="/">Back to Timeline</BackButton>
+			<Tabs>
+				{tabs.map(({ label, url }) => (
+					<Tab key={label} to={url}>{label}</Tab>
+				))}
+			</Tabs>
+			<EditButton primary to={editUrl}>{editText}</EditButton>
+		</TabsContainer>
 	</Container>
 );
 
 NodeHeader.propTypes = {
+	id: PropTypes.string.isRequired,
+	itemType: PropTypes.oneOf(['document', 'event', 'protagonist', 'location']).isRequired,
 	editUrl: PropTypes.string,
 	editText: PropTypes.string,
 	tabs: PropTypes.arrayOf(PropTypes.shape({

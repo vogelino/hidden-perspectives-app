@@ -6,8 +6,17 @@ export const CircleContainer = styled.div`
     justify-content: center;
 	flex: 1 1;
 	position: relative;
-	height: calc(100vh - 12rem);
-	margin: 2rem 0;
+	min-height: calc(100vh - 11.5rem);
+	max-height: calc(100vh - 11.5rem);
+`;
+
+export const CircleContent = styled.div`
+	height: 40rem;
+	width: 40rem;
+	max-width: 100%;
+	max-height: calc(100% - 4rem);
+	flex-grow: 0;
+	position: relative;
 `;
 
 export const CircleSvg = styled.svg`
@@ -81,6 +90,10 @@ export const BubbleChartContainer = styled.div`
 	pointer-events: none;
 	position: relative;
 	width: 50%;
-	max-width: 300px;
+	max-width: 30rem;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 `;
 
