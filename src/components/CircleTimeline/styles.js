@@ -68,8 +68,7 @@ export const DateLabel = styled.span`
 `;
 
 export const Symbol = styled.span`
-	font-size: .875rem;
-	// transform: scale(${({ children }) => (children === '▲' ? 0.7 : 1)});
+	font-size: ${({ children }) => (children === '▲' ? '.625rem' : '.875rem')};
 	pointer-events: none;
 	width: .875rem;
 	height: .875rem;
