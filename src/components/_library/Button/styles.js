@@ -5,7 +5,10 @@ import { NavLink } from 'react-router-dom';
 const isPrimary = (variant) => (variant === 'primary');
 
 export const Button = styled(SmoothUiButton)`
-	font-weight: ${({ theme }) => theme.btnFontWeight};
+	font-weight: ${({ theme, variant }) => (isPrimary(variant)
+		? theme.btnPrimaryFontWeight
+		: theme.bthSecondaryFontWeight
+	)};
 	font-size: ${({ theme }) => theme.btnFontSize};
 
 	background: ${({ variant, theme }) => (isPrimary(variant)
