@@ -31,7 +31,11 @@ const TimelineElement = ({
 			onMouseLeave={() => hoverHandler(null)}
 			onClick={() => clickHandler({ id, itemType, ...itemProps })}
 		>
-			<Tooltip id={id} itemType={itemType} position={itemType === 'document' ? 'right' : 'left'}>
+			<Tooltip
+				id={id}
+				itemType={itemType}
+				position={itemType === 'document' ? 'right' : 'left'}
+			>
 				<EventTitle>
 					{title}
 				</EventTitle>

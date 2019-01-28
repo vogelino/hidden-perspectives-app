@@ -3,6 +3,7 @@ import {
 	lifecycle,
 	withState,
 	withHandlers,
+	withProps,
 } from 'recompose';
 import { withApollo } from 'react-apollo';
 import gql from 'graphql-tag';
@@ -74,6 +75,10 @@ export default compose(
 	withState('subtitle', 'setSubtitle', undefined),
 	withState('thumbnailUrl', 'setThumbnailUrl', undefined),
 	withState('summary', 'setSummary', undefined),
+	withProps(({ itemType, id }) => ({
+		path: `/${itemType}/context/${id}`,
+		itemTypeName: ucFirst(itemType),
+	})),
 	withHandlers({
 		onMouseEnter: ({ setWasHovered }) => () => setWasHovered(true),
 	}),
