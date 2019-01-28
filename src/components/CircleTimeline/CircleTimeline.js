@@ -25,18 +25,42 @@ const DIAMETER_INNER = (DIAMETER_OUTER / 100) * 80;
 const RADIUS_OUTER = DIAMETER_OUTER / 2;
 const RADIUS_INNER = DIAMETER_INNER / 2;
 const CIRCLE_CENTER = { cx: RADIUS_OUTER + MARGIN, cy: RADIUS_OUTER + MARGIN };
-const LABEL_MARGIN = 25;
+const LABEL_MARGIN = 15;
 
 const getXByAngle = (radius, angle) => (radius * Math.sin(toRadian(angle)))
 	+ RADIUS_OUTER + MARGIN;
 const getYByAngle = (radius, angle) => (radius * -Math.cos(toRadian(angle)))
 	+ RADIUS_OUTER + MARGIN;
 
+const getDateLabelOrientation = (angle) => {
+	let translationValue = { x: 0, y: 0 };
+	if (angle === 0) {
+		translationValue = { x: -50, y: -100 };
+	} else if (angle === 90) {
+		translationValue = { x: 0, y: -50 };
+	} else if (angle === 180) {
+		translationValue = { x: -50, y: 0 };
+	} else if (angle === 270) {
+		translationValue = { x: 100, y: -50 };
+	} else if (angle > 0 && angle < 90) {
+		translationValue = { x: 0, y: -50 };
+	} else if (angle > 90 && angle < 180) {
+		translationValue = { x: 0, y: -50 };
+	} else if (angle > 180 && angle < 270) {
+		translationValue = { x: -100, y: -50 };
+	} else if (angle > 270) {
+		translationValue = { x: -100, y: -50 };
+	}
+
+	return translationValue;
+};
+
 const getDateLabelPosition = (itemX, itemY, radius, angle) => {
 	const x = itemX - getXByAngle(radius, angle);
 	const y = itemY - getYByAngle(radius, angle);
+	const translationValues = getDateLabelOrientation(angle);
 
-	return { x, y };
+	return { x, y, translationValues };
 };
 
 const CircleTimeline = ({
@@ -123,11 +147,14 @@ const CircleTimeline = ({
 						onClick={() => history.push(`/document/context/${docId}`)}
 						current={isCurrentElement}
 					>
-						<Symbol>▲</Symbol>
+						<Symbol
+							rotation={angle}
+							labelMargin={LABEL_MARGIN + (RADIUS_OUTER - RADIUS_INNER)}
+						>
+							{'▲'}
+						</Symbol>
 						<DateLabel
 							position={labelPosition}
-							rotate={angle}
-							margin={LABEL_MARGIN + (RADIUS_OUTER - RADIUS_INNER)}
 							active={labelIsActive}
 						>
 							{formatHumanDate(group[0].date)}
@@ -162,11 +189,14 @@ const CircleTimeline = ({
 						onClick={() => history.push(`/event/context/${docId}`)}
 						current={isCurrentElement}
 					>
-						<Symbol>●</Symbol>
+						<Symbol
+							rotation={angle}
+							labelMargin={LABEL_MARGIN}
+						>
+							{'●'}
+						</Symbol>
 						<DateLabel
 							position={labelPosition}
-							rotate={angle}
-							margin={LABEL_MARGIN}
 							active={labelIsActive}
 						>
 							{formatHumanDate(group[0].date)}

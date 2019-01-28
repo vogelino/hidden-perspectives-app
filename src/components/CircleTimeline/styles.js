@@ -51,38 +51,25 @@ export const DocumentLegendContainer = styled.span`
 
 export const DateLabel = styled.span`
 	color: black;
+	display: flex;
 	left: 50%;
 	font-size: .6rem;
 	opacity: ${({ active }) => (active ? 1 : 0)};
 	pointer-events: none;
 	position: absolute;
 	top: 50%;
-	transform: ${({ position: { x, y }, rotate }) => `
+	transform: ${({ position: { x, y, translationValues } }) => `
 		translate(
-			calc(-50% + ${x}px),
-			calc(-50% + ${y}px)
+			calc(${translationValues.x}% + ${x}px),
+			calc(${translationValues.y}% + ${y}px)
 		)
-		rotate(${rotate}deg)
 	`};
 	white-space: nowrap;
-
-	&:before {
-		background-color: ${({ theme }) => theme.commonBorderColor};
-		bottom: 0;
-		content: '';
-		height: 1px;
-		left: 50%;
-		opacity: ${({ active }) => (active && 0)};
-		position: absolute;
-		transform: rotate(90deg);
-		transform-origin: left bottom;
-		width: ${({ margin }) => `${margin - 12}px`}
-	}
 `;
 
 export const Symbol = styled.span`
 	font-size: .875rem;
-	transform: scale(${({ children }) => (children === '▲' ? 0.7 : 1)});
+	// transform: scale(${({ children }) => (children === '▲' ? 0.7 : 1)});
 	pointer-events: none;
 	width: .875rem;
 	height: .875rem;
@@ -90,6 +77,19 @@ export const Symbol = styled.span`
 	text-decoration: none;
 	float: left;
 	padding-top: 2px;
+
+	&::before {
+		background-color: ${({ theme }) => theme.primary};
+		content: '';
+		height: 1px;
+		left: 50%;
+		opacity: ${({ active }) => (active ? 1 : 0)};
+		position: absolute;
+		top: 50%;
+		transform: ${({ rotation }) => `rotate(${rotation - 90}deg)`};
+		transform-origin: left;
+		width: ${({ labelMargin }) => `${labelMargin - 3}px`};
+	}
 `;
 
 export const Document = styled.foreignObject`
@@ -107,7 +107,8 @@ export const Document = styled.foreignObject`
 
 		${DateLabel} {
 			opacity: 1;
-
+		}
+		${Symbol} {
 			&::before {
 				opacity: 1;
 			}
