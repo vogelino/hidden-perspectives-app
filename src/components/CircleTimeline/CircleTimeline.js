@@ -36,7 +36,7 @@ const getYByAngle = (radius, angle) => (radius * -Math.cos(toRadian(angle)))
 const getDateLabelOrientation = (angle) => {
 	let translationValue = { x: 0, y: 0 };
 	if (angle === 0) {
-		translationValue = { x: -1, y: -50 };
+		translationValue = { x: -50, y: -100 };
 	} else if (angle === 90) {
 		translationValue = { x: 0, y: -50 };
 	} else if (angle === 180) {
@@ -66,14 +66,14 @@ const getDateLabelPosition = (itemX, itemY, radius, angle) => {
 
 const getMaxGroupLength = (documents, events) => {
 	const combinedElements = [...documents, ...events];
-	let maxGroupLength = 0;
+	let maxGroup = [];
 	if (combinedElements.length > 0) {
-		maxGroupLength = combinedElements.reduce(
-			(acc, current) => (acc > current.length ? acc : current.length),
-		);
+		maxGroup = combinedElements.reduce((curr, acc) => (
+			curr.length > acc.length ? curr : acc
+		));
 	}
 
-	return maxGroupLength;
+	return maxGroup.length;
 };
 
 const CircleTimeline = ({
