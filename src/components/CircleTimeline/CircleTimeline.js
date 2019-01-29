@@ -12,6 +12,7 @@ import {
 	Symbol,
 	DateLabel,
 	LegendObject,
+	ItemCountIndicator,
 	EventLegendContainer,
 	DocumentLegendContainer,
 	BubbleChartContainer,
@@ -127,6 +128,7 @@ const CircleTimeline = ({
 				);
 				const labelIsActive = angle === 0 || angle === 320;
 				const isCurrentElement = group.find(({ id }) => id === item.id);
+				const hasMultipleItems = group.length > 1;
 				const docSize = 14;
 
 				return (
@@ -159,6 +161,15 @@ const CircleTimeline = ({
 						>
 							{formatHumanDate(group[0].date)}
 						</DateLabel>
+						{
+							hasMultipleItems && (
+								<ItemCountIndicator
+									rotation={angle}
+									itemCount={group.length}
+									inner
+								/>
+							)
+						}
 					</Document>
 				);
 			})}
@@ -169,6 +180,7 @@ const CircleTimeline = ({
 				const labelPosition = getDateLabelPosition(x, y, RADIUS_OUTER - LABEL_MARGIN, angle);
 				const labelIsActive = angle === 0 || angle === 320;
 				const isCurrentElement = group.find(({ id }) => id === item.id);
+				const hasMultipleItems = group.length > 1;
 				const docSize = 14;
 
 				return (
@@ -201,6 +213,14 @@ const CircleTimeline = ({
 						>
 							{formatHumanDate(group[0].date)}
 						</DateLabel>
+						{
+							hasMultipleItems && (
+								<ItemCountIndicator
+									rotation={angle}
+									itemCount={group.length}
+								/>
+							)
+						}
 					</Document>
 				);
 			})}

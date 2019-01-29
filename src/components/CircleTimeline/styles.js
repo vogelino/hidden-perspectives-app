@@ -37,7 +37,7 @@ export const LegendObject = styled.foreignObject`
 const legendContainerCSS = css`
 	display: inline-block;
 	transform-origin: 100% 50%;
-	transform: scale(.8);
+	transform: scale(.75);
 	margin-right: .5rem;
 `;
 
@@ -72,7 +72,7 @@ export const Symbol = styled.span`
 	pointer-events: none;
 	width: .875rem;
 	height: .875rem;
-	line-height: ${({ children }) => (children === '▲' ? '.65rem' : '.75rem')};
+	line-height: .6rem;
 	text-decoration: none;
 	float: left;
 	padding-top: 3px;
@@ -90,6 +90,22 @@ export const Symbol = styled.span`
 		width: ${({ labelMargin }) => `${labelMargin - 3}px`};
 		z-index: -1;
 	}
+`;
+
+export const ItemCountIndicator = styled.span`
+	background-color: ${({ theme }) => theme.commonBorderColor};
+	border-radius: 2px;
+	height: 4px;
+	left: 50%;
+	position: absolute;
+    top: 50%;
+	transform: ${({ rotation, inner }) => `
+		translateY(-50%)
+		rotate(${inner ? rotation + 90 : rotation - 90}deg)
+	`};
+	transform-origin: left;
+	width: ${({ itemCount }) => `${itemCount * 10}px`};
+	z-index: -1;
 `;
 
 export const Document = styled.foreignObject`
