@@ -96,16 +96,16 @@ export const ItemCountIndicator = styled.span`
 	background-color: ${({ theme }) => theme.commonBorderColor};
 	border-radius: 2px;
 	height: 4px;
-	left: 50%;
+	left: 100%;
 	position: absolute;
     top: 50%;
 	transform: ${({ rotation, inner }) => `
 		translateY(-50%)
 		rotate(${inner ? rotation + 90 : rotation - 90}deg)
 	`};
-	transform-origin: left;
+	transform-origin: -7px;
 	width: ${({ itemCountScale }) => `${60 * itemCountScale}px`};
-	z-index: -1;
+	z-index: -2;
 `;
 
 export const Document = styled.foreignObject`
@@ -128,6 +128,9 @@ export const Document = styled.foreignObject`
 			&::before {
 				opacity: 1;
 			}
+		}
+		${ItemCountIndicator} {
+			background-color: ${({ theme }) => theme.primary};
 		}
 	}
 `;

@@ -251,7 +251,7 @@ const CircleTimeline = ({
 				/>
 			</BubbleChartContainer>
 		</CircleContainer>
-	)
+	);
 };
 
 CircleTimeline.propTypes = {
