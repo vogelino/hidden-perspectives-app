@@ -21,16 +21,16 @@ const NodeHeader = ({
 }) => (
 	<Container isStatic={isStatic}>
 		<NodeTitleContainer>
+			<BackButton to="/">←</BackButton>
 			<NodeTitle id={id} itemType={itemType} />
+			<EditButton to={editUrl}>{editText}</EditButton>
 		</NodeTitleContainer>
 		<TabsContainer>
-			<BackButton to="/">Back to Timeline</BackButton>
 			<Tabs>
 				{tabs.map(({ label, url }) => (
 					<Tab key={label} to={url}>{label}</Tab>
 				))}
 			</Tabs>
-			<EditButton to={editUrl}>{editText}</EditButton>
 		</TabsContainer>
 	</Container>
 );
@@ -49,7 +49,7 @@ NodeHeader.propTypes = {
 
 NodeHeader.defaultProps = {
 	editUrl: undefined,
-	editText: 'Edit metadata',
+	editText: '✎',
 	tabs: [],
 	isStatic: false,
 };

@@ -12,7 +12,7 @@ export const Container = styled.div`
 	max-width: 30rem;
 	height: auto;
 	padding: 1rem 0 0;
-	z-index: 10;
+	z-index: 1;
 `;
 
 export const Content = styled.div`

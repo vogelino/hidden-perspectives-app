@@ -69,6 +69,7 @@ export const Symbol = styled.span`
 	text-decoration: none;
 	float: left;
 	padding-top: 2px;
+	user-select: none;
 `;
 
 export const Document = styled.foreignObject`

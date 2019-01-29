@@ -28,6 +28,6 @@ export const Title = styled(Headline)`
 export const Subtitle = styled(Headline)`
 	font-size: .875rem;
 	line-height: .875rem;
-	margin: 0 0 .25rem;
+	margin: 0 0 .6rem;
 	color: block;
 `;

@@ -5,6 +5,7 @@ export const Container = styled.div`
 	height: 8rem;
 	display: inline-block;
 	position: relative;
+	user-select: none;
 `;
 
 export const Circle = styled.div`

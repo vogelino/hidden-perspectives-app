@@ -51,4 +51,5 @@ export const BubbleText = styled(Text)`
 	}) => hasImage && (isHovered || isPinned || isActive) && `
 		opacity: 0;
 	`}
+	user-select: none;
 `;

@@ -8,7 +8,7 @@ export const Container = styled.header`
 	left: 0;
 	height: 7.8rem;
 	width: 100%;
-	z-index: 1;
+	z-index: 2;
 	background: rgba(255,255,255,.95);
 	box-shadow: 0 .5rem 2rem .5rem rgba(255,255,255,.6);
 `;
@@ -16,7 +16,7 @@ export const Container = styled.header`
 export const TabsContainer = styled.nav`
 	padding: .75rem 1rem;
 	display: flex;
-	justify-content: space-between;
+	justify-content: space-around;
 	z-index: 1;
 	height: 3.5rem;
 `;
@@ -41,6 +41,11 @@ export const Tab = styled(NavLink)`
 	text-decoration: none;
 	color: ${({ theme }) => theme.gray900};
 	border-radius: 2rem;
+	margin-right: 0.5rem;
+
+	&:last-child {
+		margin-right: 0;
+	}
 
 	&.active {
 		background: ${({ theme }) => theme.primaryLight};
@@ -58,6 +63,35 @@ export const Tab = styled(NavLink)`
 	}
 `;
 
-export const BackButton = styled(Button)``;
+const StyledButton = styled(Button)`
+	position: absolute;
+	top: 1.25rem;
 
-export const EditButton = styled(Button)``;
+	& > button {
+		font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+		border: none;
+		background: none;
+		font-size: 1.5rem;
+		line-height: 1.5rem;
+		color: ${({ theme }) => theme.gray500};
+		cursor: pointer;
+		padding: .5rem 0;
+		text-align: center;
+		width: 2.5rem;
+		height: 2.5rem;
+		border-radius: 50%;
+
+		&:hover:not(.disabled) {
+			color: ${({ theme }) => theme.primaryDark};
+			background: ${({ theme }) => theme.primaryLight};
+		}
+	}
+`;
+
+export const BackButton = styled(StyledButton)`
+	left: 1rem;
+`;
+
+export const EditButton = styled(StyledButton)`
+	right: 1rem;
+`;

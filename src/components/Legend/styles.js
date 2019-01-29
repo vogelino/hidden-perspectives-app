@@ -8,6 +8,7 @@ export const LegendLabel = styled.span`
 	color: ${({ theme }) => theme.colors.gray600};
 	${({ position }) => (position !== 'center' && `float: ${position};`)}
 	${({ position }) => (position === 'center' && 'margin: 0 auto;')}
+	user-select: none;
 
 	&:before {
 		content: '${({ symbol }) => (symbol || '▲')}';

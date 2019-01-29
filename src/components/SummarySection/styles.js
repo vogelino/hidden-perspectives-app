@@ -5,6 +5,7 @@ export const Container = styled.div`
 	height: calc(100vh - 4.5rem);
 	background: white;
 	position: relative;
+	z-index: 1;
 `;
 
 export const LoadingContainer = styled.div`
