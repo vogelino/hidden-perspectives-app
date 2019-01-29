@@ -25,13 +25,12 @@ const Tooltips = ({
 	} = bubbleData;
 
 	const { name, value } = data;
-	const hovered = isHovered(data, hoveredElement, 'stakeholder');
 	const toRelativePosition = (pos) => pos * 100 / diameter;
 
 	return (
 		<BubbleChartTooltip
 			key={`tooltip-${name}`}
-			visible={hovered}
+			visible={hoveredElement && hoveredElement.id === data.id}
 			x={toRelativePosition(x)}
 			y={toRelativePosition(y + r)}
 			text={name}
@@ -43,17 +42,28 @@ const Tooltips = ({
 const Bubbles = ({
 	bubbleLayoutItems,
 	hoveredElement,
+	pinnedElement,
 	images,
+	setPinnedElement,
 	...props
-}) => bubbleLayoutItems.map((bubbleData) => (
-	<Bubble
-		key={`bubble-link-${bubbleData.data.name}`}
-		hovered={isHovered(bubbleData.data, hoveredElement, 'stakeholder')}
-		image={images.find(({ id }) => id === bubbleData.data.id)}
-		{...bubbleData}
-		{...props}
-	/>
-));
+}) => bubbleLayoutItems.map((bubbleData) => {
+	const hovered = isHovered(bubbleData.data, hoveredElement, 'stakeholder');
+	const pinned = isHovered(bubbleData.data, pinnedElement, 'stakeholder');
+	return (
+		<Bubble
+			key={`bubble-link-${bubbleData.data.name}`}
+			hovered={hovered}
+			pinned={!hoveredElement && pinned}
+			image={images.find(({ id }) => id === bubbleData.data.id)}
+			clickHandler={(pinEl) => {
+				if (pinnedElement && pinnedElement.id === pinEl.id) return setPinnedElement(null);
+				return setPinnedElement(pinEl);
+			}}
+			{...bubbleData}
+			{...props}
+		/>
+	);
+});
 
 const BubbleChart = ({
 	bubbleLayoutItems,
@@ -61,6 +71,8 @@ const BubbleChart = ({
 	diameter,
 	hoveredElement,
 	setHoveredElement,
+	pinnedElement,
+	setPinnedElement,
 	images,
 }) => (
 	<BubbleChartContainer diameter={diameter}>
@@ -156,6 +168,8 @@ const BubbleChart = ({
 							isLoading={isLoading}
 							hoveredElement={hoveredElement}
 							setHoveredElement={setHoveredElement}
+							pinnedElement={pinnedElement}
+							setPinnedElement={setPinnedElement}
 							images={images}
 						/>
 					)
@@ -167,6 +181,7 @@ const BubbleChart = ({
 		<Tooltips
 			bubbleLayoutItems={bubbleLayoutItems}
 			hoveredElement={hoveredElement}
+			pinnedElement={pinnedElement}
 			diameter={diameter}
 		/>
 	</BubbleChartContainer>
@@ -176,6 +191,7 @@ BubbleChart.propTypes = {
 	isLoading: PropTypes.bool,
 	diameter: PropTypes.number,
 	setHoveredElement: PropTypes.func,
+	setPinnedElement: PropTypes.func,
 	bubbleLayoutItems: PropTypes.arrayOf(
 		PropTypes.shape({
 			id: PropTypes.string,
@@ -200,6 +216,18 @@ BubbleChart.propTypes = {
 			}),
 		),
 	]),
+	pinnedElement: PropTypes.oneOfType([
+		PropTypes.shape({
+			id: PropTypes.string.isRequired,
+			itemType: PropTypes.string.isRequired,
+		}),
+		PropTypes.arrayOf(
+			PropTypes.shape({
+				id: PropTypes.string.isRequired,
+				itemType: PropTypes.string.isRequired,
+			}),
+		),
+	]),
 };
 
 BubbleChart.defaultProps = {
@@ -208,7 +236,9 @@ BubbleChart.defaultProps = {
 	bubbleLayoutItems: [],
 	images: [],
 	hoveredElement: null,
+	pinnedElement: null,
 	setHoveredElement: () => {},
+	setPinnedElement: () => {},
 };
 
 export default BubbleChart;

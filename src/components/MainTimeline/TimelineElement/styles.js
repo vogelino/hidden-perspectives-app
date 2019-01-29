@@ -1,9 +1,8 @@
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
 
 export const Container = styled.div`
 	width: 100%;
-	margin-bottom: 1rem;
+	padding-bottom: 1rem;
 
 	&::after {
 		content: "";
@@ -12,10 +11,11 @@ export const Container = styled.div`
 	}
 `;
 
-export const EventTitle = styled(Link)`
+export const EventTitle = styled.span`
 	text-decoration: none;
 	color: ${({ theme }) => theme.gray900};
 	transition: background 100ms ease-out, color 100ms ease-out;
+	cursor: pointer;
 `;
 
 export const EventTitleContainer = styled.div`
@@ -44,11 +44,13 @@ export const EventTitleContainer = styled.div`
 		margin-bottom: 0;
 	}
 
+	&.pinned::after,
 	&.hovered::after {
 		color: ${({ theme }) => theme.primary};
 	}
 
-	&.hovered ${EventTitle} {
+	&.hovered ${EventTitle},
+	&.pinned ${EventTitle} {
 		color: ${({ theme }) => theme.primaryDark};
 		background: ${({ theme }) => theme.primaryLight};
 	}

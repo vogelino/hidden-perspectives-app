@@ -37,127 +37,120 @@ const CircleTimeline = ({
 	isLoading,
 	hoveredElement,
 	setHoveredElement,
-	history,
+	pinnedElement,
+	setPinnedElement,
 	itemCounts,
-}) => (
-	<CircleContainer>
-		<CircleSvg
-			id="circleContainer"
-			viewBox={`0 0 ${DIAMETER_OUTER + (MARGIN * 2)} ${DIAMETER_OUTER + (MARGIN * 2)}`}
-			preserveAspectRatio="xMidYMid meet"
-		>
-			<Circle
-				missingAngle={toRadian(20)}
-				strokeWidth={1}
-				shapeRendering="crisp-edges"
-				r={RADIUS_OUTER - 1}
+}) => {
+	const createDocumentMapper = (itemType, symbol) => (group) => {
+		const { angle, id: docId } = group[0];
+		const radius = itemType === 'document' ? RADIUS_INNER : RADIUS_OUTER;
+		const x = getXByAngle(radius, angle);
+		const y = getYByAngle(radius, angle);
+		const isCurrentElement = group.find(({ id }) => id === item.id);
+		const docSize = 14;
+		const hovered = isHovered(group, hoveredElement, itemType);
+		const pinned = isHovered(group, pinnedElement, itemType);
+		const groupWithItemType = group.map((groupEl) => ({ ...groupEl, itemType }));
+		return (
+			<Document
+				x={x - (docSize / 2)}
+				y={y - (docSize / 2)}
+				width={docSize}
+				height={docSize}
+				angle={group[0].angle}
+				key={`${itemType}-${docId}`}
+				className={[
+					hovered ? 'hovered' : '',
+					!hoveredElement && pinned ? 'pinned' : '',
+				].join(' ')}
+				onMouseEnter={() => setHoveredElement(groupWithItemType)}
+				onMouseLeave={() => setHoveredElement(null)}
 				{...CIRCLE_CENTER}
-				strokeDasharray={(Math.PI * (DIAMETER_OUTER - 1))}
-			/>
-			<Circle
-				missingAngle={toRadian(20)}
-				strokeWidth={1}
-				shapeRendering="crisp-edges"
-				r={RADIUS_INNER}
-				{...CIRCLE_CENTER}
-				strokeDasharray={(Math.PI * (DIAMETER_INNER))}
-			/>
-			<LegendObject
-				width={RADIUS_OUTER}
-				height={22}
-				x={0}
-				y={0}
+				onClick={() => {
+					if (
+						pinnedElement && (
+							pinnedElement.id === docId
+							|| (Array.isArray(pinnedElement) && pinnedElement.find((el) => el.id === docId))
+						)
+					) {
+						return setPinnedElement(null);
+					}
+					return setPinnedElement(groupWithItemType);
+				}}
+				current={isCurrentElement}
 			>
-				<EventLegendContainer>
-					<EventLegend
-						itemCount={itemCounts.eventsCount}
-						isLoading={isLoading}
-					/>
-				</EventLegendContainer>
-			</LegendObject>
-			<LegendObject
-				width={RADIUS_OUTER}
-				height={22}
-				x={0}
-				y={RADIUS_OUTER - RADIUS_INNER}
+				<Symbol>{symbol}</Symbol>
+			</Document>
+		);
+	};
+	return (
+		<CircleContainer>
+			<CircleSvg
+				id="circleContainer"
+				viewBox={`0 0 ${DIAMETER_OUTER + (MARGIN * 2)} ${DIAMETER_OUTER + (MARGIN * 2)}`}
+				preserveAspectRatio="xMidYMid meet"
 			>
-				<DocumentLegendContainer>
-					<DocumentLegend
-						itemCount={itemCounts.documentsCount}
-						isLoading={isLoading}
-					/>
-				</DocumentLegendContainer>
-			</LegendObject>
-			{documents.map((group) => {
-				const { angle, id: docId } = group[0];
-				const x = getXByAngle(RADIUS_INNER, angle);
-				const y = getYByAngle(RADIUS_INNER, angle);
-				const isCurrentElement = group.find(({ id }) => id === item.id);
-				const docSize = 14;
-				return (
-					<Document
-						x={x - (docSize / 2)}
-						y={y - (docSize / 2)}
-						width={docSize}
-						height={docSize}
-						angle={group[0].angle}
-						key={`document-${docId}`}
-						className={isHovered(group, hoveredElement, 'document') && 'hovered'}
-						onMouseEnter={() => setHoveredElement(group.map((groupEl) => ({
-							...groupEl,
-							itemType: 'document',
-						})))}
-						onMouseLeave={() => setHoveredElement(null)}
-						{...CIRCLE_CENTER}
-						onClick={() => history.push(`/document/context/${docId}`)}
-						current={isCurrentElement}
-					>
-						<Symbol>▲</Symbol>
-					</Document>
-				);
-			})}
-			{events.map((group) => {
-				const { angle, id: docId } = group[0];
-				const x = getXByAngle(RADIUS_OUTER, angle);
-				const y = getYByAngle(RADIUS_OUTER, angle);
-				const isCurrentElement = group.find(({ id }) => id === item.id);
-				const docSize = 14;
-				return (
-					<Document
-						x={x - (docSize / 2)}
-						y={y - (docSize / 2)}
-						width={docSize}
-						height={docSize}
-						angle={group[0].angle}
-						key={`event-${docId}`}
-						className={isHovered(group, hoveredElement, 'event') && 'hovered'}
-						onMouseEnter={() => setHoveredElement(group.map((groupEl) => ({
-							...groupEl,
-							itemType: 'event',
-						})))}
-						onMouseLeave={() => setHoveredElement(null)}
-						{...CIRCLE_CENTER}
-						onClick={() => history.push(`/event/context/${docId}`)}
-						current={isCurrentElement}
-					>
-						<Symbol>●</Symbol>
-					</Document>
-				);
-			})}
-		</CircleSvg>
-		<BubbleChartContainer>
-			<BubbleChart
-				items={protagonists}
-				diameter={300}
-				bubblesPadding={5}
-				isLoading={isLoading}
-				activeId={item.id}
-				hoveredElement={hoveredElement}
-				setHoveredElement={setHoveredElement}
-			/>
-		</BubbleChartContainer>
-	</CircleContainer>
-);
+				<Circle
+					missingAngle={toRadian(20)}
+					strokeWidth={1}
+					shapeRendering="crisp-edges"
+					r={RADIUS_OUTER - 1}
+					{...CIRCLE_CENTER}
+					strokeDasharray={(Math.PI * (DIAMETER_OUTER - 1))}
+				/>
+				<Circle
+					missingAngle={toRadian(20)}
+					strokeWidth={1}
+					shapeRendering="crisp-edges"
+					r={RADIUS_INNER}
+					{...CIRCLE_CENTER}
+					strokeDasharray={(Math.PI * (DIAMETER_INNER))}
+				/>
+				<LegendObject
+					width={RADIUS_OUTER}
+					height={22}
+					x={0}
+					y={0}
+				>
+					<EventLegendContainer>
+						<EventLegend
+							itemCount={itemCounts.eventsCount}
+							isLoading={isLoading}
+						/>
+					</EventLegendContainer>
+				</LegendObject>
+				<LegendObject
+					width={RADIUS_OUTER}
+					height={22}
+					x={0}
+					y={RADIUS_OUTER - RADIUS_INNER}
+				>
+					<DocumentLegendContainer>
+						<DocumentLegend
+							itemCount={itemCounts.documentsCount}
+							isLoading={isLoading}
+						/>
+					</DocumentLegendContainer>
+				</LegendObject>
+				{documents.map(createDocumentMapper('document', '▲'))}
+				{events.map(createDocumentMapper('event', '●'))}
+			</CircleSvg>
+			<BubbleChartContainer>
+				<BubbleChart
+					items={protagonists}
+					diameter={300}
+					bubblesPadding={5}
+					isLoading={isLoading}
+					activeId={item.id}
+					hoveredElement={hoveredElement}
+					setHoveredElement={setHoveredElement}
+					pinnedElement={pinnedElement}
+					setPinnedElement={setPinnedElement}
+				/>
+			</BubbleChartContainer>
+		</CircleContainer>
+	);
+};
 
 CircleTimeline.propTypes = {
 	item: PropTypes.shape({
@@ -197,6 +190,19 @@ CircleTimeline.propTypes = {
 		),
 	]),
 	setHoveredElement: PropTypes.func,
+	pinnedElement: PropTypes.oneOfType([
+		PropTypes.shape({
+			id: PropTypes.string.isRequired,
+			itemType: PropTypes.string.isRequired,
+		}),
+		PropTypes.arrayOf(
+			PropTypes.shape({
+				id: PropTypes.string.isRequired,
+				itemType: PropTypes.string.isRequired,
+			}),
+		),
+	]),
+	setPinnedElement: PropTypes.func,
 	itemCounts: PropTypes.shape({
 		eventsCount: PropTypes.number.isRequired,
 		documentsCount: PropTypes.number.isRequired,
@@ -214,7 +220,9 @@ CircleTimeline.defaultProps = {
 	events: [],
 	protagonists: {},
 	hoveredElement: null,
+	pinnedElement: null,
 	setHoveredElement: () => {},
+	setPinnedElement: () => {},
 };
 
 export default CircleTimeline;
