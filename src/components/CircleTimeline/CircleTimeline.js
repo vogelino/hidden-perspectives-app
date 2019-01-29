@@ -35,7 +35,7 @@ const getYByAngle = (radius, angle) => (radius * -Math.cos(toRadian(angle)))
 const getDateLabelOrientation = (angle) => {
 	let translationValue = { x: 0, y: 0 };
 	if (angle === 0) {
-		translationValue = { x: -50, y: -100 };
+		translationValue = { x: -1, y: -50 };
 	} else if (angle === 90) {
 		translationValue = { x: 0, y: -50 };
 	} else if (angle === 180) {

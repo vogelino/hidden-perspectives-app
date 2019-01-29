@@ -68,14 +68,14 @@ export const DateLabel = styled.span`
 `;
 
 export const Symbol = styled.span`
-	font-size: ${({ children }) => (children === '▲' ? '.625rem' : '.875rem')};
+	font-size: ${({ children }) => (children === '▲' ? '.65rem' : '.875rem')};
 	pointer-events: none;
 	width: .875rem;
 	height: .875rem;
-	line-height: ${({ children }) => (children === '▲' ? '.625rem' : '.75rem')};
+	line-height: ${({ children }) => (children === '▲' ? '.65rem' : '.75rem')};
 	text-decoration: none;
 	float: left;
-	padding-top: 2px;
+	padding-top: 3px;
 
 	&::before {
 		background-color: ${({ theme }) => theme.primary};
