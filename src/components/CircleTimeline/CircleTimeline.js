@@ -64,6 +64,18 @@ const getDateLabelPosition = (itemX, itemY, radius, angle) => {
 	return { x, y, translationValues };
 };
 
+const getMaxGroupLength = (documents, events) => {
+	const combinedElements = [...documents, ...events];
+	let maxGroupLength = 0;
+	if (combinedElements.length > 0) {
+		maxGroupLength = combinedElements.reduce(
+			(acc, current) => (acc > current.length ? acc : current.length),
+		);
+	}
+
+	return maxGroupLength;
+};
+
 const CircleTimeline = ({
 	item,
 	documents,
@@ -73,171 +85,174 @@ const CircleTimeline = ({
 	hoveredElement,
 	setHoveredElement,
 	history,
-}) => (
-	<CircleContainer>
-		<CircleSvg
-			id="circleContainer"
-			viewBox={`0 0 ${DIAMETER_OUTER + (MARGIN * 2)} ${DIAMETER_OUTER + (MARGIN * 2)}`}
-			preserveAspectRatio="xMidYMid meet"
-		>
-			<Circle
-				missingAngle={toRadian(20)}
-				strokeWidth={1}
-				shapeRendering="crisp-edges"
-				r={RADIUS_OUTER - 1}
-				{...CIRCLE_CENTER}
-				strokeDasharray={(Math.PI * (DIAMETER_OUTER - 1))}
-			/>
-			<Circle
-				missingAngle={toRadian(20)}
-				strokeWidth={1}
-				shapeRendering="crisp-edges"
-				r={RADIUS_INNER}
-				{...CIRCLE_CENTER}
-				strokeDasharray={(Math.PI * (DIAMETER_INNER))}
-			/>
-			<LegendObject
-				width={RADIUS_OUTER}
-				height={22}
-				x={0}
-				y={0}
+}) => {
+	const maxGroupLength = getMaxGroupLength(documents, events);
+	return (
+		<CircleContainer>
+			<CircleSvg
+				id="circleContainer"
+				viewBox={`0 0 ${DIAMETER_OUTER + (MARGIN * 2)} ${DIAMETER_OUTER + (MARGIN * 2)}`}
+				preserveAspectRatio="xMidYMid meet"
 			>
-				<EventLegendContainer>
-					<EventLegend itemCount={documents.length} />
-				</EventLegendContainer>
-			</LegendObject>
-			<LegendObject
-				width={RADIUS_OUTER}
-				height={22}
-				x={0}
-				y={RADIUS_OUTER - RADIUS_INNER}
-			>
-				<DocumentLegendContainer>
-					<DocumentLegend itemCount={events.length} />
-				</DocumentLegendContainer>
-			</LegendObject>
-			{documents.map((group) => {
-				const { angle, id: docId } = group[0];
-				const x = getXByAngle(RADIUS_INNER, angle);
-				const y = getYByAngle(RADIUS_INNER, angle);
-				const labelPosition = getDateLabelPosition(
-					x,
-					y,
-					RADIUS_INNER + (RADIUS_INNER - RADIUS_OUTER) - LABEL_MARGIN,
-					angle,
-				);
-				const labelIsActive = angle === 0 || angle === 320;
-				const isCurrentElement = group.find(({ id }) => id === item.id);
-				const hasMultipleItems = group.length > 1;
-				const docSize = 14;
+				<Circle
+					missingAngle={toRadian(20)}
+					strokeWidth={1}
+					shapeRendering="crisp-edges"
+					r={RADIUS_OUTER - 1}
+					{...CIRCLE_CENTER}
+					strokeDasharray={(Math.PI * (DIAMETER_OUTER - 1))}
+				/>
+				<Circle
+					missingAngle={toRadian(20)}
+					strokeWidth={1}
+					shapeRendering="crisp-edges"
+					r={RADIUS_INNER}
+					{...CIRCLE_CENTER}
+					strokeDasharray={(Math.PI * (DIAMETER_INNER))}
+				/>
+				<LegendObject
+					width={RADIUS_OUTER}
+					height={22}
+					x={0}
+					y={0}
+				>
+					<EventLegendContainer>
+						<EventLegend itemCount={documents.length} />
+					</EventLegendContainer>
+				</LegendObject>
+				<LegendObject
+					width={RADIUS_OUTER}
+					height={22}
+					x={0}
+					y={RADIUS_OUTER - RADIUS_INNER}
+				>
+					<DocumentLegendContainer>
+						<DocumentLegend itemCount={events.length} />
+					</DocumentLegendContainer>
+				</LegendObject>
+				{documents.map((group) => {
+					const { angle, id: docId } = group[0];
+					const x = getXByAngle(RADIUS_INNER, angle);
+					const y = getYByAngle(RADIUS_INNER, angle);
+					const labelPosition = getDateLabelPosition(
+						x,
+						y,
+						RADIUS_INNER + (RADIUS_INNER - RADIUS_OUTER) - LABEL_MARGIN,
+						angle,
+					);
+					const labelIsActive = angle === 0 || angle === 320;
+					const isCurrentElement = group.find(({ id }) => id === item.id);
+					const hasMultipleItems = group.length > 1;
+					const docSize = 14;
 
-				return (
-					<Document
-						x={x - (docSize / 2)}
-						y={y - (docSize / 2)}
-						width={docSize}
-						height={docSize}
-						angle={group[0].angle}
-						key={`document-${docId}`}
-						className={isHovered(group, hoveredElement, 'document') && 'hovered'}
-						onMouseEnter={() => setHoveredElement(group.map((groupEl) => ({
-							...groupEl,
-							itemType: 'document',
-						})))}
-						onMouseLeave={() => setHoveredElement(null)}
-						{...CIRCLE_CENTER}
-						onClick={() => history.push(`/document/context/${docId}`)}
-						current={isCurrentElement}
-					>
-						<Symbol
-							rotation={angle}
-							labelMargin={LABEL_MARGIN + (RADIUS_OUTER - RADIUS_INNER)}
+					return (
+						<Document
+							x={x - (docSize / 2)}
+							y={y - (docSize / 2)}
+							width={docSize}
+							height={docSize}
+							angle={group[0].angle}
+							key={`document-${docId}`}
+							className={isHovered(group, hoveredElement, 'document') && 'hovered'}
+							onMouseEnter={() => setHoveredElement(group.map((groupEl) => ({
+								...groupEl,
+								itemType: 'document',
+							})))}
+							onMouseLeave={() => setHoveredElement(null)}
+							{...CIRCLE_CENTER}
+							onClick={() => history.push(`/document/context/${docId}`)}
+							current={isCurrentElement}
 						>
-							{'▲'}
-						</Symbol>
-						<DateLabel
-							position={labelPosition}
-							active={labelIsActive}
-						>
-							{formatHumanDate(group[0].date)}
-						</DateLabel>
-						{
-							hasMultipleItems && (
-								<ItemCountIndicator
-									rotation={angle}
-									itemCount={group.length}
-									inner
-								/>
-							)
-						}
-					</Document>
-				);
-			})}
-			{events.map((group) => {
-				const { angle, id: docId } = group[0];
-				const x = getXByAngle(RADIUS_OUTER, angle);
-				const y = getYByAngle(RADIUS_OUTER, angle);
-				const labelPosition = getDateLabelPosition(x, y, RADIUS_OUTER - LABEL_MARGIN, angle);
-				const labelIsActive = angle === 0 || angle === 320;
-				const isCurrentElement = group.find(({ id }) => id === item.id);
-				const hasMultipleItems = group.length > 1;
-				const docSize = 14;
+							<Symbol
+								rotation={angle}
+								labelMargin={LABEL_MARGIN + (RADIUS_OUTER - RADIUS_INNER)}
+							>
+								{'▲'}
+							</Symbol>
+							<DateLabel
+								position={labelPosition}
+								active={labelIsActive}
+							>
+								{formatHumanDate(group[0].date)}
+							</DateLabel>
+							{
+								hasMultipleItems && (
+									<ItemCountIndicator
+										rotation={angle}
+										itemCountScale={group.length / maxGroupLength}
+										inner
+									/>
+								)
+							}
+						</Document>
+					);
+				})}
+				{events.map((group) => {
+					const { angle, id: docId } = group[0];
+					const x = getXByAngle(RADIUS_OUTER, angle);
+					const y = getYByAngle(RADIUS_OUTER, angle);
+					const labelPosition = getDateLabelPosition(x, y, RADIUS_OUTER - LABEL_MARGIN, angle);
+					const labelIsActive = angle === 0 || angle === 320;
+					const isCurrentElement = group.find(({ id }) => id === item.id);
+					const hasMultipleItems = group.length > 1;
+					const docSize = 14;
 
-				return (
-					<Document
-						x={x - (docSize / 2)}
-						y={y - (docSize / 2)}
-						width={docSize}
-						height={docSize}
-						angle={group[0].angle}
-						key={`event-${docId}`}
-						className={isHovered(group, hoveredElement, 'event') && 'hovered'}
-						onMouseEnter={() => setHoveredElement(group.map((groupEl) => ({
-							...groupEl,
-							itemType: 'event',
-						})))}
-						onMouseLeave={() => setHoveredElement(null)}
-						{...CIRCLE_CENTER}
-						onClick={() => history.push(`/event/context/${docId}`)}
-						current={isCurrentElement}
-					>
-						<Symbol
-							rotation={angle}
-							labelMargin={LABEL_MARGIN}
+					return (
+						<Document
+							x={x - (docSize / 2)}
+							y={y - (docSize / 2)}
+							width={docSize}
+							height={docSize}
+							angle={group[0].angle}
+							key={`event-${docId}`}
+							className={isHovered(group, hoveredElement, 'event') && 'hovered'}
+							onMouseEnter={() => setHoveredElement(group.map((groupEl) => ({
+								...groupEl,
+								itemType: 'event',
+							})))}
+							onMouseLeave={() => setHoveredElement(null)}
+							{...CIRCLE_CENTER}
+							onClick={() => history.push(`/event/context/${docId}`)}
+							current={isCurrentElement}
 						>
-							{'●'}
-						</Symbol>
-						<DateLabel
-							position={labelPosition}
-							active={labelIsActive}
-						>
-							{formatHumanDate(group[0].date)}
-						</DateLabel>
-						{
-							hasMultipleItems && (
-								<ItemCountIndicator
-									rotation={angle}
-									itemCount={group.length}
-								/>
-							)
-						}
-					</Document>
-				);
-			})}
-		</CircleSvg>
-		<BubbleChartContainer>
-			<BubbleChart
-				items={protagonists}
-				diameter={300}
-				bubblesPadding={5}
-				isLoading={isLoading}
-				activeId={item.id}
-				hoveredElement={hoveredElement}
-				setHoveredElement={setHoveredElement}
-			/>
-		</BubbleChartContainer>
-	</CircleContainer>
-);
+							<Symbol
+								rotation={angle}
+								labelMargin={LABEL_MARGIN}
+							>
+								{'●'}
+							</Symbol>
+							<DateLabel
+								position={labelPosition}
+								active={labelIsActive}
+							>
+								{formatHumanDate(group[0].date)}
+							</DateLabel>
+							{
+								hasMultipleItems && (
+									<ItemCountIndicator
+										rotation={angle}
+										itemCountScale={group.length / maxGroupLength}
+									/>
+								)
+							}
+						</Document>
+					);
+				})}
+			</CircleSvg>
+			<BubbleChartContainer>
+				<BubbleChart
+					items={protagonists}
+					diameter={300}
+					bubblesPadding={5}
+					isLoading={isLoading}
+					activeId={item.id}
+					hoveredElement={hoveredElement}
+					setHoveredElement={setHoveredElement}
+				/>
+			</BubbleChartContainer>
+		</CircleContainer>
+	)
+};
 
 CircleTimeline.propTypes = {
 	item: PropTypes.shape({

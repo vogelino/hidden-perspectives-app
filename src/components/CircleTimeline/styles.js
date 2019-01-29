@@ -104,7 +104,7 @@ export const ItemCountIndicator = styled.span`
 		rotate(${inner ? rotation + 90 : rotation - 90}deg)
 	`};
 	transform-origin: left;
-	width: ${({ itemCount }) => `${itemCount * 10}px`};
+	width: ${({ itemCountScale }) => `${60 * itemCountScale}px`};
 	z-index: -1;
 `;
 
