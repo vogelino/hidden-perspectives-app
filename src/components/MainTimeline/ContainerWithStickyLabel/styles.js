@@ -16,14 +16,12 @@ export const Label = styled.header`
 	line-height: 1rem;
 	color: ${({ theme }) => theme.gray600};
 	z-index: ${({ isYear }) => (isYear ? 4 : 3)};
-	/* border-bottom: 1px solid ${({ theme }) => theme.commonBorderColor}; */
-	/* box-shadow: 0 -1px 0 0 ${({ theme }) => theme.commonBorderColor}; */
 	display: flex;
 `;
 
 export const Split = styled.div`
 	flex: 0 0 50%;
-	padding: .625rem 1.5rem;
+	padding: 1rem 1.5rem;
 	display: inline-block;
 	background: ${({ hasContent }) => (hasContent ? 'rgba(255,255,255,.9)' : 'none')};
 

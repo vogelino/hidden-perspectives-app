@@ -33,6 +33,9 @@ export const EventTitleContainer = styled.div`
 		transition: color 200ms ease-out;
 		transform: translate(50%, -50%) scale(.7);
 		color: ${({ theme }) => theme.gray500};
+		font-family: Arial, sans-serif;
+		font-size: 1rem;
+		line-height: 1rem;
 	}
 
 	&:first-child {

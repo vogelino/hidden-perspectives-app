@@ -6,6 +6,7 @@ export const Container = styled.div`
 	margin-top: 4.5rem;
 	padding-top: 7.8rem;
 	width: 100%;
+	user-select: none;
 `;
 
 export const Content = styled.div`

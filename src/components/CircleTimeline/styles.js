@@ -68,8 +68,8 @@ export const Symbol = styled.span`
 	line-height: ${({ children }) => (children === '▲' ? '.625rem' : '.75rem')};
 	text-decoration: none;
 	float: left;
-	padding-top: 2px;
 	user-select: none;
+	font-family: Arial, sans-serif;
 `;
 
 export const Document = styled.foreignObject`
