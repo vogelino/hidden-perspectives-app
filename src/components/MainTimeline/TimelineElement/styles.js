@@ -18,25 +18,27 @@ export const EventTitle = styled.span`
 	cursor: pointer;
 `;
 
+export const Symbol = styled.span`
+	position: absolute;
+	top: 0;
+	transition: color 200ms ease-out;
+	color: ${({ theme }) => theme.gray500};
+	font-family: Arial, sans-serif;
+	font-size: 18px;
+	line-height: 17px;
+	width: 18px;
+	height: 18px;
+	box-sizing: border-box;
+	border-radius: 50%;
+	text-align: center;
+`;
+
 export const EventTitleContainer = styled.div`
-	padding: 0 1.5rem;
+	${({ right }) => (right ? 'padding-right' : 'padding-left')}: 2rem;
 	margin: 1rem 0;
 	position: relative;
 	max-width: 20rem;
 	float: ${({ right }) => (right ? 'right' : 'left')};
-
-	&:after {
-		content: '▲';
-		position: absolute;
-		top: 0.55rem;
-		right: .5rem;
-		transition: color 200ms ease-out;
-		transform: translate(50%, -50%) scale(.7);
-		color: ${({ theme }) => theme.gray500};
-		font-family: Arial, sans-serif;
-		font-size: 1rem;
-		line-height: 1rem;
-	}
 
 	&:first-child {
 		margin-top: 0;
@@ -47,9 +49,15 @@ export const EventTitleContainer = styled.div`
 		margin-bottom: 0;
 	}
 
-	&.pinned::after,
-	&.hovered::after {
-		color: ${({ theme }) => theme.primary};
+	${Symbol}  {
+		${({ right }) => (right ? 'right' : 'left')}: 0;
+		${({ right }) => (right && 'font-size: 14px;')}
+	}
+
+	&.pinned ${Symbol},
+	&.hovered ${Symbol} {
+		color: ${({ theme }) => theme.primaryDark};
+		background: ${({ theme }) => theme.primaryLight};
 	}
 
 	&.hovered ${EventTitle},
