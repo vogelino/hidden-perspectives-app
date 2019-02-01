@@ -95,7 +95,7 @@ export const Symbol = styled.span`
 export const ItemCountIndicator = styled.span`
 	background-color: ${({ theme }) => theme.commonBorderColor};
 	border-radius: 2px;
-	height: 4px;
+	height: 2px;
 	left: 100%;
 	position: absolute;
     top: 50%;
@@ -104,7 +104,7 @@ export const ItemCountIndicator = styled.span`
 		rotate(${inner ? rotation + 90 : rotation - 90}deg)
 	`};
 	transform-origin: -7px;
-	width: ${({ itemCountScale }) => `${50 * itemCountScale}px`};
+	width: ${({ itemCountScale }) => `${30 * itemCountScale}px`};
 	z-index: -2;
 `;
 
