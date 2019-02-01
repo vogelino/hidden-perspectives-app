@@ -122,9 +122,9 @@ const BubbleChart = ({
 			<defs>
 				<GradientMapFilter
 					id="image-color-filter"
-					red="0.31 0.92"
-					green="0.31 0.92"
-					blue="0.31 0.92"
+					red="0.3 0.87"
+					green="0.34 0.89"
+					blue="0.38 0.9"
 				/>
 				<GradientMapFilter
 					id="image-color-filter-hover"

@@ -83,8 +83,9 @@ export const Document = styled.foreignObject`
 
 	&.pinned,
 	&.hovered {
-		color: ${({ current, theme }) => (current ? theme.primaryDark : theme.primary)};
-		background: ${({ current, theme }) => (current ? theme.primaryLight : 'white')};
+		color: ${({ theme }) => theme.primaryDark};
+		background: ${({ theme }) => theme.primaryLight};
+		text-shadow: none;
 	}
 `;
 
