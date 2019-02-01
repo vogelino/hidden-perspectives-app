@@ -19,7 +19,7 @@ const loadingResults = Object.keys([...Array(3)]);
 
 const getFormattedTitle = (title, searchQuery) => {
 	const titleLowercased = title.toLowerCase();
-	const searchQueryLowercased = title.toLowerCase().
+	const searchQueryLowercased = title.toLowerCase();
 	const index = titleLowercased.indexOf(searchQueryLowercased);
 	let formattedTitle = title;
 
@@ -49,9 +49,7 @@ const SearchResults = ({
 }) => (searchResults.length === 0 && !isLoading ? (
 	<Container show={!!searchQuery}>
 		<Content>
-			<NoResults>
-				{`No results found for “${searchQuery}”.`}
-			</NoResults>
+			<NoResults>{`No results found for “${searchQuery}”.`}</NoResults>
 		</Content>
 	</Container>
 ) : (
@@ -76,20 +74,20 @@ const SearchResults = ({
 				</TabHint>
 			</TabsContainer>
 			<Results>
-				{isLoading && loadingResults.map((key) => (
-					<LoadingResult key={key}>&nbsp;</LoadingResult>
-				))}
-				{!isLoading && searchResults.map(({ id, title, type }) => (
-					<Result
-						key={id}
-						type={type}
-						className={activeResult === id && 'highlighted'}
-						onMouseEnter={() => setActiveResult(id)}
-						onClick={() => onResultClick({ id, type })}
-					>
-						{getFormattedTitle(title, searchQuery)}
-					</Result>
-				))}
+				{isLoading
+						&& loadingResults.map((key) => <LoadingResult key={key}>&nbsp;</LoadingResult>)}
+				{!isLoading
+						&& searchResults.map(({ id, title, type }) => (
+							<Result
+								key={id}
+								type={type}
+								className={activeResult === id && 'highlighted'}
+								onMouseEnter={() => setActiveResult(id)}
+								onClick={() => onResultClick({ id, type })}
+							>
+								{getFormattedTitle(title, searchQuery)}
+							</Result>
+						))}
 			</Results>
 		</Content>
 	</Container>
@@ -102,16 +100,20 @@ SearchResults.propTypes = {
 	setActiveResult: PropTypes.func,
 	setActiveTab: PropTypes.func,
 	onResultClick: PropTypes.func,
-	searchResults: PropTypes.arrayOf(PropTypes.shape({
-		id: PropTypes.string.isRequired,
-		title: PropTypes.string.isRequired,
-		type: PropTypes.oneOf(['event', 'document', 'stakeholder', 'location']).isRequired,
-	})),
+	searchResults: PropTypes.arrayOf(
+		PropTypes.shape({
+			id: PropTypes.string.isRequired,
+			title: PropTypes.string.isRequired,
+			type: PropTypes.oneOf(['event', 'document', 'stakeholder', 'location']).isRequired,
+		}),
+	),
 	activeTab: PropTypes.oneOf(['all', 'event', 'document', 'stakeholder', 'location']),
-	tabs: PropTypes.arrayOf(PropTypes.shape({
-		key: PropTypes.string.isRequired,
-		title: PropTypes.string.isRequired,
-	})),
+	tabs: PropTypes.arrayOf(
+		PropTypes.shape({
+			key: PropTypes.string.isRequired,
+			title: PropTypes.string.isRequired,
+		}),
+	),
 };
 
 SearchResults.defaultProps = {

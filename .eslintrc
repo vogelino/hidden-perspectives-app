@@ -1,6 +1,13 @@
 {
 	"extends": "airbnb",
 	"plugins": ["jest"],
+	"parserOptions": {
+        "ecmaVersion": 6,
+        "sourceType": "module",
+        "ecmaFeatures": {
+            "jsx": true
+        }
+    },
 	"rules": {
 		"indent": ["error", "tab"],
 		"react/jsx-indent": ["error", "tab"],

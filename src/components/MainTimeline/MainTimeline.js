@@ -8,6 +8,20 @@ import TimelineItems from './TimelineItems';
 import Stakeholders from './Stakeholders';
 import { MainTimelineLegend } from '../Legend';
 
+const parseTimelineItems = (years) => {
+	const months = years.reduce((acc, cur) => {
+		if (!cur.months) return acc;
+		return [...acc, ...cur.months];
+	}, []);
+
+	const days = months.reduce((acc, cur) => {
+		if (cur.days.length === 0 || !cur.days) return acc;
+		return [...acc, ...cur.days];
+	}, []);
+
+	return days;
+};
+
 const MainTimeline = ({
 	timelineItems,
 	minimapItems,
@@ -35,11 +49,13 @@ const MainTimeline = ({
 			setHoveredElement={setHoveredElement}
 		/>
 		<MainTimelineLegend />
-		<TimelineItems
-			timelineItems={timelineItems}
-			hoveredElement={hoveredElement}
-			setHoveredElement={setHoveredElement}
-		/>
+		{timelineItems.length > 0 && (
+			<TimelineItems
+				timelineItems={parseTimelineItems(timelineItems)}
+				hoveredElement={hoveredElement}
+				setHoveredElement={setHoveredElement}
+			/>
+		)}
 	</Container>
 );
 

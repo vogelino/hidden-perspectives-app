@@ -11,18 +11,116 @@ import {
 	Documents,
 } from './styles';
 
+import { CellMeasurer, CellMeasurerCache, List } from 'react-virtualized'
+
+let cache = new CellMeasurerCache({
+	fixedWidth: true,
+	minHeight: 50,
+});
+
+const flattenYears = (year) => {
+	year.reduce((acc, cur) => {
+		return [...acc, ...cur.months];
+	}, []);
+}
+
+const padding = 24
+const innerPadding = 16
+
+const estimatedTextHight = text => {
+	if (text.length < 40) return 20
+	if (text.length < 80) return 40
+	else return 65
+}
+
+const estimateMonthHeight = data => {
+	if (!data) return 0
+		let height = padding * 2
+		const { day, key, documents, events } = data
+		const d = documents.length > events.length ? documents : events
+
+		if (d.length === 0) return 0
+
+		
+		const l = d.reduce((accd, curd) => {
+			return accd + estimatedTextHight(curd.title) + innerPadding
+		}, 0)
+		
+		return l + 2 * padding
+}
+
+class TimelineItemsClass extends React.Component {
+	constructor(props) {
+		super(props);
+		this._cache = new CellMeasurerCache({
+			fixedWidth: false,
+			minHeight: 50,
+		})
+	}
+
+	_rowRenderer = ({ index, key, parent, style }) => {
+		const { timelineItems } = this.props 
+		const data = this.props.timelineItems[index]
+		if (!data) return null
+		const {day, events, documents, dayKey } = data
+
+		const mapTimelineItem = (itemType) => (item) => (
+			<TimelineElement
+				key={item.id}
+				{...item}
+				itemType={itemType}
+				// hoveredElement={hoveredElement}
+				// hovered={isHovered(item, hoveredElement, itemType)}
+				// hoverHandler={setHoveredElement}
+			/>
+		);
+
+		return (
+				<div style={style} key={key}>
+
+						<EventContainer>
+							<Event {...dayKey}>
+								<EventDate>{day}</EventDate>
+								<Documents>
+									{documents.map(mapTimelineItem('document'))}
+								</Documents>
+								<Events>
+									{events.map(mapTimelineItem('event'))}
+								</Events>
+							</Event>
+						</EventContainer>
+				
+				</div>
+		)
+	}
+
+	shouldComponentUpdate = (nextProps, nextState) => {
+	  return false
+	}
+	
+
+	render() {
+		return (
+			<List 
+				height={1200}
+				overscanRowCount={0}
+				rowHeight={(index) => {
+					return estimateMonthHeight(this.props.timelineItems[index.index])
+				}}
+				rowRenderer={this._rowRenderer}
+				rowCount={this.props.timelineItems.length}
+				width={800}
+			/>
+		)
+	}
+}
+
 const TimelineItems = ({
 	timelineItems,
 	hoveredElement,
 	setHoveredElement,
 }) => timelineItems.map(({ year, months, ...yearKey }) => (
-	<ContainerWithStickyLabel
-		label={year}
-		{...yearKey}
-		isYear
-		hoveredElement={hoveredElement}
-	>
-		{months.map(({ month, days, ...monthKey }) => (
+		months.map(({ month, days, ...monthKey }, index) => (
 			<ContainerWithStickyLabel
 				label={month}
 				date={`${month} ${year}`}
@@ -61,11 +159,10 @@ const TimelineItems = ({
 					);
 				})}
 			</ContainerWithStickyLabel>
-		))}
-	</ContainerWithStickyLabel>
+		))
 ));
 
-TimelineItems.propTypes = {
+TimelineItemsClass.propTypes = {
 	timelineItems: PropTypes.arrayOf(
 		PropTypes.shape({
 			key: PropTypes.string.isRequired,
@@ -105,10 +202,10 @@ TimelineItems.propTypes = {
 	setHoveredElement: PropTypes.func,
 };
 
-TimelineItems.defaultProps = {
+TimelineItemsClass.defaultProps = {
 	hoveredElement: null,
 	timelineItems: [],
 	setHoveredElement: () => {},
 };
 
-export default TimelineItems;
+export default TimelineItemsClass;
