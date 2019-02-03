@@ -1,3 +1,3 @@
-import TimelineItems from './TimelineItems';
+import TimelineItems from "./TimelineItems";
 
 export default TimelineItems;

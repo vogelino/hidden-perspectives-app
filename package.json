@@ -1,111 +1,115 @@
 {
-  "name": "hidden-perspectives-app",
-  "version": "0.1.0",
-  "private": true,
-  "url": "git@github.com:vogelino/hidden-perspectives-app.git",
-  "description": "The Frontend App of the US-IRAN project",
-  "engines": {
-    "node": "10.11.0",
-    "npm": "6.4.1"
-  },
-  "authors": [
-    "Lucas Vogel @vogelino <contact@vogelino.com> (https://vogelino.com)",
-    "Ludwig Frank @ludwigfrank <mail@ludwigfrank.com> (http://ludwigfrank.com/)",
-    "Bela Kurek @q-rec <bela.kurek@berlin.de>",
-    "Florian Zia @flozia <zia.florian@gmail.com>",
-    "Joshua Pacheco @josues <joshua.pacheco@me.com>"
-  ],
-  "scripts": {
-    "start": "npx serve build",
-    "dev": "react-app-rewired start",
-    "build": "react-app-rewired build",
-    "test": "react-app-rewired test",
-    "test-latest": "CI=true yarn run test -b -o",
-    "eject": "react-scripts eject",
-    "lint": "npx eslint --fix ./src",
-    "lint-latest": "LIST=`git diff-index --name-only --diff-filter=d HEAD | grep .*\\.js | grep -v json`; if [ \"$LIST\" ]; then npx eslint --fix $LIST; fi",
-    "quality-check": "yarn run lint-latest && yarn run test-latest",
-    "storybook": "start-storybook -p 9009 -s public",
-    "build-storybook": "build-storybook -s public"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "yarn run quality-check",
-      "pre-push": "yarn run quality-check"
-    }
-  },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ],
-  "dependencies": {
-    "@smooth-ui/core-sc": "^7.0.4",
-    "apollo-cache-inmemory": "^1.3.6",
-    "apollo-client": "^2.4.3",
-    "apollo-link": "^1.2.3",
-    "apollo-link-context": "^1.0.9",
-    "apollo-link-http": "^1.5.5",
-    "apollo-link-state": "^0.4.2",
-    "apollo-link-ws": "^1.0.9",
-    "apollo-utilities": "^1.0.23",
-    "auth0-js": "^9.8.1",
-    "d3": "^5.7.0",
-    "d3-scale": "^2.1.2",
-    "date-fns": "^1.29.0",
-    "final-form": "^4.10.0",
-    "graphql": "^14.0.2",
-    "graphql-tag": "^2.10.0",
-    "initials": "^3.0.0",
-    "lint-staged": "^7.3.0",
-    "lodash.debounce": "^4.0.8",
-    "normalize.css": "^8.0.0",
-    "polished": "^2.3.0",
-    "prop-types": "^15.6.2",
-    "ramda": "^0.25.0",
-    "react": "^16.5.2",
-    "react-apollo": "^2.2.4",
-    "react-app-rewire-styled-components": "^3.0.2",
-    "react-bubble-chart": "^0.4.0",
-    "react-day-picker": "^7.2.4",
-    "react-dom": "^16.5.2",
-    "react-final-form": "^3.6.7",
-    "react-helmet": "^5.2.0",
-    "react-outside-click-handler": "^1.2.2",
-    "react-pdf": "^4.0.0",
-    "react-router-dom": "^4.3.1",
-    "react-scripts": "2.0.5",
-    "react-select": "^2.1.1",
-    "react-virtualized": "^9.21.0",
-    "recompose": "^0.30.0",
-    "styled-components": "^4.0.2",
-    "subscriptions-transport-ws": "^0.9.15"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.1.2",
-    "@storybook/addon-actions": "^4.0.2",
-    "@storybook/addon-info": "^3.4.11",
-    "@storybook/addon-links": "^4.0.2",
-    "@storybook/addons": "^4.0.2",
-    "@storybook/react": "^4.0.2",
-    "babel-loader": "^8.0.4",
-    "d3": "^5.7.0",
-    "enzyme": "^3.7.0",
-    "enzyme-adapter-react-16": "^1.6.0",
-    "eslint-config-airbnb": "^17.1.0",
-    "eslint-plugin-import": "^2.14.0",
-    "eslint-plugin-jest": "^21.26.0",
-    "eslint-plugin-jsx-a11y": "^6.1.2",
-    "eslint-plugin-react": "^7.11.1",
-    "husky": "^1.1.2",
-    "react-app-rewired": "^1.6.2",
-    "sinon": "^7.1.0"
-  },
-  "jest": {
-    "collectCoverageFrom": [
-      "src/**/*.js",
-      "!src/index.js"
-    ]
-  }
+	"name": "hidden-perspectives-app",
+	"version": "0.1.0",
+	"private": true,
+	"url": "git@github.com:vogelino/hidden-perspectives-app.git",
+	"description": "The Frontend App of the US-IRAN project",
+	"engines": {
+		"node": "10.11.0",
+		"npm": "6.4.1"
+	},
+	"authors": [
+		"Lucas Vogel @vogelino <contact@vogelino.com> (https://vogelino.com)",
+		"Ludwig Frank @ludwigfrank <mail@ludwigfrank.com> (http://ludwigfrank.com/)",
+		"Bela Kurek @q-rec <bela.kurek@berlin.de>",
+		"Florian Zia @flozia <zia.florian@gmail.com>",
+		"Joshua Pacheco @josues <joshua.pacheco@me.com>"
+	],
+	"scripts": {
+		"start": "npx serve build",
+		"dev": "react-app-rewired start",
+		"build": "react-app-rewired build",
+		"test": "react-app-rewired test",
+		"test-latest": "CI=true yarn run test -b -o",
+		"eject": "react-scripts eject",
+		"lint": "npx eslint --fix ./src",
+		"lint-latest": "LIST=`git diff-index --name-only --diff-filter=d HEAD | grep .*\\.js | grep -v json`; if [ \"$LIST\" ]; then npx eslint --fix $LIST; fi",
+		"quality-check": "yarn run lint-latest && yarn run test-latest",
+		"storybook": "start-storybook -p 9009 -s public",
+		"build-storybook": "build-storybook -s public"
+	},
+	"husky": {
+		"hooks": {
+			"pre-commit": "yarn run quality-check",
+			"pre-push": "yarn run quality-check"
+		}
+	},
+	"browserslist": [
+		">0.2%",
+		"not dead",
+		"not ie <= 11",
+		"not op_mini all"
+	],
+	"dependencies": {
+		"@smooth-ui/core-sc": "^7.0.4",
+		"apollo-cache-inmemory": "^1.3.6",
+		"apollo-client": "^2.4.3",
+		"apollo-link": "^1.2.3",
+		"apollo-link-context": "^1.0.9",
+		"apollo-link-http": "^1.5.5",
+		"apollo-link-state": "^0.4.2",
+		"apollo-link-ws": "^1.0.9",
+		"apollo-utilities": "^1.0.23",
+		"auth0-js": "^9.8.1",
+		"d3": "^5.7.0",
+		"d3-scale": "^2.1.2",
+		"date-fns": "^1.29.0",
+		"final-form": "^4.10.0",
+		"graphql": "^14.0.2",
+		"graphql-tag": "^2.10.0",
+		"immutable": "^4.0.0-rc.12",
+		"initials": "^3.0.0",
+		"lint-staged": "^7.3.0",
+		"lodash.debounce": "^4.0.8",
+		"normalize.css": "^8.0.0",
+		"polished": "^2.3.0",
+		"prop-types": "^15.6.2",
+		"ramda": "^0.25.0",
+		"react": "^16.5.2",
+		"react-apollo": "^2.2.4",
+		"react-app-rewire-styled-components": "^3.0.2",
+		"react-bubble-chart": "^0.4.0",
+		"react-day-picker": "^7.2.4",
+		"react-dom": "^16.5.2",
+		"react-final-form": "^3.6.7",
+		"react-helmet": "^5.2.0",
+		"react-outside-click-handler": "^1.2.2",
+		"react-pdf": "^4.0.0",
+		"react-router-dom": "^4.3.1",
+		"react-scripts": "2.0.5",
+		"react-select": "^2.1.1",
+		"react-virtualized": "^9.21.0",
+		"recompose": "^0.30.0",
+		"styled-components": "^4.0.2",
+		"subscriptions-transport-ws": "^0.9.15"
+	},
+	"devDependencies": {
+		"@babel/core": "^7.1.2",
+		"@storybook/addon-actions": "^4.0.2",
+		"@storybook/addon-info": "^3.4.11",
+		"@storybook/addon-links": "^4.0.2",
+		"@storybook/addons": "^4.0.2",
+		"@storybook/react": "^4.0.2",
+		"babel-loader": "^8.0.4",
+		"d3": "^5.7.0",
+		"enzyme": "^3.7.0",
+		"enzyme-adapter-react-16": "^1.6.0",
+		"eslint-config-airbnb": "^17.1.0",
+		"eslint-config-prettier": "^4.0.0",
+		"eslint-plugin-import": "^2.14.0",
+		"eslint-plugin-jest": "^21.26.0",
+		"eslint-plugin-jsx-a11y": "^6.1.2",
+		"eslint-plugin-prettier": "^3.0.1",
+		"eslint-plugin-react": "^7.11.1",
+		"husky": "^1.1.2",
+		"prettier": "^1.16.3",
+		"react-app-rewired": "^1.6.2",
+		"sinon": "^7.1.0"
+	},
+	"jest": {
+		"collectCoverageFrom": [
+			"src/**/*.js",
+			"!src/index.js"
+		]
+	}
 }
