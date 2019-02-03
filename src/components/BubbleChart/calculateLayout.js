@@ -39,7 +39,7 @@ const calcForceLayout = (data) => {
 	const width = 960;
 	const height = 960;
 
-	const nodes = d3.range(50).map(() => ({ radius: Math.random() * 20 + 4 }));
+	const nodes = d3.range(30).map(() => ({ radius: Math.random() * 20 + 4 }));
 	const root = nodes[0];
 	const color = d3.scaleOrdinal(d3.schemeCategory10);
 
@@ -56,15 +56,18 @@ const calcForceLayout = (data) => {
 	// 	.size([width, height]);
 
 	const force = d3.forceSimulation(nodes)
-		.force('charge', d3.forceManyBody())
+		.force('charge', d3.forceManyBody().strength((d, i) => (i === 0 ? -100 : 0)))
 		.force('center', d3.forceCenter(width / 2, height / 2));
-		// .on('tick', ticked);
+		// .force('link', d3.forceLink().distance((d) => d.distance).strength(0.1))
+		// .on('tick', console.log)
 
-	// force.start();
+	console.log(nodes);
 
 	const svg = d3.select('body').append('svg')
 		.attr('width', width)
-		.attr('height', height);
+		.attr('height', height)
+		.style('top', 0)
+		.style('position', 'absolute');
 
 	svg.selectAll('circle')
 		.data(nodes.slice(1))
