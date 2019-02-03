@@ -7,6 +7,7 @@ import {
 } from 'recompose';
 import * as d3 from 'd3';
 import BubbleChart from './BubbleChart';
+import calculateLayout from './calculateLayout';
 import { getWikipediaImagePerUrl } from '../../utils/imageUtil';
 
 const calcBubbleLayout = (data, diameter, padding) => {
@@ -50,6 +51,8 @@ export default compose(
 			diameter,
 			bubblesPadding,
 		).children;
+
+		calculateLayout(formattedItems);
 
 		return {
 			items: formattedItems,
