@@ -1,25 +1,18 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { Container } from "./styles";
-import Minimap from "./Minimap";
-import { LoadingContainer } from "../LoadingIndicator/styles";
-import LoadingIndicator from "../LoadingIndicator";
-import TimelineItems from "./TimelineItems";
-import Stakeholders from "./Stakeholders";
-import { MainTimelineLegend } from "../Legend";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Container } from './styles';
+import Minimap from './Minimap';
+import { LoadingContainer } from '../LoadingIndicator/styles';
+import LoadingIndicator from '../LoadingIndicator';
+import TimelineItems from './TimelineItems';
+import Stakeholders from './Stakeholders';
+import { MainTimelineLegend } from '../Legend';
 
 const parseTimelineItems = (years) => {
 	const months = years.reduce((acc, cur) => {
 		if (!cur.months) return acc;
 		return [...acc, ...cur.months];
 	}, []);
-
-	/*
-	const days = months.reduce((acc, cur) => {
-		if (cur.days.length === 0 || !cur.days) return acc;
-		return [...acc, ...cur.days];
-	}, []);
-	*/
 
 	return months;
 };
@@ -33,7 +26,7 @@ const MainTimeline = ({
 	fetchingProtagonists,
 	onRef,
 	setHoveredElement,
-	hoveredElement
+	hoveredElement,
 }) => (
 	<Container id="mainTimeline" ref={onRef}>
 		<LoadingContainer isLoading={isLoading}>
@@ -63,8 +56,8 @@ MainTimeline.propTypes = {
 	minimapItems: PropTypes.arrayOf(
 		PropTypes.shape({
 			id: PropTypes.string.isRequired,
-			density: PropTypes.number.isRequired
-		})
+			density: PropTypes.number.isRequired,
+		}),
 	),
 	bubbleChartItems: Stakeholders.propTypes.items,
 	hoveredElement: TimelineItems.propTypes.hoveredElement,
@@ -72,7 +65,7 @@ MainTimeline.propTypes = {
 	errors: PropTypes.arrayOf(PropTypes.string),
 	isLoading: PropTypes.bool,
 	fetchingProtagonists: PropTypes.bool,
-	onRef: PropTypes.func
+	onRef: PropTypes.func,
 };
 
 MainTimeline.defaultProps = {
@@ -84,7 +77,7 @@ MainTimeline.defaultProps = {
 	errors: [],
 	isLoading: true,
 	fetchingProtagonists: true,
-	onRef: () => {}
+	onRef: () => {},
 };
 
 export default MainTimeline;

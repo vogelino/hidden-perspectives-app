@@ -1,6 +1,3 @@
-import { renderOnlyIfInViewport } from '../../../utils/hocUtil';
 import ContainerWithStickyLabel from './ContainerWithStickyLabel';
 
-export default renderOnlyIfInViewport(
-	(props, nextProps) => props.hoveredElement !== nextProps.hoveredElement,
-)(ContainerWithStickyLabel);
+export default ContainerWithStickyLabel;
