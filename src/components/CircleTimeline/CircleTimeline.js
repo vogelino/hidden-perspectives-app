@@ -1,8 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { onlyUpdateForKeys } from 'recompose';
 import BubbleChart from '../BubbleChart';
 import { EventLegend, DocumentLegend } from '../Legend/Legend';
 import { isHovered } from '../../utils/timelineUtil';
+import { withoutReRender } from '../../utils/hocUtil';
 import {
 	CircleContainer,
 	CircleContent,
@@ -40,6 +42,99 @@ const isFilteredByTag = (filteredTags, tags) => (
 	&& filteredTags.length !== tags.length
 );
 
+const Circles = withoutReRender(() => (
+	<>
+		<Circle
+			missingAngle={toRadian(20)}
+			strokeWidth={1}
+			shapeRendering="crisp-edges"
+			r={RADIUS_OUTER - 1}
+			{...CIRCLE_CENTER}
+			strokeDasharray={(Math.PI * (DIAMETER_OUTER - 1))}
+		/>
+		<Circle
+			missingAngle={toRadian(20)}
+			strokeWidth={1}
+			shapeRendering="crisp-edges"
+			r={RADIUS_INNER}
+			{...CIRCLE_CENTER}
+			strokeDasharray={(Math.PI * (DIAMETER_INNER))}
+		/>
+	</>
+));
+
+const Legends = onlyUpdateForKeys([
+	'itemCounts',
+	'isLoading',
+])(({ itemCounts, isLoading }) => (
+	<>
+		<LegendObject
+			width={RADIUS_OUTER}
+			height={22}
+			x={0}
+			y={0}
+		>
+			<EventLegendContainer>
+				<EventLegend
+					itemCount={itemCounts.eventsCount}
+					isLoading={isLoading}
+				/>
+			</EventLegendContainer>
+		</LegendObject>
+		<LegendObject
+			width={RADIUS_OUTER}
+			height={22}
+			x={0}
+			y={RADIUS_OUTER - RADIUS_INNER}
+		>
+			<DocumentLegendContainer>
+				<DocumentLegend
+					itemCount={itemCounts.documentsCount}
+					isLoading={isLoading}
+				/>
+			</DocumentLegendContainer>
+		</LegendObject>
+	</>
+));
+
+const TimelineItem = onlyUpdateForKeys([
+	'hoveredElement',
+	'hovered',
+	'pinned',
+])(({
+	x,
+	y,
+	docSize,
+	angle,
+	hoveredElement,
+	hovered,
+	pinned,
+	isCurrentElement,
+	symbol,
+	onClick,
+	onMouseEnter,
+	onMouseLeave,
+}) => (
+	<Document
+		x={x - (docSize / 2)}
+		y={y - (docSize / 2)}
+		width={docSize}
+		height={docSize}
+		angle={angle}
+		className={[
+			hovered ? 'hovered' : '',
+			!hoveredElement && pinned ? 'pinned' : '',
+		].join(' ')}
+		onMouseEnter={onMouseEnter}
+		onMouseLeave={onMouseLeave}
+		{...CIRCLE_CENTER}
+		onClick={onClick}
+		current={isCurrentElement}
+	>
+		<Symbol>{symbol}</Symbol>
+	</Document>
+));
+
 const CircleTimeline = ({
 	item,
 	documents,
@@ -60,28 +155,19 @@ const CircleTimeline = ({
 		if (filtredGroup.length === 0) return null;
 		const { angle, id: docId } = filtredGroup[0];
 		const radius = itemType === 'document' ? RADIUS_INNER : RADIUS_OUTER;
-		const x = getXByAngle(radius, angle);
-		const y = getYByAngle(radius, angle);
-		const isCurrentElement = filtredGroup.find(({ id }) => id === item.id);
-		const docSize = 14;
-		const hovered = isHovered(filtredGroup, hoveredElement, itemType);
-		const pinned = isHovered(filtredGroup, pinnedElement, itemType);
-		const groupWithItemType = filtredGroup.map((groupEl) => ({ ...groupEl, itemType }));
 		return (
-			<Document
-				x={x - (docSize / 2)}
-				y={y - (docSize / 2)}
-				width={docSize}
-				height={docSize}
-				angle={filtredGroup[0].angle}
+			<TimelineItem
 				key={`${itemType}-${docId}`}
-				className={[
-					hovered ? 'hovered' : '',
-					!hoveredElement && pinned ? 'pinned' : '',
-				].join(' ')}
-				onMouseEnter={() => setHoveredElement(groupWithItemType)}
+				x={getXByAngle(radius, (angle || 0))}
+				y={getYByAngle(radius, (angle || 0))}
+				docSize={14}
+				hovered={isHovered(filtredGroup, hoveredElement, itemType)}
+				pinned={isHovered(filtredGroup, pinnedElement, itemType)}
+				isCurrentElement={filtredGroup.find(({ id }) => id === item.id)}
+				onMouseEnter={() => setHoveredElement(
+					filtredGroup.map((groupEl) => ({ ...groupEl, itemType })),
+				)}
 				onMouseLeave={() => setHoveredElement(null)}
-				{...CIRCLE_CENTER}
 				onClick={() => {
 					if (
 						pinnedElement && (
@@ -91,12 +177,16 @@ const CircleTimeline = ({
 					) {
 						return setPinnedElement(null);
 					}
-					return setPinnedElement(groupWithItemType);
+					return setPinnedElement(
+						filtredGroup.map((groupEl) => ({ ...groupEl, itemType })),
+					);
 				}}
-				current={isCurrentElement}
-			>
-				<Symbol>{symbol}</Symbol>
-			</Document>
+				{...{
+					angle: angle || 0,
+					hoveredElement,
+					symbol,
+				}}
+			/>
 		);
 	};
 	return (
@@ -107,48 +197,8 @@ const CircleTimeline = ({
 					viewBox={`0 0 ${DIAMETER_OUTER + (MARGIN * 2)} ${DIAMETER_OUTER + (MARGIN * 2)}`}
 					preserveAspectRatio="xMidYMid meet"
 				>
-					<Circle
-						missingAngle={toRadian(20)}
-						strokeWidth={1}
-						shapeRendering="crisp-edges"
-						r={RADIUS_OUTER - 1}
-						{...CIRCLE_CENTER}
-						strokeDasharray={(Math.PI * (DIAMETER_OUTER - 1))}
-					/>
-					<Circle
-						missingAngle={toRadian(20)}
-						strokeWidth={1}
-						shapeRendering="crisp-edges"
-						r={RADIUS_INNER}
-						{...CIRCLE_CENTER}
-						strokeDasharray={(Math.PI * (DIAMETER_INNER))}
-					/>
-					<LegendObject
-						width={RADIUS_OUTER}
-						height={22}
-						x={0}
-						y={0}
-					>
-						<EventLegendContainer>
-							<EventLegend
-								itemCount={itemCounts.eventsCount}
-								isLoading={isLoading}
-							/>
-						</EventLegendContainer>
-					</LegendObject>
-					<LegendObject
-						width={RADIUS_OUTER}
-						height={22}
-						x={0}
-						y={RADIUS_OUTER - RADIUS_INNER}
-					>
-						<DocumentLegendContainer>
-							<DocumentLegend
-								itemCount={itemCounts.documentsCount}
-								isLoading={isLoading}
-							/>
-						</DocumentLegendContainer>
-					</LegendObject>
+					<Circles />
+					<Legends {...{ itemCounts, isLoading }} />
 					{documents.map(createDocumentMapper('document', '▲'))}
 					{events.map(createDocumentMapper('event', '●'))}
 				</CircleSvg>

@@ -90,10 +90,13 @@ const getQueryByItemId = (itemType) => {
 	}
 };
 
-const formatTagsForQuery = (type, tagIds) => map(
-	(tagId) => `{ ${type}Tags_some: { id: "${tagId}" } }`,
-	tagIds,
-);
+const formatTagsForQuery = (id, type, tagIds) => [
+	...map(
+		(tagId) => `{ ${type}Tags_some: { id: "${tagId}" } }`,
+		tagIds,
+	),
+	`{ id_in: "${id}" }`,
+];
 
 const getOrderBy = (type) => (
 	type === 'document' ? 'documentCreationDate_ASC' : 'eventStartDate_ASC'
@@ -104,8 +107,8 @@ const getAdditionalReturnValuesByType = (type) => (
 	documentKind { id, name }` : 'eventStartDate'
 );
 
-const builtQueryStringByType = (type, tagIds) => {
-	const formattedTags = formatTagsForQuery(type, tagIds);
+const builtQueryStringByType = (type, id, tagIds) => {
+	const formattedTags = formatTagsForQuery(id, type, tagIds);
 	const orderBy = getOrderBy(type);
 	const additionalReturnValues = getAdditionalReturnValuesByType(type);
 	const stakeholdersFieldName = type === 'document' ? 'mentionedStakeholders' : 'eventStakeholders';
@@ -135,10 +138,10 @@ const builtQueryStringByType = (type, tagIds) => {
 	return query;
 };
 
-const builtTagsQuery = (tagIds) => gql`
+const builtTagsQuery = (id, tagIds) => gql`
 	query {
-		${builtQueryStringByType('event', tagIds)}
-		${builtQueryStringByType('document', tagIds)}
+		${builtQueryStringByType('event', id, tagIds)}
+		${builtQueryStringByType('document', id, tagIds)}
 	}
 `;
 
@@ -238,7 +241,7 @@ const getQuery = (item, itemType) => {
 
 	if (itemType === 'event' || itemType === 'document') {
 		tags = getResponseProp('tags', itemType, item);
-		const tagsQuery = builtTagsQuery(map(prop('id'), tags));
+		const tagsQuery = builtTagsQuery(item.id, map(prop('id'), tags));
 		query = tagsQuery;
 	} else if (itemType === 'stakeholder') {
 		const mentionedInQuery = builtStakeholderMentionedInQuery(item);
