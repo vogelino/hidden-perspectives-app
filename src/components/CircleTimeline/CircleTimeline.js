@@ -30,6 +30,16 @@ const getXByAngle = (radius, angle) => (radius * Math.sin(toRadian(angle)))
 const getYByAngle = (radius, angle) => (radius * -Math.cos(toRadian(angle)))
 	+ RADIUS_OUTER + MARGIN;
 
+const filterGroupByTags = (filteredTags, group) => group
+	.filter(({ commonTags }) => (commonTags || [])
+		.find(({ id }) => (filteredTags || [])
+			.find((filterTag) => id === filterTag)));
+
+const isFilteredByTag = (filteredTags, tags) => (
+	filteredTags.length > 0
+	&& filteredTags.length !== tags.length
+);
+
 const CircleTimeline = ({
 	item,
 	documents,
@@ -41,24 +51,29 @@ const CircleTimeline = ({
 	pinnedElement,
 	setPinnedElement,
 	itemCounts,
+	filteredTags,
+	tags,
 }) => {
 	const createDocumentMapper = (itemType, symbol) => (group) => {
-		const { angle, id: docId } = group[0];
+		const filtredGroup = isFilteredByTag(filteredTags, tags)
+			? filterGroupByTags(filteredTags, group) : group;
+		if (filtredGroup.length === 0) return null;
+		const { angle, id: docId } = filtredGroup[0];
 		const radius = itemType === 'document' ? RADIUS_INNER : RADIUS_OUTER;
 		const x = getXByAngle(radius, angle);
 		const y = getYByAngle(radius, angle);
-		const isCurrentElement = group.find(({ id }) => id === item.id);
+		const isCurrentElement = filtredGroup.find(({ id }) => id === item.id);
 		const docSize = 14;
-		const hovered = isHovered(group, hoveredElement, itemType);
-		const pinned = isHovered(group, pinnedElement, itemType);
-		const groupWithItemType = group.map((groupEl) => ({ ...groupEl, itemType }));
+		const hovered = isHovered(filtredGroup, hoveredElement, itemType);
+		const pinned = isHovered(filtredGroup, pinnedElement, itemType);
+		const groupWithItemType = filtredGroup.map((groupEl) => ({ ...groupEl, itemType }));
 		return (
 			<Document
 				x={x - (docSize / 2)}
 				y={y - (docSize / 2)}
 				width={docSize}
 				height={docSize}
-				angle={group[0].angle}
+				angle={filtredGroup[0].angle}
 				key={`${itemType}-${docId}`}
 				className={[
 					hovered ? 'hovered' : '',
@@ -174,6 +189,10 @@ CircleTimeline.propTypes = {
 			angle: PropTypes.number.isRequired,
 		})),
 	),
+	filteredTags: PropTypes.arrayOf(PropTypes.string).isRequired,
+	tags: PropTypes.arrayOf(PropTypes.shape({
+		id: PropTypes.string.isRequired,
+	})).isRequired,
 	protagonists: PropTypes.objectOf(
 		PropTypes.arrayOf(PropTypes.shape({
 			id: PropTypes.string,

@@ -288,6 +288,7 @@ const normalizeItems = (keysMap, items, tags) => map((item) => ({
 	...item,
 	date: new Date(item[keysMap.date]),
 	commonTags: item[keysMap.tags].filter((itemTag) => tags.some(({ id }) => id === itemTag.id)),
+	tags: item[keysMap.tags],
 }), items);
 
 const mapAllItemsDates = ({ allDocuments, allEvents, tags }) => {
@@ -356,7 +357,12 @@ const getContextParser = (props, item, tags) => ({ data: { allEvents, allDocumen
 };
 
 const getItemParser = (props) => ({ data }) => {
-	const { client, setItem, itemType } = props;
+	const {
+		client,
+		setItem,
+		itemType,
+		setTags,
+	} = props;
 	const dataItemName = ucFirst(itemType);
 	const item = data[dataItemName];
 
@@ -371,6 +377,7 @@ const getItemParser = (props) => ({ data }) => {
 	client.query({ query })
 		.then(getContextParser(props, item, tags))
 		.catch(getErrorHandler(props));
+	setTags(tags);
 };
 
 const performQuery = (props) => {
@@ -401,6 +408,8 @@ export default compose(
 	withState('itemCounts', 'setItemCounts', { eventsCount: 0, documentsCount: 0, protagonistsCount: 0 }),
 	withState('hoveredElement', 'setHoveredElement', null),
 	withState('pinnedElement', 'setPinnedElement', null),
+	withState('tags', 'setTags', []),
+	withState('filteredTags', 'setFilteredTags', []),
 	lifecycle({
 		componentDidMount() {
 			performQuery(this.props);
@@ -420,6 +429,8 @@ export default compose(
 				|| this.props.isLoading !== nextProps.isLoading
 				|| this.props.itemType !== nextProps.itemType
 				|| this.props.errors !== nextProps.errors
+				|| this.props.tags !== nextProps.tags
+				|| this.props.filteredTags !== nextProps.filteredTags
 			);
 		},
 	}),

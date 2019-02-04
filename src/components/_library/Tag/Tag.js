@@ -2,14 +2,19 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Container, Link } from './styles';
 
-const Tag = ({ path, onClick, children }) => (path ? (
+const Tag = ({
+	path,
+	onClick,
+	children,
+	...otherProps
+}) => (path ? (
 	<Link to={path} onClick={onClick}>
-		<Container interactive>
+		<Container interactive {...otherProps}>
 			{children}
 		</Container>
 	</Link>
 ) : (
-	<Container onClick={onClick} interactive={!!onClick}>
+	<Container onClick={onClick} interactive={!!onClick} {...otherProps}>
 		{children}
 	</Container>
 ));

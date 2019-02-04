@@ -1,6 +1,72 @@
 import React from 'react';
-import { Container } from './styles';
+import PropTypes from 'prop-types';
+import { prop } from 'ramda';
+import { Container, AllNoneText } from './styles';
+import Tag from '../_library/Tag';
 
-const LabelFilters = () => <Container />;
+const getToggleHandler = ({ filteredTags, tags, setFilteredTags }) => () => {
+	if (filteredTags.length === tags.length) return setFilteredTags([]);
+	return setFilteredTags(tags.map(prop('id')));
+};
+
+const getClickHandler = ({
+	filteredTags,
+	setFilteredTags,
+	id,
+}) => () => {
+	const newFilteredTags = filteredTags.includes(id)
+		? filteredTags.filter((tagId) => tagId !== id)
+		: [...filteredTags, id];
+	setFilteredTags(newFilteredTags);
+};
+
+function elementHasTag(element, id) {
+	if (Array.isArray(element)) return element.find((nestedEl) => elementHasTag(nestedEl, id));
+	return (element.tags || []).find((tag) => tag.id === id);
+}
+
+const LabelFilters = ({
+	tags,
+	filteredTags,
+	hoveredElement,
+	pinnedElement,
+	...otherProps
+}) => (
+	<Container>
+		<AllNoneText onClick={getToggleHandler({ tags, filteredTags, ...otherProps })}>
+			{'Toggle all/none'}
+		</AllNoneText>
+		{tags.map(({ id, name }) => (
+			<Tag
+				key={id}
+				hovered={hoveredElement && elementHasTag(hoveredElement, id)}
+				isActive={filteredTags.find((filteredTagId) => filteredTagId === id)}
+				onClick={getClickHandler({ ...otherProps, filteredTags, id })}
+			>
+				{name}
+			</Tag>
+		))}
+	</Container>
+);
+
+LabelFilters.propTypes = {
+	tags: PropTypes.arrayOf(PropTypes.shape({
+		id: PropTypes.string.isRequired,
+		name: PropTypes.string.isRequired,
+	})).isRequired,
+	filteredTags: PropTypes.arrayOf(PropTypes.string).isRequired,
+	setFilteredTags: PropTypes.func.isRequired,
+	hoveredElement: PropTypes.shape({
+		tags: PropTypes.arrayOf(PropTypes.string),
+	}),
+	pinnedElement: PropTypes.shape({
+		tags: PropTypes.arrayOf(PropTypes.string),
+	}),
+};
+
+LabelFilters.defaultProps = {
+	hoveredElement: null,
+	pinnedElement: null,
+};
 
 export default LabelFilters;

@@ -6,4 +6,17 @@ export const Container = styled.div`
 	background: white;
 	position: relative;
 	z-index: 1;
+	padding: 9rem 2rem 0;
+`;
+
+export const AllNoneText = styled.span`
+	display: block;
+	margin-bottom: 1rem;
+	font-size: .875rem;
+	cursor: pointer;
+	transition: color 200ms ease-out;
+
+	&:hover {
+		text-decoration: underline;
+	}
 `;
