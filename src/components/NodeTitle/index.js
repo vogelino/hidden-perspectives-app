@@ -37,15 +37,26 @@ const STAKEHOLDER_QUERY = gql`
 	}
 `;
 
+const LOCATION_QUERY = gql`
+	query GetLocation($id: ID!) {
+		Location(id: $id) {
+			id
+			locationName
+		}
+	}
+`;
+
 const getEventSubtitle = ({ eventStartDate }) => formatHumanDate(eventStartDate);
 const getDocumentSubtitle = ({ documentKind }) => ucFirst(documentKind.name);
-const getStakeholderSubtitle = () => 'Participant';
+const getStakeholderSubtitle = () => 'Protagonist';
+const getLocationSubtitle = () => 'Location';
 
 const getQueryByItemId = (itemType) => {
 	switch (itemType) {
 	case 'event': return EVENT_QUERY;
 	case 'document': return DOCUMENT_QUERY;
 	case 'stakeholder': return STAKEHOLDER_QUERY;
+	case 'location': return LOCATION_QUERY;
 	default: return '';
 	}
 };
@@ -55,6 +66,7 @@ const getTitleByItemType = (item, itemType) => {
 	case 'event': return item.eventTitle;
 	case 'document': return item.documentTitle;
 	case 'stakeholder': return item.stakeholderFullName;
+	case 'location': return item.locationName;
 	default: return '';
 	}
 };
@@ -64,6 +76,7 @@ const getSubtitleByItemType = (item, itemType) => {
 	case 'event': return getEventSubtitle(item);
 	case 'document': return getDocumentSubtitle(item);
 	case 'stakeholder': return getStakeholderSubtitle(item);
+	case 'location': return getLocationSubtitle(item);
 	default: return '';
 	}
 };

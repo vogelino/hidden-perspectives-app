@@ -71,11 +71,21 @@ const STAKEHOLDER_QUERY = gql`
 	}
 `;
 
+const LOCATION_QUERY = gql`
+	query GetLocation($id: ID!) {
+		Location(id: $id) {
+			id
+			locationName
+		}
+	}
+`;
+
 const getQueryByItemId = (itemType) => {
 	switch (itemType) {
 	case 'event': return EVENT_QUERY;
 	case 'document': return DOCUMENT_QUERY;
 	case 'stakeholder': return STAKEHOLDER_QUERY;
+	case 'location': return LOCATION_QUERY;
 	default: return '';
 	}
 };
@@ -132,7 +142,7 @@ const builtTagsQuery = (tagIds) => gql`
 	}
 `;
 
-const builtQueryStringByItemId = (type, { id }) => {
+const builtStakeholderQueryStringByItemId = (type, { id }) => {
 	const orderBy = getOrderBy(type);
 	const additionalReturnValues = getAdditionalReturnValuesByType(type);
 	const stakeholdersFieldName = type === 'document' ? 'mentionedStakeholders' : 'eventStakeholders';
@@ -160,10 +170,45 @@ const builtQueryStringByItemId = (type, { id }) => {
 	return query;
 };
 
-const builtMentionedInQuery = (item) => gql`
+const builtLocationQueryStringByItemId = (type, { id }) => {
+	const orderBy = getOrderBy(type);
+	const additionalReturnValues = getAdditionalReturnValuesByType(type);
+	const locationsFieldName = type === 'document' ? 'mentionedLocations' : 'eventLocations';
+	const query = `
+		all${ucFirst(type)}s(
+			filter: {
+				${locationsFieldName}_some: { id: "${id}" }
+			}
+			orderBy: ${orderBy}
+		) {
+			id
+			${type}Title
+			${additionalReturnValues}
+			${type}Tags {
+				id
+				name
+			}
+			${type}Description
+			${locationsFieldName} {
+				id
+				locationName
+			}
+		}
+	`;
+	return query;
+};
+
+const builtStakeholderMentionedInQuery = (item) => gql`
 	query {
-		${builtQueryStringByItemId('event', item)}
-		${builtQueryStringByItemId('document', item)}
+		${builtStakeholderQueryStringByItemId('event', item)}
+		${builtStakeholderQueryStringByItemId('document', item)}
+	}
+`;
+
+const builtLocationMentionedInQuery = (item) => gql`
+	query {
+		${builtLocationQueryStringByItemId('event', item)}
+		${builtLocationQueryStringByItemId('document', item)}
 	}
 `;
 
@@ -172,6 +217,7 @@ const getResponseProp = (key, type, item) => {
 	case 'event':
 	case 'document': return prop(`${type}${ucFirst(key)}`, item);
 	case 'stakeholder': return item.stakeholderFullName;
+	case 'location': return item.locationName;
 	default: return '';
 	}
 };
@@ -181,27 +227,32 @@ const getItemSubtitle = (item, itemType) => {
 	case 'event': return getFormattedDate(new Date(item.eventStartDate));
 	case 'document': return item.documentKind && item.documentKind.name;
 	case 'stakeholder': return 'stakeholder';
+	case 'location': return 'location';
 	default: return '';
 	}
 };
 
 const getQuery = (item, itemType) => {
 	let query;
+	let tags = [];
 
 	if (itemType === 'event' || itemType === 'document') {
-		const tags = getResponseProp('tags', itemType, item);
+		tags = getResponseProp('tags', itemType, item);
 		const tagsQuery = builtTagsQuery(map(prop('id'), tags));
 		query = tagsQuery;
 	} else if (itemType === 'stakeholder') {
-		const mentionedInQuery = builtMentionedInQuery(item);
+		const mentionedInQuery = builtStakeholderMentionedInQuery(item);
+		query = mentionedInQuery;
+	} else if (itemType === 'location') {
+		const mentionedInQuery = builtLocationMentionedInQuery(item);
 		query = mentionedInQuery;
 	}
 
-	return query;
+	return { query, tags };
 };
 
 const getProtagonists = (item, itemType, allDocuments, allEvents) => {
-	const items = itemType === 'stakeholder' ? union(allDocuments, allEvents) : [item];
+	const items = itemType === 'stakeholder' || itemType === 'location' ? union(allDocuments, allEvents) : [item];
 
 	const protagonistsFromAllItems = items.map((currentItem) => {
 		const isEvent = has('eventStakeholders');
@@ -211,6 +262,7 @@ const getProtagonists = (item, itemType, allDocuments, allEvents) => {
 
 	const flattenedProtagonists = flatten(protagonistsFromAllItems);
 	const clusterProtagonists = (data) => data
+		.filter((d) => d)
 		.reduce((acc, current) => {
 			const { id } = current;
 			return Object.assign(acc, {
@@ -222,17 +274,63 @@ const getProtagonists = (item, itemType, allDocuments, allEvents) => {
 	return parsedProtagonists;
 };
 
-const getContextParser = (props, item) => ({ data: { allEvents, allDocuments } }) => {
+const getDocOrEventParser = (getAngle) => pipe(
+	map(({ date, ...item }) => ({
+		...item,
+		date,
+		angle: getAngle(date),
+	})),
+	(items) => groupItemsBy(items, 'angle'),
+	sortBy(prop('date')),
+);
+
+const normalizeItems = (keysMap, items, tags) => map((item) => ({
+	...item,
+	date: new Date(item[keysMap.date]),
+	commonTags: item[keysMap.tags].filter((itemTag) => tags.some(({ id }) => id === itemTag.id)),
+}), items);
+
+const mapAllItemsDates = ({ allDocuments, allEvents, tags }) => {
+	const documentKeysMap = {
+		date: 'documentCreationDate',
+		tags: 'documentTags',
+	};
+	const eventKeysMap = {
+		date: 'eventStartDate',
+		tags: 'eventTags',
+	};
+	const normalizedDocuments = normalizeItems(documentKeysMap, allDocuments, tags);
+	const normalizedEvents = normalizeItems(eventKeysMap, allEvents, tags);
+	const allItems = sortBy(prop('date'), union(normalizedDocuments, normalizedEvents));
+	return {
+		allItems,
+		documents: normalizedDocuments,
+		events: normalizedEvents,
+	};
+};
+
+const getContextParser = (props, item, tags) => ({ data: { allEvents, allDocuments } }) => {
 	const {
 		itemType,
 		stopLoading,
 		setDocuments,
 		setEvents,
 		setProtagonists,
+		setItemCounts,
 	} = props;
+
+	if (allDocuments.length === 0 && allEvents.length === 0) {
+		setDocuments([]);
+		setEvents([]);
+		stopLoading();
+		return;
+	}
+
+	const { allItems, documents, events } = mapAllItemsDates({ allDocuments, allEvents, tags });
+
 	const dateExtremes = [
-		new Date(allDocuments[0].documentCreationDate),
-		new Date(allDocuments[allDocuments.length - 1].documentCreationDate),
+		allItems[0].date,
+		allItems[allItems.length - 1].date,
 	];
 	const angleScaleFunction = scaleLinear()
 		.domain(dateExtremes)
@@ -240,41 +338,19 @@ const getContextParser = (props, item) => ({ data: { allEvents, allDocuments } }
 
 	const roundAngle = (angle) => angle - (angle % 4);
 	const getAngle = pipe(angleScaleFunction, roundAngle);
-	const parsedDocuments = pipe(
-		map((document) => {
-			const { id, documentCreationDate } = document;
-			const date = new Date(documentCreationDate);
-			const angle = getAngle(date);
-			return {
-				...document,
-				id,
-				date,
-				angle,
-			};
-		}),
-		(items) => groupItemsBy(items, 'angle'),
-		sortBy(prop('date')),
-	)(allDocuments);
+	const itemParser = getDocOrEventParser(getAngle);
+	const parsedDocuments = itemParser(documents);
+	const parsedEvents = itemParser(events);
+	const protagonists = getProtagonists(item, itemType, allDocuments, allEvents);
 
-	const parsedEvents = pipe(
-		map((event) => {
-			const { id, eventStartDate } = event;
-			const date = new Date(eventStartDate);
-			const angle = getAngle(date);
-			return {
-				...event,
-				id,
-				date,
-				angle,
-			};
-		}),
-		(items) => groupItemsBy(items, 'angle'),
-		sortBy(prop('date')),
-	)(allEvents);
-
+	setItemCounts({
+		documentsCount: allDocuments.length,
+		eventsCount: allEvents.length,
+		protagonistsCount: protagonists.length,
+	});
 	setDocuments(parsedDocuments);
 	setEvents(parsedEvents);
-	setProtagonists(getProtagonists(item, itemType, allDocuments, allEvents));
+	setProtagonists(protagonists);
 
 	stopLoading();
 };
@@ -291,10 +367,9 @@ const getItemParser = (props) => ({ data }) => {
 		itemType,
 	});
 
-	client.query({
-		query: getQuery(item, itemType),
-	})
-		.then(getContextParser(props, item))
+	const { query, tags } = getQuery(item, itemType);
+	client.query({ query })
+		.then(getContextParser(props, item, tags))
 		.catch(getErrorHandler(props));
 };
 
@@ -323,7 +398,9 @@ export default compose(
 	withState('documents', 'setDocuments', []),
 	withState('events', 'setEvents', []),
 	withState('protagonists', 'setProtagonists', {}),
+	withState('itemCounts', 'setItemCounts', { eventsCount: 0, documentsCount: 0, protagonistsCount: 0 }),
 	withState('hoveredElement', 'setHoveredElement', null),
+	withState('pinnedElement', 'setPinnedElement', null),
 	lifecycle({
 		componentDidMount() {
 			performQuery(this.props);
@@ -339,6 +416,7 @@ export default compose(
 				|| this.props.events !== nextProps.events
 				|| this.props.protagonists !== nextProps.protagonists
 				|| this.props.hoveredElement !== nextProps.hoveredElement
+				|| this.props.pinnedElement !== nextProps.pinnedElement
 				|| this.props.isLoading !== nextProps.isLoading
 				|| this.props.itemType !== nextProps.itemType
 				|| this.props.errors !== nextProps.errors

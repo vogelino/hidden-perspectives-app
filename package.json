@@ -81,7 +81,8 @@
 		"react-virtualized": "^9.21.0",
 		"recompose": "^0.30.0",
 		"styled-components": "^4.0.2",
-		"subscriptions-transport-ws": "^0.9.15"
+		"subscriptions-transport-ws": "^0.9.15",
+		"wikijs": "^5.0.0-alpha.1"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.1.2",
@@ -90,7 +91,6 @@
 		"@storybook/addon-links": "^4.0.2",
 		"@storybook/addons": "^4.0.2",
 		"@storybook/react": "^4.0.2",
-		"babel-loader": "^8.0.4",
 		"d3": "^5.7.0",
 		"enzyme": "^3.7.0",
 		"enzyme-adapter-react-16": "^1.6.0",
@@ -99,7 +99,6 @@
 		"eslint-plugin-import": "^2.14.0",
 		"eslint-plugin-jest": "^21.26.0",
 		"eslint-plugin-jsx-a11y": "^6.1.2",
-		"eslint-plugin-prettier": "^3.0.1",
 		"eslint-plugin-react": "^7.11.1",
 		"husky": "^1.1.2",
 		"prettier": "^1.16.3",

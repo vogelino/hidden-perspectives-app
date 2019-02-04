@@ -1,16 +1,34 @@
 import styled from 'styled-components';
-import { NavLink } from 'react-router-dom';
 import { Text } from '../styles';
 
-export const BubbleLink = styled(NavLink)`
-    pointer-events: all;
+export const Container = styled.g`
+	pointer-events: all;
+	cursor: pointer;
 `;
 
-export const BubbleCircle = styled.circle`
-    align-items: center;
-    height: ${({ r }) => r * 2}px;
-    fill: ${({ isHovered, theme }) => (isHovered ? theme.primaryLight : theme.gray200)};
-    opacity: ${({ isLoading }) => (isLoading ? 0 : 1)};
+export const BubbleCircle = styled.circle.attrs({
+	style: ({ r }) => ({
+		height: `${r * 2}px`,
+	}),
+})`
+	align-items: center;
+	${({
+		fill,
+		isHovered,
+		isPinned,
+		theme,
+	}) => {
+		if (fill) return '';
+		const colorFill = ((isHovered || isPinned) ? theme.primaryLight : theme.gray200);
+		return `fill: ${colorFill};`;
+	}}
+	opacity: ${({ isLoading }) => (isLoading ? 0 : 1)};
+	filter: url(${({ isHovered, isPinned }) => ((isHovered || isPinned) ? '#image-color-filter-hover' : '#image-color-filter')});
+	font-weight: bold;
 `;
 
-export const BubbleText = styled(Text)``;
+export const BubbleText = styled(Text)`
+	${({ hasImage, isHovered, isPinned }) => hasImage && (isHovered || isPinned) && `
+		opacity: 0;
+	`}
+`;

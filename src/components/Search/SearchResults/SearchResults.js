@@ -19,7 +19,7 @@ const loadingResults = Object.keys([...Array(3)]);
 
 const getFormattedTitle = (title, searchQuery) => {
 	const titleLowercased = title.toLowerCase();
-	const searchQueryLowercased = title.toLowerCase();
+	const searchQueryLowercased = searchQuery.toLowerCase();
 	const index = titleLowercased.indexOf(searchQueryLowercased);
 	let formattedTitle = title;
 
@@ -129,7 +129,7 @@ SearchResults.defaultProps = {
 		{ key: 'all', title: 'All' },
 		{ key: 'event', title: 'Events' },
 		{ key: 'document', title: 'Documents' },
-		{ key: 'stakeholder', title: 'Participants' },
+		{ key: 'stakeholder', title: 'Protagonists' },
 	],
 };
 

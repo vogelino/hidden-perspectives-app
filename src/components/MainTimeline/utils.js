@@ -47,9 +47,8 @@ export const parseItemsToDates = (initialYear = 1971, nodes) => {
 				currentYear += 1;
 				placeNode();
 			} else if (nodeYear === currentYear) {
-				const sameDay = years[years.length - 1].months[nodeMonth - 1].days.find((day) => {
-					return day.dateUnitIndex === nodeDay;
-				});
+				const sameDay = years[years.length - 1].months[nodeMonth - 1].days
+					.find((day) => day.dateUnitIndex === nodeDay);
 
 				if (sameDay) {
 					sameDay[getContainerName(node)].push(node);
@@ -57,7 +56,7 @@ export const parseItemsToDates = (initialYear = 1971, nodes) => {
 					const dayItem = { documents: [], events: [] };
 					dayItem[getContainerName(node)] = [node];
 					years[years.length - 1].months[nodeMonth - 1].days.push(
-						newDay(nodeDay, dateUnits, dayItem)
+						newDay(nodeDay, dateUnits, dayItem),
 					);
 				}
 			}

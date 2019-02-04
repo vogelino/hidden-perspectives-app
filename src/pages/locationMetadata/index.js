@@ -1,24 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import DetailView from '../../components/DetailView';
+import MetadataView from '../../components/MetadataView';
 import Header from '../../components/Header';
 import NodeTitle from '../../components/NodeTitle';
 import NodeHeader from '../../components/NodeHeader';
 
-const ParticipantPage = ({ match }) => (
-	<div className="ParticipantPage">
+const LocationMetadataPage = ({ match }) => (
+	<div className="LocationPage">
 		<Header>
 			<NodeTitle
 				id={match.params.id}
-				itemType="stakeholder"
+				itemType="location"
 			/>
 		</Header>
-		<NodeHeader id={match.params.id} itemType="stakeholder" />
-		<DetailView id={match.params.id} itemType="stakeholder" />
+		<NodeHeader id={match.params.id} itemType="location" />
+		<MetadataView id={match.params.id} itemType="location" />
 	</div>
 );
 
-ParticipantPage.propTypes = {
+LocationMetadataPage.propTypes = {
 	match: PropTypes.shape({
 		params: PropTypes.shape({
 			id: PropTypes.string,
@@ -26,4 +26,4 @@ ParticipantPage.propTypes = {
 	}).isRequired,
 };
 
-export default ParticipantPage;
+export default LocationMetadataPage;

@@ -4,7 +4,9 @@ import { List } from 'react-virtualized';
 import TimelineElement from '../TimelineElement';
 import { isHovered } from '../../../utils/timelineUtil';
 import { monthsLabels } from '../../../utils/dateUtil';
-import { EventContainer, Event, EventDate, Events, Documents } from './styles';
+import {
+	EventContainer, Event, EventDate, Events, Documents,
+} from './styles';
 import { estimatedMonthHeight } from './utils';
 import ContainerWithStickyLabel from '../ContainerWithStickyLabel';
 
@@ -15,7 +17,9 @@ class TimelineItemsClass extends React.Component {
 	}
 
 	rowRenderer({ index, key, style }) {
-		const { hoveredElement, setHoveredElement } = this.props;
+		const {
+			hoveredElement, setHoveredElement, pinnedElement, setPinnedElement,
+		} = this.props;
 		const data = this.props.timelineItems[index];
 		if (!data) return null;
 		const { days, dateUnitIndex, year } = data;
@@ -29,25 +33,32 @@ class TimelineItemsClass extends React.Component {
 				hoveredElement={hoveredElement}
 				hovered={isHovered(item, hoveredElement, itemType)}
 				hoverHandler={setHoveredElement}
+				pinned={!hoveredElement && isHovered(item, pinnedElement, itemType)}
+				clickHandler={(pinEl) => {
+					if (pinnedElement && pinEl.id === pinnedElement.id) {
+						return setPinnedElement(null);
+					}
+					return setPinnedElement(pinEl);
+				}}
 			/>
 		);
 
 		return (
 			<div style={style} key={key}>
 				<ContainerWithStickyLabel label={monthLabel} date={`${monthLabel} ${year}`}>
-					{days.map(({ dateUnitIndex: dayIndex, key: dayKey, events, documents }) => {
-						return (
-							<EventContainer key={dayKey}>
-								<Event>
-									<EventDate>{dayIndex}</EventDate>
-									<Documents>
-										{documents.map(mapTimelineItem('document'))}
-									</Documents>
-									<Events>{events.map(mapTimelineItem('event'))}</Events>
-								</Event>
-							</EventContainer>
-						);
-					})}
+					{days.map(({
+						dateUnitIndex: dayIndex, key: dayKey, events, documents,
+					}) => (
+						<EventContainer key={dayKey}>
+							<Event>
+								<EventDate>{dayIndex}</EventDate>
+								<Documents>
+									{documents.map(mapTimelineItem('document'))}
+								</Documents>
+								<Events>{events.map(mapTimelineItem('event'))}</Events>
+							</Event>
+						</EventContainer>
+					))}
 				</ContainerWithStickyLabel>
 			</div>
 		);
@@ -58,9 +69,7 @@ class TimelineItemsClass extends React.Component {
 			<List
 				height={1200}
 				overscanRowCount={0}
-				rowHeight={(index) => {
-					return estimatedMonthHeight(this.props.timelineItems[index.index]);
-				}}
+				rowHeight={(index) => estimatedMonthHeight(this.props.timelineItems[index.index])}
 				rowRenderer={this.rowRenderer}
 				rowCount={this.props.timelineItems.length}
 				width={window.innerWidth - 384}
@@ -96,17 +105,40 @@ TimelineItemsClass.propTypes = {
 			),
 		}),
 	),
-	hoveredElement: PropTypes.shape({
-		id: PropTypes.string.isRequired,
-		itemType: PropTypes.string.isRequired,
-	}),
+	hoveredElement: PropTypes.oneOfType([
+		PropTypes.shape({
+			id: PropTypes.string.isRequired,
+			itemType: PropTypes.string.isRequired,
+		}),
+		PropTypes.arrayOf(
+			PropTypes.shape({
+				id: PropTypes.string.isRequired,
+				itemType: PropTypes.string.isRequired,
+			}),
+		),
+	]),
 	setHoveredElement: PropTypes.func,
+	pinnedElement: PropTypes.oneOfType([
+		PropTypes.shape({
+			id: PropTypes.string.isRequired,
+			itemType: PropTypes.string.isRequired,
+		}),
+		PropTypes.arrayOf(
+			PropTypes.shape({
+				id: PropTypes.string.isRequired,
+				itemType: PropTypes.string.isRequired,
+			}),
+		),
+	]),
+	setPinnedElement: PropTypes.func,
 };
 
 TimelineItemsClass.defaultProps = {
 	hoveredElement: null,
+	pinnedElement: null,
 	timelineItems: [],
 	setHoveredElement: () => {},
+	setPinnedElement: () => {},
 };
 
 export default TimelineItemsClass;

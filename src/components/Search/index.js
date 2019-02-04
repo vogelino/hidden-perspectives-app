@@ -40,6 +40,7 @@ const SEARCH_QUERY = gql`
 				OR: [
 					{ documentTitle_contains: $searchQuery }
 					{ documentDescription_contains: $searchQuery }
+					{ documentTranscript_contains: $searchQuery }
 					{ mentionedStakeholders_some: {
 						stakeholderFullName_contains: $searchQuery
 					} }
@@ -127,7 +128,7 @@ export default compose(
 				{ key: 'all', title: 'All' },
 				{ key: 'event', title: 'Events' },
 				{ key: 'document', title: 'Documents' },
-				{ key: 'stakeholder', title: 'Participants' },
+				{ key: 'stakeholder', title: 'Protagonists' },
 			],
 		};
 	}),
@@ -197,15 +198,27 @@ export default compose(
 			const activeResultObj = searchResults.find(propEq('id', activeResult));
 			if (!activeResultObj) return;
 			const { id, type } = activeResultObj;
-			history.push(`/${type}/context/${id}`);
+			const itemType = type === 'stakeholder' ? 'protagonist' : type;
+			history.push(`/${itemType}/context/${id}`);
+		},
+		onEscape: (props) => (evt) => {
+			evt.preventDefault();
+			const { setSearchQuery } = props;
+			setSearchQuery('');
 		},
 	}),
 	lifecycle({
 		componentDidMount() {
-			const { onTab, onArrow, onEnter } = this.props;
+			const {
+				onTab,
+				onArrow,
+				onEnter,
+				onEscape,
+			} = this.props;
 			document.addEventListener('keydown', (evt) => {
 				if (evt.code === 'Tab') return onTab(evt);
 				if (evt.code === 'Enter') return onEnter(evt);
+				if (evt.code === 'Escape') return onEscape(evt);
 				if (evt.code === 'ArrowDown' || evt.code === 'ArrowUp') return onArrow(evt);
 				return undefined;
 			});

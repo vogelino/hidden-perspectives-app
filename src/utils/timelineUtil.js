@@ -42,6 +42,7 @@ export const getMinimap = (timelineItems) => {
 		.range([1, 0.1, 0]);
 
 	return monthGoups.map(({ months, count }) => ({
+		count,
 		density: minimapColorScale(count),
 		id: months.join('-'),
 		year: months[0].split('-')[0],
@@ -124,4 +125,10 @@ export const isHovered = (item, hoveredElement, itemType) => {
 		return hoveredElement.some((hoveredEl) => isItemHovered(item, hoveredEl, itemType));
 	}
 	return isItemHovered(item, hoveredElement, itemType);
+};
+
+const getSummaryElementById = (id) => document.getElementById(`summary-${id}`);
+export const getHoveredSummary = (hoveredElement) => {
+	const indexInMiddle = Math.round((hoveredElement.length - 1) / 2);
+	return getSummaryElementById(hoveredElement[indexInMiddle].id);
 };

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { compose, lifecycle, withState } from 'recompose';
 import { withApollo } from 'react-apollo';
 import gql from 'graphql-tag';
@@ -99,6 +100,25 @@ const STAKEHOLDER_QUERY = gql`
 	}
 `;
 
+const LOCATION_QUERY = gql`
+	query GetLocation($id: ID!) {
+		Location(id: $id) {
+			id
+			documentsMentionedIn {
+				id
+				documentTitle
+			}
+			locationEvents {
+				id
+				eventTitle
+			}
+			locationDescription
+			locationName
+			locationWikipediaUri
+		}
+	}
+`;
+
 const mapStakeholder = ({ id, stakeholderFullName }) => ({
 	id, name: stakeholderFullName,
 });
@@ -120,9 +140,20 @@ const hasValue = propHasValue('value');
 const hasValues = propHasValue('values');
 const formatIfValidDate = ifElse(identity, getFormattedDate, always(null));
 
-const passValueAsChild = (Component) => ({ value, ...props }) => (
-	<Component {...props}>{value}</Component>
-);
+const passValueAsChild = (Component) => {
+	const WrapperComponent = ({ value, ...props }) => (
+		<Component {...props}>{value}</Component>
+	);
+	WrapperComponent.propTypes = {
+		value: PropTypes.oneOfType([
+			PropTypes.string,
+			PropTypes.array,
+			PropTypes.shape({}),
+		]).isRequired,
+	};
+
+	return WrapperComponent;
+};
 
 const structureDocumentData = (data) => {
 	const coreInformation = {
@@ -273,11 +304,50 @@ const structureStakeholderData = (data) => {
 	].filter(hasValues);
 };
 
+const structureLocationData = (data) => {
+	const {
+		locationDescription,
+		locationName,
+		locationWikipediaUri,
+		documentsMentionedIn,
+		locationEvents,
+	} = data;
+
+	const coreInformation = {
+		groupLabel: 'Core information',
+		values: [
+			{ label: 'Title', value: locationName },
+			{ label: 'Description', value: locationDescription },
+			{ label: 'Wikipedia', value: locationWikipediaUri },
+		].filter(hasValue),
+	};
+
+	const appearences = {
+		groupLabel: 'Appearences',
+		values: [
+			{
+				label: 'Documents',
+				value: documentsMentionedIn.map(mapDocuments),
+			},
+			{
+				label: 'Events',
+				value: locationEvents.map(mapEvents),
+			},
+		].filter(hasValue),
+	};
+
+	return [
+		coreInformation,
+		appearences,
+	].filter(hasValues);
+};
+
 const getStructuredData = (data, itemType) => {
 	switch (itemType) {
 	case 'event': return structureEventData(data.Event);
 	case 'document': return structureDocumentData(data.Document);
 	case 'stakeholder': return structureStakeholderData(data.Stakeholder);
+	case 'location': return structureLocationData(data.Location);
 	default: return '';
 	}
 };
@@ -293,6 +363,7 @@ const getItemQuery = (itemType) => {
 	case 'event': return EVENT_QUERY;
 	case 'document': return DOCUMENT_QUERY;
 	case 'stakeholder': return STAKEHOLDER_QUERY;
+	case 'location': return LOCATION_QUERY;
 	default: return '';
 	}
 };

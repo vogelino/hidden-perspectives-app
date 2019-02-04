@@ -5,7 +5,7 @@ import Minimap from './Minimap';
 import { LoadingContainer } from '../LoadingIndicator/styles';
 import LoadingIndicator from '../LoadingIndicator';
 import TimelineItems from './TimelineItems';
-import Stakeholders from './Stakeholders';
+import Protagonists from './Protagonists';
 import { MainTimelineLegend } from '../Legend';
 
 const parseTimelineItems = (years) => {
@@ -27,18 +27,34 @@ const MainTimeline = ({
 	onRef,
 	setHoveredElement,
 	hoveredElement,
+	setPinnedElement,
+	pinnedElement,
+	eventsCount,
+	documentsCount,
+	protagonistsCount,
 }) => (
 	<Container id="mainTimeline" ref={onRef}>
 		<LoadingContainer isLoading={isLoading}>
 			<LoadingIndicator />
 		</LoadingContainer>
 		{errors.map((error) => error)}
-		<Minimap isLoading={isLoading} items={minimapItems} />
-		<Stakeholders
+		<Minimap
+			isLoading={isLoading}
+			items={minimapItems}
+		/>
+		<Protagonists
 			isLoading={fetchingProtagonists}
 			items={bubbleChartItems}
 			hoveredElement={hoveredElement}
 			setHoveredElement={setHoveredElement}
+			pinnedElement={pinnedElement}
+			setPinnedElement={setPinnedElement}
+		/>
+		<MainTimelineLegend
+			isLoading={isLoading}
+			eventsCount={eventsCount}
+			documentsCount={documentsCount}
+			protagonistsCount={protagonistsCount}
 		/>
 		<MainTimelineLegend />
 		{timelineItems.length > 0 && (
@@ -46,6 +62,8 @@ const MainTimeline = ({
 				timelineItems={parseTimelineItems(timelineItems)}
 				hoveredElement={hoveredElement}
 				setHoveredElement={setHoveredElement}
+				pinnedElement={pinnedElement}
+				setPinnedElement={setPinnedElement}
 			/>
 		)}
 	</Container>
@@ -53,15 +71,18 @@ const MainTimeline = ({
 
 MainTimeline.propTypes = {
 	timelineItems: TimelineItems.propTypes.timelineItems,
-	minimapItems: PropTypes.arrayOf(
-		PropTypes.shape({
-			id: PropTypes.string.isRequired,
-			density: PropTypes.number.isRequired,
-		}),
-	),
-	bubbleChartItems: Stakeholders.propTypes.items,
+	minimapItems: PropTypes.arrayOf(PropTypes.shape({
+		id: PropTypes.string.isRequired,
+		density: PropTypes.number.isRequired,
+	})),
+	eventsCount: PropTypes.number.isRequired,
+	documentsCount: PropTypes.number.isRequired,
+	protagonistsCount: PropTypes.number.isRequired,
+	bubbleChartItems: Protagonists.propTypes.items,
 	hoveredElement: TimelineItems.propTypes.hoveredElement,
+	pinnedElement: TimelineItems.propTypes.pinnedElement,
 	setHoveredElement: PropTypes.func,
+	setPinnedElement: PropTypes.func,
 	errors: PropTypes.arrayOf(PropTypes.string),
 	isLoading: PropTypes.bool,
 	fetchingProtagonists: PropTypes.bool,
@@ -70,9 +91,11 @@ MainTimeline.propTypes = {
 
 MainTimeline.defaultProps = {
 	hoveredElement: TimelineItems.defaultProps.hoveredElement,
+	pinnedElement: TimelineItems.defaultProps.pinnedElement,
 	setHoveredElement: () => {},
+	setPinnedElement: () => {},
 	timelineItems: TimelineItems.defaultProps.timelineItems,
-	bubbleChartItems: Stakeholders.defaultProps.items,
+	bubbleChartItems: Protagonists.defaultProps.items,
 	minimapItems: [],
 	errors: [],
 	isLoading: true,

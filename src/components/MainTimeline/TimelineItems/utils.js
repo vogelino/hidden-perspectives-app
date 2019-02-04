@@ -24,9 +24,8 @@ export const estimatedDayHight = (day) => {
 	// If there are no documents return 0 height.
 	if (data.length === 0) return 0;
 
-	const blockHeightWithoutPadding = data.reduce((acc, cur) => {
-		return acc + estimatedTextHight(cur.title) + dayNodePadding;
-	}, 0);
+	const blockHeightWithoutPadding = data
+		.reduce((acc, cur) => acc + estimatedTextHight(cur.title) + dayNodePadding, 0);
 
 	return blockHeightWithoutPadding + 2 * dayPadding;
 };
@@ -47,9 +46,7 @@ export const estimatedMonthHeight = (month) => {
 	// If the month has no data, return only its labels hight.
 	if (days.length === 0) return monthLabelHeight;
 
-	const blockHeight = days.reduce((acc, cur) => {
-		return acc + estimatedDayHight(cur);
-	}, 0);
+	const blockHeight = days.reduce((acc, cur) => acc + estimatedDayHight(cur), 0);
 
 	return blockHeight + monthLabelHeight;
 };
