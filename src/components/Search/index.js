@@ -154,7 +154,8 @@ export default compose(
 		},
 		onResultClick: ({ setSearchQuery, history }) => ({ id, type }) => {
 			setSearchQuery('');
-			history.push(`/${type}/context/${id}`);
+			const itemType = type === 'stakeholder' ? 'protagonist' : type;
+			history.push(`/${itemType}/context/${id}`);
 		},
 		onTab: (props) => (evt) => {
 			evt.preventDefault();
