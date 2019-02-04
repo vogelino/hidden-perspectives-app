@@ -18,8 +18,8 @@ const generateMonths = (year) => {
 	return months;
 };
 
-const newYear = (dateUnitIndex, { year }, months = generateMonths(dateUnitIndex)) => ({
-	key: `${year}`,
+const newYear = (dateUnitIndex, months = generateMonths(dateUnitIndex)) => ({
+	key: `${dateUnitIndex}`,
 	dateUnitIndex,
 	months,
 });
@@ -43,7 +43,7 @@ export const parseItemsToDates = (initialYear = 1971, nodes) => {
 
 		function placeNode() {
 			if (nodeYear > currentYear) {
-				years.push(newYear(currentYear + 1, dateUnits));
+				years.push(newYear(currentYear + 1));
 				currentYear += 1;
 				placeNode();
 			} else if (nodeYear === currentYear) {
@@ -57,7 +57,7 @@ export const parseItemsToDates = (initialYear = 1971, nodes) => {
 					const dayItem = { documents: [], events: [] };
 					dayItem[getContainerName(node)] = [node];
 					years[years.length - 1].months[nodeMonth - 1].days.push(
-						newDay(nodeDay, dateUnits, dayItem)
+						newDay(nodeDay, dateUnits, dayItem),
 					);
 				}
 			}
@@ -65,5 +65,6 @@ export const parseItemsToDates = (initialYear = 1971, nodes) => {
 		placeNode();
 	});
 
+	console.log(years);
 	return years;
 };

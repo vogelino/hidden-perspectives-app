@@ -18,16 +18,20 @@ const ALL_EVENTS_AND_DOCUMENTS = gql`
 			id
 			eventTitle
 			eventStartDate
+			eventDescription
 			eventStakeholders {
 				id
+				stakeholderFullName
 			}
 		}
 		allDocuments(orderBy: documentCreationDate_ASC) {
 			id
 			documentTitle
+			documentDescription
 			documentCreationDate
 			mentionedStakeholders {
 				id
+				stakeholderFullName
 			}
 		}
 	}
@@ -243,13 +247,13 @@ export default compose(
 		shouldComponentUpdate(nextProps) {
 			return (
 				nextProps.timelineItems.length !== this.props.timelineItems.length ||
-				nextProps.bubbleChartItems !== this.props.bubbleChartItems ||
-				nextProps.fetchingProtagonists !== this.props.fetchingProtagonists ||
+				// nextProps.bubbleChartItems !== this.props.bubbleChartItems ||
+				// nextProps.fetchingProtagonists !== this.props.fetchingProtagonists ||
 				nextProps.errors.length !== this.props.errors.length ||
 				nextProps.isLoading !== this.props.isLoading ||
 				nextProps.eventsCount !== this.props.eventsCount ||
 				nextProps.documentsCount !== this.props.documentsCount ||
-				nextProps.protagonistsCount !== this.props.protagonistsCount ||
+				// nextProps.protagonistsCount !== this.props.protagonistsCount ||
 				nextProps.hoveredElement !== this.props.hoveredElement
 			);
 		},

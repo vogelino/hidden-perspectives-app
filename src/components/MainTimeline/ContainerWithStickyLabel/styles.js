@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 export const Container = styled.div`
 	display: block;
@@ -22,13 +22,10 @@ export const Label = styled.header`
 `;
 
 export const Split = styled.div`
-	flex: 0 0 50%;
-	padding: .625rem 1.5rem;
-	display: inline-block;
-	background: ${({ hasContent }) => (hasContent ? 'rgba(255,255,255,.9)' : 'none')};
-
-	&:first-child {
-		border-right: 1px solid ${({ theme }) => theme.commonBorderColor};
-		text-align: right;
-	}
+	width: 100%;
+	text-align: center;
+	color: ${({ theme }) => theme.gray600};
+	font-size: 0.875rem;
+	line-height: ${({ isEmpty }) => (isEmpty ? '24px' : '36px')};
+	height: ${({ isEmpty }) => (isEmpty ? '24px' : '36px')};
 `;

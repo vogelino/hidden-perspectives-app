@@ -1,15 +1,22 @@
 import styled from 'styled-components';
 import { EventTitleContainer } from '../TimelineElement/styles';
+import { yearLabelHeight, monthLabelHeight, dayPadding, dayNodePadding } from './utils';
 
 export const Event = styled.div`
 	padding: 0;
-	font-size: .875rem;
+	font-size: 0.875rem;
 	line-height: 1.25rem;
 	display: flex;
 	position: relative;
 `;
 
-export const EventContainer = styled.div`
+export const EventContainer = styled.div``;
+
+export const Year = styled.div`
+	height: ${yearLabelHeight}px;
+	margin: 0 auto;
+	text-align: center;
+	line-height: 48px;
 `;
 
 export const EventDate = styled.span`
@@ -42,7 +49,7 @@ export const Events = styled(Column)`
 		content: '●';
 		right: auto;
 		left: 0;
-		transform: translate(50%,-50%);
+		transform: translate(50%, -50%);
 	}
 `;
 
@@ -50,4 +57,3 @@ export const Documents = styled(Column)`
 	border-right: 1px solid ${({ theme }) => theme.commonBorderColor};
 	text-align: right;
 `;
-
