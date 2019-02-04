@@ -14,7 +14,9 @@ import {
 	has,
 	flatten,
 	union,
-	sortBy,
+	either,
+	head,
+	last,
 } from 'ramda';
 import DetailView from './DetailView';
 import { withLoading, withErrors, getErrorHandler } from '../../utils/hocUtil';
@@ -274,39 +276,60 @@ const getProtagonists = (item, itemType, allDocuments, allEvents) => {
 	return parsedProtagonists;
 };
 
-const getDocOrEventParser = (getAngle) => pipe(
-	map(({ date, ...item }) => ({
-		...item,
-		date,
-		angle: getAngle(date),
-	})),
-	(items) => groupItemsBy(items, 'angle'),
-	sortBy(prop('date')),
-);
+const getItemDate = pipe(either(prop('documentCreationDate'), prop('eventStartDate')), (x) => new Date(x));
+const getItemTags = either(prop('documentTags'), prop('eventTags'));
 
-const normalizeItems = (keysMap, items, tags) => map((item) => ({
-	...item,
-	date: new Date(item[keysMap.date]),
-	commonTags: item[keysMap.tags].filter((itemTag) => tags.some(({ id }) => id === itemTag.id)),
-	tags: item[keysMap.tags],
-}), items);
-
-const mapAllItemsDates = ({ allDocuments, allEvents, tags }) => {
-	const documentKeysMap = {
-		date: 'documentCreationDate',
-		tags: 'documentTags',
-	};
-	const eventKeysMap = {
-		date: 'eventStartDate',
-		tags: 'eventTags',
-	};
-	const normalizedDocuments = normalizeItems(documentKeysMap, allDocuments, tags);
-	const normalizedEvents = normalizeItems(eventKeysMap, allEvents, tags);
-	const allItems = sortBy(prop('date'), union(normalizedDocuments, normalizedEvents));
+const newNormalizeItem = ({ tags, getAngle }) => (item) => {
+	const itemTags = getItemTags(item);
+	const commonTags = itemTags.filter((itemTag) => tags.some(({ id }) => id === itemTag.id));
+	const date = getItemDate(item);
 	return {
-		allItems,
-		documents: normalizedDocuments,
-		events: normalizedEvents,
+		...item,
+		angle: getAngle(date),
+		tags: itemTags,
+		date,
+		commonTags,
+	};
+};
+
+const newNormalizeItems = ({ tags, getAngle, items }) => pipe(
+	map(newNormalizeItem({ tags, getAngle })),
+	(x) => groupItemsBy(x, 'angle'),
+)(items);
+
+const roundAngle = (angle) => angle - (angle % 4);
+
+const getFirstDate = pipe(head, getItemDate);
+const getLastDate = pipe(last, getItemDate);
+
+const getStartExtreme = ({ allDocuments, allEvents }) => {
+	const firstDocumentDate = getFirstDate(allDocuments);
+	const firstEventDate = getFirstDate(allEvents);
+
+	return firstDocumentDate < firstEventDate ? firstDocumentDate : firstEventDate;
+};
+
+const getEndExtreme = ({ allDocuments, allEvents }) => {
+	const lastDocumentDate = getLastDate(allDocuments);
+	const lastEventDate = getLastDate(allEvents);
+
+	return lastDocumentDate > lastEventDate ? lastDocumentDate : lastEventDate;
+};
+
+const newParseItems = ({ allDocuments, allEvents, tags }) => {
+	const dateExtremes = [
+		getStartExtreme({ allDocuments, allEvents }),
+		getEndExtreme({ allDocuments, allEvents }),
+	];
+	const angleScaleFunction = scaleLinear()
+		.domain(dateExtremes)
+		.range([0, 320]);
+
+	const getAngle = pipe(angleScaleFunction, roundAngle);
+
+	return {
+		events: newNormalizeItems({ tags, getAngle, items: allEvents }),
+		documents: newNormalizeItems({ tags, getAngle, items: allDocuments }),
 	};
 };
 
@@ -327,21 +350,7 @@ const getContextParser = (props, item, tags) => ({ data: { allEvents, allDocumen
 		return;
 	}
 
-	const { allItems, documents, events } = mapAllItemsDates({ allDocuments, allEvents, tags });
-
-	const dateExtremes = [
-		allItems[0].date,
-		allItems[allItems.length - 1].date,
-	];
-	const angleScaleFunction = scaleLinear()
-		.domain(dateExtremes)
-		.range([0, 320]);
-
-	const roundAngle = (angle) => angle - (angle % 4);
-	const getAngle = pipe(angleScaleFunction, roundAngle);
-	const itemParser = getDocOrEventParser(getAngle);
-	const parsedDocuments = itemParser(documents);
-	const parsedEvents = itemParser(events);
+	const { documents, events } = newParseItems({ allDocuments, allEvents, tags });
 	const protagonists = getProtagonists(item, itemType, allDocuments, allEvents);
 
 	setItemCounts({
@@ -349,8 +358,8 @@ const getContextParser = (props, item, tags) => ({ data: { allEvents, allDocumen
 		eventsCount: allEvents.length,
 		protagonistsCount: protagonists.length,
 	});
-	setDocuments(parsedDocuments);
-	setEvents(parsedEvents);
+	setDocuments(documents);
+	setEvents(events);
 	setProtagonists(protagonists);
 
 	stopLoading();
