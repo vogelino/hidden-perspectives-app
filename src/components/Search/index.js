@@ -195,6 +195,7 @@ export default compose(
 		},
 		onEnter: (props) => (evt) => {
 			evt.preventDefault();
+			props.setSearchQuery('');
 			const { history, searchResults, activeResult } = props;
 			const activeResultObj = searchResults.find(propEq('id', activeResult));
 			if (!activeResultObj) return;
