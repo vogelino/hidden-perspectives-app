@@ -236,7 +236,7 @@ const structureEventData = (data) => {
 			{
 				label: 'Protagonists',
 				value: eventStakeholders.map(mapStakeholder),
-				ValueComponent: passValueAsChild(Stakeholder),
+				ValueComponent: passValueAsChild(Stakeholder, 'protagonist'),
 			},
 			{ label: 'Locations', value: eventLocations.map(mapLocation) },
 		].filter(hasValue),
