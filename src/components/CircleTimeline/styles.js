@@ -78,7 +78,9 @@ export const Symbol = styled.span`
 	padding-top: 3px;
 
 	&::before {
-		background-color: ${({ theme }) => theme.primary};
+		background-color: ${({ theme, current }) => (current
+		? theme.primary
+		: theme.commonBorderColor)};
 		content: '';
 		height: 1px;
 		left: 50%;
@@ -126,7 +128,7 @@ export const Document = styled.foreignObject`
 		}
 		${Symbol} {
 			&::before {
-				opacity: 1;
+				background-color: ${({ theme }) => theme.primary};
 			}
 		}
 		${ItemCountIndicator} {
