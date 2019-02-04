@@ -146,6 +146,7 @@ const CircleTimeline = ({
 					setHoveredElement={setHoveredElement}
 					pinnedElement={pinnedElement}
 					setPinnedElement={setPinnedElement}
+					radialLayout
 				/>
 			</BubbleChartContainer>
 		</CircleContainer>

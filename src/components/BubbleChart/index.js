@@ -5,22 +5,9 @@ import {
 	withState,
 	withHandlers,
 } from 'recompose';
-import * as d3 from 'd3';
 import BubbleChart from './BubbleChart';
-import calculateLayout from './calculateLayout';
+import { calcBubbleLayout, calcForceLayout } from './calculateChartLayout';
 import { getWikipediaImagePerUrl } from '../../utils/imageUtil';
-
-const calcBubbleLayout = (data, diameter, padding) => {
-	const bubbleLayout = d3.pack()
-		.size([diameter, diameter])
-		.padding(padding);
-
-	const rootNode = d3
-		.hierarchy(data)
-		.sum((d) => d.value);
-
-	return bubbleLayout(rootNode);
-};
 
 const formatItems = (bubblesData, activeId) => {
 	const formattedData = Object.keys(bubblesData).map((key) => ({
@@ -44,19 +31,20 @@ export default compose(
 		diameter,
 		bubblesPadding,
 		activeId,
+		radialLayout,
 	}) => {
 		const formattedItems = formatItems(items, activeId);
-		const bubbleLayoutItems = calcBubbleLayout(
+		const bubbleLayout = calcBubbleLayout(
 			formattedItems,
 			diameter,
 			bubblesPadding,
 		).children;
 
-		calculateLayout(formattedItems);
+		const forceLayout = calcForceLayout(bubbleLayout, diameter);
 
 		return {
 			items: formattedItems,
-			bubbleLayoutItems,
+			bubbleLayoutItems: radialLayout ? forceLayout : bubbleLayout,
 		};
 	}),
 	withHandlers({
