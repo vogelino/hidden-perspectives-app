@@ -140,9 +140,14 @@ const hasValue = propHasValue('value');
 const hasValues = propHasValue('values');
 const formatIfValidDate = ifElse(identity, getFormattedDate, always(null));
 
-const passValueAsChild = (Component) => {
+const passValueAsChild = (Component, itemType) => {
 	const WrapperComponent = ({ value, ...props }) => (
-		<Component {...props}>{value}</Component>
+		<Component
+			{...props}
+			to={itemType && `/${itemType}/context/${props.id}`}
+		>
+			{value}
+		</Component>
 	);
 	WrapperComponent.propTypes = {
 		value: PropTypes.oneOfType([
@@ -150,6 +155,7 @@ const passValueAsChild = (Component) => {
 			PropTypes.array,
 			PropTypes.shape({}),
 		]).isRequired,
+		id: PropTypes.string.isRequired,
 	};
 
 	return WrapperComponent;
@@ -164,7 +170,7 @@ const structureDocumentData = (data) => {
 			{
 				label: 'Authors',
 				value: data.documentAuthors.map(mapStakeholder),
-				ValueComponent: passValueAsChild(Stakeholder),
+				ValueComponent: passValueAsChild(Stakeholder, 'protagonist'),
 			},
 			{ label: 'Creation date', value: formatIfValidDate(data.documentCreationDate) },
 			{ label: 'Publication date', value: formatIfValidDate(data.documentPublicationDate) },
@@ -177,7 +183,7 @@ const structureDocumentData = (data) => {
 			{
 				label: 'Protagonists',
 				value: data.mentionedStakeholders.map(mapStakeholder),
-				ValueComponent: passValueAsChild(Stakeholder),
+				ValueComponent: passValueAsChild(Stakeholder, 'protagonist'),
 			},
 			{ label: 'Locations', value: data.mentionedLocations.map(mapLocation) },
 		].filter(hasValue),
