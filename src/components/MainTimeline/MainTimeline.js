@@ -56,7 +56,6 @@ const MainTimeline = ({
 			documentsCount={documentsCount}
 			protagonistsCount={protagonistsCount}
 		/>
-		<MainTimelineLegend />
 		{timelineItems.length > 0 && (
 			<TimelineItems
 				timelineItems={parseTimelineItems(timelineItems)}

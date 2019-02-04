@@ -1,23 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Container, Label, Split } from './styles';
+import { Container, Split } from './styles';
 
 const ContainerWithStickyLabel = ({
 	label,
 	children,
 	isYear,
 	setComponentRef,
+	isEmpty,
 }) => (
 	<Container ref={setComponentRef}>
-		<Label
-			isYear={isYear}
-			className={`timeline-item ${isYear ? 'timeline-year' : 'timeline-month'}`}
-			id={isYear ? `timeline-year-${label}` : `timeline-month-${label}`}
-			data-value={label}
-		>
-			<Split hasContent={!isYear}>{!isYear && label}</Split>
-			<Split hasContent={isYear}>{isYear && label}</Split>
-		</Label>
+		<Split isEmpty={isEmpty} hasContent={!isYear}>
+			{isEmpty ? '·' : label}
+		</Split>
 		{children}
 	</Container>
 );
@@ -26,6 +21,7 @@ ContainerWithStickyLabel.propTypes = {
 	label: PropTypes.string,
 	children: PropTypes.node,
 	isYear: PropTypes.bool,
+	isEmpty: PropTypes.bool,
 	setComponentRef: PropTypes.func,
 };
 
@@ -33,6 +29,7 @@ ContainerWithStickyLabel.defaultProps = {
 	label: '—',
 	children: null,
 	isYear: false,
+	isEmpty: true,
 	setComponentRef: () => {},
 };
 

@@ -10,13 +10,12 @@ import BubbleChart from './BubbleChart';
 import { getWikipediaImagePerUrl } from '../../utils/imageUtil';
 
 const calcBubbleLayout = (data, diameter, padding) => {
-	const bubbleLayout = d3.pack()
+	const bubbleLayout = d3
+		.pack()
 		.size([diameter, diameter])
 		.padding(padding);
 
-	const rootNode = d3
-		.hierarchy(data)
-		.sum((d) => d.value);
+	const rootNode = d3.hierarchy(data).sum((d) => d.value);
 
 	return bubbleLayout(rootNode);
 };
@@ -29,7 +28,6 @@ const formatItems = (bubblesData, activeId) => {
 		value: bubblesData[key].length,
 		isActive: key === activeId,
 	}));
-
 	return {
 		name: 'protagonists',
 		children: formattedData,
@@ -45,11 +43,8 @@ export default compose(
 		activeId,
 	}) => {
 		const formattedItems = formatItems(items, activeId);
-		const bubbleLayoutItems = calcBubbleLayout(
-			formattedItems,
-			diameter,
-			bubblesPadding,
-		).children;
+		const bubbleLayoutItems = calcBubbleLayout(formattedItems, diameter, bubblesPadding)
+			.children;
 
 		return {
 			items: formattedItems,

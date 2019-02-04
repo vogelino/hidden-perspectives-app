@@ -22,16 +22,20 @@ const ALL_EVENTS_AND_DOCUMENTS = gql`
 			id
 			eventTitle
 			eventStartDate
+			eventDescription
 			eventStakeholders {
 				id
+				stakeholderFullName
 			}
 		}
 		allDocuments(orderBy: documentCreationDate_ASC) {
 			id
 			documentTitle
+			documentDescription
 			documentCreationDate
 			mentionedStakeholders {
 				id
+				stakeholderFullName
 			}
 		}
 	}
