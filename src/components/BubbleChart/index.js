@@ -39,6 +39,7 @@ const formatItems = (bubblesData, activeId) => {
 export default compose(
 	withState('images', 'setImages', []),
 	withProps(({
+		item,
 		items,
 		diameter,
 		bubblesPadding,
@@ -54,6 +55,7 @@ export default compose(
 		return {
 			items: formattedItems,
 			bubbleLayoutItems,
+			activeElemenId: item ? item.id : '',
 		};
 	}),
 	withHandlers({
@@ -81,7 +83,7 @@ export default compose(
 				});
 
 				Promise.all(loadAllImages).then((images) => {
-					setImages(images);
+					setImages(images.filter(({ url }) => !!url));
 				});
 			}
 		},

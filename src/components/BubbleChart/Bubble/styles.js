@@ -6,6 +6,21 @@ export const Container = styled.g`
 	cursor: pointer;
 `;
 
+const getFilterUrl = ({ isHovered, isPinned, isActive }) => {
+	if (isHovered || isPinned) return '#image-color-filter-hover';
+	if (isActive) return 'none';
+	return '#image-color-filter';
+};
+
+export const BubbleActiveCircle = styled.circle.attrs({
+	style: ({ r }) => ({
+		height: `${r * 2}px`,
+	}),
+})`
+	stroke-width: 4px;
+	stroke: ${({ theme }) => theme.primary};
+`;
+
 export const BubbleCircle = styled.circle.attrs({
 	style: ({ r }) => ({
 		height: `${r * 2}px`,
@@ -23,12 +38,18 @@ export const BubbleCircle = styled.circle.attrs({
 		return `fill: ${colorFill};`;
 	}}
 	opacity: ${({ isLoading }) => (isLoading ? 0 : 1)};
-	filter: url(${({ isHovered, isPinned }) => ((isHovered || isPinned) ? '#image-color-filter-hover' : '#image-color-filter')});
+	filter: url(${getFilterUrl});
 	font-weight: bold;
 `;
 
 export const BubbleText = styled(Text)`
-	${({ hasImage, isHovered, isPinned }) => hasImage && (isHovered || isPinned) && `
+	${({
+		hasImage,
+		isHovered,
+		isPinned,
+		isActive,
+	}) => hasImage && (isHovered || isPinned || isActive) && `
 		opacity: 0;
 	`}
+	user-select: none;
 `;

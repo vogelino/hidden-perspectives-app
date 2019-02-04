@@ -2,17 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import DetailView from '../../components/DetailView';
 import Header from '../../components/Header';
-import NodeTitle from '../../components/NodeTitle';
 import NodeHeader from '../../components/NodeHeader';
 
 const EventPage = ({ match }) => (
 	<div className="EventPage">
-		<Header>
-			<NodeTitle
-				id={match.params.id}
-				itemType="event"
-			/>
-		</Header>
+		<Header />
 		<NodeHeader id={match.params.id} itemType="event" />
 		<DetailView id={match.params.id} itemType="event" />
 	</div>

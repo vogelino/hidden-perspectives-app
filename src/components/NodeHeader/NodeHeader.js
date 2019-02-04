@@ -1,11 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import NodeTitle from '../NodeTitle';
 import {
 	Container,
 	BackButton,
 	Tabs,
 	Tab,
 	EditButton,
+	NodeTitleContainer,
+	TabsContainer,
 } from './styles';
 
 const NodeHeader = ({
@@ -13,19 +16,28 @@ const NodeHeader = ({
 	editUrl,
 	editText,
 	isStatic,
+	id,
+	itemType,
 }) => (
 	<Container isStatic={isStatic}>
-		<BackButton to="/">Back to Timeline</BackButton>
-		<Tabs>
-			{tabs.map(({ label, url }) => (
-				<Tab key={label} to={url}>{label}</Tab>
-			))}
-		</Tabs>
-		<EditButton to={editUrl}>{editText}</EditButton>
+		<NodeTitleContainer>
+			<BackButton to="/">←</BackButton>
+			<NodeTitle id={id} itemType={itemType} />
+			<EditButton to={editUrl}>{editText}</EditButton>
+		</NodeTitleContainer>
+		<TabsContainer>
+			<Tabs>
+				{tabs.map(({ label, url }) => (
+					<Tab key={label} to={url}>{label}</Tab>
+				))}
+			</Tabs>
+		</TabsContainer>
 	</Container>
 );
 
 NodeHeader.propTypes = {
+	id: PropTypes.string.isRequired,
+	itemType: PropTypes.oneOf(['document', 'event', 'protagonist', 'location']).isRequired,
 	editUrl: PropTypes.string,
 	editText: PropTypes.string,
 	tabs: PropTypes.arrayOf(PropTypes.shape({
@@ -37,7 +49,7 @@ NodeHeader.propTypes = {
 
 NodeHeader.defaultProps = {
 	editUrl: undefined,
-	editText: 'Edit metadata',
+	editText: '✎',
 	tabs: [],
 	isStatic: false,
 };

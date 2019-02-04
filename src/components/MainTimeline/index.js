@@ -281,6 +281,8 @@ export default compose(
 			if (!initialProtagonistsFetched) {
 				setInitialProtagonistsFetched(true);
 				getProtagonistsInViewport(timelineContainer, this.props);
+
+				document.getElementById('timeline-year-1993').scrollIntoView();
 			}
 		},
 		shouldComponentUpdate(nextProps) {

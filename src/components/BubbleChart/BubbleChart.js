@@ -45,6 +45,7 @@ const Bubbles = ({
 	pinnedElement,
 	images,
 	setPinnedElement,
+	activeElementId,
 	...props
 }) => bubbleLayoutItems.map((bubbleData) => {
 	const hovered = isHovered(bubbleData.data, hoveredElement, 'stakeholder');
@@ -54,6 +55,7 @@ const Bubbles = ({
 			key={`bubble-link-${bubbleData.data.name}`}
 			hovered={hovered}
 			pinned={!hoveredElement && pinned}
+			isActive={activeElementId === bubbleData.data.id}
 			image={images.find(({ id }) => id === bubbleData.data.id)}
 			clickHandler={(pinEl) => {
 				if (pinnedElement && pinnedElement.id === pinEl.id) return setPinnedElement(null);
@@ -65,6 +67,41 @@ const Bubbles = ({
 	);
 });
 
+const GradientMapFilter = ({
+	id,
+	red,
+	green,
+	blue,
+}) => (
+	<filter id={id}>
+		<feColorMatrix
+			type="matrix"
+			values="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 0 0 0 1 0"
+			in="SourceGraphic"
+			result="colormatrix"
+		/>
+		<feComponentTransfer in="colormatrix" result="componentTransfer">
+			<feFuncR type="table" tableValues={red} />
+			<feFuncG type="table" tableValues={green} />
+			<feFuncB type="table" tableValues={blue} />
+			<feFuncA type="table" tableValues="0 1" />
+		</feComponentTransfer>
+		<feBlend
+			mode="normal"
+			in="componentTransfer"
+			in2="SourceGraphic"
+			result="blend"
+		/>
+	</filter>
+);
+
+GradientMapFilter.propTypes = {
+	id: PropTypes.string.isRequired,
+	red: PropTypes.string.isRequired,
+	green: PropTypes.string.isRequired,
+	blue: PropTypes.string.isRequired,
+};
+
 const BubbleChart = ({
 	bubbleLayoutItems,
 	isLoading,
@@ -73,6 +110,7 @@ const BubbleChart = ({
 	setHoveredElement,
 	pinnedElement,
 	setPinnedElement,
+	activeElementId,
 	images,
 }) => (
 	<BubbleChartContainer diameter={diameter}>
@@ -82,55 +120,18 @@ const BubbleChart = ({
 			preserveAspectRatio="xMidYMid meet"
 		>
 			<defs>
-				<filter id="image-color-filter">
-					<feColorMatrix
-						type="matrix"
-						values="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 0 0 0 1 0"
-						in="SourceGraphic"
-						result="colormatrix"
-					/>
-					<feComponentTransfer in="colormatrix" result="componentTransfer">
-						<feFuncR type="table" tableValues="0.31 0.92" />
-						<feFuncG type="table" tableValues="0.31 0.92" />
-						<feFuncB type="table" tableValues="0.31 0.92" />
-						<feFuncA type="table" tableValues="0 1" />
-					</feComponentTransfer>
-					<feBlend
-						mode="normal"
-						in="componentTransfer"
-						in2="SourceGraphic"
-						result="blend"
-					/>
-				</filter>
-				<filter
+				<GradientMapFilter
+					id="image-color-filter"
+					red="0.3 0.87"
+					green="0.34 0.89"
+					blue="0.38 0.9"
+				/>
+				<GradientMapFilter
 					id="image-color-filter-hover"
-					x="-10%"
-					y="-10%"
-					width="120%"
-					height="120%"
-					filterUnits="objectBoundingBox"
-					primitiveUnits="userSpaceOnUse"
-					colorInterpolationFilters="sRGB"
-				>
-					<feColorMatrix
-						type="matrix"
-						values="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 0 0 0 1 0"
-						in="SourceGraphic"
-						result="colormatrix"
-					/>
-					<feComponentTransfer in="colormatrix" result="componentTransfer">
-						<feFuncR type="table" tableValues="0.57 0.99" />
-						<feFuncG type="table" tableValues="0.31 0.87" />
-						<feFuncB type="table" tableValues="0 0.64" />
-						<feFuncA type="table" tableValues="0 1" />
-					</feComponentTransfer>
-					<feBlend
-						mode="normal"
-						in="componentTransfer"
-						in2="SourceGraphic"
-						result="blend"
-					/>
-				</filter>
+					red="0.39 0.8 1"
+					green="0.15 0.57 0.93"
+					blue="0.06 0.33 0.78"
+				/>
 
 				{images.map(({
 					id,
@@ -164,6 +165,7 @@ const BubbleChart = ({
 					? <Text x={diameter / 2} y={diameter / 2}>No protagonists</Text>
 					: (
 						<Bubbles
+							activeElementId={activeElementId}
 							bubbleLayoutItems={bubbleLayoutItems}
 							isLoading={isLoading}
 							hoveredElement={hoveredElement}
@@ -192,6 +194,7 @@ BubbleChart.propTypes = {
 	diameter: PropTypes.number,
 	setHoveredElement: PropTypes.func,
 	setPinnedElement: PropTypes.func,
+	activeElementId: PropTypes.string,
 	bubbleLayoutItems: PropTypes.arrayOf(
 		PropTypes.shape({
 			id: PropTypes.string,
@@ -237,6 +240,7 @@ BubbleChart.defaultProps = {
 	images: [],
 	hoveredElement: null,
 	pinnedElement: null,
+	activeElementId: '',
 	setHoveredElement: () => {},
 	setPinnedElement: () => {},
 };

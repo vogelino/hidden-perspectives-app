@@ -14,12 +14,14 @@ import LocationPage from '../../pages/location';
 import LocationMetadataPage from '../../pages/locationMetadata';
 import TranscriptPage from '../../pages/transcript';
 import OriginalPage from '../../pages/original';
+import { GlobalStyles } from './styles';
 
 const App = () => (
 	<Router>
 		<Theme>
 			<div className="App">
 				<Head />
+				<GlobalStyles />
 				<Route exact path="/" component={Home} />
 				<Route exact path="/document/context/:id" component={DocumentPage} />
 				<Route exact path="/document/transcript/:id" component={TranscriptPage} />
