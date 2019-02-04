@@ -11,8 +11,6 @@ import {
 	map,
 	prop,
 	pipe,
-	has,
-	flatten,
 	union,
 	either,
 	head,
@@ -256,24 +254,19 @@ const getQuery = (item, itemType) => {
 const getProtagonists = (item, itemType, allDocuments, allEvents) => {
 	const items = itemType === 'stakeholder' || itemType === 'location' ? union(allDocuments, allEvents) : [item];
 
-	const protagonistsFromAllItems = items.map((currentItem) => {
-		const isEvent = has('eventStakeholders');
-		const stakeholdersFieldName = isEvent(currentItem) ? 'eventStakeholders' : 'mentionedStakeholders';
-		return currentItem[stakeholdersFieldName];
-	});
+	const protagonists = items.reduce((allProtagonists, currentItem) => {
+		const stakeholdersValue = either(prop('eventStakeholders'), prop('mentionedStakeholders'))(currentItem);
+		const stakeholders = stakeholdersValue.reduce((acc, current) => ({
+			...acc,
+			[current.id]: (acc[current.id] || []).concat(current),
+		}), allProtagonists);
+		return {
+			...allProtagonists,
+			...stakeholders,
+		};
+	}, {});
 
-	const flattenedProtagonists = flatten(protagonistsFromAllItems);
-	const clusterProtagonists = (data) => data
-		.filter((d) => d)
-		.reduce((acc, current) => {
-			const { id } = current;
-			return Object.assign(acc, {
-				[id]: (acc[id] || []).concat(current),
-			});
-		}, {});
-	const parsedProtagonists = clusterProtagonists(flattenedProtagonists);
-
-	return parsedProtagonists;
+	return protagonists;
 };
 
 const getItemDate = pipe(either(prop('documentCreationDate'), prop('eventStartDate')), (x) => new Date(x));
