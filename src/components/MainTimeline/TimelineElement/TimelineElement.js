@@ -5,6 +5,7 @@ import {
 	Container,
 	EventTitleContainer,
 	EventTitle,
+	Symbol,
 } from './styles';
 
 const TimelineElement = ({
@@ -31,6 +32,7 @@ const TimelineElement = ({
 			onMouseLeave={() => hoverHandler(null)}
 			onClick={() => clickHandler({ id, itemType, ...itemProps })}
 		>
+			<Symbol>{itemType === 'document' ? '▲' : '●'}</Symbol>
 			<Tooltip
 				id={id}
 				itemType={itemType}

@@ -64,6 +64,5 @@ export const parseItemsToDates = (initialYear = 1971, nodes) => {
 		placeNode();
 	});
 
-	console.log(years);
 	return years;
 };

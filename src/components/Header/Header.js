@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import UserInfo from './UserInfo';
+import Search from '../Search';
 import {
 	HeaderContainer,
 	UserInfoContainer,
@@ -10,11 +11,10 @@ import {
 
 const Header = ({
 	isAuthenticated,
-	children,
 }) => (
 	<HeaderContainer>
 		<Logo to="/">Hidden Perspectives</Logo>
-		{children}
+		<Search />
 		{!isAuthenticated() ? (
 			<UserInfoContainer>
 				<LogButton to="/login" exact>
@@ -27,12 +27,10 @@ const Header = ({
 
 Header.propTypes = {
 	isAuthenticated: PropTypes.func,
-	children: PropTypes.node,
 };
 
 Header.defaultProps = {
 	isAuthenticated: () => false,
-	children: null,
 };
 
 export default Header;

@@ -110,7 +110,7 @@ class TimelineItemsClass extends React.Component {
 			<List
 				height={1200}
 				overscanRowCount={0}
-				rowHeight={(index) => estimatedMonthHeight(this.props.timelineItems[index.index])}
+				rowHeight={({ index }) => estimatedMonthHeight(this.props.timelineItems[index])}
 				rowRenderer={this.rowRenderer}
 				onRowsRendered={this.updateStakeholders}
 				rowCount={this.props.timelineItems.length}

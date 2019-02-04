@@ -4345,6 +4345,7 @@ d3-force@1:
 d3-force@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/d3-force/-/d3-force-2.0.0.tgz#b0f649a9f6507cfe2721dbdca7a8cb1d7ad58984"
+  integrity sha512-aDpHOuvG5tIgP/a3U0ZyZ14Z3mdj3dwOIhuLSWiA/sMRqvjtc4XTNGFTLPVWiR7qbMFsDiG5roFkoq7S+uKAYA==
   dependencies:
     d3-dispatch "1"
     d3-quadtree "1"
@@ -8442,6 +8443,7 @@ lodash.templatesettings@^4.0.0:
 lodash.throttle@^4.1.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/lodash.throttle/-/lodash.throttle-4.1.1.tgz#c23e91b710242ac70c37f1e1cda9274cc39bf2f4"
+  integrity sha1-wj6RtxAkKscMN/HhzaknTMOb8vQ=
 
 lodash.uniq@^4.5.0:
   version "4.5.0"
@@ -10794,6 +10796,11 @@ react-app-rewired@^1.2.0, react-app-rewired@^1.6.2:
   dependencies:
     cross-spawn "^5.1.0"
     dotenv "^4.0.0"
+
+react-bubble-chart@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/react-bubble-chart/-/react-bubble-chart-0.4.0.tgz#0028b43aae1d26c7da27de9ddd7d4eb927fd5a10"
+  integrity sha1-ACi0Oq4dJsfaJ96d3X1OuSf9WhA=
 
 react-clientside-effect@^1.2.0:
   version "1.2.0"

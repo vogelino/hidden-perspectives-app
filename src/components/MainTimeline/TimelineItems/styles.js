@@ -1,6 +1,4 @@
 import styled from 'styled-components';
-import { EventTitleContainer } from '../TimelineElement/styles';
-import { yearLabelHeight } from './utils';
 
 export const Event = styled.div`
 	padding: 0;
@@ -13,7 +11,6 @@ export const Event = styled.div`
 export const EventContainer = styled.div``;
 
 export const Year = styled.div`
-	height: ${yearLabelHeight}px;
 	margin: 0 auto;
 	text-align: center;
 	line-height: 48px;
@@ -44,13 +41,6 @@ const Column = styled.div`
 
 export const Events = styled(Column)`
 	position: static;
-
-	${EventTitleContainer}:after {
-		content: '●';
-		right: auto;
-		left: 0;
-		transform: translate(50%, -50%);
-	}
 `;
 
 export const Documents = styled(Column)`

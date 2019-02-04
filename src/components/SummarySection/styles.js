@@ -1,10 +1,11 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-	flex: 0 0 32rem;
-	height: calc(100vh - 8rem);
+	flex: 0 0 28rem;
+	height: calc(100vh - 4.5rem);
 	background: white;
 	position: relative;
+	z-index: 1;
 `;
 
 export const LoadingContainer = styled.div`
@@ -21,10 +22,10 @@ export const LoadingContainer = styled.div`
 
 export const Items = styled.div`
 	width: 100%;
-	height: calc(100vh - 8rem);
+	height: calc(100vh - 4.5rem);
 	position: relative;
 	overflow-x: hidden;
 	overflow-y: auto;
-	padding: 2rem;
+	padding: 9.8rem 2rem 2rem;
 	scroll-behavior: smooth;
 `;
