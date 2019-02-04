@@ -34,17 +34,16 @@ export default compose(
 		radialLayout,
 	}) => {
 		const formattedItems = formatItems(items, activeId);
+		const bubbleLayoutDiameter = radialLayout ? diameter * 0.85 : diameter;
 		const bubbleLayout = calcBubbleLayout(
 			formattedItems,
-			diameter,
+			bubbleLayoutDiameter,
 			bubblesPadding,
 		).children;
 
-		const forceLayout = calcForceLayout(bubbleLayout, diameter);
-
 		return {
 			items: formattedItems,
-			bubbleLayoutItems: radialLayout ? forceLayout : bubbleLayout,
+			bubbleLayoutItems: radialLayout ? calcForceLayout(bubbleLayout, diameter) : bubbleLayout,
 		};
 	}),
 	withHandlers({
