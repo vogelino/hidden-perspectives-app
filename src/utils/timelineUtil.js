@@ -81,12 +81,18 @@ export const isFullyInViewport = (element) => {
 
 const isDocumentHovered = (item, hoveredElement) => {
 	if (hoveredElement.itemType === 'event') return false;
+	if (hoveredElement.itemType === 'tag') {
+		return !!item.commonTags.find((tag) => tag.id === hoveredElement.id);
+	}
 	return !!item
 		.mentionedStakeholders.find(({ id }) => id === hoveredElement.id);
 };
 
 const isEventHovered = (item, hoveredElement) => {
 	if (hoveredElement.itemType === 'document') return false;
+	if (hoveredElement.itemType === 'tag') {
+		return !!item.commonTags.find((tag) => tag.id === hoveredElement.id);
+	}
 	return !!item
 		.eventStakeholders.find(({ id }) => id === hoveredElement.id);
 };

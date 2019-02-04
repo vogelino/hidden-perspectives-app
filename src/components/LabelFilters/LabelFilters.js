@@ -29,7 +29,7 @@ const LabelFilters = ({
 	tags,
 	filteredTags,
 	hoveredElement,
-	pinnedElement,
+	setHoveredElement,
 	...otherProps
 }) => (
 	<Container>
@@ -41,6 +41,8 @@ const LabelFilters = ({
 				key={id}
 				hovered={hoveredElement && elementHasTag(hoveredElement, id)}
 				isActive={filteredTags.find((filteredTagId) => filteredTagId === id)}
+				onMouseEnter={() => setHoveredElement({ id, itemType: 'tag' })}
+				onMouseLeave={() => setHoveredElement(null)}
 				onClick={getClickHandler({ ...otherProps, filteredTags, id })}
 			>
 				{name}
@@ -56,17 +58,24 @@ LabelFilters.propTypes = {
 	})).isRequired,
 	filteredTags: PropTypes.arrayOf(PropTypes.string).isRequired,
 	setFilteredTags: PropTypes.func.isRequired,
-	hoveredElement: PropTypes.shape({
-		tags: PropTypes.arrayOf(PropTypes.string),
-	}),
-	pinnedElement: PropTypes.shape({
-		tags: PropTypes.arrayOf(PropTypes.string),
-	}),
+	hoveredElement: PropTypes.oneOfType([
+		PropTypes.shape({
+			id: PropTypes.string.isRequired,
+			itemType: PropTypes.string.isRequired,
+		}),
+		PropTypes.arrayOf(
+			PropTypes.shape({
+				id: PropTypes.string.isRequired,
+				itemType: PropTypes.string.isRequired,
+			}),
+		),
+	]),
+	setHoveredElement: PropTypes.func,
 };
 
 LabelFilters.defaultProps = {
 	hoveredElement: null,
-	pinnedElement: null,
+	setHoveredElement: () => {},
 };
 
 export default LabelFilters;
