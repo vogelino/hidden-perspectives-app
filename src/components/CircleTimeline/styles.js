@@ -129,6 +129,7 @@ export const Document = styled.foreignObject`
 		${Symbol} {
 			&::before {
 				background-color: ${({ theme }) => theme.primary};
+				opacity: 1;
 			}
 		}
 		${ItemCountIndicator} {
