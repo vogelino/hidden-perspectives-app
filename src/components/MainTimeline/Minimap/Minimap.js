@@ -14,11 +14,6 @@ import {
 	YearName,
 } from './styles';
 
-const scrollToYear = (year) => {
-	const yearElement = document.getElementById(`timeline-year-${year}`);
-	yearElement.scrollIntoView();
-};
-
 const OptimizedYears = lifecycle({
 	shouldComponentUpdate({ items, activeYear }) {
 		return items.length !== this.props.items.length
@@ -39,7 +34,6 @@ const OptimizedYears = lifecycle({
 					density={density}
 					height={yearHeight}
 					isActive={activeYear === year}
-					onClick={() => scrollToYear(year)}
 				>
 					<YearTooltip>
 						<YearName>{year}</YearName>
