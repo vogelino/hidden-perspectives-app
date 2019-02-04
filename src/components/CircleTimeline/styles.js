@@ -54,7 +54,7 @@ export const DateLabel = styled.span`
 	display: flex;
 	left: 50%;
 	font-size: .6rem;
-	opacity: ${({ active }) => (active ? 1 : 0)};
+	opacity: ${({ active, current }) => (active || current ? 1 : 0)};
 	pointer-events: none;
 	position: absolute;
 	top: 50%;
@@ -82,7 +82,7 @@ export const Symbol = styled.span`
 		content: '';
 		height: 1px;
 		left: 50%;
-		opacity: ${({ active }) => (active ? 1 : 0)};
+		opacity: ${({ active, current }) => (active || current ? 1 : 0)};
 		position: absolute;
 		top: 50%;
 		transform: ${({ rotation }) => `rotate(${rotation - 90}deg)`};

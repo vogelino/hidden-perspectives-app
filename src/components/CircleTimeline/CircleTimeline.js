@@ -142,7 +142,7 @@ const CircleTimeline = ({
 					);
 					const labelIsActive = angle === 0 || angle === 320;
 					const isCurrentElement = group.find(({ id }) => id === item.id);
-					const hasMultipleItems = group.length > 1;
+					const showGroupIndicator = group.length > 1;
 					const docSize = 14;
 
 					return (
@@ -166,17 +166,20 @@ const CircleTimeline = ({
 							<Symbol
 								rotation={angle}
 								labelMargin={LABEL_MARGIN + (RADIUS_OUTER - RADIUS_INNER)}
+								active={labelIsActive}
+								current={isCurrentElement}
 							>
 								{'▲'}
 							</Symbol>
 							<DateLabel
 								position={labelPosition}
 								active={labelIsActive}
+								current={isCurrentElement}
 							>
 								{formatHumanDate(group[0].date)}
 							</DateLabel>
 							{
-								hasMultipleItems && (
+								showGroupIndicator && (
 									<ItemCountIndicator
 										rotation={angle}
 										itemCountScale={group.length / maxGroupLength}
@@ -194,7 +197,7 @@ const CircleTimeline = ({
 					const labelPosition = getDateLabelPosition(x, y, RADIUS_OUTER - LABEL_MARGIN, angle);
 					const labelIsActive = angle === 0 || angle === 320;
 					const isCurrentElement = group.find(({ id }) => id === item.id);
-					const hasMultipleItems = group.length > 1;
+					const showGroupIndicator = group.length > 1;
 					const docSize = 14;
 
 					return (
@@ -218,17 +221,20 @@ const CircleTimeline = ({
 							<Symbol
 								rotation={angle}
 								labelMargin={LABEL_MARGIN}
+								active={labelIsActive}
+								current={isCurrentElement}
 							>
 								{'●'}
 							</Symbol>
 							<DateLabel
 								position={labelPosition}
 								active={labelIsActive}
+								current={isCurrentElement}
 							>
 								{formatHumanDate(group[0].date)}
 							</DateLabel>
 							{
-								hasMultipleItems && (
+								showGroupIndicator && (
 									<ItemCountIndicator
 										rotation={angle}
 										itemCountScale={group.length / maxGroupLength}
