@@ -101,12 +101,12 @@ export const ItemCountIndicator = styled.span`
 	left: 100%;
 	position: absolute;
     top: 50%;
-	transform: ${({ rotation, inner }) => `
+	transform: ${({ rotation }) => `
 		translateY(-50%)
-		rotate(${inner ? rotation + 90 : rotation - 90}deg)
+		rotate(${rotation + 90}deg)
 	`};
 	transform-origin: -7px;
-	width: ${({ itemCountScale }) => `${30 * itemCountScale}px`};
+	width: ${({ itemCountScale }) => `${20 * itemCountScale}px`};
 	z-index: -2;
 `;
 
