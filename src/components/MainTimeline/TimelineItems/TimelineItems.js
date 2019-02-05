@@ -11,11 +11,12 @@ import {
 import { estimatedMonthHeight } from './utils';
 import ContainerWithStickyLabel from '../ContainerWithStickyLabel';
 
-class TimelineItemsClass extends React.Component {
+class TimelineItemsClass extends React.PureComponent {
 	constructor(props) {
 		super(props);
 
-		this.updateStakeholders = throttle(this.updateStakeholders, 200);
+		this.updateStakeholders = throttle(this.updateStakeholders.bind(this), 200);
+		this.handleScroll = throttle(this.handleScroll.bind(this), 100);
 		this.rowRenderer = this.rowRenderer.bind(this);
 	}
 
@@ -43,7 +44,16 @@ class TimelineItemsClass extends React.Component {
 				});
 			});
 		});
-	};
+	}
+
+	handleScroll() {
+		const monthBlocks = document.getElementsByClassName('timeline-month');
+		const indexInTheMiddle = Math.round(monthBlocks.length / 2) - 1;
+		const monthInTheMiddle = monthBlocks[indexInTheMiddle];
+		const year = monthInTheMiddle.getAttribute('data-year');
+		if (this.props.activeYear === year) return;
+		this.props.setActiveYear(year);
+	}
 
 	rowRenderer({ index, key, style }) {
 		const {
@@ -51,7 +61,7 @@ class TimelineItemsClass extends React.Component {
 		} = this.props;
 		const data = this.props.timelineItems[index];
 		if (!data) return null;
-		const { days, dateUnitIndex, year } = data;
+		const { days, dateUnitIndex } = data;
 		const monthLabel = monthsLabels[dateUnitIndex - 1];
 
 		const mapTimelineItem = (itemType) => (item) => (
@@ -72,13 +82,10 @@ class TimelineItemsClass extends React.Component {
 			/>
 		);
 
+		const year = data.key.split('-')[0];
 		return (
-			<div style={style} key={key}>
-				{dateUnitIndex === 1 && (
-					<Year>
-						{data.key.split('-')[0]}
-					</Year>
-				)}
+			<div style={style} key={key} className="timeline-month" data-year={year}>
+				{dateUnitIndex === 1 && <Year>{year}</Year>}
 				<ContainerWithStickyLabel
 					isEmpty={days.length === 0}
 					label={monthLabel}
@@ -111,9 +118,11 @@ class TimelineItemsClass extends React.Component {
 				height={1200}
 				overscanRowCount={0}
 				rowHeight={({ index }) => estimatedMonthHeight(this.props.timelineItems[index])}
+				onScroll={this.handleScroll}
 				rowRenderer={this.rowRenderer}
 				onRowsRendered={this.updateStakeholders}
 				rowCount={this.props.timelineItems.length}
+				scrollToIndex={this.props.activeRowIndex}
 				width={window.innerWidth - 384}
 			/>
 		);
@@ -173,6 +182,10 @@ TimelineItemsClass.propTypes = {
 		),
 	]),
 	setPinnedElement: PropTypes.func,
+	setActiveRowIndex: PropTypes.func,
+	activeRowIndex: PropTypes.number,
+	activeYear: PropTypes.string,
+	setActiveYear: PropTypes.func,
 };
 
 TimelineItemsClass.defaultProps = {
@@ -181,6 +194,10 @@ TimelineItemsClass.defaultProps = {
 	timelineItems: [],
 	setHoveredElement: () => {},
 	setPinnedElement: () => {},
+	setActiveRowIndex: () => {},
+	activeRowIndex: 300,
+	activeYear: '1993',
+	setActiveYear: () => {},
 };
 
 export default TimelineItemsClass;

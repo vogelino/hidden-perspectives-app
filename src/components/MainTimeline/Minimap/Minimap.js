@@ -19,7 +19,7 @@ const OptimizedYears = lifecycle({
 		return items.length !== this.props.items.length
 			|| activeYear !== this.props.activeYear;
 	},
-})(({ items, activeYear }) => {
+})(({ items, activeYear, onClick }) => {
 	const yearHeight = (100 / items.length);
 	return (
 		<YearsContainer>
@@ -34,6 +34,7 @@ const OptimizedYears = lifecycle({
 					density={density}
 					height={yearHeight}
 					isActive={activeYear === year}
+					onClick={() => onClick(year)}
 				>
 					<YearTooltip>
 						<YearName>{year}</YearName>
@@ -63,11 +64,12 @@ const Minimap = ({
 	items,
 	isLoading,
 	activeYear,
+	onClick,
 }) => (
 	<OuterContainer>
 		<InnerContainer>
 			<Content>
-				<OptimizedYears items={items} activeYear={activeYear} />
+				<OptimizedYears items={items} activeYear={activeYear} onClick={onClick} />
 			</Content>
 			{!isLoading && (
 				<OptimizedDates years={getYears(items)} items={items} />
@@ -83,12 +85,14 @@ Minimap.propTypes = {
 	})),
 	isLoading: PropTypes.bool,
 	activeYear: PropTypes.string,
+	onClick: PropTypes.func,
 };
 
 Minimap.defaultProps = {
 	isLoading: false,
 	items: [],
 	activeYear: undefined,
+	onClick: () => {},
 };
 
 export default Minimap;

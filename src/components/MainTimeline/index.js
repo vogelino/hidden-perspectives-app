@@ -231,6 +231,8 @@ export default compose(
 	withState('initialProtagonistsFetched', 'setInitialProtagonistsFetched', false),
 	withState('hoveredElement', 'setHoveredElement', null),
 	withState('pinnedElement', 'setPinnedElement', null),
+	withState('activeRowIndex', 'setActiveRowIndex', 300),
+	withState('activeYear', 'setActiveYear', '1993'),
 	withHandlers({ onRef }),
 	lifecycle({
 		componentDidMount() {
@@ -264,6 +266,8 @@ export default compose(
 				|| (nextProps.eventsCount !== this.props.eventsCount)
 				|| (nextProps.documentsCount !== this.props.documentsCount)
 				|| (nextProps.protagonistsCount !== this.props.protagonistsCount)
+				|| (nextProps.activeRowIndex !== this.props.activeRowIndex)
+				|| (nextProps.activeYear !== this.props.activeYear)
 				|| (nextProps.hoveredElement !== this.props.hoveredElement);
 		},
 	}),

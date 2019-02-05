@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { findIndex } from 'ramda';
 import { Container } from './styles';
 import Minimap from './Minimap';
 import { LoadingContainer } from '../LoadingIndicator/styles';
@@ -32,41 +33,57 @@ const MainTimeline = ({
 	eventsCount,
 	documentsCount,
 	protagonistsCount,
-}) => (
-	<Container id="mainTimeline" ref={onRef}>
-		<LoadingContainer isLoading={isLoading}>
-			<LoadingIndicator />
-		</LoadingContainer>
-		{errors.map((error) => error)}
-		<Minimap
-			isLoading={isLoading}
-			items={minimapItems}
-		/>
-		<Protagonists
-			isLoading={fetchingProtagonists}
-			items={bubbleChartItems}
-			hoveredElement={hoveredElement}
-			setHoveredElement={setHoveredElement}
-			pinnedElement={pinnedElement}
-			setPinnedElement={setPinnedElement}
-		/>
-		<MainTimelineLegend
-			isLoading={isLoading}
-			eventsCount={eventsCount}
-			documentsCount={documentsCount}
-			protagonistsCount={protagonistsCount}
-		/>
-		{timelineItems.length > 0 && (
-			<TimelineItems
-				timelineItems={parseTimelineItems(timelineItems)}
+	activeRowIndex,
+	setActiveRowIndex,
+	activeYear,
+	setActiveYear,
+}) => {
+	const items = parseTimelineItems(timelineItems);
+	return (
+		<Container id="mainTimeline" ref={onRef}>
+			<LoadingContainer isLoading={isLoading}>
+				<LoadingIndicator />
+			</LoadingContainer>
+			{errors.map((error) => error)}
+			<Minimap
+				isLoading={isLoading}
+				items={minimapItems}
+				activeYear={activeYear}
+				activeRowIndex={activeRowIndex}
+				onClick={(year) => {
+					const indexOfFirstItem = findIndex(({ key }) => key === `${year}-1`, items);
+					setActiveRowIndex(indexOfFirstItem);
+					setActiveYear(year);
+				}}
+			/>
+			<Protagonists
+				isLoading={fetchingProtagonists}
+				items={bubbleChartItems}
 				hoveredElement={hoveredElement}
 				setHoveredElement={setHoveredElement}
 				pinnedElement={pinnedElement}
 				setPinnedElement={setPinnedElement}
 			/>
-		)}
-	</Container>
-);
+			<MainTimelineLegend
+				isLoading={isLoading}
+				eventsCount={eventsCount}
+				documentsCount={documentsCount}
+				protagonistsCount={protagonistsCount}
+			/>
+			{items.length > 0 && (
+				<TimelineItems
+					timelineItems={items}
+					hoveredElement={hoveredElement}
+					setHoveredElement={setHoveredElement}
+					pinnedElement={pinnedElement}
+					setPinnedElement={setPinnedElement}
+					activeRowIndex={activeRowIndex}
+					setActiveYear={setActiveYear}
+				/>
+			)}
+		</Container>
+	);
+};
 
 MainTimeline.propTypes = {
 	timelineItems: TimelineItems.propTypes.timelineItems,
@@ -86,6 +103,10 @@ MainTimeline.propTypes = {
 	isLoading: PropTypes.bool,
 	fetchingProtagonists: PropTypes.bool,
 	onRef: PropTypes.func,
+	setActiveRowIndex: PropTypes.func,
+	activeRowIndex: PropTypes.number,
+	setActiveYear: PropTypes.func,
+	activeYear: PropTypes.string,
 };
 
 MainTimeline.defaultProps = {
@@ -100,6 +121,10 @@ MainTimeline.defaultProps = {
 	isLoading: true,
 	fetchingProtagonists: true,
 	onRef: () => {},
+	setActiveRowIndex: () => {},
+	setActiveYear: () => {},
+	activeRowIndex: 300,
+	activeYear: '1993',
 };
 
 export default MainTimeline;
