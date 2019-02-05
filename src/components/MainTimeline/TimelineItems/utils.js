@@ -3,10 +3,14 @@ export const dayNodePadding = 16;
 export const monthLabelHeight = 36;
 export const yearLabelHeight = 40;
 
-export const estimatedTextHight = (text) => {
-	if (text.length < 40) return 20;
-	if (text.length < 80) return 40;
-	return 60;
+export const estimatedTextHight = (text) => Math.ceil(text.length / 43) * 20;
+// if (text.length < 46) return 20;
+// if (text.length < 83) return 40;
+// if (text.length < 134) return 60;
+// return 80;
+
+const estimatedItemCollectionHeight = (collection) => {
+	return collection.reduce((acc, cur) => acc + estimatedTextHight(cur.title) + dayNodePadding, 0);
 };
 
 /**
@@ -25,10 +29,18 @@ export const estimatedDayHight = (day) => {
 	// If there are no documents return 0 height.
 	if (data.length === 0) return 0;
 
-	const blockHeightWithoutPadding = data.reduce(
-		(acc, cur) => acc + estimatedTextHight(cur.title) + dayNodePadding,
-		0,
-	);
+	let blockHeightWithoutPadding;
+
+	// If the two item collections have the same size, calculate and return the
+	// one with the bigger height.
+	if (!documents.length === events.length) {
+		blockHeightWithoutPadding = estimatedItemCollectionHeight(data);
+	} else {
+		blockHeightWithoutPadding = Math.max(
+			estimatedItemCollectionHeight(documents),
+			estimatedItemCollectionHeight(events),
+		);
+	}
 
 	return blockHeightWithoutPadding + 2 * dayPadding;
 };
