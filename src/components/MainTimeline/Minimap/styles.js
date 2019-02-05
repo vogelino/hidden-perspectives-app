@@ -64,7 +64,7 @@ export const YearCount = styled(TooltipSpan)`
 
 export const Year = styled.div.attrs({
 	style: ({ theme, density }) => ({
-		background: mix(density, theme.gray100, theme.gray900),
+		background: mix(density, 'white', theme.primary),
 	}),
 })`
 	width: 1.25rem;

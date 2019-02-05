@@ -22,7 +22,7 @@ export const getMinimap = (timelineItems) => {
 	const getEventsAndDocumentsLength = ({ events, documents }) => (
 		events.length + documents.length
 	);
-	const monthGoups = groupedMonts.map((monthsGroup) => {
+	const yearGroups = groupedMonts.map((monthsGroup) => {
 		const months = monthsGroup.map(prop('key'));
 		const count = monthsGroup.reduce((acc2, { days }) => (
 			acc2 + days.reduce((acc3, day) => (
@@ -35,13 +35,13 @@ export const getMinimap = (timelineItems) => {
 		if (a.count < b.count) return -1;
 		if (a.count > b.count) return 1;
 		return 0;
-	}, monthGoups);
+	}, yearGroups);
 
 	const minimapColorScale = scaleLinear()
 		.domain([0, sortedMonths[sortedMonths.length - 1].count])
 		.range([1, 0.1, 0]);
 
-	return monthGoups.map(({ months, count }) => ({
+	return yearGroups.map(({ months, count }) => ({
 		count,
 		density: minimapColorScale(count),
 		id: months.join('-'),
