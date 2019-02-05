@@ -1,12 +1,12 @@
 export const dayPadding = 24;
 export const dayNodePadding = 16;
 export const monthLabelHeight = 36;
-export const yearLabelHeight = 32;
+export const yearLabelHeight = 40;
 
 export const estimatedTextHight = (text) => {
 	if (text.length < 40) return 20;
 	if (text.length < 80) return 40;
-	return 65;
+	return 60;
 };
 
 /**
@@ -25,8 +25,10 @@ export const estimatedDayHight = (day) => {
 	// If there are no documents return 0 height.
 	if (data.length === 0) return 0;
 
-	const blockHeightWithoutPadding = data
-		.reduce((acc, cur) => acc + estimatedTextHight(cur.title) + dayNodePadding, 0);
+	const blockHeightWithoutPadding = data.reduce(
+		(acc, cur) => acc + estimatedTextHight(cur.title) + dayNodePadding,
+		0,
+	);
 
 	return blockHeightWithoutPadding + 2 * dayPadding;
 };
