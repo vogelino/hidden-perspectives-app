@@ -13,7 +13,8 @@ export const EventContainer = styled.div``;
 export const Year = styled.div`
 	margin: 0 auto;
 	text-align: center;
-	line-height: 48px;
+	line-height: 54px;
+	height: 40px;
 `;
 
 export const EventDate = styled.span`
