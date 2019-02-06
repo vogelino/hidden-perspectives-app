@@ -50,13 +50,11 @@ class TimelineItemsClass extends React.PureComponent {
 			});
 		});
 
-		const stakeHolders = Object.keys(protagonists).map((key) => {
-			return {
-				name: key,
-				value: protagonists[key].value,
-				id: protagonists[key].id,
-			};
-		});
+		const stakeHolders = Object.keys(protagonists).map((key) => ({
+			name: key,
+			value: protagonists[key].value,
+			id: protagonists[key].id,
+		}));
 
 		if (stakeHolders.length > 0) {
 			this.setState({
@@ -124,18 +122,21 @@ class TimelineItemsClass extends React.PureComponent {
 
 	render() {
 		return (
-			<List
-				height={1200}
-				overscanRowCount={0}
-				rowHeight={({ index }) => estimatedMonthHeight(this.props.timelineItems[index])}
-				onScroll={this.handleScroll}
-				rowRenderer={this.rowRenderer}
-				onRowsRendered={this.updateStakeholders}
-				rowCount={this.props.timelineItems.length}
-				scrollToIndex={this.props.activeRowIndex}
-				scrollToAlignment="start"
-				width={window.innerWidth - 384}
-			/>
+			<div>
+				<BubbleChart data={this.state.stakeHolders} />
+				<List
+					height={1200}
+					overscanRowCount={0}
+					rowHeight={({ index }) => estimatedMonthHeight(this.props.timelineItems[index])}
+					onScroll={this.handleScroll}
+					rowRenderer={this.rowRenderer}
+					onRowsRendered={this.updateStakeholders}
+					rowCount={this.props.timelineItems.length}
+					scrollToIndex={this.props.activeRowIndex}
+					scrollToAlignment="start"
+					width={window.innerWidth - 384}
+				/>
+			</div>
 		);
 	}
 }

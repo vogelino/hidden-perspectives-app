@@ -36,7 +36,7 @@ const MainTimeline = ({
 }) => {
 	const items = parseTimelineItems(timelineItems);
 	return (
-		<Container id="mainTimeline" ref={onRef}>
+		<Container id="mainTimeline">
 			<LoadingContainer isLoading={isLoading}>
 				<LoadingIndicator />
 			</LoadingContainer>
@@ -52,14 +52,7 @@ const MainTimeline = ({
 					setActiveYear(year);
 				}}
 			/>
-			<Protagonists
-				isLoading={fetchingProtagonists}
-				items={bubbleChartItems}
-				hoveredElement={hoveredElement}
-				setHoveredElement={setHoveredElement}
-				pinnedElement={pinnedElement}
-				setPinnedElement={setPinnedElement}
-			/>
+
 			<MainTimelineLegend
 				isLoading={isLoading}
 				eventsCount={eventsCount}
@@ -99,7 +92,6 @@ MainTimeline.propTypes = {
 	errors: PropTypes.arrayOf(PropTypes.string),
 	isLoading: PropTypes.bool,
 	fetchingProtagonists: PropTypes.bool,
-	onRef: PropTypes.func,
 	setActiveRowIndex: PropTypes.func,
 	activeRowIndex: PropTypes.number,
 	setActiveYear: PropTypes.func,
@@ -116,7 +108,6 @@ MainTimeline.defaultProps = {
 	errors: [],
 	isLoading: true,
 	fetchingProtagonists: true,
-	onRef: () => {},
 	setActiveRowIndex: () => {},
 	setActiveYear: () => {},
 	activeRowIndex: 300,
