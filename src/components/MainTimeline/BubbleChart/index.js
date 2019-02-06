@@ -1,36 +1,15 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-// import Pack from './Pack';
 import { hierarchy, pack as d3Pack } from 'd3-hierarchy';
-import Group from './Group';
 import { Transition, animated, config } from 'react-spring';
+import { Link } from 'react-router-dom';
 
-const mockData = [
-	{
-		id: 'askjghhkasjhfdjkasjhkdf',
-		name: 'Ludwig Frank',
-		value: 1,
-	},
-	{
-		id: 'askjghhsgfjhfdjkasjhkdf',
-		name: 'Joshua Pachenco',
-		value: 2,
-	},
-	{
-		id: 'askjghhkshrffdjkasjhkdf',
-		name: 'Lucas Vogel',
-		value: 5,
-	},
-	{
-		id: 'assagfhkasjhfdjkasjhkdf',
-		name: 'Bela Kurek',
-		value: 1,
-	},
-];
+import { BubbleTextWrapper, BubbleText, ChartWrapper } from './styles';
+import { parseName } from '../../../utils/stringUtil';
 
 class BubbleChart extends PureComponent {
 	static propTypes = {
-		nodes: PropTypes.arrayOf(
+		data: PropTypes.arrayOf(
 			PropTypes.shape({
 				id: PropTypes.string.isRequired,
 				name: PropTypes.string,
@@ -41,11 +20,11 @@ class BubbleChart extends PureComponent {
 	};
 
 	static defaultProps = {
-		animate: false,
+		animate: true,
 	};
 
 	render() {
-		if (!this.props.data.length > 0) return null;
+		if (!this.props.data.length) return null;
 
 		const nodes = hierarchy({
 			name: 'nodes',
@@ -53,52 +32,70 @@ class BubbleChart extends PureComponent {
 		}).sum((d) => d.value * 2);
 
 		const pack = d3Pack()
-			.size([200, 200])
+			.size([300, 300])
 			.padding(5);
 
 		const data = pack(nodes);
 
-		// if (document.getElementById('protagonist-wrapper')) {
-		// 	console.log(
-		// 		document
-		// 			.getElementById('protagonist-wrapper')
-		// 			.children.find((el) => el.style.opacity !== 1),
-		// 	);
-		// }
-
 		return (
-			<div style={{ top: 0, position: 'absolute' }}>
-				<svg width={200} height={200} id="protagonist-wrapper">
+			<ChartWrapper>
+				<svg width={300} height={300} id="protagonist-wrapper">
 					{this.props.animate ? (
 						<Transition
 							items={data.children}
 							from={{ opacity: 0 }}
 							enter={{ opacity: 1 }}
-							leave={{ opacity: 0 }}
+							leave={{ display: 'none' }}
 							// config={{ tension: 100, friction: 10 }}
 							keys={(item) => item.data.id}
 						>
 							{(item) => ({ opacity }) => {
+								const parseNameOptions = {
+									containerWidth: item.r,
+									containerHeight: item.r,
+									// Average letter width to approximate the rendered length.
+									letterWidth: 6,
+									letterHeight: 14,
+								};
+
+								const name = parseName(item.data.name, parseNameOptions);
+								const noBreak = name.split('.').length > 1 && name.length < 16;
+
 								return (
-									<animated.g
-										className={'svg-group'}
-										transform={`translate(${item.x}, ${item.y})`}
-										opacity={opacity}
-									>
-										<circle r={item.r} fill="#FF6264" />
-									</animated.g>
+									<Link to={`/protagonist/context/${item.data.id}`}>
+										<animated.g
+											transform={`translate(${item.x}, ${item.y})`}
+											opacity={opacity}
+										>
+											<circle r={item.r} fill="#E6E8EB" />
+											<foreignObject
+												x={-(item.r / 2)}
+												y={-(item.r / 2)}
+												width={item.r}
+												height={item.r}
+											>
+												<BubbleTextWrapper>
+													<BubbleText noBreak={noBreak}>
+														{name}
+													</BubbleText>
+												</BubbleTextWrapper>
+											</foreignObject>
+										</animated.g>
+									</Link>
 								);
 							}}
 						</Transition>
 					) : (
 						data.children.map((item) => (
-							<Group top={item.y} left={item.x}>
-								<circle r={item.r} fill="#FF6264" />
-							</Group>
+							<Link to={`/protagonist/context/${item.id}`}>
+								<g transform={`translate(${item.x}, ${item.y})`} key={item.id}>
+									<circle r={item.r} fill="#FF6264" />
+								</g>
+							</Link>
 						))
 					)}
 				</svg>
-			</div>
+			</ChartWrapper>
 		);
 	}
 }

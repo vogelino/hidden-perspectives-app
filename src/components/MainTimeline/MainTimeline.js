@@ -5,7 +5,6 @@ import Minimap from './Minimap';
 import { LoadingContainer } from '../LoadingIndicator/styles';
 import LoadingIndicator from '../LoadingIndicator';
 import TimelineItems from './TimelineItems';
-import Protagonists from './Protagonists';
 import { MainTimelineLegend } from '../Legend';
 
 const parseTimelineItems = (years) => {
@@ -20,11 +19,8 @@ const parseTimelineItems = (years) => {
 const MainTimeline = ({
 	timelineItems,
 	minimapItems,
-	bubbleChartItems,
 	errors,
 	isLoading,
-	fetchingProtagonists,
-	onRef,
 	setHoveredElement,
 	hoveredElement,
 	setPinnedElement,
@@ -33,23 +29,12 @@ const MainTimeline = ({
 	documentsCount,
 	protagonistsCount,
 }) => (
-	<Container id="mainTimeline" ref={onRef}>
+	<Container id="mainTimeline">
 		<LoadingContainer isLoading={isLoading}>
 			<LoadingIndicator />
 		</LoadingContainer>
 		{errors.map((error) => error)}
-		<Minimap
-			isLoading={isLoading}
-			items={minimapItems}
-		/>
-		<Protagonists
-			isLoading={fetchingProtagonists}
-			items={bubbleChartItems}
-			hoveredElement={hoveredElement}
-			setHoveredElement={setHoveredElement}
-			pinnedElement={pinnedElement}
-			setPinnedElement={setPinnedElement}
-		/>
+		<Minimap isLoading={isLoading} items={minimapItems} />
 		<MainTimelineLegend
 			isLoading={isLoading}
 			eventsCount={eventsCount}
@@ -70,22 +55,21 @@ const MainTimeline = ({
 
 MainTimeline.propTypes = {
 	timelineItems: TimelineItems.propTypes.timelineItems,
-	minimapItems: PropTypes.arrayOf(PropTypes.shape({
-		id: PropTypes.string.isRequired,
-		density: PropTypes.number.isRequired,
-	})),
+	minimapItems: PropTypes.arrayOf(
+		PropTypes.shape({
+			id: PropTypes.string.isRequired,
+			density: PropTypes.number.isRequired,
+		}),
+	),
 	eventsCount: PropTypes.number.isRequired,
 	documentsCount: PropTypes.number.isRequired,
 	protagonistsCount: PropTypes.number.isRequired,
-	bubbleChartItems: Protagonists.propTypes.items,
 	hoveredElement: TimelineItems.propTypes.hoveredElement,
 	pinnedElement: TimelineItems.propTypes.pinnedElement,
 	setHoveredElement: PropTypes.func,
 	setPinnedElement: PropTypes.func,
 	errors: PropTypes.arrayOf(PropTypes.string),
 	isLoading: PropTypes.bool,
-	fetchingProtagonists: PropTypes.bool,
-	onRef: PropTypes.func,
 };
 
 MainTimeline.defaultProps = {
@@ -94,12 +78,9 @@ MainTimeline.defaultProps = {
 	setHoveredElement: () => {},
 	setPinnedElement: () => {},
 	timelineItems: TimelineItems.defaultProps.timelineItems,
-	bubbleChartItems: Protagonists.defaultProps.items,
 	minimapItems: [],
 	errors: [],
 	isLoading: true,
-	fetchingProtagonists: true,
-	onRef: () => {},
 };
 
 export default MainTimeline;

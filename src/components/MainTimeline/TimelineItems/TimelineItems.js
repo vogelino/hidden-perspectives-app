@@ -5,22 +5,24 @@ import throttle from 'lodash.throttle';
 import TimelineElement from '../TimelineElement';
 import { isHovered } from '../../../utils/timelineUtil';
 import { monthsLabels } from '../../../utils/dateUtil';
-import {
-	EventContainer, Event, EventDate, Events, Documents, Year,
-} from './styles';
+import { EventContainer, Event, EventDate, Events, Documents, Year } from './styles';
 import { estimatedMonthHeight } from './utils';
 import ContainerWithStickyLabel from '../ContainerWithStickyLabel';
+import BubbleChart from '../BubbleChart';
 
 class TimelineItemsClass extends React.Component {
 	constructor(props) {
 		super(props);
+		this.state = {
+			stakeHolders: [],
+		};
 
-		this.updateStakeholders = throttle(this.updateStakeholders, 200);
+		this.updateStakeholders = throttle(this.updateStakeholders, 400);
 		this.rowRenderer = this.rowRenderer.bind(this);
 	}
 
 	updateStakeholders = ({ startIndex, stopIndex }) => {
-		const data = this.props.timelineItems.slice(startIndex, stopIndex);
+		const data = this.props.timelineItems.slice(startIndex - 0 || 0, stopIndex + 0 || 0);
 		const protagonists = {};
 
 		data.forEach((month) => {
@@ -29,8 +31,11 @@ class TimelineItemsClass extends React.Component {
 				if (items.length === 0) return;
 
 				items.forEach((item) => {
-					if (!item.mentionedStakeholders) return;
-					item.mentionedStakeholders.forEach(({ stakeholderFullName, id }) => {
+					const s = item.mentionedStakeholders || item.eventStakeholders;
+
+					if (!s) return;
+
+					s.forEach(({ stakeholderFullName, id }) => {
 						if (protagonists[stakeholderFullName]) {
 							protagonists[stakeholderFullName].value += 1;
 						} else {
@@ -43,12 +48,24 @@ class TimelineItemsClass extends React.Component {
 				});
 			});
 		});
+
+		const stakeHolders = Object.keys(protagonists).map((key) => {
+			return {
+				name: key,
+				value: protagonists[key].value,
+				id: protagonists[key].id,
+			};
+		});
+
+		if (stakeHolders.length > 0) {
+			this.setState({
+				stakeHolders,
+			});
+		}
 	};
 
 	rowRenderer({ index, key, style }) {
-		const {
-			hoveredElement, setHoveredElement, pinnedElement, setPinnedElement,
-		} = this.props;
+		const { hoveredElement, setHoveredElement, pinnedElement, setPinnedElement } = this.props;
 		const data = this.props.timelineItems[index];
 		if (!data) return null;
 		const { days, dateUnitIndex, year } = data;
@@ -74,28 +91,17 @@ class TimelineItemsClass extends React.Component {
 
 		return (
 			<div style={style} key={key}>
-				{dateUnitIndex === 1 && (
-					<Year>
-						{data.key.split('-')[0]}
-					</Year>
-				)}
+				{dateUnitIndex === 1 && <Year>{data.key.split('-')[0]}</Year>}
 				<ContainerWithStickyLabel
 					isEmpty={days.length === 0}
 					label={monthLabel}
 					date={`${monthLabel} ${year}`}
 				>
-					{days.map(({
-						dateUnitIndex: dayIndex,
-						key: dayKey,
-						events,
-						documents,
-					}) => (
+					{days.map(({ dateUnitIndex: dayIndex, key: dayKey, events, documents }) => (
 						<EventContainer key={dayKey}>
 							<Event>
 								<EventDate>{dayIndex}</EventDate>
-								<Documents>
-									{documents.map(mapTimelineItem('document'))}
-								</Documents>
+								<Documents>{documents.map(mapTimelineItem('document'))}</Documents>
 								<Events>{events.map(mapTimelineItem('event'))}</Events>
 							</Event>
 						</EventContainer>
@@ -107,15 +113,18 @@ class TimelineItemsClass extends React.Component {
 
 	render() {
 		return (
-			<List
-				height={1200}
-				overscanRowCount={0}
-				rowHeight={({ index }) => estimatedMonthHeight(this.props.timelineItems[index])}
-				rowRenderer={this.rowRenderer}
-				onRowsRendered={this.updateStakeholders}
-				rowCount={this.props.timelineItems.length}
-				width={window.innerWidth - 384}
-			/>
+			<div>
+				<BubbleChart data={this.state.stakeHolders} />
+				<List
+					height={1200}
+					overscanRowCount={0}
+					rowHeight={({ index }) => estimatedMonthHeight(this.props.timelineItems[index])}
+					rowRenderer={this.rowRenderer}
+					onRowsRendered={this.updateStakeholders}
+					rowCount={this.props.timelineItems.length}
+					width={window.innerWidth - 384}
+				/>
+			</div>
 		);
 	}
 }

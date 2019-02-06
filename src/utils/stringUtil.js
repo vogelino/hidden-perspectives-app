@@ -17,3 +17,47 @@ export const getCapsOnlyInitials = (string) => {
 	const combinedString = upperChars.join('');
 	return combinedString.substring(0, maxLength);
 };
+
+const defaultOptions = {
+	containerWidth: 80,
+	containerHeight: 20,
+	// Average letter width to approximate the rendered length.
+	letterWidth: 6,
+	letterHeight: 14,
+};
+
+export const parseName = (string = 'Barack Obama Bush', options = defaultOptions) => {
+	const { containerWidth, containerHeight, letterWidth, letterHeight } = options;
+
+	// Calculate how many lines we can render inside the block
+	const possibleLineAmount = Math.floor(containerHeight / letterHeight);
+
+	// TODO: define all edge cases
+	let name = string.replace('United States', 'US');
+
+	const nameTooLong =
+		Math.ceil((name.length * letterWidth) / containerWidth) > possibleLineAmount;
+
+	let maxIterations = 5;
+	// If the text is too long for the container width and the estimated lines too many
+	// for the container height.
+	while (nameTooLong && maxIterations > 0) {
+		const names = name.split(' ').filter((name) => {
+			return !['for', 'of', 'the', 'The'].includes(name);
+		});
+
+		for (let i = 0; i < names.length; i += 1) {
+			if (names[i].length > 3) {
+				names[i] = names[i].charAt(0).toUpperCase() + '.';
+				break;
+			}
+		}
+
+		name = names.join(' ');
+		maxIterations -= 1;
+	}
+
+	return name;
+
+	// If the rendered text width is probably higher than the container width
+};
