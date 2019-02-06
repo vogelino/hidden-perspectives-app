@@ -128,7 +128,7 @@ export default compose(
 	lifecycle({
 		componentDidMount() {
 			const { props } = this;
-
+			console.log(props.client);
 			props.client
 				.query({ query: ALL_EVENTS_AND_DOCUMENTS })
 				.then(getEventsAndDocuments(props))

@@ -1,12 +1,56 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { hierarchy, pack as d3Pack } from 'd3-hierarchy';
-import { Transition, animated, config } from 'react-spring';
+import { useTransition, animated, config } from 'react-spring';
 import { Link } from 'react-router-dom';
 
 import { BubbleTextWrapper, BubbleText, ChartWrapper } from './styles';
 import { parseName } from '../../../utils/stringUtil';
 
+const AnimatedBubbles = ({ data }) => {
+	const transitions = useTransition(data, (item) => item.data.id, {
+		from: { opacity: 0 },
+		enter: { opacity: 1 },
+	});
+
+	return transitions.map(({ item, key, props, state }) => {
+		const parseNameOptions = {
+			containerWidth: item.r,
+			containerHeight: item.r,
+			// Average letter width to approximate the rendered length.
+			letterWidth: 4,
+			letterHeight: 10,
+		};
+
+		const name = parseName(item.data.name, parseNameOptions);
+
+		if (state !== 'leave') {
+			return (
+				<Link to={`/protagonist/context/${item.data.id}`} key={key}>
+					<animated.g
+						transform={`translate(${item.x}, ${item.y})`}
+						opacity={props.opacity}
+					>
+						<circle r={item.r} fill="#E6E8EB" />
+						<foreignObject
+							x={-(item.r / 2)}
+							y={-(item.r / 2)}
+							width={item.r}
+							height={item.r}
+						>
+							<BubbleTextWrapper>
+								<BubbleText noBreak={name.includes('.') && name.length < 16}>
+									{name}
+								</BubbleText>
+							</BubbleTextWrapper>
+						</foreignObject>
+					</animated.g>
+				</Link>
+			);
+		}
+		return null;
+	});
+};
 class BubbleChart extends PureComponent {
 	static propTypes = {
 		data: PropTypes.arrayOf(
@@ -40,60 +84,7 @@ class BubbleChart extends PureComponent {
 		return (
 			<ChartWrapper>
 				<svg width={300} height={300} id="protagonist-wrapper">
-					{this.props.animate ? (
-						<Transition
-							items={data.children}
-							from={{ opacity: 0 }}
-							enter={{ opacity: 1 }}
-							leave={{ display: 'none' }}
-							// config={{ tension: 100, friction: 10 }}
-							keys={(item) => item.data.id}
-						>
-							{(item) => ({ opacity }) => {
-								const parseNameOptions = {
-									containerWidth: item.r,
-									containerHeight: item.r,
-									// Average letter width to approximate the rendered length.
-									letterWidth: 6,
-									letterHeight: 14,
-								};
-
-								const name = parseName(item.data.name, parseNameOptions);
-								const noBreak = name.split('.').length > 1 && name.length < 16;
-
-								return (
-									<Link to={`/protagonist/context/${item.data.id}`}>
-										<animated.g
-											transform={`translate(${item.x}, ${item.y})`}
-											opacity={opacity}
-										>
-											<circle r={item.r} fill="#E6E8EB" />
-											<foreignObject
-												x={-(item.r / 2)}
-												y={-(item.r / 2)}
-												width={item.r}
-												height={item.r}
-											>
-												<BubbleTextWrapper>
-													<BubbleText noBreak={noBreak}>
-														{name}
-													</BubbleText>
-												</BubbleTextWrapper>
-											</foreignObject>
-										</animated.g>
-									</Link>
-								);
-							}}
-						</Transition>
-					) : (
-						data.children.map((item) => (
-							<Link to={`/protagonist/context/${item.id}`}>
-								<g transform={`translate(${item.x}, ${item.y})`} key={item.id}>
-									<circle r={item.r} fill="#FF6264" />
-								</g>
-							</Link>
-						))
-					)}
+					<AnimatedBubbles data={data.children} />
 				</svg>
 			</ChartWrapper>
 		);

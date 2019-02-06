@@ -33,7 +33,9 @@ export const parseName = (string = 'Barack Obama Bush', options = defaultOptions
 	const possibleLineAmount = Math.floor(containerHeight / letterHeight);
 
 	// TODO: define all edge cases
-	let name = string.replace('United States', 'US');
+	let name = string
+		.replace('United States', 'US')
+		.replace('Tim Renton, Baron Renton of Mount Harry', 'Tim Renton');
 
 	const nameTooLong =
 		Math.ceil((name.length * letterWidth) / containerWidth) > possibleLineAmount;

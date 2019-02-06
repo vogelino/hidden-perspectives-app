@@ -5,7 +5,9 @@ import throttle from 'lodash.throttle';
 import TimelineElement from '../TimelineElement';
 import { isHovered } from '../../../utils/timelineUtil';
 import { monthsLabels } from '../../../utils/dateUtil';
-import { EventContainer, Event, EventDate, Events, Documents, Year } from './styles';
+import {
+	EventContainer, Event, EventDate, Events, Documents, Year,
+} from './styles';
 import { estimatedMonthHeight } from './utils';
 import ContainerWithStickyLabel from '../ContainerWithStickyLabel';
 import BubbleChart from '../BubbleChart';
@@ -73,7 +75,9 @@ class TimelineItemsClass extends React.PureComponent {
 	}
 
 	rowRenderer({ index, key, style }) {
-		const { hoveredElement, setHoveredElement, pinnedElement, setPinnedElement } = this.props;
+		const {
+			hoveredElement, setHoveredElement, pinnedElement, setPinnedElement,
+		} = this.props;
 		const data = this.props.timelineItems[index];
 		if (!data) return null;
 		const { days, dateUnitIndex } = data;
@@ -106,7 +110,9 @@ class TimelineItemsClass extends React.PureComponent {
 					label={monthLabel}
 					date={`${monthLabel} ${year}`}
 				>
-					{days.map(({ dateUnitIndex: dayIndex, key: dayKey, events, documents }) => (
+					{days.map(({
+						dateUnitIndex: dayIndex, key: dayKey, events, documents,
+					}) => (
 						<EventContainer key={dayKey}>
 							<Event>
 								<EventDate>{dayIndex}</EventDate>
