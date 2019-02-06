@@ -1,6 +1,6 @@
 import { withApollo } from 'react-apollo';
 import {
-	compose, lifecycle, withState, withHandlers,
+	compose, lifecycle, withState,
 } from 'recompose';
 import gql from 'graphql-tag';
 import MainTimeline from './MainTimeline';
@@ -122,7 +122,6 @@ export default compose(
 	withState('minimapItems', 'setMinimapItems', []),
 	withState('bubbleChartItems', 'setBubbleChartItems', {}),
 	withState('timelineContainer', 'setTimelineContainer', null),
-	withState('fetchingProtagonists', 'setFetchingProtagonists', true),
 	withState('initialProtagonistsFetched', 'setInitialProtagonistsFetched', false),
 	withState('hoveredElement', 'setHoveredElement', null),
 	withState('pinnedElement', 'setPinnedElement', null),
@@ -131,7 +130,6 @@ export default compose(
 	lifecycle({
 		componentDidMount() {
 			const { props } = this;
-			console.log(props.client);
 			props.client
 				.query({ query: ALL_EVENTS_AND_DOCUMENTS })
 				.then(getEventsAndDocuments(props))
@@ -142,7 +140,6 @@ export default compose(
 			return (
 				nextProps.timelineItems.length !== this.props.timelineItems.length
 				|| nextProps.bubbleChartItems !== this.props.bubbleChartItems
-				|| nextProps.fetchingProtagonists !== this.props.fetchingProtagonists
 				|| nextProps.errors.length !== this.props.errors.length
 				|| nextProps.isLoading !== this.props.isLoading
 				|| nextProps.hoveredElement !== this.props.hoveredElement

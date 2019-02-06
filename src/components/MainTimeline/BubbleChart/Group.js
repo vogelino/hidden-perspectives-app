@@ -1,19 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { animated } from 'react-spring';
 
-Group.propTypes = {
-	top: PropTypes.number,
-	left: PropTypes.number,
-	transform: PropTypes.string,
-	className: PropTypes.string,
-	children: PropTypes.any,
-};
-
-export default function Group({ top = 0, left = 0, transform, children, key, ...restProps }) {
+export default function Group({
+	top = 0, left = 0, transform, children, key, ...restProps
+}) {
 	return (
 		<g
-			className={'svg-group'}
+			className="svg-group"
 			transform={transform || `translate(${left}, ${top})`}
 			key={key}
 			{...restProps}
@@ -22,3 +15,12 @@ export default function Group({ top = 0, left = 0, transform, children, key, ...
 		</g>
 	);
 }
+
+Group.propTypes = {
+	top: PropTypes.number.isRequired,
+	left: PropTypes.number.isRequired,
+	transform: PropTypes.string.isRequired,
+	className: PropTypes.string.isRequired,
+	key: PropTypes.string.isRequired,
+	children: PropTypes.node.isRequired,
+};

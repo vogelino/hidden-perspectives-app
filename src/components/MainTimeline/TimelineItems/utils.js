@@ -9,9 +9,8 @@ export const estimatedTextHight = (text) => Math.ceil(text.length / 43) * 20;
 // if (text.length < 134) return 60;
 // return 80;
 
-const estimatedItemCollectionHeight = (collection) => {
-	return collection.reduce((acc, cur) => acc + estimatedTextHight(cur.title) + dayNodePadding, 0);
-};
+const estimatedItemCollectionHeight = (collection) => collection
+	.reduce((acc, cur) => acc + estimatedTextHight(cur.title) + dayNodePadding, 0);
 
 /**
  * Estimate a days height value.

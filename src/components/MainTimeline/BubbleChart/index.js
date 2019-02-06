@@ -1,9 +1,8 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { hierarchy, pack as d3Pack } from 'd3-hierarchy';
-import { useTransition, animated, config } from 'react-spring';
+import { useTransition, animated } from 'react-spring';
 import { Link } from 'react-router-dom';
-
 import { BubbleTextWrapper, BubbleText, ChartWrapper } from './styles';
 import { parseName } from '../../../utils/stringUtil';
 
@@ -53,6 +52,7 @@ const AnimatedBubbles = ({ data }) => {
 		return null;
 	});
 };
+
 class BubbleChart extends PureComponent {
 	static propTypes = {
 		data: PropTypes.arrayOf(
@@ -61,12 +61,7 @@ class BubbleChart extends PureComponent {
 				name: PropTypes.string,
 				value: PropTypes.string,
 			}),
-		),
-		animate: PropTypes.bool,
-	};
-
-	static defaultProps = {
-		animate: true,
+		).isRequired,
 	};
 
 	render() {

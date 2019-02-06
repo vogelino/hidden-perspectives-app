@@ -39,13 +39,13 @@ export const parseName = (string = 'Barack Obama Bush', options = defaultOptions
 		.replace('United States', 'US')
 		.replace('Tim Renton, Baron Renton of Mount Harry', 'Tim Renton');
 
-	const nameTooLong =		Math.ceil((name.length * letterWidth) / containerWidth) > possibleLineAmount;
+	const nameTooLong =	Math.ceil((name.length * letterWidth) / containerWidth) > possibleLineAmount;
 
 	let maxIterations = 5;
 	// If the text is too long for the container width and the estimated lines too many
 	// for the container height.
 	while (nameTooLong && maxIterations > 0) {
-		const names = name.split(' ').filter((name) => !['for', 'of', 'the', 'The'].includes(name));
+		const names = name.split(' ').filter((n) => !['for', 'of', 'the', 'The'].includes(n));
 
 		for (let i = 0; i < names.length; i += 1) {
 			if (names[i].length > 3) {

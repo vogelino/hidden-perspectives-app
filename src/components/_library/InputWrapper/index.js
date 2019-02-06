@@ -91,6 +91,7 @@ InputWrapper.defaultProps = {
 	children: (props) => (
 		<TextInput
 			{...props}
+			// eslint-disable-next-line react/prop-types
 			onChange={(evt) => props.onChange(evt.target.value)}
 		/>
 	),

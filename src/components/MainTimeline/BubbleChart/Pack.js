@@ -24,7 +24,7 @@ export default function Pack({
 	size,
 	padding,
 	children,
-	nodeComponent = DefaultNode,
+	nodeComponent = HierarchyDefaultNode,
 }) {
 	const pack = d3pack();
 
@@ -38,26 +38,23 @@ export default function Pack({
 
 	return (
 		<Group top={top} left={left} className="svg-pack">
-			{nodeComponent &&
-				data.descendants().map((node) => {
-					return (
-						<Group key={`pack-node-${node.id}`}>
-							{React.createElement(nodeComponent, { node })}
-						</Group>
-					);
-				})}
+			{nodeComponent
+				&& data.descendants().map((node) => (
+					<Group key={`pack-node-${node.id}`}>
+						{React.createElement(nodeComponent, { node })}
+					</Group>
+				))}
 		</Group>
 	);
 }
 
 Pack.propTypes = {
-	root: PropTypes.object.isRequired,
-	children: PropTypes.func,
-	top: PropTypes.number,
-	left: PropTypes.number,
-	className: PropTypes.string,
-	radius: PropTypes.func,
-	size: PropTypes.arrayOf(PropTypes.number),
-	padding: PropTypes.number,
-	nodeComponent: PropTypes.any,
+	root: PropTypes.shape({}).isRequired,
+	children: PropTypes.func.isRequired,
+	top: PropTypes.number.isRequired,
+	left: PropTypes.number.isRequired,
+	radius: PropTypes.func.isRequired,
+	size: PropTypes.arrayOf(PropTypes.number).isRequired,
+	padding: PropTypes.number.isRequired,
+	nodeComponent: PropTypes.func.isRequired,
 };

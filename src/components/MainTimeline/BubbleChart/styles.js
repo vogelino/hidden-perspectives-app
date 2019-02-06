@@ -13,9 +13,8 @@ export const BubbleText = styled('p')`
 	font-size: 13px;
 	line-height: 14px;
 	z-index: 10;
-	${(props) =>
-		props.noBreak &&
-		css`
+	${(props) => props.noBreak
+		&& css`
 			white-space: nowrap;
 		`}
 `;
