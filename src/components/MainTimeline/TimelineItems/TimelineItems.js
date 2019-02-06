@@ -123,6 +123,7 @@ class TimelineItemsClass extends React.PureComponent {
 				onRowsRendered={this.updateStakeholders}
 				rowCount={this.props.timelineItems.length}
 				scrollToIndex={this.props.activeRowIndex}
+				scrollToAlignment="start"
 				width={window.innerWidth - 384}
 			/>
 		);
