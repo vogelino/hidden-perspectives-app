@@ -1,103 +1,132 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import {
+	withProps,
+	withState,
+	compose,
+	withHandlers,
+} from 'recompose';
+import gql from 'graphql-tag';
+import { Mutation, withApollo } from 'react-apollo';
+import Login from './Login';
+import { logUserIn, logUserOut } from '../../utils/localStorageUtil';
 
-const Login = ({
+const SIGNUP_MUTATION = gql`
+mutation CreateUser($userName: String!, $authProviderData: AuthProviderSignupData!) {
+  createUser(
+    userName: $userName
+    authProvider: $authProviderData
+  ) {
+    id
+  }
+}
+`;
+
+const LOGIN_MUTATION = gql`
+mutation SigninUser($email: AUTH_PROVIDER_EMAIL!) {
+  signinUser(
+    email: $email
+  ) {
+    token
+    user {
+      id
+	  role
+    }
+  }
+}
+`;
+
+const getLoginCallback = (props) => ({
+	data: { signinUser: { token, user: { id, role } } },
 	errors,
-	login,
-	onNameChange,
-	nameValue,
-	namePlaceholder,
-	onEmailChange,
-	emailValue,
-	emailPlaceholder,
-	onPasswordChange,
-	passwordValue,
-	passwordPlaceholder,
-	loginButtonText,
-	signupButtonText,
-	onSubmit,
-	onLoginMethodChange,
-	callToLoginText,
-	callToSignupText,
-	loginTitle,
-	signupTitle,
-}) => (
-	<form
-		onSubmit={(evt) => {
-			evt.preventDefault();
-			onSubmit();
-		}}
-	>
-		<h4 className="mv3">{login ? loginTitle : signupTitle}</h4>
-		<div className="flex flex-column">
-			{!login && (
-				<input
-					value={nameValue}
-					onChange={(e) => onNameChange(e.target.value)}
-					type="text"
-					autoComplete="username"
-					placeholder={namePlaceholder}
-				/>
-			)}
-			<input
-				value={emailValue}
-				onChange={(e) => onEmailChange(e.target.value)}
-				type="email"
-				autoComplete="email"
-				placeholder={emailPlaceholder}
-			/>
-			<input
-				value={passwordValue}
-				onChange={(e) => onPasswordChange(e.target.value)}
-				type="password"
-				autoComplete={login ? 'current-password' : 'new-password'}
-				placeholder={passwordPlaceholder}
-			/>
-		</div>
-		<div className="flex mt3">
-			<input type="submit" className="pointer mr2 button" value={login ? loginButtonText : signupButtonText} />
-			<button type="button" className="pointer button" onClick={() => onLoginMethodChange(!login)}>
-				{login ? callToSignupText : callToLoginText}
-			</button>
-		</div>
-		<div>
-			{errors.map(({ message }) => (
-				<h1>{message}</h1>
-			))}
-		</div>
-	</form>
-);
-
-Login.defaultProps = {
-	nameValue: '',
-	emailValue: '',
-	passwordValue: '',
-	errors: [],
+}) => {
+	if (errors) {
+		logUserOut();
+		props.setErrors(errors);
+	}
+	logUserIn(token, id, role);
+	props.clearFields();
 };
 
-Login.propTypes = {
-	errors: PropTypes.arrayOf(PropTypes.shape({
-		message: PropTypes.string.isRequired,
+const getLoginVariables = (props) => ({
+	email: {
+		email: props.emailValue,
+		password: props.passwordValue,
+	},
+});
+
+const getSignupVariables = (props) => (({
+	userName: props.nameValue,
+	authProviderData: {
+		email: {
+			email: props.emailValue,
+			password: props.passwordValue,
+		},
+	},
+}));
+
+const getLoginMutation = (props) => ({
+	mutation: LOGIN_MUTATION,
+	variables: getLoginVariables(props),
+});
+
+export default compose(
+	withApollo,
+	withState('nameValue', 'onNameChange', ''),
+	withState('emailValue', 'onEmailChange', ''),
+	withState('passwordValue', 'onPasswordChange', ''),
+	withState('login', 'onLoginMethodChange', true),
+	withState('errors', 'setErrors', []),
+	withProps(({
+		history,
+		onNameChange,
+		onEmailChange,
+		onPasswordChange,
+	}) => ({
+		namePlaceholder: 'Enter your username',
+		emailPlaceholder: 'Enter your email address',
+		passwordPlaceholder: 'Enter your password',
+		loginTitle: 'Login into Hacker News Clone',
+		signupTitle: 'Sign up into Hacker News Clone',
+		loginButtonText: 'Login',
+		signupButtonText: 'Sign up',
+		callToLoginText: 'Already have an account?',
+		callToSignupText: 'Not yet an account?',
+		clearFields() {
+			onNameChange('');
+			onEmailChange('');
+			onPasswordChange('');
+			history.push('/');
+		},
 	})),
-	login: PropTypes.bool.isRequired,
-	onNameChange: PropTypes.func.isRequired,
-	nameValue: PropTypes.string,
-	namePlaceholder: PropTypes.string.isRequired,
-	onEmailChange: PropTypes.func.isRequired,
-	emailValue: PropTypes.string,
-	emailPlaceholder: PropTypes.string.isRequired,
-	onPasswordChange: PropTypes.func.isRequired,
-	passwordValue: PropTypes.string,
-	passwordPlaceholder: PropTypes.string.isRequired,
-	loginButtonText: PropTypes.string.isRequired,
-	signupButtonText: PropTypes.string.isRequired,
-	onSubmit: PropTypes.func.isRequired,
-	onLoginMethodChange: PropTypes.func.isRequired,
-	callToLoginText: PropTypes.string.isRequired,
-	callToSignupText: PropTypes.string.isRequired,
-	loginTitle: PropTypes.string.isRequired,
-	signupTitle: PropTypes.string.isRequired,
-};
-
-export default Login;
-
+	withHandlers({
+		onError(props) {
+			return async function onErrorAsync(err) {
+				props.setErrors(err.graphQLErrors);
+			};
+		},
+		onCompleted(props) {
+			return async function onCompletedAsync(data) {
+				if (Object.prototype.hasOwnProperty.call(data, 'createUser')) {
+					props.client.mutate(getLoginMutation(props))
+						.then(getLoginCallback(props));
+					return;
+				}
+				logUserIn(
+					data.signinUser.token,
+					data.signinUser.user.id,
+					data.signinUser.user.role,
+				);
+				props.clearFields();
+			};
+		},
+	}),
+)((props) => (
+	<Mutation
+		mutation={props.login ? LOGIN_MUTATION : SIGNUP_MUTATION}
+		variables={props.login ? getLoginVariables(props) : getSignupVariables(props)}
+		onCompleted={props.onCompleted}
+		onError={props.onError}
+	>
+		{(mutation) => <Login {...props} onSubmit={mutation} />}
+	</Mutation>
+));
