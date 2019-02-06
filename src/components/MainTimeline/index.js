@@ -231,7 +231,7 @@ export default compose(
 	withState('initialProtagonistsFetched', 'setInitialProtagonistsFetched', false),
 	withState('hoveredElement', 'setHoveredElement', null),
 	withState('pinnedElement', 'setPinnedElement', null),
-	withState('activeRowIndex', 'setActiveRowIndex', 300),
+	withState('activeRowIndex', 'setActiveRowIndex', 266),
 	withState('activeYear', 'setActiveYear', '1993'),
 	withHandlers({ onRef }),
 	lifecycle({
