@@ -65,4 +65,9 @@ export const GlobalStyles = createGlobalStyle`
 		letter-spacing: .01em;
 	}
 
+	#root {
+		min-height: calc(100vh - 4.5rem);
+		position: relative;
+	}
+
 `;

@@ -14,7 +14,7 @@ const CustomButton = ({
 		</Button>
 	</Link>
 ) : (
-	<Button {...rest}>
+	<Button {...rest} variant={primary ? 'primary' : 'light'}>
 		{children}
 	</Button>
 ));

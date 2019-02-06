@@ -77,5 +77,5 @@ export const UserAvatar = styled.span`
 	line-height: 1rem;
 	text-align: center;
 	border-radius: 50%;
-	padding-top: .25rem;
+	padding-top: .45rem;
 `;
