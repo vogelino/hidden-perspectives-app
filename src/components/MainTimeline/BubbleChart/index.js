@@ -13,7 +13,9 @@ const AnimatedBubbles = ({ data }) => {
 		enter: { opacity: 1 },
 	});
 
-	return transitions.map(({ item, key, props, state }) => {
+	return transitions.map(({
+		item, key, props, state,
+	}) => {
 		const parseNameOptions = {
 			containerWidth: item.r,
 			containerHeight: item.r,
