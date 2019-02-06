@@ -1,5 +1,7 @@
 import { withApollo } from 'react-apollo';
-import { compose, lifecycle, withState, withHandlers } from 'recompose';
+import {
+	compose, lifecycle, withState, withHandlers,
+} from 'recompose';
 import gql from 'graphql-tag';
 import MainTimeline from './MainTimeline';
 import { withLoading, withErrors, getErrorHandler } from '../../utils/hocUtil';
@@ -34,20 +36,21 @@ const ALL_EVENTS_AND_DOCUMENTS = gql`
 	}
 `;
 
-const normaliseItems = ({ items, itemDateProperty, itemTitleProperty, itemType }) =>
-	items.map((props) => {
-		const date = new Date(props[itemDateProperty]);
-		const { id } = props;
-		return {
-			...props,
-			id,
-			date,
-			dateString: getFormattedDate(date),
-			title: props[itemTitleProperty],
-			path: `/${itemType}/context/${id}`,
-			type: itemType,
-		};
-	});
+const normaliseItems = ({
+	items, itemDateProperty, itemTitleProperty, itemType,
+}) => items.map((props) => {
+	const date = new Date(props[itemDateProperty]);
+	const { id } = props;
+	return {
+		...props,
+		id,
+		date,
+		dateString: getFormattedDate(date),
+		title: props[itemTitleProperty],
+		path: `/${itemType}/context/${id}`,
+		type: itemType,
+	};
+});
 
 const structureItems = ({ timelineEvents, timelineDocuments }) => {
 	const nodes = [...timelineEvents, ...timelineDocuments].sort((a, b) => {
@@ -123,6 +126,9 @@ export default compose(
 	withState('initialProtagonistsFetched', 'setInitialProtagonistsFetched', false),
 	withState('hoveredElement', 'setHoveredElement', null),
 	withState('pinnedElement', 'setPinnedElement', null),
+	withState('activeRowIndex', 'setActiveRowIndex', 266),
+	withState('activeYear', 'setActiveYear', '1993'),
+	withHandlers({ onRef }),
 	lifecycle({
 		componentDidMount() {
 			const { props } = this;
@@ -135,17 +141,19 @@ export default compose(
 
 		shouldComponentUpdate(nextProps) {
 			return (
-				nextProps.timelineItems.length !== this.props.timelineItems.length ||
-				nextProps.bubbleChartItems !== this.props.bubbleChartItems ||
-				nextProps.fetchingProtagonists !== this.props.fetchingProtagonists ||
-				nextProps.errors.length !== this.props.errors.length ||
-				nextProps.isLoading !== this.props.isLoading ||
-				nextProps.hoveredElement !== this.props.hoveredElement ||
-				nextProps.pinnedElement !== this.props.pinnedElement ||
-				nextProps.eventsCount !== this.props.eventsCount ||
-				nextProps.documentsCount !== this.props.documentsCount ||
-				nextProps.protagonistsCount !== this.props.protagonistsCount ||
-				nextProps.hoveredElement !== this.props.hoveredElement
+				nextProps.timelineItems.length !== this.props.timelineItems.length
+				|| nextProps.bubbleChartItems !== this.props.bubbleChartItems
+				|| nextProps.fetchingProtagonists !== this.props.fetchingProtagonists
+				|| nextProps.errors.length !== this.props.errors.length
+				|| nextProps.isLoading !== this.props.isLoading
+				|| nextProps.hoveredElement !== this.props.hoveredElement
+				|| nextProps.pinnedElement !== this.props.pinnedElement
+				|| nextProps.eventsCount !== this.props.eventsCount
+				|| nextProps.documentsCount !== this.props.documentsCount
+				|| nextProps.protagonistsCount !== this.props.protagonistsCount
+				|| nextProps.activeRowIndex !== this.props.activeRowIndex
+				|| nextProps.activeYear !== this.props.activeYear
+				|| nextProps.hoveredElement !== this.props.hoveredElement
 			);
 		},
 	}),

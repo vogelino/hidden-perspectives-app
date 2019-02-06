@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { prop } from 'ramda';
-import { Container, AllNoneText } from './styles';
+import { AllNoneText } from './styles';
 import Tag from '../_library/Tag';
 
 const getToggleHandler = ({ filteredTags, tags, setFilteredTags }) => () => {
@@ -32,7 +32,7 @@ const LabelFilters = ({
 	setHoveredElement,
 	...otherProps
 }) => (
-	<Container>
+	<>
 		<AllNoneText onClick={getToggleHandler({ tags, filteredTags, ...otherProps })}>
 			{'Toggle all/none'}
 		</AllNoneText>
@@ -48,7 +48,7 @@ const LabelFilters = ({
 				{name}
 			</Tag>
 		))}
-	</Container>
+	</>
 );
 
 LabelFilters.propTypes = {

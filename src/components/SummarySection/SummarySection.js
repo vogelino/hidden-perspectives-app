@@ -3,13 +3,8 @@ import PropTypes from 'prop-types';
 import { formatHumanDate } from '../../utils/dateUtil';
 import { ucFirst } from '../../utils/stringUtil';
 import { isHovered } from '../../utils/timelineUtil';
-import LoadingIndicator from '../LoadingIndicator';
 import Summary from './Summary';
-import {
-	Container,
-	Items,
-	LoadingContainer,
-} from './styles';
+import { Items } from './styles';
 
 const SummarySection = ({
 	items,
@@ -17,43 +12,38 @@ const SummarySection = ({
 	setHoveredElement,
 	...props
 }) => (
-	<Container>
-		<LoadingContainer isLoading={props.isLoading}>
-			<LoadingIndicator />
-		</LoadingContainer>
-		<Items id="summary-section">
-			{items.map((item) => {
-				const itemType = item.type === 'Event' ? 'event' : 'document';
-				const { hoveredElement, pinnedElement } = props;
-				return (
-					<Summary
-						key={item.id}
-						{...props}
-						{...item}
-						type={ucFirst(item.type)}
-						date={formatHumanDate(item.date)}
-						itemType={itemType}
-						hovered={isHovered(item, hoveredElement, itemType)}
-						pinned={!hoveredElement && isHovered(item, pinnedElement, itemType)}
-						hoverHandler={setHoveredElement}
-						clickHandler={(pinEl) => {
-							const { id } = pinEl;
-							if (
-								pinnedElement && (
-									pinnedElement.id === id
-									|| (Array.isArray(pinnedElement)
-										&& pinnedElement.find((el) => el.id === id))
-								)
-							) {
-								return setPinnedElement(null);
-							}
-							return setPinnedElement({ ...item, itemType });
-						}}
-					/>
-				);
-			})}
-		</Items>
-	</Container>
+	<Items id="summary-section">
+		{items.map((item) => {
+			const itemType = item.type === 'Event' ? 'event' : 'document';
+			const { hoveredElement, pinnedElement } = props;
+			return (
+				<Summary
+					key={item.id}
+					{...props}
+					{...item}
+					type={ucFirst(item.type)}
+					date={formatHumanDate(item.date)}
+					itemType={itemType}
+					hovered={isHovered(item, hoveredElement, itemType)}
+					pinned={!hoveredElement && isHovered(item, pinnedElement, itemType)}
+					hoverHandler={setHoveredElement}
+					clickHandler={(pinEl) => {
+						const { id } = pinEl;
+						if (
+							pinnedElement && (
+								pinnedElement.id === id
+								|| (Array.isArray(pinnedElement)
+									&& pinnedElement.find((el) => el.id === id))
+							)
+						) {
+							return setPinnedElement(null);
+						}
+						return setPinnedElement({ ...item, itemType });
+					}}
+				/>
+			);
+		})}
+	</Items>
 );
 
 SummarySection.propTypes = {

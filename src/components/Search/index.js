@@ -218,6 +218,7 @@ export default compose(
 				onEscape,
 			} = this.props;
 			document.addEventListener('keydown', (evt) => {
+				if (!document.querySelector('#search-bar:focus')) return undefined;
 				if (evt.code === 'Tab') return onTab(evt);
 				if (evt.code === 'Enter') return onEnter(evt);
 				if (evt.code === 'Escape') return onEscape(evt);
