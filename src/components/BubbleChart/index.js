@@ -20,7 +20,7 @@ const formatItems = (bubblesData, activeId) => {
 
 	return {
 		name: 'protagonists',
-		children: formattedData,
+		children: formattedData.filter((item) => !item.isActive),
 	};
 };
 
@@ -34,16 +34,19 @@ export default compose(
 		radialLayout,
 	}) => {
 		const formattedItems = formatItems(items, activeId);
-		const bubbleLayoutDiameter = radialLayout ? diameter * 0.85 : diameter;
 		const bubbleLayout = calcBubbleLayout(
 			formattedItems,
-			bubbleLayoutDiameter,
+			radialLayout ? diameter * 0.75 : diameter,
 			bubblesPadding,
 		).children;
 
 		return {
-			items: formattedItems,
-			bubbleLayoutItems: radialLayout ? calcForceLayout(bubbleLayout, diameter) : bubbleLayout,
+			bubbleLayoutItems: radialLayout
+				? calcForceLayout(
+					bubbleLayout,
+					diameter,
+				)
+				: bubbleLayout,
 		};
 	}),
 	withHandlers({

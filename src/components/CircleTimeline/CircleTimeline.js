@@ -138,7 +138,7 @@ const CircleTimeline = ({
 			<BubbleChartContainer>
 				<BubbleChart
 					items={protagonists}
-					diameter={300}
+					diameter={400}
 					bubblesPadding={5}
 					isLoading={isLoading}
 					activeId={item.id}

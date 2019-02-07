@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 
-export const calcBubbleLayout = (data, diameter, padding) => {
+export const calcBubbleLayout = (data, diameter, padding = 0) => {
 	const packLayout = d3.pack()
 		.size([diameter, diameter])
 		.padding(padding);
@@ -12,17 +12,12 @@ export const calcBubbleLayout = (data, diameter, padding) => {
 	return packLayout(rootNode);
 };
 
-export const calcForceLayout = (bubbleItems, diameter, padding = 1, maxBubbleRadius = 60) => {
+export const calcForceLayout = (bubbleItems, diameter, padding = 1) => {
 	if (bubbleItems !== undefined) {
 		const nodeData = bubbleItems.map((item) => ({ r: item.r }));
 
-		const radiusMax = d3.max(nodeData.map((d) => d.r));
-		const bubbleScale = d3.scaleLinear()
-			.domain([0, radiusMax])
-			.range([0, maxBubbleRadius]);
-
-		const chargeForce = d3.forceCollide().radius((d) => (bubbleScale(d.r + padding)));
-		const radialForce = d3.forceRadial(() => diameter / 4);
+		const chargeForce = d3.forceCollide().radius((d) => d.r);
+		const radialForce = d3.forceRadial(() => diameter / 3);
 		const simulation = d3.forceSimulation(nodeData)
 			.force('charge', chargeForce)
 			.force('r', radialForce)
@@ -35,11 +30,12 @@ export const calcForceLayout = (bubbleItems, diameter, padding = 1, maxBubbleRad
 
 		return bubbleItems.map((item, index) => {
 			const { x, y, r } = nodeData[index];
+			const radius = bubbleItems.length > 1 ? r : r / 2;
 			return {
 				...item,
 				x: x + diameter / 2,
 				y: y + diameter / 2,
-				r: bubbleScale(r),
+				r: radius - padding,
 			};
 		});
 	}

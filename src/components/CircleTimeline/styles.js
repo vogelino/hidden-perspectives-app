@@ -78,10 +78,10 @@ export const Document = styled.foreignObject`
 `;
 
 export const BubbleChartContainer = styled.div`
-	height: 50%;
+	height: 100%;
 	pointer-events: none;
 	position: relative;
-	width: 50%;
-	max-width: 300px;
+	width: 100%;
+	max-width: 350px;
 `;
 
