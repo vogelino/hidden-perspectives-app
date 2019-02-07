@@ -108,6 +108,9 @@ const CircleTimeline = ({
 		const labelIsActive = angle === 0 || angle === 320;
 		const showGroupIndicator = group.length > 1;
 		const maxGroupLength = getMaxGroupLength(documents, events);
+		const labelMargin = itemType === 'document'
+			? LABEL_MARGIN
+			: LABEL_MARGIN;
 		return (
 			<Document
 				x={x - (docSize / 2)}
@@ -136,7 +139,14 @@ const CircleTimeline = ({
 				}}
 				current={isCurrentElement}
 			>
-				<Symbol>{symbol}</Symbol>
+				<Symbol
+					rotation={angle}
+					labelMargin={labelMargin}
+					active={labelIsActive}
+					current={isCurrentElement}
+				>
+					{symbol}
+				</Symbol>
 				<DateLabel
 					position={labelPosition}
 					active={labelIsActive}
