@@ -82,10 +82,12 @@ export const Symbol = styled.span`
 	pointer-events: none;
 	width: .875rem;
 	height: .875rem;
-	line-height: .6rem;
+	line-height: ${({ children }) => (children === '▲' ? '.6rem' : '.4rem')};
 	text-decoration: none;
 	float: left;
 	padding-top: 3px;
+	font-family: Arial, sans-serif;
+	user-select: none;
 
 	&::before {
 		background-color: ${({ theme, current }) => (current
