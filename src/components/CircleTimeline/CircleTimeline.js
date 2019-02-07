@@ -99,18 +99,22 @@ const CircleTimeline = ({
 		const hovered = isHovered(group, hoveredElement, itemType);
 		const pinned = isHovered(group, pinnedElement, itemType);
 		const groupWithItemType = group.map((groupEl) => ({ ...groupEl, itemType }));
+		const labelMargin = itemType === 'document'
+			? LABEL_MARGIN + RADIUS_OUTER - RADIUS_INNER
+			: LABEL_MARGIN;
+		const labelRadius = itemType === 'document'
+			? RADIUS_INNER + (RADIUS_INNER - RADIUS_OUTER) - LABEL_MARGIN
+			: RADIUS_OUTER - LABEL_MARGIN;
 		const labelPosition = getDateLabelPosition(
 			x,
 			y,
-			RADIUS_INNER + (RADIUS_INNER - RADIUS_OUTER) - LABEL_MARGIN,
+			labelRadius,
 			angle,
 		);
 		const labelIsActive = angle === 0 || angle === 320;
 		const showGroupIndicator = group.length > 1;
 		const maxGroupLength = getMaxGroupLength(documents, events);
-		const labelMargin = itemType === 'document'
-			? LABEL_MARGIN
-			: LABEL_MARGIN;
+
 		return (
 			<Document
 				x={x - (docSize / 2)}
