@@ -6,8 +6,18 @@ export const CircleContainer = styled.div`
     justify-content: center;
 	flex: 1 1;
 	position: relative;
-	height: calc(100vh - 12rem);
-	margin: 2rem 0;
+	min-height: calc(100vh - 15.3rem);
+	max-height: calc(100vh - 15.3rem);
+	margin-top: 10.8rem;
+`;
+
+export const CircleContent = styled.div`
+	height: 40rem;
+	width: 40rem;
+	max-width: 100%;
+	max-height: calc(100% - 4rem);
+	flex-grow: 0;
+	position: relative;
 `;
 
 export const CircleSvg = styled.svg`
@@ -58,7 +68,8 @@ export const Symbol = styled.span`
 	line-height: ${({ children }) => (children === '▲' ? '.625rem' : '.75rem')};
 	text-decoration: none;
 	float: left;
-	padding-top: 2px;
+	user-select: none;
+	font-family: Arial, sans-serif;
 `;
 
 export const Document = styled.foreignObject`
@@ -72,8 +83,9 @@ export const Document = styled.foreignObject`
 
 	&.pinned,
 	&.hovered {
-		color: ${({ current, theme }) => (current ? theme.primaryDark : theme.primary)};
-		background: ${({ current, theme }) => (current ? theme.primaryLight : 'white')};
+		color: ${({ theme }) => theme.primaryDark};
+		background: ${({ theme }) => theme.primaryLight};
+		text-shadow: none;
 	}
 `;
 
@@ -81,7 +93,11 @@ export const BubbleChartContainer = styled.div`
 	height: 100%;
 	pointer-events: none;
 	position: relative;
-	width: 100%;
-	max-width: 350px;
+	width: 50%;
+	max-width: 30rem;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 `;
 

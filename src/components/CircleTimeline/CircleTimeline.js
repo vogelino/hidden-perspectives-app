@@ -5,6 +5,7 @@ import { EventLegend, DocumentLegend } from '../Legend/Legend';
 import { isHovered } from '../../utils/timelineUtil';
 import {
 	CircleContainer,
+	CircleContent,
 	CircleSvg,
 	Circle,
 	Document,
@@ -85,70 +86,71 @@ const CircleTimeline = ({
 	};
 	return (
 		<CircleContainer>
-			<CircleSvg
-				id="circleContainer"
-				viewBox={`0 0 ${DIAMETER_OUTER + (MARGIN * 2)} ${DIAMETER_OUTER + (MARGIN * 2)}`}
-				preserveAspectRatio="xMidYMid meet"
-			>
-				<Circle
-					missingAngle={toRadian(20)}
-					strokeWidth={1}
-					shapeRendering="crisp-edges"
-					r={RADIUS_OUTER - 1}
-					{...CIRCLE_CENTER}
-					strokeDasharray={(Math.PI * (DIAMETER_OUTER - 1))}
-				/>
-				<Circle
-					missingAngle={toRadian(20)}
-					strokeWidth={1}
-					shapeRendering="crisp-edges"
-					r={RADIUS_INNER}
-					{...CIRCLE_CENTER}
-					strokeDasharray={(Math.PI * (DIAMETER_INNER))}
-				/>
-				<LegendObject
-					width={RADIUS_OUTER}
-					height={22}
-					x={0}
-					y={0}
+			<CircleContent>
+				<CircleSvg
+					id="circleContainer"
+					viewBox={`0 0 ${DIAMETER_OUTER + (MARGIN * 2)} ${DIAMETER_OUTER + (MARGIN * 2)}`}
+					preserveAspectRatio="xMidYMid meet"
 				>
-					<EventLegendContainer>
-						<EventLegend
-							itemCount={itemCounts.eventsCount}
-							isLoading={isLoading}
-						/>
-					</EventLegendContainer>
-				</LegendObject>
-				<LegendObject
-					width={RADIUS_OUTER}
-					height={22}
-					x={0}
-					y={RADIUS_OUTER - RADIUS_INNER}
-				>
-					<DocumentLegendContainer>
-						<DocumentLegend
-							itemCount={itemCounts.documentsCount}
-							isLoading={isLoading}
-						/>
-					</DocumentLegendContainer>
-				</LegendObject>
-				{documents.map(createDocumentMapper('document', '▲'))}
-				{events.map(createDocumentMapper('event', '●'))}
-			</CircleSvg>
-			<BubbleChartContainer>
-				<BubbleChart
-					items={protagonists}
-					diameter={400}
-					bubblesPadding={5}
-					isLoading={isLoading}
-					activeId={item.id}
-					hoveredElement={hoveredElement}
-					setHoveredElement={setHoveredElement}
-					pinnedElement={pinnedElement}
-					setPinnedElement={setPinnedElement}
-					radialLayout
-				/>
-			</BubbleChartContainer>
+					<Circle
+						missingAngle={toRadian(20)}
+						strokeWidth={1}
+						shapeRendering="crisp-edges"
+						r={RADIUS_OUTER - 1}
+						{...CIRCLE_CENTER}
+						strokeDasharray={(Math.PI * (DIAMETER_OUTER - 1))}
+					/>
+					<Circle
+						missingAngle={toRadian(20)}
+						strokeWidth={1}
+						shapeRendering="crisp-edges"
+						r={RADIUS_INNER}
+						{...CIRCLE_CENTER}
+						strokeDasharray={(Math.PI * (DIAMETER_INNER))}
+					/>
+					<LegendObject
+						width={RADIUS_OUTER}
+						height={22}
+						x={0}
+						y={0}
+					>
+						<EventLegendContainer>
+							<EventLegend
+								itemCount={itemCounts.eventsCount}
+								isLoading={isLoading}
+							/>
+						</EventLegendContainer>
+					</LegendObject>
+					<LegendObject
+						width={RADIUS_OUTER}
+						height={22}
+						x={0}
+						y={RADIUS_OUTER - RADIUS_INNER}
+					>
+						<DocumentLegendContainer>
+							<DocumentLegend
+								itemCount={itemCounts.documentsCount}
+								isLoading={isLoading}
+							/>
+						</DocumentLegendContainer>
+					</LegendObject>
+					{documents.map(createDocumentMapper('document', '▲'))}
+					{events.map(createDocumentMapper('event', '●'))}
+				</CircleSvg>
+				<BubbleChartContainer>
+					<BubbleChart
+						items={protagonists}
+						diameter={400}
+						isLoading={isLoading}
+						activeId={item.id}
+						hoveredElement={hoveredElement}
+						setHoveredElement={setHoveredElement}
+						pinnedElement={pinnedElement}
+						setPinnedElement={setPinnedElement}
+						radialLayout
+					/>
+				</BubbleChartContainer>
+			</CircleContent>
 		</CircleContainer>
 	);
 };

@@ -5,6 +5,7 @@ import {
 	BubbleCircle,
 	Container,
 	BubbleText,
+	BubbleActiveCircle,
 } from './styles';
 
 const Bubble = ({
@@ -40,7 +41,6 @@ const Bubble = ({
 			onClick={() => clickHandler({ itemType: 'stakeholder', ...data })}
 		>
 			<BubbleCircle
-				key={`bubble-${name}`}
 				cx={x}
 				cy={y}
 				r={r}
@@ -50,10 +50,12 @@ const Bubble = ({
 				isActive={isActive}
 				fill={image ? `url(#image-def-${id})` : undefined}
 			/>
+			{isActive && (
+				<BubbleActiveCircle cx={x} cy={y} r={r - 2} fill="none" />
+			)}
 			<BubbleText
 				x={x}
 				y={y}
-				key={`text-${name}`}
 				isLoading={isLoading}
 				isHovered={hovered}
 				isPinned={pinned}

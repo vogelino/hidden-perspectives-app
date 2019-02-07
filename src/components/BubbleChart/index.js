@@ -74,7 +74,7 @@ export default compose(
 				});
 
 				Promise.all(loadAllImages).then((images) => {
-					setImages(images);
+					setImages(images.filter(({ url }) => !!url));
 				});
 			}
 		},

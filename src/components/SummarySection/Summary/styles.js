@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import Headline from '../../_library/Headline';
 
 export const TitleWrapper = styled.div`
-	margin: .5rem 0 .3rem 0;
+	margin: .3rem 0;
 `;
 
 export const Title = styled(Headline)`
@@ -40,12 +40,12 @@ export const Item = styled.div`
 `;
 
 export const Symbol = styled.span`
-	font-size: ${({ isEvent }) => (isEvent ? '1rem' : '.675rem')};
+	font-size: ${({ isEvent }) => (isEvent ? '1.2rem' : '.8rem')};
+	line-height: .8rem;
 	margin-right: .5rem;
-	vertical-align: middle;
 	display: inline-block;
-	margin-top: -2px;
 	opacity: .8;
+	font-family: Arial, sans-serif;
 	
 	&:before {
 		content: '${({ isEvent }) => (isEvent ? '●' : '▲')}';
