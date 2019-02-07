@@ -119,10 +119,7 @@ export const Document = styled.foreignObject`
 	color: ${({ current, theme }) => (current ? 'white' : theme.gray500)};
 	${({ current }) => !current && 'text-shadow: -2px -2px 0 white, 2px -2px 0 white, -2px 2px 0 white, 2px 2px 0 white;'}
 
-	&.hovered {
-		color: ${({ current, theme }) => (current ? theme.primaryDark : theme.primary)};
-		background: ${({ current, theme }) => (current ? theme.primaryLight : 'white')};
-
+	&:hover {
 		${DateLabel} {
 			opacity: 1;
 		}
@@ -132,6 +129,12 @@ export const Document = styled.foreignObject`
 				opacity: 1;
 			}
 		}
+	}
+
+	&.hovered {
+		color: ${({ current, theme }) => (current ? theme.primaryDark : theme.primary)};
+		background: ${({ current, theme }) => (current ? theme.primaryLight : 'white')};
+
 		${ItemCountIndicator} {
 			background-color: ${({ theme }) => theme.primary};
 		}
