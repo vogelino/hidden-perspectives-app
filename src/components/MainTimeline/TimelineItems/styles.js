@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { EventTitleContainer } from '../TimelineElement/styles';
 
 export const Event = styled.div`
 	padding: 0;
@@ -37,13 +36,6 @@ const Column = styled.div`
 
 export const Events = styled(Column)`
 	position: static;
-
-	${EventTitleContainer}:after {
-		content: '●';
-		right: auto;
-		left: 0;
-		transform: translate(50%,-50%);
-	}
 `;
 
 export const Documents = styled(Column)`

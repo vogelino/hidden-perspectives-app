@@ -181,6 +181,8 @@ const getEventsAndDocuments = ({
 	setTimelineItems,
 	stopLoading,
 	setMinimapItems,
+	setDocumentsCount,
+	setEventsCount,
 }) => ({ data: { allEvents: events, allDocuments: documents } }) => {
 	const items = parseItems({
 		events,
@@ -193,6 +195,8 @@ const getEventsAndDocuments = ({
 
 	setTimelineItems(items);
 	setMinimapItems(getMinimap(items));
+	setDocumentsCount(documents.length);
+	setEventsCount(events.length);
 	stopLoading();
 };
 
@@ -209,8 +213,11 @@ const getProtagonistsInViewport = (timelineElement, props) => {
 	const {
 		setBubbleChartItems,
 		setFetchingProtagonists,
+		setPinnedElement,
+		setProtagonistsCount,
 	} = props;
 
+	setPinnedElement(null);
 	const timelineEventIds = getEventIdsInViewport(timelineElement);
 
 	if (timelineEventIds.length > 0) {
@@ -224,6 +231,7 @@ const getProtagonistsInViewport = (timelineElement, props) => {
 		})
 			.then((response) => {
 				const clusteredProtagonists = getClusteredProtagonists(response);
+				setProtagonistsCount(Object.keys(clusteredProtagonists).length);
 				setBubbleChartItems(clusteredProtagonists);
 				setFetchingProtagonists(false);
 			})
@@ -245,12 +253,16 @@ export default compose(
 	withLoading,
 	withErrors,
 	withState('timelineItems', 'setTimelineItems', []),
+	withState('eventsCount', 'setEventsCount', 0),
+	withState('documentsCount', 'setDocumentsCount', 0),
+	withState('protagonistsCount', 'setProtagonistsCount', 0),
 	withState('minimapItems', 'setMinimapItems', []),
 	withState('bubbleChartItems', 'setBubbleChartItems', {}),
 	withState('timelineContainer', 'setTimelineContainer', null),
 	withState('fetchingProtagonists', 'setFetchingProtagonists', true),
 	withState('initialProtagonistsFetched', 'setInitialProtagonistsFetched', false),
 	withState('hoveredElement', 'setHoveredElement', null),
+	withState('pinnedElement', 'setPinnedElement', null),
 	withHandlers({ onRef }),
 	lifecycle({
 		componentDidMount() {
@@ -269,6 +281,8 @@ export default compose(
 			if (!initialProtagonistsFetched) {
 				setInitialProtagonistsFetched(true);
 				getProtagonistsInViewport(timelineContainer, this.props);
+
+				document.getElementById('timeline-year-1993').scrollIntoView();
 			}
 		},
 		shouldComponentUpdate(nextProps) {
@@ -277,6 +291,11 @@ export default compose(
 				|| (nextProps.fetchingProtagonists !== this.props.fetchingProtagonists)
 				|| (nextProps.errors.length !== this.props.errors.length)
 				|| (nextProps.isLoading !== this.props.isLoading)
+				|| (nextProps.hoveredElement !== this.props.hoveredElement)
+				|| (nextProps.pinnedElement !== this.props.pinnedElement)
+				|| (nextProps.eventsCount !== this.props.eventsCount)
+				|| (nextProps.documentsCount !== this.props.documentsCount)
+				|| (nextProps.protagonistsCount !== this.props.protagonistsCount)
 				|| (nextProps.hoveredElement !== this.props.hoveredElement);
 		},
 	}),

@@ -3,9 +3,11 @@ import PropTypes from 'prop-types';
 import { Container } from './styles';
 import CircleTimeline from '../CircleTimeline';
 import SummarySection from '../SummarySection';
+import LabelFilters from '../LabelFilters';
 
 const DetailView = ({ item, isLoading, ...rest }) => (
 	<Container>
+		{item && <LabelFilters item={item} isLoading={isLoading} {...rest} />}
 		{item && <CircleTimeline item={item} isLoading={isLoading} {...rest} />}
 		{item && <SummarySection item={item} isLoading={isLoading} {...rest} />}
 	</Container>

@@ -4,7 +4,7 @@ import { ucFirst } from '../../utils/stringUtil';
 import NodeHeader from './NodeHeader';
 
 const createUrl = curry(({ itemType, id }, path) => {
-	const type = itemType === 'stakeholder' ? 'participant' : itemType;
+	const type = itemType === 'stakeholder' ? 'protagonist' : itemType;
 	return `/${type}/${path}/${id}`;
 });
 

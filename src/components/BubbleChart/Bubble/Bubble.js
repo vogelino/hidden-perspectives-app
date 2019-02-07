@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 import { getCapsOnlyInitials } from '../../../utils/stringUtil';
 import {
 	BubbleCircle,
-	BubbleLink,
+	Container,
 	BubbleText,
+	BubbleActiveCircle,
 } from './styles';
 
 const Bubble = ({
@@ -15,6 +16,8 @@ const Bubble = ({
 	setComponentRef,
 	hovered,
 	setHoveredElement,
+	pinned,
+	clickHandler,
 	textNodeWidth,
 	isLoading,
 	image,
@@ -32,27 +35,30 @@ const Bubble = ({
 		fontSize = Math.min(maxFontSize, fontSize);
 	}
 	return (
-		<BubbleLink
-			to={`/participant/context/${id}`}
+		<Container
 			onMouseEnter={() => setHoveredElement({ itemType: 'stakeholder', ...data })}
 			onMouseLeave={() => setHoveredElement(null)}
+			onClick={() => clickHandler({ itemType: 'stakeholder', ...data })}
 		>
 			<BubbleCircle
-				key={`bubble-${name}`}
 				cx={x}
 				cy={y}
 				r={r}
 				isLoading={isLoading}
 				isHovered={hovered}
+				isPinned={pinned}
 				isActive={isActive}
 				fill={image ? `url(#image-def-${id})` : undefined}
 			/>
+			{isActive && (
+				<BubbleActiveCircle cx={x} cy={y} r={r - 2} fill="none" />
+			)}
 			<BubbleText
 				x={x}
 				y={y}
-				key={`text-${name}`}
 				isLoading={isLoading}
 				isHovered={hovered}
+				isPinned={pinned}
 				isActive={isActive}
 				fontSize={fontSize > 0 ? fontSize : 0}
 				ref={setComponentRef}
@@ -60,7 +66,7 @@ const Bubble = ({
 			>
 				{initials}
 			</BubbleText>
-		</BubbleLink>
+		</Container>
 	);
 };
 
@@ -76,8 +82,10 @@ Bubble.propTypes = {
 	textNodeWidth: PropTypes.number,
 	isLoading: PropTypes.bool,
 	hovered: PropTypes.bool,
+	pinned: PropTypes.bool,
 	setComponentRef: PropTypes.func,
 	setHoveredElement: PropTypes.func,
+	clickHandler: PropTypes.func,
 	image: PropTypes.shape({
 		id: PropTypes.string.isRequired,
 		url: PropTypes.string,
@@ -88,8 +96,10 @@ Bubble.propTypes = {
 Bubble.defaultProps = {
 	isLoading: false,
 	hovered: false,
+	pinned: false,
 	setComponentRef: () => {},
 	setHoveredElement: () => {},
+	clickHandler: () => {},
 	textNodeWidth: undefined,
 	image: undefined,
 };

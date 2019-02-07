@@ -234,9 +234,10 @@ const getItemSubtitle = (item, itemType) => {
 
 const getQuery = (item, itemType) => {
 	let query;
+	let tags = [];
 
 	if (itemType === 'event' || itemType === 'document') {
-		const tags = getResponseProp('tags', itemType, item);
+		tags = getResponseProp('tags', itemType, item);
 		const tagsQuery = builtTagsQuery(map(prop('id'), tags));
 		query = tagsQuery;
 	} else if (itemType === 'stakeholder') {
@@ -247,7 +248,7 @@ const getQuery = (item, itemType) => {
 		query = mentionedInQuery;
 	}
 
-	return query;
+	return { query, tags };
 };
 
 const getProtagonists = (item, itemType, allDocuments, allEvents) => {
@@ -283,14 +284,23 @@ const getDocOrEventParser = (getAngle) => pipe(
 	sortBy(prop('date')),
 );
 
-const normalizeItems = (dateKey, items) => map((item) => ({
+const normalizeItems = (keysMap, items, tags) => map((item) => ({
 	...item,
-	date: new Date(item[dateKey]),
+	date: new Date(item[keysMap.date]),
+	commonTags: item[keysMap.tags].filter((itemTag) => tags.some(({ id }) => id === itemTag.id)),
 }), items);
 
-const mapAllItemsDates = ({ allDocuments, allEvents }) => {
-	const normalizedDocuments = normalizeItems('documentCreationDate', allDocuments);
-	const normalizedEvents = normalizeItems('eventStartDate', allEvents);
+const mapAllItemsDates = ({ allDocuments, allEvents, tags }) => {
+	const documentKeysMap = {
+		date: 'documentCreationDate',
+		tags: 'documentTags',
+	};
+	const eventKeysMap = {
+		date: 'eventStartDate',
+		tags: 'eventTags',
+	};
+	const normalizedDocuments = normalizeItems(documentKeysMap, allDocuments, tags);
+	const normalizedEvents = normalizeItems(eventKeysMap, allEvents, tags);
 	const allItems = sortBy(prop('date'), union(normalizedDocuments, normalizedEvents));
 	return {
 		allItems,
@@ -299,13 +309,14 @@ const mapAllItemsDates = ({ allDocuments, allEvents }) => {
 	};
 };
 
-const getContextParser = (props, item) => ({ data: { allEvents, allDocuments } }) => {
+const getContextParser = (props, item, tags) => ({ data: { allEvents, allDocuments } }) => {
 	const {
 		itemType,
 		stopLoading,
 		setDocuments,
 		setEvents,
 		setProtagonists,
+		setItemCounts,
 	} = props;
 
 	if (allDocuments.length === 0 && allEvents.length === 0) {
@@ -315,7 +326,7 @@ const getContextParser = (props, item) => ({ data: { allEvents, allDocuments } }
 		return;
 	}
 
-	const { allItems, documents, events } = mapAllItemsDates({ allDocuments, allEvents });
+	const { allItems, documents, events } = mapAllItemsDates({ allDocuments, allEvents, tags });
 
 	const dateExtremes = [
 		allItems[0].date,
@@ -330,10 +341,16 @@ const getContextParser = (props, item) => ({ data: { allEvents, allDocuments } }
 	const itemParser = getDocOrEventParser(getAngle);
 	const parsedDocuments = itemParser(documents);
 	const parsedEvents = itemParser(events);
+	const protagonists = getProtagonists(item, itemType, allDocuments, allEvents);
 
+	setItemCounts({
+		documentsCount: allDocuments.length,
+		eventsCount: allEvents.length,
+		protagonistsCount: protagonists.length,
+	});
 	setDocuments(parsedDocuments);
 	setEvents(parsedEvents);
-	setProtagonists(getProtagonists(item, itemType, allDocuments, allEvents));
+	setProtagonists(protagonists);
 
 	stopLoading();
 };
@@ -350,10 +367,9 @@ const getItemParser = (props) => ({ data }) => {
 		itemType,
 	});
 
-	client.query({
-		query: getQuery(item, itemType),
-	})
-		.then(getContextParser(props, item))
+	const { query, tags } = getQuery(item, itemType);
+	client.query({ query })
+		.then(getContextParser(props, item, tags))
 		.catch(getErrorHandler(props));
 };
 
@@ -382,7 +398,9 @@ export default compose(
 	withState('documents', 'setDocuments', []),
 	withState('events', 'setEvents', []),
 	withState('protagonists', 'setProtagonists', {}),
+	withState('itemCounts', 'setItemCounts', { eventsCount: 0, documentsCount: 0, protagonistsCount: 0 }),
 	withState('hoveredElement', 'setHoveredElement', null),
+	withState('pinnedElement', 'setPinnedElement', null),
 	lifecycle({
 		componentDidMount() {
 			performQuery(this.props);
@@ -398,6 +416,7 @@ export default compose(
 				|| this.props.events !== nextProps.events
 				|| this.props.protagonists !== nextProps.protagonists
 				|| this.props.hoveredElement !== nextProps.hoveredElement
+				|| this.props.pinnedElement !== nextProps.pinnedElement
 				|| this.props.isLoading !== nextProps.isLoading
 				|| this.props.itemType !== nextProps.itemType
 				|| this.props.errors !== nextProps.errors

@@ -6,6 +6,7 @@ import {
 	prop,
 } from 'ramda';
 import { formatGraphcoolDocument, formatGraphcoolEvent } from '../../utils/graphcoolUtil';
+import { getHoveredSummary } from '../../utils/timelineUtil';
 import SummarySection from './SummarySection';
 
 const formatEvents = (events) => flatten(events).map(formatGraphcoolEvent);
@@ -19,16 +20,18 @@ export default compose(
 		),
 	})),
 	lifecycle({
-		componentDidUpdate() {
-			const { hoveredElement } = this.props;
+		componentWillUpdate(nextProps) {
+			const { hoveredElement } = nextProps;
 			const hoveredElementIsArray = Array.isArray(hoveredElement);
 			if (hoveredElement && hoveredElementIsArray) {
-				const indexInMiddle = Math.round((hoveredElement.length - 1) / 2);
-				const idToScrollTo = hoveredElement[indexInMiddle].id;
-				const cssIdOfElement = `summary-${idToScrollTo}`;
-				const element = document.getElementById(cssIdOfElement);
+				const element = getHoveredSummary(nextProps.hoveredElement);
 				if (!element) return;
 				element.scrollIntoView({ behavior: 'smooth' });
+			}
+		},
+		componentDidUpdate() {
+			if (!this.props.hoveredElement) {
+				document.getElementById('summary-section').scroll();
 			}
 		},
 	}),
