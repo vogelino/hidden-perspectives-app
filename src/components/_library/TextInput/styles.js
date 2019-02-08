@@ -5,7 +5,7 @@ export const Input = styled(SmoothUiInput)`
 	width: 100%;
 	border: ${({ theme, valid }) => (!valid ? `1px solid ${theme.red};` : 'none')};
 	border-radius: 0;
-	padding: .875rem 1rem;
+	padding: 1rem 1rem .75rem;
 	position: relative;
 	height: 100%;
 

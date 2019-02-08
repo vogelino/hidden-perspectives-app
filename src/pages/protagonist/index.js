@@ -5,11 +5,11 @@ import Header from '../../components/Header';
 import NodeHeader from '../../components/NodeHeader';
 
 const ProtagonistPage = ({ match }) => (
-	<div className="ProtagonistPage">
+	<>
 		<Header />
 		<NodeHeader id={match.params.id} itemType="stakeholder" />
 		<DetailView id={match.params.id} itemType="stakeholder" />
-	</div>
+	</>
 );
 
 ProtagonistPage.propTypes = {

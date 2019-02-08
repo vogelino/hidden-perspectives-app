@@ -5,11 +5,11 @@ import Header from '../../components/Header';
 import NodeHeader from '../../components/NodeHeader';
 
 const DocumentPage = ({ match }) => (
-	<div className="DocumentPage">
+	<>
 		<Header />
 		<NodeHeader id={match.params.id} itemType="document" />
 		<DetailView id={match.params.id} itemType="document" />
-	</div>
+	</>
 );
 
 DocumentPage.propTypes = {

@@ -33,6 +33,7 @@ const getMeta = (meta) => ({
 	error: getError(meta),
 });
 
+// eslint-disable-next-line react/prop-types
 const adapt = (Component) => ({ input, meta, ...rest }) => (
 	<Component {...input} {...rest} {...getMeta(meta)} />
 );

@@ -5,11 +5,11 @@ import Header from '../../components/Header';
 import NodeHeader from '../../components/NodeHeader';
 
 const TranscriptPage = ({ match }) => (
-	<div className="TranscriptPage">
+	<>
 		<Header />
 		<NodeHeader id={match.params.id} itemType="document" />
 		<TranscriptView id={match.params.id} />
-	</div>
+	</>
 );
 
 TranscriptPage.propTypes = {

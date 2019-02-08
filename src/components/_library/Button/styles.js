@@ -26,7 +26,7 @@ export const Button = styled(SmoothUiButton)`
 		? theme.btnPrimaryBorderColor
 		: theme.btnSecondaryBorderColor
 	)};
-	padding: .6rem 2rem .4rem;
+	padding: .875rem 1rem .75rem;
 	user-select: none;
 
 	&,

@@ -5,11 +5,11 @@ import Header from '../../components/Header';
 import NodeHeader from '../../components/NodeHeader';
 
 const EventPage = ({ match }) => (
-	<div className="LocationPage">
+	<>
 		<Header />
 		<NodeHeader id={match.params.id} itemType="location" />
 		<DetailView id={match.params.id} itemType="location" />
-	</div>
+	</>
 );
 
 EventPage.propTypes = {

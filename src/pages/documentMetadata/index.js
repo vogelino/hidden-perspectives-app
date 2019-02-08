@@ -5,11 +5,11 @@ import Header from '../../components/Header';
 import NodeHeader from '../../components/NodeHeader';
 
 const DocumentMetadataPage = ({ match }) => (
-	<div className="MetadataPage">
+	<>
 		<Header />
 		<NodeHeader id={match.params.id} itemType="document" />
 		<MetadataView id={match.params.id} itemType="document" />
-	</div>
+	</>
 );
 
 DocumentMetadataPage.propTypes = {

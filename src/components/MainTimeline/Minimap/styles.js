@@ -41,9 +41,9 @@ export const YearTooltip = styled.span`
 	position: absolute;
 	top: 50%;
 	left: calc(100% + .5rem);
-	transform: translateY(-20%);
+	transform: translateY(-50%);
 	opacity: 0;
-	transition: opacity 200ms ease-out, transform 200ms ease-out;
+	transition: opacity 200ms ease-out, color 200ms ease-out, background 200ms ease-out;
 	white-space: nowrap;
 `;
 
@@ -60,11 +60,12 @@ export const YearCount = styled(TooltipSpan)`
 	background: ${({ theme }) => theme.primaryDark10};
 	border-left: 1px solid ${({ theme }) => theme.primaryDark25};
 	border-radius: 0 1rem 1rem 0;
+	transition: border-left-color 200ms ease-out, background 200ms ease-out;
 `;
 
 export const Year = styled.div.attrs({
 	style: ({ theme, density }) => ({
-		background: mix(density, theme.gray100, theme.gray900),
+		background: mix(density, 'white', theme.primary),
 	}),
 })`
 	width: 1.25rem;
@@ -75,7 +76,6 @@ export const Year = styled.div.attrs({
 	transition: z-index 100ms step-end, box-shadow 200ms ease-out, border-radius 200ms ease-out;
 	${({ isActive }) => isActive && 'transition: z-index 100ms step-start, box-shadow 200ms ease-out, border-radius 200ms ease-out;'}
 	box-shadow: 0 0 0 0 ${({ theme }) => theme.primary}, inset 0 0 0 0 rgba(255,255,255,.2);
-	${({ isActive }) => isActive && 'box-shadow: 0 0 0 2px black, inset 0 0 0 1px rgba(255,255,255,.2);'}
 	cursor: pointer;
 
 	&:hover {
@@ -84,8 +84,23 @@ export const Year = styled.div.attrs({
 		z-index: 10;
 	}
 
+	${({ isActive, theme }) => isActive && `
+		box-shadow: 0 0 0 2px ${theme.primary}, inset 0 0 0 1px rgba(255,255,255,.2);
+		cursor: default;
+
+		& ${YearTooltip} {
+			opacity: 1;
+			background: ${theme.primary};
+			color: white;
+
+			& ${YearCount} {
+				background: rgba(255,255,255,.1);
+				border-left-color: rgba(255,255,255,.2);
+			}
+		}
+	`} 
+
 	&:hover ${YearTooltip} {
-		transform: translateY(-50%);
 		opacity: 1;
 	}
 `;

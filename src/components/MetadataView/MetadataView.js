@@ -6,7 +6,14 @@ import LoadingIndicator from '../LoadingIndicator';
 import { LoadingContainer } from '../LoadingIndicator/styles';
 import { Container, Content } from './styles';
 
-const defaultValueComponent = ({ value }) => value;
+const DefaultValueComponent = ({ value }) => value;
+DefaultValueComponent.propTypes = {
+	value: PropTypes.oneOfType([
+		PropTypes.string,
+		PropTypes.array,
+		PropTypes.shape({}),
+	]).isRequired,
+};
 
 const MetadataView = ({ data, isLoading }) => (
 	<Container>
@@ -16,7 +23,7 @@ const MetadataView = ({ data, isLoading }) => (
 			</LoadingContainer>
 			{data.map(({ values, groupLabel }) => (
 				<Fieldset title={groupLabel} key={groupLabel}>
-					{values.map(({ label, ValueComponent = defaultValueComponent, value }) => (
+					{values.map(({ label, ValueComponent = DefaultValueComponent, value }) => (
 						<MetadataRow key={label} label={label}>
 							{Array.isArray(value)
 								? value.map(({ name, ...props }) => (

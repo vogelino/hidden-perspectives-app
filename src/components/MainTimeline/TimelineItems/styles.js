@@ -2,13 +2,19 @@ import styled from 'styled-components';
 
 export const Event = styled.div`
 	padding: 0;
-	font-size: .875rem;
+	font-size: 0.875rem;
 	line-height: 1.25rem;
 	display: flex;
 	position: relative;
 `;
 
-export const EventContainer = styled.div`
+export const EventContainer = styled.div``;
+
+export const Year = styled.div`
+	margin: 0 auto;
+	text-align: center;
+	line-height: 54px;
+	height: 40px;
 `;
 
 export const EventDate = styled.span`
@@ -42,4 +48,3 @@ export const Documents = styled(Column)`
 	border-right: 1px solid ${({ theme }) => theme.commonBorderColor};
 	text-align: right;
 `;
-

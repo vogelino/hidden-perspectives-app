@@ -1,10 +1,32 @@
 import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
 
+const getColor = ({
+	theme,
+	isActive,
+	hovered,
+	pinned,
+}) => {
+	if (pinned || hovered) return theme.primaryDark;
+	if (isActive) return 'white';
+	return theme.gray800;
+};
+
+const getBackground = ({
+	theme,
+	isActive,
+	hovered,
+	pinned,
+}) => {
+	if (pinned || hovered) return theme.primaryLight;
+	if (isActive) return theme.primary;
+	return theme.gray200;
+};
+
 export const Container = styled.span`
 	border-radius: 1rem;
-	background: ${({ theme }) => theme.gray200};
-	color: ${({ theme }) => theme.gray800};
+	background: ${getBackground};
+	color: ${getColor};
 	text-decoration: none;
 	padding: .6rem 1rem .4rem;
 	margin: 0 .5rem .5rem 0;
