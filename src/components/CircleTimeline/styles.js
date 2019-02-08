@@ -82,7 +82,7 @@ export const Symbol = styled.span`
 	pointer-events: none;
 	width: .875rem;
 	height: .875rem;
-	line-height: ${({ children }) => (children === '▲' ? '.6rem' : '.4rem')};
+	line-height: ${({ children }) => (children === '▲' ? '.5rem' : '.4rem')};
 	text-decoration: none;
 	float: left;
 	padding-top: 3px;
@@ -139,7 +139,7 @@ export const Document = styled.foreignObject`
 		}
 		${Symbol} {
 			&::before {
-				background-color: ${({ theme }) => theme.primary};
+				background-color: ${({ theme }) => theme.primaryLight};
 				opacity: 1;
 			}
 		}
@@ -152,7 +152,7 @@ export const Document = styled.foreignObject`
 		text-shadow: none;
 
 		${ItemCountIndicator} {
-			background-color: ${({ theme }) => theme.primary};
+			background-color: ${({ theme }) => theme.primaryLight};
 		}
 	}
 `;
