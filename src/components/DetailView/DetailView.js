@@ -1,15 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Container } from './styles';
 import CircleTimeline from '../CircleTimeline';
 import SummarySection from '../SummarySection';
 import LabelFilters from '../LabelFilters';
+import { Container, LeftSidebar, RightSidebar } from './styles';
 
 const DetailView = ({ item, isLoading, ...rest }) => (
 	<Container>
-		{item && <LabelFilters item={item} isLoading={isLoading} {...rest} />}
+		{item && !isLoading && (
+			<LeftSidebar>
+				<LabelFilters item={item} isLoading={isLoading} {...rest} />
+			</LeftSidebar>
+		)}
 		{item && <CircleTimeline item={item} isLoading={isLoading} {...rest} />}
-		{item && <SummarySection item={item} isLoading={isLoading} {...rest} />}
+		{item && !isLoading && (
+			<RightSidebar>
+				<SummarySection item={item} isLoading={isLoading} {...rest} />
+			</RightSidebar>
+		)}
 	</Container>
 );
 

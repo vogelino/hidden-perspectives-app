@@ -10,13 +10,12 @@ import BubbleChart from './BubbleChart';
 import { getWikipediaImagePerUrl } from '../../utils/imageUtil';
 
 const calcBubbleLayout = (data, diameter, padding) => {
-	const bubbleLayout = d3.pack()
+	const bubbleLayout = d3
+		.pack()
 		.size([diameter, diameter])
 		.padding(padding);
 
-	const rootNode = d3
-		.hierarchy(data)
-		.sum((d) => d.value);
+	const rootNode = d3.hierarchy(data).sum((d) => d.value);
 
 	return bubbleLayout(rootNode);
 };
@@ -29,11 +28,21 @@ const formatItems = (bubblesData, activeId) => {
 		value: bubblesData[key].length,
 		isActive: key === activeId,
 	}));
-
 	return {
 		name: 'protagonists',
 		children: formattedData,
 	};
+};
+
+const getImageCache = () => {
+	const cacheString = window.localStorage.getItem('hp-protagonist-images');
+	return cacheString ? JSON.parse(cacheString) : {};
+};
+
+let imageCache;
+
+const updateImageCache = () => {
+	window.localStorage.setItem('hp-protagonist-images', JSON.stringify(imageCache));
 };
 
 export default compose(
@@ -46,11 +55,8 @@ export default compose(
 		activeId,
 	}) => {
 		const formattedItems = formatItems(items, activeId);
-		const bubbleLayoutItems = calcBubbleLayout(
-			formattedItems,
-			diameter,
-			bubblesPadding,
-		).children;
+		const bubbleLayoutItems = calcBubbleLayout(formattedItems, diameter, bubblesPadding)
+			.children;
 
 		return {
 			items: formattedItems,
@@ -73,6 +79,15 @@ export default compose(
 				const loadAllImages = bubbleLayoutItems.map((item) => {
 					const { id, name } = item.data;
 					const size = Math.ceil(item.r * 2);
+					if (Object.hasOwnProperty.call(imageCache, id)) {
+						return Promise.resolve({
+							id,
+							url: imageCache[id],
+							size,
+							x: item.x - item.r,
+							y: item.y - item.r,
+						});
+					}
 					return getWikipediaImagePerUrl(name, size).then((url) => ({
 						id,
 						url,
@@ -83,13 +98,28 @@ export default compose(
 				});
 
 				Promise.all(loadAllImages).then((images) => {
-					setImages(images.filter(({ url }) => !!url));
+					const newImages = [];
+					images.forEach((image) => {
+						if (!imageCache[image.id]) {
+							imageCache[image.id] = image.url || false;
+						}
+						if (!image.url) return;
+						newImages.push(image);
+					});
+					setImages(newImages);
 				});
 			}
 		},
 	}),
 	lifecycle({
+		componentDidMount() {
+			imageCache = getImageCache();
+		},
 		componentDidUpdate(prevProps) {
+			if (prevProps.bubbleLayoutItems === this.props.bubbleLayoutItems) return;
+			if (prevProps.images !== this.props.images) {
+				updateImageCache();
+			}
 			this.props.fetchImages(prevProps);
 		},
 	}),

@@ -5,11 +5,11 @@ import Header from '../../components/Header';
 import NodeHeader from '../../components/NodeHeader';
 
 const ProtagonistMetadataPage = ({ match }) => (
-	<div className="MetadataPage">
+	<>
 		<Header />
 		<NodeHeader id={match.params.id} itemType="stakeholder" />
 		<MetadataView id={match.params.id} itemType="stakeholder" />
-	</div>
+	</>
 );
 
 ProtagonistMetadataPage.propTypes = {

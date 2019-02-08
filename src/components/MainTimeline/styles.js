@@ -7,4 +7,8 @@ export const Container = styled.div`
 	overflow-y: auto;
 	position: relative;
 	z-index: 1;
+
+	& .ReactVirtualized__Grid:focus {
+		outline: none;
+	}
 `;

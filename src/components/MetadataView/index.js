@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { compose, lifecycle, withState } from 'recompose';
 import { withApollo } from 'react-apollo';
 import gql from 'graphql-tag';
@@ -139,9 +140,26 @@ const hasValue = propHasValue('value');
 const hasValues = propHasValue('values');
 const formatIfValidDate = ifElse(identity, getFormattedDate, always(null));
 
-const passValueAsChild = (Component) => ({ value, ...props }) => (
-	<Component {...props}>{value}</Component>
-);
+const passValueAsChild = (Component, itemType) => {
+	const WrapperComponent = ({ value, ...props }) => (
+		<Component
+			{...props}
+			to={itemType && `/${itemType}/context/${props.id}`}
+		>
+			{value}
+		</Component>
+	);
+	WrapperComponent.propTypes = {
+		value: PropTypes.oneOfType([
+			PropTypes.string,
+			PropTypes.array,
+			PropTypes.shape({}),
+		]).isRequired,
+		id: PropTypes.string.isRequired,
+	};
+
+	return WrapperComponent;
+};
 
 const structureDocumentData = (data) => {
 	const coreInformation = {
@@ -152,7 +170,7 @@ const structureDocumentData = (data) => {
 			{
 				label: 'Authors',
 				value: data.documentAuthors.map(mapStakeholder),
-				ValueComponent: passValueAsChild(Stakeholder),
+				ValueComponent: passValueAsChild(Stakeholder, 'protagonist'),
 			},
 			{ label: 'Creation date', value: formatIfValidDate(data.documentCreationDate) },
 			{ label: 'Publication date', value: formatIfValidDate(data.documentPublicationDate) },
@@ -165,7 +183,7 @@ const structureDocumentData = (data) => {
 			{
 				label: 'Protagonists',
 				value: data.mentionedStakeholders.map(mapStakeholder),
-				ValueComponent: passValueAsChild(Stakeholder),
+				ValueComponent: passValueAsChild(Stakeholder, 'protagonist'),
 			},
 			{ label: 'Locations', value: data.mentionedLocations.map(mapLocation) },
 		].filter(hasValue),
@@ -218,7 +236,7 @@ const structureEventData = (data) => {
 			{
 				label: 'Protagonists',
 				value: eventStakeholders.map(mapStakeholder),
-				ValueComponent: passValueAsChild(Stakeholder),
+				ValueComponent: passValueAsChild(Stakeholder, 'protagonist'),
 			},
 			{ label: 'Locations', value: eventLocations.map(mapLocation) },
 		].filter(hasValue),

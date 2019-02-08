@@ -154,7 +154,8 @@ export default compose(
 		},
 		onResultClick: ({ setSearchQuery, history }) => ({ id, type }) => {
 			setSearchQuery('');
-			history.push(`/${type}/context/${id}`);
+			const itemType = type === 'stakeholder' ? 'protagonist' : type;
+			history.push(`/${itemType}/context/${id}`);
 		},
 		onTab: (props) => (evt) => {
 			evt.preventDefault();
@@ -194,6 +195,7 @@ export default compose(
 		},
 		onEnter: (props) => (evt) => {
 			evt.preventDefault();
+			props.setSearchQuery('');
 			const { history, searchResults, activeResult } = props;
 			const activeResultObj = searchResults.find(propEq('id', activeResult));
 			if (!activeResultObj) return;
@@ -216,6 +218,7 @@ export default compose(
 				onEscape,
 			} = this.props;
 			document.addEventListener('keydown', (evt) => {
+				if (!document.querySelector('#search-bar:focus')) return undefined;
 				if (evt.code === 'Tab') return onTab(evt);
 				if (evt.code === 'Enter') return onEnter(evt);
 				if (evt.code === 'Escape') return onEscape(evt);

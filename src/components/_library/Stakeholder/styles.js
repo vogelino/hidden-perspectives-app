@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { NavLink } from 'react-router-dom';
 
 export const Container = styled.span`
 	margin: 0 1rem .5rem 0;
@@ -14,6 +15,16 @@ export const Text = styled.span`
 	line-height: .875rem;
 	padding: .6rem 0 0;
 	display: inline-block;
+	transition: color 200ms ease-out;
+`;
+
+export const Link = styled(NavLink)`
+	display: inline-block;
+
+	&:hover ${Text} {
+		color: ${({ theme }) => theme.gray900};
+		text-decoration: underline;
+	}
 `;
 
 export const Circle = styled.span`

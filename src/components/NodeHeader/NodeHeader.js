@@ -37,7 +37,7 @@ const NodeHeader = ({
 
 NodeHeader.propTypes = {
 	id: PropTypes.string.isRequired,
-	itemType: PropTypes.oneOf(['document', 'event', 'protagonist', 'location']).isRequired,
+	itemType: PropTypes.oneOf(['document', 'event', 'stakeholder', 'location']).isRequired,
 	editUrl: PropTypes.string,
 	editText: PropTypes.string,
 	tabs: PropTypes.arrayOf(PropTypes.shape({
