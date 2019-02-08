@@ -34,7 +34,16 @@ const formatItems = (bubblesData, activeId) => {
 	};
 };
 
-const imageCache = new Map();
+const getImageCache = () => {
+	const cacheString = window.localStorage.getItem('hp-protagonist-images');
+	return cacheString ? JSON.parse(cacheString) : {};
+};
+
+let imageCache;
+
+const updateImageCache = () => {
+	window.localStorage.setItem('hp-protagonist-images', JSON.stringify(imageCache));
+};
 
 export default compose(
 	withState('images', 'setImages', []),
@@ -70,10 +79,10 @@ export default compose(
 				const loadAllImages = bubbleLayoutItems.map((item) => {
 					const { id, name } = item.data;
 					const size = Math.ceil(item.r * 2);
-					if (imageCache.get(id)) {
+					if (Object.hasOwnProperty.call(imageCache, id)) {
 						return Promise.resolve({
 							id,
-							url: imageCache.get(id),
+							url: imageCache[id],
 							size,
 							x: item.x - item.r,
 							y: item.y - item.r,
@@ -91,8 +100,8 @@ export default compose(
 				Promise.all(loadAllImages).then((images) => {
 					const newImages = [];
 					images.forEach((image) => {
-						if (!imageCache.get(image.id)) {
-							imageCache.set(image.id, image.url);
+						if (!imageCache[image.id]) {
+							imageCache[image.id] = image.url || false;
 						}
 						if (!image.url) return;
 						newImages.push(image);
@@ -103,8 +112,14 @@ export default compose(
 		},
 	}),
 	lifecycle({
+		componentDidMount() {
+			imageCache = getImageCache();
+		},
 		componentDidUpdate(prevProps) {
 			if (prevProps.bubbleLayoutItems === this.props.bubbleLayoutItems) return;
+			if (prevProps.images !== this.props.images) {
+				updateImageCache();
+			}
 			this.props.fetchImages(prevProps);
 		},
 	}),
