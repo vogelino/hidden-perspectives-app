@@ -1,113 +1,164 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ContainerWithStickyLabel from '../ContainerWithStickyLabel';
+import { List } from 'react-virtualized';
+import throttle from 'lodash.throttle';
 import TimelineElement from '../TimelineElement';
 import { isHovered } from '../../../utils/timelineUtil';
+import { monthsLabels } from '../../../utils/dateUtil';
 import {
-	EventContainer,
-	Event,
-	EventDate,
-	Events,
-	Documents,
+	EventContainer, Event, EventDate, Events, Documents, Year,
 } from './styles';
+import { estimatedMonthHeight } from './utils';
+import ContainerWithStickyLabel from '../ContainerWithStickyLabel';
 
-const TimelineItems = ({
-	timelineItems,
-	hoveredElement,
-	setHoveredElement,
-	pinnedElement,
-	setPinnedElement,
-}) => timelineItems.map(({ year, months, ...yearKey }) => (
-	<ContainerWithStickyLabel
-		label={year}
-		{...yearKey}
-		isYear
-		hoveredElement={hoveredElement}
-	>
-		{months.map(({ month, days, ...monthKey }) => (
-			<ContainerWithStickyLabel
-				label={month}
-				date={`${month} ${year}`}
-				{...monthKey}
+class TimelineItemsClass extends React.PureComponent {
+	constructor(props) {
+		super(props);
+
+		this.updateStakeholders = throttle(this.updateStakeholders.bind(this), 200);
+		this.handleScroll = throttle(this.handleScroll.bind(this), 100);
+		this.rowRenderer = this.rowRenderer.bind(this);
+		this.timelineEl = React.createRef();
+	}
+
+	updateStakeholders = ({ startIndex, stopIndex }) => {
+		const data = this.props.timelineItems.slice(startIndex, stopIndex);
+		const protagonists = {};
+
+		data.forEach((month) => {
+			month.days.forEach((day) => {
+				const items = [...day.events, ...day.documents];
+				if (items.length === 0) return;
+
+				items.forEach((item) => {
+					if (!item.mentionedStakeholders) return;
+					item.mentionedStakeholders.forEach(({ stakeholderFullName, id }) => {
+						if (protagonists[stakeholderFullName]) {
+							protagonists[stakeholderFullName].value += 1;
+						} else {
+							protagonists[stakeholderFullName] = {
+								value: 1,
+								id,
+							};
+						}
+					});
+				});
+			});
+		});
+	}
+
+	handleScroll() {
+		this.props.onTimelineScroll(this.timelineEl.current);
+		const monthBlocks = document.getElementsByClassName('timeline-month');
+		const indexInTheMiddle = Math.round(monthBlocks.length / 2) - 1;
+		const monthInTheMiddle = monthBlocks[indexInTheMiddle];
+		const year = monthInTheMiddle.getAttribute('data-year');
+		if (this.props.activeYear === year) return;
+		this.props.setActiveYear(year);
+	}
+
+	rowRenderer({ index, key, style }) {
+		const {
+			hoveredElement, setHoveredElement, pinnedElement, setPinnedElement,
+		} = this.props;
+		const data = this.props.timelineItems[index];
+		if (!data) return null;
+		const { days, dateUnitIndex } = data;
+		const monthLabel = monthsLabels[dateUnitIndex - 1];
+
+		const mapTimelineItem = (itemType) => (item) => (
+			<TimelineElement
+				key={item.id}
+				{...item}
+				itemType={itemType}
 				hoveredElement={hoveredElement}
-				pinnedElement={pinnedElement}
-			>
-				{days.map(({
-					day,
-					key,
-					events,
-					documents,
-					...dayKey
-				}) => {
-					const mapTimelineItem = (itemType) => (item) => {
-						const hovered = isHovered(item, hoveredElement, itemType);
-						const pinned = isHovered(item, pinnedElement, itemType);
-						return (
-							<TimelineElement
-								key={item.id}
-								{...item}
-								itemType={itemType}
-								hoveredElement={hoveredElement}
-								hovered={hovered}
-								pinned={!hoveredElement && pinned}
-								hoverHandler={setHoveredElement}
-								clickHandler={(pinEl) => {
-									if (pinnedElement && pinEl.id === pinnedElement.id) return setPinnedElement(null);
-									return setPinnedElement(pinEl);
-								}}
-							/>
-						);
-					};
-					return (
-						<EventContainer key={key}>
-							<Event {...dayKey}>
-								<EventDate>{day}</EventDate>
+				hovered={isHovered(item, hoveredElement, itemType)}
+				hoverHandler={setHoveredElement}
+				pinned={!hoveredElement && isHovered(item, pinnedElement, itemType)}
+				clickHandler={(pinEl) => {
+					if (pinnedElement && pinEl.id === pinnedElement.id) {
+						return setPinnedElement(null);
+					}
+					return setPinnedElement(pinEl);
+				}}
+			/>
+		);
+
+		const year = data.key.split('-')[0];
+		return (
+			<div style={style} key={key} className="timeline-month" data-year={year}>
+				{dateUnitIndex === 1 && <Year>{year}</Year>}
+				<ContainerWithStickyLabel
+					isEmpty={days.length === 0}
+					label={monthLabel}
+					date={`${monthLabel} ${year}`}
+				>
+					{days.map(({
+						dateUnitIndex: dayIndex,
+						key: dayKey,
+						events,
+						documents,
+					}) => (
+						<EventContainer key={dayKey}>
+							<Event>
+								<EventDate>{dayIndex}</EventDate>
 								<Documents>
 									{documents.map(mapTimelineItem('document'))}
 								</Documents>
-								<Events>
-									{events.map(mapTimelineItem('event'))}
-								</Events>
+								<Events>{events.map(mapTimelineItem('event'))}</Events>
 							</Event>
 						</EventContainer>
-					);
-				})}
-			</ContainerWithStickyLabel>
-		))}
-	</ContainerWithStickyLabel>
-));
+					))}
+				</ContainerWithStickyLabel>
+			</div>
+		);
+	}
 
-TimelineItems.propTypes = {
+	render() {
+		return (
+			<div ref={this.timelineEl}>
+				<List
+					height={1200}
+					overscanRowCount={0}
+					rowHeight={({ index }) => estimatedMonthHeight(this.props.timelineItems[index])}
+					onScroll={this.handleScroll}
+					rowRenderer={this.rowRenderer}
+					onRowsRendered={this.updateStakeholders}
+					rowCount={this.props.timelineItems.length}
+					scrollToIndex={this.props.activeRowIndex}
+					scrollToAlignment="start"
+					width={window.innerWidth - 384}
+				/>
+			</div>
+		);
+	}
+}
+
+TimelineItemsClass.propTypes = {
 	timelineItems: PropTypes.arrayOf(
 		PropTypes.shape({
 			key: PropTypes.string.isRequired,
-			year: PropTypes.string.isRequired,
-			months: PropTypes.arrayOf(
+			dateUnitIndex: PropTypes.number.isRequired,
+			days: PropTypes.arrayOf(
 				PropTypes.shape({
 					key: PropTypes.string.isRequired,
-					month: PropTypes.string.isRequired,
-					days: PropTypes.arrayOf(
+					dateUnitIndex: PropTypes.number.isRequired,
+					events: PropTypes.arrayOf(
 						PropTypes.shape({
-							key: PropTypes.string.isRequired,
-							day: PropTypes.string.isRequired,
-							events: PropTypes.arrayOf(
-								PropTypes.shape({
-									id: PropTypes.string.isRequired,
-									title: PropTypes.string.isRequired,
-									date: PropTypes.instanceOf(Date).isRequired,
-								}),
-							),
-							documents: PropTypes.arrayOf(
-								PropTypes.shape({
-									id: PropTypes.string.isRequired,
-									title: PropTypes.string.isRequired,
-									date: PropTypes.instanceOf(Date).isRequired,
-								}),
-							),
+							id: PropTypes.string.isRequired,
+							title: PropTypes.string.isRequired,
+							date: PropTypes.instanceOf(Date).isRequired,
 						}),
-					).isRequired,
+					),
+					documents: PropTypes.arrayOf(
+						PropTypes.shape({
+							id: PropTypes.string.isRequired,
+							title: PropTypes.string.isRequired,
+							date: PropTypes.instanceOf(Date).isRequired,
+						}),
+					),
 				}),
-			).isRequired,
+			),
 		}),
 	),
 	hoveredElement: PropTypes.oneOfType([
@@ -136,14 +187,24 @@ TimelineItems.propTypes = {
 		),
 	]),
 	setPinnedElement: PropTypes.func,
+	setActiveRowIndex: PropTypes.func,
+	onTimelineScroll: PropTypes.func,
+	activeRowIndex: PropTypes.number,
+	activeYear: PropTypes.string,
+	setActiveYear: PropTypes.func,
 };
 
-TimelineItems.defaultProps = {
+TimelineItemsClass.defaultProps = {
 	hoveredElement: null,
 	pinnedElement: null,
 	timelineItems: [],
 	setHoveredElement: () => {},
 	setPinnedElement: () => {},
+	setActiveRowIndex: () => {},
+	onTimelineScroll: () => {},
+	activeRowIndex: 300,
+	activeYear: '1993',
+	setActiveYear: () => {},
 };
 
-export default TimelineItems;
+export default TimelineItemsClass;

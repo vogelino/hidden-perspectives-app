@@ -19,7 +19,7 @@ import { GlobalStyles } from './styles';
 const App = () => (
 	<Router>
 		<Theme>
-			<div className="App">
+			<>
 				<Head />
 				<GlobalStyles />
 				<Route exact path="/" component={Home} />
@@ -36,7 +36,7 @@ const App = () => (
 				<Route exact path="/location/context/:id" component={LocationPage} />
 				<Route exact path="/location/metadata/:id" component={LocationMetadataPage} />
 				<Route exact path="/login" component={Login} />
-			</div>
+			</>
 		</Theme>
 	</Router>
 );

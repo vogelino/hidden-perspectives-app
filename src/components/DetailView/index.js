@@ -11,10 +11,10 @@ import {
 	map,
 	prop,
 	pipe,
-	has,
-	flatten,
 	union,
-	sortBy,
+	either,
+	head,
+	last,
 } from 'ramda';
 import DetailView from './DetailView';
 import { withLoading, withErrors, getErrorHandler } from '../../utils/hocUtil';
@@ -90,10 +90,13 @@ const getQueryByItemId = (itemType) => {
 	}
 };
 
-const formatTagsForQuery = (type, tagIds) => map(
-	(tagId) => `{ ${type}Tags_some: { id: "${tagId}" } }`,
-	tagIds,
-);
+const formatTagsForQuery = (id, type, tagIds) => [
+	...map(
+		(tagId) => `{ ${type}Tags_some: { id: "${tagId}" } }`,
+		tagIds,
+	),
+	`{ id_in: "${id}" }`,
+];
 
 const getOrderBy = (type) => (
 	type === 'document' ? 'documentCreationDate_ASC' : 'eventStartDate_ASC'
@@ -104,8 +107,8 @@ const getAdditionalReturnValuesByType = (type) => (
 	documentKind { id, name }` : 'eventStartDate'
 );
 
-const builtQueryStringByType = (type, tagIds) => {
-	const formattedTags = formatTagsForQuery(type, tagIds);
+const builtQueryStringByType = (type, id, tagIds) => {
+	const formattedTags = formatTagsForQuery(id, type, tagIds);
 	const orderBy = getOrderBy(type);
 	const additionalReturnValues = getAdditionalReturnValuesByType(type);
 	const stakeholdersFieldName = type === 'document' ? 'mentionedStakeholders' : 'eventStakeholders';
@@ -135,10 +138,10 @@ const builtQueryStringByType = (type, tagIds) => {
 	return query;
 };
 
-const builtTagsQuery = (tagIds) => gql`
+const builtTagsQuery = (id, tagIds) => gql`
 	query {
-		${builtQueryStringByType('event', tagIds)}
-		${builtQueryStringByType('document', tagIds)}
+		${builtQueryStringByType('event', id, tagIds)}
+		${builtQueryStringByType('document', id, tagIds)}
 	}
 `;
 
@@ -238,7 +241,7 @@ const getQuery = (item, itemType) => {
 
 	if (itemType === 'event' || itemType === 'document') {
 		tags = getResponseProp('tags', itemType, item);
-		const tagsQuery = builtTagsQuery(map(prop('id'), tags));
+		const tagsQuery = builtTagsQuery(item.id, map(prop('id'), tags));
 		query = tagsQuery;
 	} else if (itemType === 'stakeholder') {
 		const mentionedInQuery = builtStakeholderMentionedInQuery(item);
@@ -254,58 +257,75 @@ const getQuery = (item, itemType) => {
 const getProtagonists = (item, itemType, allDocuments, allEvents) => {
 	const items = itemType === 'stakeholder' || itemType === 'location' ? union(allDocuments, allEvents) : [item];
 
-	const protagonistsFromAllItems = items.map((currentItem) => {
-		const isEvent = has('eventStakeholders');
-		const stakeholdersFieldName = isEvent(currentItem) ? 'eventStakeholders' : 'mentionedStakeholders';
-		return currentItem[stakeholdersFieldName];
-	});
+	const protagonists = items.reduce((allProtagonists, currentItem) => {
+		const stakeholdersValue = either(prop('eventStakeholders'), prop('mentionedStakeholders'))(currentItem);
+		const stakeholders = stakeholdersValue.reduce((acc, current) => ({
+			...acc,
+			[current.id]: (acc[current.id] || []).concat(current),
+		}), allProtagonists);
+		return {
+			...allProtagonists,
+			...stakeholders,
+		};
+	}, {});
 
-	const flattenedProtagonists = flatten(protagonistsFromAllItems);
-	const clusterProtagonists = (data) => data
-		.filter((d) => d)
-		.reduce((acc, current) => {
-			const { id } = current;
-			return Object.assign(acc, {
-				[id]: (acc[id] || []).concat(current),
-			});
-		}, {});
-	const parsedProtagonists = clusterProtagonists(flattenedProtagonists);
-
-	return parsedProtagonists;
+	return protagonists;
 };
 
-const getDocOrEventParser = (getAngle) => pipe(
-	map(({ date, ...item }) => ({
-		...item,
-		date,
-		angle: getAngle(date),
-	})),
-	(items) => groupItemsBy(items, 'angle'),
-	sortBy(prop('date')),
-);
+const getItemDate = pipe(either(prop('documentCreationDate'), prop('eventStartDate')), (x) => new Date(x));
+const getItemTags = either(prop('documentTags'), prop('eventTags'));
 
-const normalizeItems = (keysMap, items, tags) => map((item) => ({
-	...item,
-	date: new Date(item[keysMap.date]),
-	commonTags: item[keysMap.tags].filter((itemTag) => tags.some(({ id }) => id === itemTag.id)),
-}), items);
-
-const mapAllItemsDates = ({ allDocuments, allEvents, tags }) => {
-	const documentKeysMap = {
-		date: 'documentCreationDate',
-		tags: 'documentTags',
-	};
-	const eventKeysMap = {
-		date: 'eventStartDate',
-		tags: 'eventTags',
-	};
-	const normalizedDocuments = normalizeItems(documentKeysMap, allDocuments, tags);
-	const normalizedEvents = normalizeItems(eventKeysMap, allEvents, tags);
-	const allItems = sortBy(prop('date'), union(normalizedDocuments, normalizedEvents));
+const newNormalizeItem = ({ tags, getAngle }) => (item) => {
+	const itemTags = getItemTags(item);
+	const commonTags = itemTags.filter((itemTag) => tags.some(({ id }) => id === itemTag.id));
+	const date = getItemDate(item);
 	return {
-		allItems,
-		documents: normalizedDocuments,
-		events: normalizedEvents,
+		...item,
+		angle: getAngle(date),
+		tags: itemTags,
+		date,
+		commonTags,
+	};
+};
+
+const newNormalizeItems = ({ tags, getAngle, items }) => pipe(
+	map(newNormalizeItem({ tags, getAngle })),
+	(x) => groupItemsBy(x, 'angle'),
+)(items);
+
+const roundAngle = (angle) => angle - (angle % 4);
+
+const getFirstDate = pipe(head, getItemDate);
+const getLastDate = pipe(last, getItemDate);
+
+const getStartExtreme = ({ allDocuments, allEvents }) => {
+	const firstDocumentDate = getFirstDate(allDocuments);
+	const firstEventDate = getFirstDate(allEvents);
+
+	return firstDocumentDate < firstEventDate ? firstDocumentDate : firstEventDate;
+};
+
+const getEndExtreme = ({ allDocuments, allEvents }) => {
+	const lastDocumentDate = getLastDate(allDocuments);
+	const lastEventDate = getLastDate(allEvents);
+
+	return lastDocumentDate > lastEventDate ? lastDocumentDate : lastEventDate;
+};
+
+const newParseItems = ({ allDocuments, allEvents, tags }) => {
+	const dateExtremes = [
+		getStartExtreme({ allDocuments, allEvents }),
+		getEndExtreme({ allDocuments, allEvents }),
+	];
+	const angleScaleFunction = scaleLinear()
+		.domain(dateExtremes)
+		.range([0, 320]);
+
+	const getAngle = pipe(angleScaleFunction, roundAngle);
+
+	return {
+		events: newNormalizeItems({ tags, getAngle, items: allEvents }),
+		documents: newNormalizeItems({ tags, getAngle, items: allDocuments }),
 	};
 };
 
@@ -326,21 +346,7 @@ const getContextParser = (props, item, tags) => ({ data: { allEvents, allDocumen
 		return;
 	}
 
-	const { allItems, documents, events } = mapAllItemsDates({ allDocuments, allEvents, tags });
-
-	const dateExtremes = [
-		allItems[0].date,
-		allItems[allItems.length - 1].date,
-	];
-	const angleScaleFunction = scaleLinear()
-		.domain(dateExtremes)
-		.range([0, 320]);
-
-	const roundAngle = (angle) => angle - (angle % 4);
-	const getAngle = pipe(angleScaleFunction, roundAngle);
-	const itemParser = getDocOrEventParser(getAngle);
-	const parsedDocuments = itemParser(documents);
-	const parsedEvents = itemParser(events);
+	const { documents, events } = newParseItems({ allDocuments, allEvents, tags });
 	const protagonists = getProtagonists(item, itemType, allDocuments, allEvents);
 
 	setItemCounts({
@@ -348,15 +354,20 @@ const getContextParser = (props, item, tags) => ({ data: { allEvents, allDocumen
 		eventsCount: allEvents.length,
 		protagonistsCount: protagonists.length,
 	});
-	setDocuments(parsedDocuments);
-	setEvents(parsedEvents);
+	setDocuments(documents);
+	setEvents(events);
 	setProtagonists(protagonists);
 
 	stopLoading();
 };
 
 const getItemParser = (props) => ({ data }) => {
-	const { client, setItem, itemType } = props;
+	const {
+		client,
+		setItem,
+		itemType,
+		setTags,
+	} = props;
 	const dataItemName = ucFirst(itemType);
 	const item = data[dataItemName];
 
@@ -371,6 +382,7 @@ const getItemParser = (props) => ({ data }) => {
 	client.query({ query })
 		.then(getContextParser(props, item, tags))
 		.catch(getErrorHandler(props));
+	setTags(tags);
 };
 
 const performQuery = (props) => {
@@ -401,6 +413,8 @@ export default compose(
 	withState('itemCounts', 'setItemCounts', { eventsCount: 0, documentsCount: 0, protagonistsCount: 0 }),
 	withState('hoveredElement', 'setHoveredElement', null),
 	withState('pinnedElement', 'setPinnedElement', null),
+	withState('tags', 'setTags', []),
+	withState('filteredTags', 'setFilteredTags', []),
 	lifecycle({
 		componentDidMount() {
 			performQuery(this.props);
@@ -420,6 +434,8 @@ export default compose(
 				|| this.props.isLoading !== nextProps.isLoading
 				|| this.props.itemType !== nextProps.itemType
 				|| this.props.errors !== nextProps.errors
+				|| this.props.tags !== nextProps.tags
+				|| this.props.filteredTags !== nextProps.filteredTags
 			);
 		},
 	}),

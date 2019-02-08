@@ -1,13 +1,17 @@
-import * as d3 from 'd3';
+import {
+	pack,
+	hierarchy,
+	forceCollide,
+	forceRadial,
+	forceSimulation,
+} from 'd3';
 
 export const calcBubbleLayout = (data, diameter, padding = 0) => {
-	const packLayout = d3.pack()
+	const packLayout = pack()
 		.size([diameter, diameter])
 		.padding(padding);
 
-	const rootNode = d3
-		.hierarchy(data)
-		.sum((d) => d.value);
+	const rootNode = hierarchy(data).sum((d) => d.value);
 
 	return packLayout(rootNode);
 };
@@ -16,9 +20,9 @@ export const calcForceLayout = (bubbleItems, diameter, padding = 1) => {
 	if (bubbleItems !== undefined) {
 		const nodeData = bubbleItems.map((item) => ({ r: item.r }));
 
-		const chargeForce = d3.forceCollide().radius((d) => d.r);
-		const radialForce = d3.forceRadial(() => diameter / 3);
-		const simulation = d3.forceSimulation(nodeData)
+		const chargeForce = forceCollide().radius((d) => d.r);
+		const radialForce = forceRadial(() => diameter / 3);
+		const simulation = forceSimulation(nodeData)
 			.force('charge', chargeForce)
 			.force('r', radialForce)
 			.stop();

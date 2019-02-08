@@ -103,6 +103,7 @@ const TooltipTrigger = ({
 TooltipTrigger.propTypes = {
 	onMouseEnter: PropTypes.func,
 	onMouseLeave: PropTypes.func,
+	children: PropTypes.node.isRequired,
 };
 
 TooltipTrigger.defaultProps = {

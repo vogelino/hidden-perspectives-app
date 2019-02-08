@@ -9,7 +9,7 @@ export const HeaderContainer = styled.header`
 	left: 0;
 	background: white;
 	text-align: right;
-	z-index: 2;
+	z-index: 3;
 	border-bottom: 1px solid ${({ theme }) => theme.commonBorderColor};
 	display: flex;
 	justify-content: space-between;
@@ -77,5 +77,5 @@ export const UserAvatar = styled.span`
 	line-height: 1rem;
 	text-align: center;
 	border-radius: 50%;
-	padding-top: .25rem;
+	padding-top: .45rem;
 `;

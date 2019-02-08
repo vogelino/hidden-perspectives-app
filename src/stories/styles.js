@@ -2,8 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Theme from '../components/Theme';
-import '../index.css';
-import '../fonts.css';
+import { GlobalStyles } from '../components/App/styles';
 
 const StoryWrapperContent = styled.div`
 	width: 100%;
@@ -24,6 +23,7 @@ const StoryWrapperContainer = styled.div`
 export const StoryWrapper = ({ children, maxWidth, background }) => (
 	<Theme>
 		<StoryWrapperContainer>
+			<GlobalStyles />
 			<StoryWrapperContent
 				maxWidth={maxWidth}
 				background={background}
