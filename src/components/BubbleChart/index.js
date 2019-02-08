@@ -34,6 +34,8 @@ const formatItems = (bubblesData, activeId) => {
 	};
 };
 
+const imageCache = new Map();
+
 export default compose(
 	withState('images', 'setImages', []),
 	withProps(({
@@ -68,6 +70,15 @@ export default compose(
 				const loadAllImages = bubbleLayoutItems.map((item) => {
 					const { id, name } = item.data;
 					const size = Math.ceil(item.r * 2);
+					if (imageCache.get(id)) {
+						return Promise.resolve({
+							id,
+							url: imageCache.get(id),
+							size,
+							x: item.x - item.r,
+							y: item.y - item.r,
+						});
+					}
 					return getWikipediaImagePerUrl(name, size).then((url) => ({
 						id,
 						url,
@@ -78,13 +89,22 @@ export default compose(
 				});
 
 				Promise.all(loadAllImages).then((images) => {
-					setImages(images.filter(({ url }) => !!url));
+					const newImages = [];
+					images.forEach((image) => {
+						if (!imageCache.get(image.id)) {
+							imageCache.set(image.id, image.url);
+						}
+						if (!image.url) return;
+						newImages.push(image);
+					});
+					setImages(newImages);
 				});
 			}
 		},
 	}),
 	lifecycle({
 		componentDidUpdate(prevProps) {
+			if (prevProps.bubbleLayoutItems === this.props.bubbleLayoutItems) return;
 			this.props.fetchImages(prevProps);
 		},
 	}),

@@ -18,6 +18,7 @@ class TimelineItemsClass extends React.PureComponent {
 		this.updateStakeholders = throttle(this.updateStakeholders.bind(this), 200);
 		this.handleScroll = throttle(this.handleScroll.bind(this), 100);
 		this.rowRenderer = this.rowRenderer.bind(this);
+		this.timelineEl = React.createRef();
 	}
 
 	updateStakeholders = ({ startIndex, stopIndex }) => {
@@ -47,6 +48,7 @@ class TimelineItemsClass extends React.PureComponent {
 	}
 
 	handleScroll() {
+		this.props.onTimelineScroll(this.timelineEl.current);
 		const monthBlocks = document.getElementsByClassName('timeline-month');
 		const indexInTheMiddle = Math.round(monthBlocks.length / 2) - 1;
 		const monthInTheMiddle = monthBlocks[indexInTheMiddle];
@@ -114,18 +116,20 @@ class TimelineItemsClass extends React.PureComponent {
 
 	render() {
 		return (
-			<List
-				height={1200}
-				overscanRowCount={0}
-				rowHeight={({ index }) => estimatedMonthHeight(this.props.timelineItems[index])}
-				onScroll={this.handleScroll}
-				rowRenderer={this.rowRenderer}
-				onRowsRendered={this.updateStakeholders}
-				rowCount={this.props.timelineItems.length}
-				scrollToIndex={this.props.activeRowIndex}
-				scrollToAlignment="start"
-				width={window.innerWidth - 384}
-			/>
+			<div ref={this.timelineEl}>
+				<List
+					height={1200}
+					overscanRowCount={0}
+					rowHeight={({ index }) => estimatedMonthHeight(this.props.timelineItems[index])}
+					onScroll={this.handleScroll}
+					rowRenderer={this.rowRenderer}
+					onRowsRendered={this.updateStakeholders}
+					rowCount={this.props.timelineItems.length}
+					scrollToIndex={this.props.activeRowIndex}
+					scrollToAlignment="start"
+					width={window.innerWidth - 384}
+				/>
+			</div>
 		);
 	}
 }
@@ -184,6 +188,7 @@ TimelineItemsClass.propTypes = {
 	]),
 	setPinnedElement: PropTypes.func,
 	setActiveRowIndex: PropTypes.func,
+	onTimelineScroll: PropTypes.func,
 	activeRowIndex: PropTypes.number,
 	activeYear: PropTypes.string,
 	setActiveYear: PropTypes.func,
@@ -196,6 +201,7 @@ TimelineItemsClass.defaultProps = {
 	setHoveredElement: () => {},
 	setPinnedElement: () => {},
 	setActiveRowIndex: () => {},
+	onTimelineScroll: () => {},
 	activeRowIndex: 300,
 	activeYear: '1993',
 	setActiveYear: () => {},

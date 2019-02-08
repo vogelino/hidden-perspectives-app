@@ -9,7 +9,7 @@ import {
 import debounce from 'lodash.debounce';
 import MainTimeline from './MainTimeline';
 import { withLoading, withErrors, getErrorHandler } from '../../utils/hocUtil';
-import { getMinimap, isFullyInViewport } from '../../utils/timelineUtil';
+import { getMinimap } from '../../utils/timelineUtil';
 import { ucFirst } from '../../utils/stringUtil';
 import isDocumentId from '../../utils/isDocumentId';
 import { getFormattedDate } from '../../utils/dateUtil';
@@ -167,7 +167,6 @@ const getEventsAndDocuments = ({
 const getEventIdsInViewport = (timelineElement) => {
 	const timelineEvents = timelineElement.getElementsByClassName('timeline-event');
 	const eventIds = [...timelineEvents]
-		.filter(isFullyInViewport)
 		.map((timelineEvent) => timelineEvent.getAttribute('data-id'));
 
 	return eventIds;
@@ -206,15 +205,13 @@ const getProtagonistsInViewport = (timelineElement, props) => {
 	}
 };
 
-const onRef = (props) => (ref) => {
-	if (ref) {
-		props.setTimelineContainer(ref);
-		ref.addEventListener(
-			'scroll',
-			debounce((event) => getProtagonistsInViewport(event.target, props), 350),
-		);
-	}
-};
+const onTimelineScroll = (props) => debounce(
+	(target) => {
+		if (!target) return;
+		getProtagonistsInViewport(target, props);
+	},
+	150,
+);
 
 export default compose(
 	withApollo,
@@ -233,7 +230,7 @@ export default compose(
 	withState('pinnedElement', 'setPinnedElement', null),
 	withState('activeRowIndex', 'setActiveRowIndex', 266),
 	withState('activeYear', 'setActiveYear', '1993'),
-	withHandlers({ onRef }),
+	withHandlers({ onTimelineScroll }),
 	lifecycle({
 		componentDidMount() {
 			const { props } = this;
@@ -242,18 +239,6 @@ export default compose(
 				.query({ query: ALL_EVENTS_AND_DOCUMENTS })
 				.then(getEventsAndDocuments(props))
 				.catch(getErrorHandler(props));
-		},
-		componentDidUpdate() {
-			const {
-				initialProtagonistsFetched,
-				setInitialProtagonistsFetched,
-				timelineContainer,
-			} = this.props;
-
-			if (!initialProtagonistsFetched) {
-				setInitialProtagonistsFetched(true);
-				getProtagonistsInViewport(timelineContainer, this.props);
-			}
 		},
 		shouldComponentUpdate(nextProps) {
 			return (nextProps.timelineItems.length !== this.props.timelineItems.length)

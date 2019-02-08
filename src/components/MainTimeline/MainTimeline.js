@@ -25,7 +25,6 @@ const MainTimeline = ({
 	errors,
 	isLoading,
 	fetchingProtagonists,
-	onRef,
 	setHoveredElement,
 	hoveredElement,
 	setPinnedElement,
@@ -37,10 +36,11 @@ const MainTimeline = ({
 	setActiveRowIndex,
 	activeYear,
 	setActiveYear,
+	onTimelineScroll,
 }) => {
 	const items = parseTimelineItems(timelineItems);
 	return (
-		<Container id="mainTimeline" ref={onRef}>
+		<Container id="mainTimeline">
 			<LoadingContainer isLoading={isLoading}>
 				<LoadingIndicator />
 			</LoadingContainer>
@@ -79,6 +79,7 @@ const MainTimeline = ({
 					setPinnedElement={setPinnedElement}
 					activeRowIndex={activeRowIndex}
 					setActiveYear={setActiveYear}
+					onTimelineScroll={onTimelineScroll}
 				/>
 			)}
 		</Container>
@@ -102,7 +103,7 @@ MainTimeline.propTypes = {
 	errors: PropTypes.arrayOf(PropTypes.string),
 	isLoading: PropTypes.bool,
 	fetchingProtagonists: PropTypes.bool,
-	onRef: PropTypes.func,
+	onTimelineScroll: PropTypes.func,
 	setActiveRowIndex: PropTypes.func,
 	activeRowIndex: PropTypes.number,
 	setActiveYear: PropTypes.func,
@@ -120,7 +121,7 @@ MainTimeline.defaultProps = {
 	errors: [],
 	isLoading: true,
 	fetchingProtagonists: true,
-	onRef: () => {},
+	onTimelineScroll: () => {},
 	setActiveRowIndex: () => {},
 	setActiveYear: () => {},
 	activeRowIndex: 300,
