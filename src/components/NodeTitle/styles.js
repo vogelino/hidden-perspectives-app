@@ -3,11 +3,10 @@ import Headline from '../_library/Headline';
 
 export const Container = styled.div`
 	width: 100%;
-	padding: 1rem;
-	margin: 0 auto;
-	text-align: center;
-	padding: 1rem 0;
+	margin: 0 0 2rem;
+	padding: 1rem 0 2rem;
 	display: inline-block;
+	border-bottom: 1px solid ${({ theme }) => theme.gray200};
 `;
 
 export const Title = styled(Headline)`

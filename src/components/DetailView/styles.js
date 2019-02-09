@@ -9,11 +9,11 @@ export const Container = styled.div`
 
 export const LeftSidebar = styled.aside`
 	flex: 0 0 28rem;
-	height: calc(100vh - 4.5rem);
+	height: calc(100vh - 8rem);
 	background: white;
 	position: relative;
 	z-index: 1;
-	padding: 9rem 2rem 0;
+	padding: 6rem 2rem 0;
 `;
 
 export const RightSidebar = styled.aside`
