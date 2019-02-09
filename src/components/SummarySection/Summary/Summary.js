@@ -34,7 +34,9 @@ const Summary = ({
 		date,
 		title,
 		summary,
+		thumbnailUrl,
 	} = item;
+
 	return (
 		<Item
 			className={getSummaryClass({ hovered, pinned, hoveredElement })}
@@ -50,6 +52,7 @@ const Summary = ({
 				position="left"
 				prefetchedData={{
 					summary,
+					thumbnailUrl,
 					subtitle: '',
 				}}
 			>

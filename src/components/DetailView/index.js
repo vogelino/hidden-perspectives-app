@@ -110,8 +110,17 @@ const getOrderBy = (type) => (
 );
 
 const getAdditionalReturnValuesByType = (type) => (
-	type === 'document' ? `documentCreationDate
-	documentKind { id, name }` : 'eventStartDate'
+	type === 'document'
+		? `
+		documentCreationDate
+		documentFiles {
+			url
+		}
+		documentKind {
+			id
+			name
+		}`
+		: 'eventStartDate'
 );
 
 const builtQueryStringByType = (type, id, tagIds) => {

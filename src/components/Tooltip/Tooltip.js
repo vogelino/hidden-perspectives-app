@@ -11,15 +11,18 @@ import {
 	head,
 	splitAt,
 } from 'ramda';
+import { pdfjs, Document, Page } from 'react-pdf';
 import {
 	Trigger,
 	Container,
 	Content,
-	Thumbnail,
 	Subtitle,
 	Summary,
 	ExploreButton,
+	Thumbnail,
 } from './styles';
+
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 const SUMMARY_MAX_LEN = 200;
 const isBiggerThanMax = pipe(length, lt(SUMMARY_MAX_LEN));
@@ -45,7 +48,18 @@ const Tooltip = ({
 }) => (
 	<Container id={`tooltip-${id}`} position={position} {...rest}>
 		<Content>
-			{!isLoading && <Thumbnail>{thumbnailUrl}</Thumbnail>}
+			{!isLoading && thumbnailUrl && (
+				<Thumbnail>
+					<Document
+						file={thumbnailUrl}
+						loading=" "
+						error=" "
+						renderMode="canvas"
+					>
+						<Page pageNumber={1} width={64} />
+					</Document>
+				</Thumbnail>
+			)}
 			{!noSubtitle && <Subtitle variant="h6">{isLoading ? 'Loading...' : subtitle}</Subtitle>}
 			{!isLoading && <Summary>{getSummary(summary)}</Summary>}
 			{path && (
