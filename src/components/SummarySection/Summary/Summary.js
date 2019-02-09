@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { prop } from 'ramda';
 import Tooltip from '../../Tooltip';
 import {
 	Item,
@@ -35,7 +34,6 @@ const Summary = ({
 		date,
 		title,
 		summary,
-		commonTags,
 	} = item;
 	return (
 		<Item
@@ -52,9 +50,7 @@ const Summary = ({
 				position="left"
 				prefetchedData={{
 					summary,
-					subtitle: commonTags && commonTags.length
-						? `Common tags: ${commonTags.map(prop('name')).join(', ')}`
-						: '',
+					subtitle: '',
 				}}
 			>
 				<SecondaryInfo variant="h6">
