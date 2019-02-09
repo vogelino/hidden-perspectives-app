@@ -62,8 +62,7 @@ export const Description = styled.p`
 	font-size: .875rem;
 	line-height: 1.25rem;
 	cursor: pointer;
-	transition: color 200ms ease-out, max-height 200ms ease-out;
-	max-height: 800px;
+	transition: color 200ms ease-out;
 	overflow: hidden;
 	margin: 1.5rem 0 0.5rem;
 
@@ -78,7 +77,6 @@ export const Description = styled.p`
 	
 	${({ expanded, theme }) => !expanded && `
 		color: ${theme.gray600};
-		max-height: 200px;
 
 		& ${DescriptionLimitGradient},
 		& ${ShowMoreText} {

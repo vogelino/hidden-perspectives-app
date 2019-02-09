@@ -33,9 +33,11 @@ const LabelFilters = ({
 	...otherProps
 }) => (
 	<>
-		<AllNoneText onClick={getToggleHandler({ tags, filteredTags, ...otherProps })}>
-			{'Toggle all/none'}
-		</AllNoneText>
+		{tags.length > 0 && (
+			<AllNoneText onClick={getToggleHandler({ tags, filteredTags, ...otherProps })}>
+				{'Toggle all/none'}
+			</AllNoneText>
+		)}
 		{tags.map(({ id, name }) => (
 			<Tag
 				key={id}
