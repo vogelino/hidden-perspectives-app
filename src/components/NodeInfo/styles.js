@@ -91,6 +91,20 @@ export const TitleContainer = styled.div`
 		clear: both;
 		display: table;
 	}
+
+	& > .react-pdf__Document {
+		width: 4rem;
+		float: left;
+		margin: 0 1rem 1rem 0;
+		min-height: 4rem;
+
+		.react-pdf__Page__canvas {
+			width: 100% !important;
+			height: auto !important;
+			border-radius: 4px;
+			border: 1px solid ${({ theme }) => theme.gray200};
+		}
+	}
 `;
 
 export const StakholderImage = styled.div`

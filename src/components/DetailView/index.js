@@ -244,6 +244,12 @@ const getItemSubtitle = (item, itemType) => {
 
 const getItemDescription = (item, itemType) => item[`${itemType}Description`];
 
+const getItemOriginal = (item, itemType) => {
+	if (itemType !== 'document') return undefined;
+	return item.documentFiles && item.documentFiles.length > 0
+		? item.documentFiles[0].url : undefined;
+};
+
 const getQuery = (item, itemType) => {
 	let query;
 	let tags = [];
@@ -385,6 +391,7 @@ const getItemParser = (props) => ({ data }) => {
 		title: getResponseProp('title', itemType, item),
 		subtitle: getItemSubtitle(item, itemType),
 		description: getItemDescription(item, itemType),
+		original: getItemOriginal(item, itemType),
 		itemType,
 	});
 
