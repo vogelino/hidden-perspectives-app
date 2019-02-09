@@ -90,7 +90,7 @@ export const Document = styled.foreignObject`
 `;
 
 export const BubbleChartContainer = styled.div`
-	height: 50%;
+	height: 100%;
 	pointer-events: none;
 	position: relative;
 	width: 50%;
