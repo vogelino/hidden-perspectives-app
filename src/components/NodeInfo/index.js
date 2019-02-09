@@ -8,7 +8,7 @@ import {
 import { withApollo } from 'react-apollo';
 import { ucFirst } from '../../utils/stringUtil';
 import { formatHumanDate } from '../../utils/dateUtil';
-import NodeTitle from './NodeTitle';
+import NodeInfo from './NodeInfo';
 
 const EVENT_QUERY = gql`
 	query GetEvent($id: ID!) {
@@ -127,4 +127,4 @@ export default compose(
 			);
 		},
 	}),
-)(NodeTitle);
+)(NodeInfo);

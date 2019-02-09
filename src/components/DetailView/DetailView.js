@@ -3,14 +3,14 @@ import PropTypes from 'prop-types';
 import CircleTimeline from '../CircleTimeline';
 import SummarySection from '../SummarySection';
 import LabelFilters from '../LabelFilters';
-import NodeTitle from '../NodeTitle';
+import NodeInfo from '../NodeInfo';
 import { Container, LeftSidebar, RightSidebar } from './styles';
 
 const DetailView = ({ item, isLoading, ...rest }) => (
 	<Container>
 		{item && !isLoading && (
 			<LeftSidebar>
-				<NodeTitle item={item} isLoading={isLoading} {...rest} />
+				<NodeInfo item={item} isLoading={isLoading} {...rest} />
 				<LabelFilters item={item} isLoading={isLoading} {...rest} />
 			</LeftSidebar>
 		)}
