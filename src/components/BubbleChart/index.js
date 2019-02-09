@@ -5,20 +5,9 @@ import {
 	withState,
 	withHandlers,
 } from 'recompose';
-import * as d3 from 'd3';
 import BubbleChart from './BubbleChart';
+import { calcBubbleLayout, calcForceLayout } from './calculateChartLayout';
 import { getWikipediaImagePerUrl } from '../../utils/imageUtil';
-
-const calcBubbleLayout = (data, diameter, padding) => {
-	const bubbleLayout = d3
-		.pack()
-		.size([diameter, diameter])
-		.padding(padding);
-
-	const rootNode = d3.hierarchy(data).sum((d) => d.value);
-
-	return bubbleLayout(rootNode);
-};
 
 const formatItems = (bubblesData, activeId) => {
 	const formattedData = Object.keys(bubblesData).map((key) => ({
@@ -30,7 +19,7 @@ const formatItems = (bubblesData, activeId) => {
 	}));
 	return {
 		name: 'protagonists',
-		children: formattedData,
+		children: formattedData.filter((item) => !item.isActive),
 	};
 };
 
@@ -48,20 +37,26 @@ const updateImageCache = () => {
 export default compose(
 	withState('images', 'setImages', []),
 	withProps(({
-		item,
 		items,
 		diameter,
 		bubblesPadding,
 		activeId,
+		radialLayout,
 	}) => {
 		const formattedItems = formatItems(items, activeId);
-		const bubbleLayoutItems = calcBubbleLayout(formattedItems, diameter, bubblesPadding)
-			.children;
+		const bubbleLayout = calcBubbleLayout(
+			formattedItems,
+			radialLayout ? diameter * 0.75 : diameter,
+			bubblesPadding,
+		).children;
 
 		return {
-			items: formattedItems,
-			bubbleLayoutItems,
-			activeElemenId: item ? item.id : '',
+			bubbleLayoutItems: radialLayout
+				? calcForceLayout(
+					bubbleLayout,
+					diameter,
+				)
+				: bubbleLayout,
 		};
 	}),
 	withHandlers({

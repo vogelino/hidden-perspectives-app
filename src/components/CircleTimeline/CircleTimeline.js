@@ -205,14 +205,14 @@ const CircleTimeline = ({
 				<BubbleChartContainer>
 					<BubbleChart
 						items={protagonists}
-						diameter={300}
-						bubblesPadding={5}
+						diameter={400}
 						isLoading={isLoading}
 						activeId={item.id}
 						hoveredElement={hoveredElement}
 						setHoveredElement={setHoveredElement}
 						pinnedElement={pinnedElement}
 						setPinnedElement={setPinnedElement}
+						radialLayout
 					/>
 				</BubbleChartContainer>
 			</CircleContent>
