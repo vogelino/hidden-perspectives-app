@@ -19,7 +19,7 @@ import {
 import DetailView from './DetailView';
 import { withLoading, withErrors, getErrorHandler } from '../../utils/hocUtil';
 import { ucFirst } from '../../utils/stringUtil';
-import { getFormattedDate } from '../../utils/dateUtil';
+import { formatHumanDate } from '../../utils/dateUtil';
 import { groupItemsBy } from '../../utils/timelineUtil';
 
 const EVENT_QUERY = gql`
@@ -36,6 +36,7 @@ const EVENT_QUERY = gql`
 				id
 				stakeholderFullName
 			}
+			eventDescription
 		}
 	}
 `;
@@ -45,6 +46,7 @@ const DOCUMENT_QUERY = gql`
 		Document(id: $id) {
 			id
 			documentTitle
+			documentCreationDate
 			documentKind {
 				id
 				name
@@ -57,7 +59,10 @@ const DOCUMENT_QUERY = gql`
 				id
 				stakeholderFullName
 			}
-
+			documentDescription
+			documentFiles {
+				url
+			}
 		}
 	}
 `;
@@ -67,6 +72,7 @@ const STAKEHOLDER_QUERY = gql`
 		Stakeholder(id: $id) {
 			id
 			stakeholderFullName
+			stakeholderDescription
 		}
 	}
 `;
@@ -76,6 +82,7 @@ const LOCATION_QUERY = gql`
 		Location(id: $id) {
 			id
 			locationName
+			locationDescription
 		}
 	}
 `;
@@ -227,13 +234,15 @@ const getResponseProp = (key, type, item) => {
 
 const getItemSubtitle = (item, itemType) => {
 	switch (itemType) {
-	case 'event': return getFormattedDate(new Date(item.eventStartDate));
-	case 'document': return item.documentKind && item.documentKind.name;
-	case 'stakeholder': return 'stakeholder';
-	case 'location': return 'location';
+	case 'event': return `Event ・ ${formatHumanDate(new Date(item.eventStartDate))}`;
+	case 'document': return `${ucFirst(item.documentKind && item.documentKind.name)} ・ ${formatHumanDate(new Date(item.documentCreationDate))}`;
+	case 'stakeholder': return 'Protagonist';
+	case 'location': return 'Location';
 	default: return '';
 	}
 };
+
+const getItemDescription = (item, itemType) => item[`${itemType}Description`];
 
 const getQuery = (item, itemType) => {
 	let query;
@@ -375,6 +384,7 @@ const getItemParser = (props) => ({ data }) => {
 		id: item.id,
 		title: getResponseProp('title', itemType, item),
 		subtitle: getItemSubtitle(item, itemType),
+		description: getItemDescription(item, itemType),
 		itemType,
 	});
 

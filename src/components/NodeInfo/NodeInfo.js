@@ -1,27 +1,50 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Container, Title, Subtitle } from './styles';
+import {
+	Container,
+	Title,
+	Subtitle,
+	Description,
+	DescriptionLimitGradient,
+	ShowMoreText,
+} from './styles';
 
-const NodeInfo = ({ symbol, subtitle, title }) => (
+const NodeInfo = ({
+	subtitle,
+	title,
+	description,
+	descriptionExpanded,
+	toggleDescriptionExpansion,
+}) => (
 	<Container>
 		{subtitle && (
 			<Subtitle variant="h6">{subtitle}</Subtitle>
 		)}
-		<Title variant="h4">
-			{`${symbol} ${title}`}
-		</Title>
+		<Title variant="h4">{title}</Title>
+		{description && (
+			<Description
+				onClick={() => toggleDescriptionExpansion(!descriptionExpanded)}
+				expanded={descriptionExpanded}
+			>
+				{description}
+				<DescriptionLimitGradient />
+				<ShowMoreText>Show more</ShowMoreText>
+			</Description>
+		)}
 	</Container>
 );
 
 NodeInfo.propTypes = {
-	symbol: PropTypes.string,
 	subtitle: PropTypes.string,
 	title: PropTypes.string.isRequired,
+	description: PropTypes.string,
+	descriptionExpanded: PropTypes.bool.isRequired,
+	toggleDescriptionExpansion: PropTypes.func.isRequired,
 };
 
 NodeInfo.defaultProps = {
 	subtitle: undefined,
-	symbol: '',
+	description: undefined,
 };
 
 export default NodeInfo;
