@@ -41,6 +41,8 @@ export const Thumbnail = styled.div`
 	border-radius: 4px;
 	border: 1px solid ${({ theme }) => theme.gray200};
 	margin: 0 1rem .5rem 0;
+	width: 4rem;
+	overflow: hidden;
 `;
 
 export const Subtitle = styled(Headline)`
