@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { prop } from 'ramda';
 import { AllNoneText } from './styles';
 import Tag from '../_library/Tag';
+import Headline from '../_library/Headline';
 
 const getToggleHandler = ({ filteredTags, tags, setFilteredTags }) => () => {
 	if (filteredTags.length === tags.length) return setFilteredTags([]);
@@ -34,10 +35,14 @@ const LabelFilters = ({
 }) => (
 	<>
 		{tags.length > 0 && (
-			<AllNoneText onClick={getToggleHandler({ tags, filteredTags, ...otherProps })}>
-				{'Toggle all/none'}
-			</AllNoneText>
+			<Headline variant="h5">
+				{'Keywords'}
+				<AllNoneText onClick={getToggleHandler({ tags, filteredTags, ...otherProps })}>
+					{'Toggle all/none'}
+				</AllNoneText>
+			</Headline>
 		)}
+		<br />
 		{tags.map(({ id, name }) => (
 			<Tag
 				key={id}
