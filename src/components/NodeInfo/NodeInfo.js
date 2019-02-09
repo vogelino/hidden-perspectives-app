@@ -7,6 +7,8 @@ import {
 	Description,
 	DescriptionLimitGradient,
 	ShowMoreText,
+	TitleContainer,
+	StakholderImage,
 } from './styles';
 
 const DESCRIPTION_MAX_LENGTH = 400;
@@ -24,15 +26,19 @@ const NodeInfo = ({
 	description,
 	descriptionExpanded,
 	toggleDescriptionExpansion,
+	image,
 }) => {
 	const isLonger = isDescriptionLonger(description);
 	const clickHandler = isLonger ? () => toggleDescriptionExpansion(!descriptionExpanded) : () => {};
 	return (
 		<Container>
-			{subtitle && (
-				<Subtitle variant="h6">{subtitle}</Subtitle>
-			)}
-			<Title variant="h4">{title}</Title>
+			<TitleContainer>
+				{image && <StakholderImage image={image} />}
+				{subtitle && (
+					<Subtitle variant="h6">{subtitle}</Subtitle>
+				)}
+				<Title variant="h4">{title}</Title>
+			</TitleContainer>
 			{description && (
 				<Description onClick={clickHandler} expanded={descriptionExpanded || !isLonger}>
 					{getDescription(description, descriptionExpanded)}
@@ -52,6 +58,7 @@ NodeInfo.propTypes = {
 	subtitle: PropTypes.string,
 	title: PropTypes.string.isRequired,
 	description: PropTypes.string,
+	image: PropTypes.string,
 	descriptionExpanded: PropTypes.bool.isRequired,
 	toggleDescriptionExpansion: PropTypes.func.isRequired,
 };
@@ -59,6 +66,7 @@ NodeInfo.propTypes = {
 NodeInfo.defaultProps = {
 	subtitle: undefined,
 	description: undefined,
+	image: undefined,
 };
 
 export default NodeInfo;

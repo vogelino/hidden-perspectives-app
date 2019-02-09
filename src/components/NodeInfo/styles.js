@@ -64,7 +64,7 @@ export const Description = styled.p`
 	cursor: pointer;
 	transition: color 200ms ease-out;
 	overflow: hidden;
-	margin: 1.5rem 0 0.5rem;
+	margin: 1rem 0 0.5rem;
 
 	&:hover {
 		color: ${({ theme }) => theme.dark}
@@ -83,4 +83,24 @@ export const Description = styled.p`
 			opacity: 1;
 		}
 	`};
+`;
+
+export const TitleContainer = styled.div`
+	&::after {
+		content: "";
+		clear: both;
+		display: table;
+	}
+`;
+
+export const StakholderImage = styled.div`
+	float: left;
+	width: 4.5rem;
+	height: 4.5rem;
+	border-radius: 50%;
+	background: url("${({ image }) => image}");
+	background-position: center center;
+	background-size: cover;
+	margin: 0 1rem 1rem 0;
+	margin-top: -0.25rem;
 `;
