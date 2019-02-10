@@ -4,7 +4,7 @@ import { onlyUpdateForKeys } from 'recompose';
 import BubbleChart from '../BubbleChart';
 import { EventLegend, DocumentLegend } from '../Legend/Legend';
 import { isHovered } from '../../utils/timelineUtil';
-import { formatHumanDate } from '../../utils/dateUtil';
+import { formatHumanDateShort } from '../../utils/dateUtil';
 import { withoutReRender } from '../../utils/hocUtil';
 import {
 	CircleContainer,
@@ -156,7 +156,7 @@ const TimelineItem = onlyUpdateForKeys([
 	hoveredElement,
 	hovered,
 	pinned,
-	isCurrentElement,
+	currentElement,
 	group,
 	symbol,
 	itemType,
@@ -196,10 +196,10 @@ const TimelineItem = onlyUpdateForKeys([
 			onMouseLeave={onMouseLeave}
 			{...CIRCLE_CENTER}
 			onClick={onClick}
-			current={isCurrentElement}
+			current={currentElement}
 		>
 			<Symbol
-				current={isCurrentElement}
+				current={currentElement}
 				active={labelIsActive}
 				rotation={angle}
 				labelMargin={labelMargin}
@@ -209,9 +209,9 @@ const TimelineItem = onlyUpdateForKeys([
 			<DateLabel
 				position={labelPosition}
 				active={labelIsActive}
-				current={isCurrentElement}
+				current={currentElement}
 			>
-				{formatHumanDate(group[0].date)}
+				{formatHumanDateShort(currentElement ? currentElement.date : group[0].date)}
 			</DateLabel>
 			{
 				showGroupIndicator && (
@@ -246,8 +246,9 @@ const CircleTimeline = ({
 		if (filteredGroup.length === 0) return null;
 		const { angle, id: docId } = filteredGroup[0];
 		const radius = itemType === 'document' ? RADIUS_INNER : RADIUS_OUTER;
-		const isCurrentElement = group.find(({ id }) => id === item.id);
+		const currentElement = group.find(({ id }) => id === item.id);
 		const hovered = isHovered(group, hoveredElement, itemType);
+		const pinned = isHovered(group, pinnedElement, itemType);
 
 		return (
 			<TimelineItem
@@ -260,8 +261,8 @@ const CircleTimeline = ({
 				group={group}
 				itemType={itemType}
 				hovered={hovered}
-				pinned={isCurrentElement}
-				isCurrentElement={isCurrentElement}
+				pinned={pinned}
+				currentElement={currentElement}
 				onMouseEnter={() => setHoveredElement(
 					filteredGroup.map((groupEl) => ({ ...groupEl, itemType })),
 				)}

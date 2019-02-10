@@ -34,3 +34,4 @@ export const getDifferenceInYears = (...dates) => Math.abs(differenceInYears(...
 
 export const formatYear = (date) => format(date, 'YYYY');
 export const formatHumanDate = (date) => format(date, 'ddd, D MMM YYYY');
+export const formatHumanDateShort = (date) => format(date, 'D MMM YYYY');
