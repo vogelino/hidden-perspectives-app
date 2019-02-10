@@ -47,7 +47,7 @@ export const LegendObject = styled.foreignObject`
 const legendContainerCSS = css`
 	display: inline-block;
 	transform-origin: 100% 50%;
-	transform: scale(.8);
+	transform: scale(.75);
 	margin-right: .5rem;
 `;
 
@@ -59,15 +59,67 @@ export const DocumentLegendContainer = styled.span`
 	${legendContainerCSS}
 `;
 
+export const DateLabel = styled.span`
+	color: black;
+	display: flex;
+	left: 50%;
+	font-size: .6rem;
+	opacity: ${({ active, current }) => (active || current ? 1 : 0)};
+	pointer-events: none;
+	position: absolute;
+	top: 50%;
+	transform: ${({ position: { x, y, translationValues } }) => `
+		translate(
+			calc(${translationValues.x}% + ${x}px),
+			calc(${translationValues.y}% + ${y}px)
+		)
+	`};
+	white-space: nowrap;
+`;
+
 export const Symbol = styled.span`
-	font-size: .875rem;
-	transform: scale(${({ children }) => (children === '▲' ? 0.7 : 1)});
+	font-size: ${({ children }) => (children === '▲' ? '.65rem' : '.875rem')};
 	pointer-events: none;
 	width: .875rem;
 	height: .875rem;
-	line-height: ${({ children }) => (children === '▲' ? '.625rem' : '.75rem')};
+	line-height: ${({ children }) => (children === '▲' ? '.5rem' : '.4rem')};
 	text-decoration: none;
 	float: left;
+	padding-top: 3px;
+	font-family: Arial, sans-serif;
+	user-select: none;
+
+	&::before {
+		background-color: ${({ theme, current }) => (current
+		? theme.primary
+		: theme.commonBorderColor)};
+		content: '';
+		height: 1px;
+		left: 50%;
+		opacity: ${({ active, current }) => (active || current ? 1 : 0)};
+		position: absolute;
+		top: 50%;
+		transform: ${({ rotation }) => `rotate(${rotation - 90}deg)`};
+		transform-origin: left;
+		width: ${({ labelMargin }) => `${labelMargin - 3}px`};
+		z-index: -1;
+	}
+`;
+
+export const ItemCountIndicator = styled.span`
+	background-color: ${({ theme }) => theme.commonBorderColor};
+	border-radius: 2px;
+	height: 2px;
+	left: 100%;
+	position: absolute;
+    top: 50%;
+	transform: ${({ rotation }) => `
+		translateY(-50%)
+		rotate(${rotation + 90}deg)
+	`};
+	transform-origin: -7px;
+	width: ${({ itemCountScale }) => `${20 * itemCountScale}px`};
+	z-index: -2;
 	user-select: none;
 	font-family: Arial, sans-serif;
 `;
@@ -80,12 +132,29 @@ export const Document = styled.foreignObject`
 	background: ${({ current, theme }) => (current ? theme.primary : 'none')};
 	color: ${({ current, theme }) => (current ? 'white' : theme.gray500)};
 	${({ current }) => !current && 'text-shadow: -2px -2px 0 white, 2px -2px 0 white, -2px 2px 0 white, 2px 2px 0 white;'}
+	overflow: visible;
 
+	&:hover {
+		${DateLabel} {
+			opacity: 1;
+		}
+		${Symbol} {
+			&::before {
+				background-color: ${({ theme }) => theme.primaryLight};
+				opacity: 1;
+			}
+		}
+	}
+	
 	&.pinned,
 	&.hovered {
 		color: ${({ theme }) => theme.primaryDark};
 		background: ${({ theme }) => theme.primaryLight};
 		text-shadow: none;
+
+		${ItemCountIndicator} {
+			background-color: ${({ theme }) => theme.primaryLight};
+		}
 	}
 `;
 
@@ -100,4 +169,3 @@ export const BubbleChartContainer = styled.div`
 	left: 50%;
 	transform: translate(-50%, -50%);
 `;
-
