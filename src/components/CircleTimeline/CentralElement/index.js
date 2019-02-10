@@ -1,7 +1,7 @@
 import {
+	onlyUpdateForKeys,
 	withState,
 	compose,
-	onlyUpdateForKeys,
 	lifecycle,
 	withProps,
 } from 'recompose';
@@ -20,8 +20,17 @@ export default compose(
 	})),
 	lifecycle({
 		componentDidMount() {
-			if (this.props.itemType === 'stakeholder') return getStakeholderImage(this.props);
-			return undefined;
+			if (this.props.itemType === 'stakeholder') {
+				getStakeholderImage(this.props);
+			}
+		},
+		componentDidUpdate(prevProps) {
+			if (this.props.id !== prevProps.id) {
+				this.props.setImage(undefined);
+				if (this.props.itemType === 'stakeholder') {
+					getStakeholderImage(this.props);
+				}
+			}
 		},
 	}),
 	onlyUpdateForKeys([

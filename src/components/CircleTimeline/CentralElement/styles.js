@@ -3,6 +3,12 @@ import PdfThumbnail from '../../PdfThumbnail';
 
 export const Pdf = styled(PdfThumbnail)`
 	margin: 0;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: calc(5rem - 6px);
+	height: calc(5rem - 6px);
+	border: none;
 `;
 
 export const Circle = styled.div`
@@ -24,8 +30,8 @@ export const Circle = styled.div`
 	text-align: center;
 
 	.react-pdf__Document {
-		width: 5rem;
-		height: 5rem;
+		width: calc(5rem - 6px);
+		height: calc(5rem - 6px);
 		position: relative;
 	}
 
