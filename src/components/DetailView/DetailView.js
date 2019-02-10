@@ -4,21 +4,23 @@ import CircleTimeline from '../CircleTimeline';
 import SummarySection from '../SummarySection';
 import LabelFilters from '../LabelFilters';
 import NodeInfo from '../NodeInfo';
-import { Container, LeftSidebar, RightSidebar } from './styles';
+import { Container, Sidebar, LeftSidebarContent } from './styles';
 
 const DetailView = ({ item, isLoading, ...rest }) => (
 	<Container>
 		{item && !isLoading && (
-			<LeftSidebar>
-				<NodeInfo item={item} isLoading={isLoading} {...rest} />
-				<LabelFilters item={item} isLoading={isLoading} {...rest} />
-			</LeftSidebar>
+			<Sidebar>
+				<LeftSidebarContent>
+					<NodeInfo item={item} isLoading={isLoading} {...rest} />
+					<LabelFilters item={item} isLoading={isLoading} {...rest} />
+				</LeftSidebarContent>
+			</Sidebar>
 		)}
 		{item && <CircleTimeline item={item} isLoading={isLoading} {...rest} />}
 		{item && !isLoading && (
-			<RightSidebar>
+			<Sidebar>
 				<SummarySection item={item} isLoading={isLoading} {...rest} />
-			</RightSidebar>
+			</Sidebar>
 		)}
 	</Container>
 );
