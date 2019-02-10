@@ -132,6 +132,7 @@ export const Document = styled.foreignObject`
 	background: ${({ current, theme }) => (current ? theme.primary : 'none')};
 	color: ${({ current, theme }) => (current ? 'white' : theme.gray500)};
 	${({ current }) => !current && 'text-shadow: -2px -2px 0 white, 2px -2px 0 white, -2px 2px 0 white, 2px 2px 0 white;'}
+	overflow: visible;
 
 	&:hover {
 		${DateLabel} {
