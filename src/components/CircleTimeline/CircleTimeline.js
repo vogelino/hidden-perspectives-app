@@ -5,6 +5,7 @@ import BubbleChart from '../BubbleChart';
 import { EventLegend, DocumentLegend } from '../Legend/Legend';
 import CentralElement from './CentralElement';
 import { isHovered } from '../../utils/timelineUtil';
+import { formatHumanDateShort } from '../../utils/dateUtil';
 import { withoutReRender } from '../../utils/hocUtil';
 import {
 	CircleContainer,
@@ -13,7 +14,9 @@ import {
 	Circle,
 	Document,
 	Symbol,
+	DateLabel,
 	LegendObject,
+	ItemCountIndicator,
 	EventLegendContainer,
 	DocumentLegendContainer,
 	BubbleChartContainer,
@@ -27,11 +30,55 @@ const DIAMETER_INNER = (DIAMETER_OUTER / 100) * 80;
 const RADIUS_OUTER = DIAMETER_OUTER / 2;
 const RADIUS_INNER = DIAMETER_INNER / 2;
 const CIRCLE_CENTER = { cx: RADIUS_OUTER + MARGIN, cy: RADIUS_OUTER + MARGIN };
+const LABEL_MARGIN = 15;
 
 const getXByAngle = (radius, angle) => (radius * Math.sin(toRadian(angle)))
 	+ RADIUS_OUTER + MARGIN;
 const getYByAngle = (radius, angle) => (radius * -Math.cos(toRadian(angle)))
 	+ RADIUS_OUTER + MARGIN;
+
+const getDateLabelOrientation = (angle) => {
+	let translationValue = { x: 0, y: 0 };
+	if (angle === 0) {
+		translationValue = { x: -50, y: -100 };
+	} else if (angle === 90) {
+		translationValue = { x: 0, y: -50 };
+	} else if (angle === 180) {
+		translationValue = { x: -50, y: 0 };
+	} else if (angle === 270) {
+		translationValue = { x: 100, y: -50 };
+	} else if (angle > 0 && angle < 90) {
+		translationValue = { x: 0, y: -50 };
+	} else if (angle > 90 && angle < 180) {
+		translationValue = { x: 0, y: -50 };
+	} else if (angle > 180 && angle < 270) {
+		translationValue = { x: -100, y: -50 };
+	} else if (angle > 270) {
+		translationValue = { x: -100, y: -50 };
+	}
+
+	return translationValue;
+};
+
+const getDateLabelPosition = (itemX, itemY, radius, angle) => {
+	const x = itemX - getXByAngle(radius, angle);
+	const y = itemY - getYByAngle(radius, angle);
+	const translationValues = getDateLabelOrientation(angle);
+
+	return { x, y, translationValues };
+};
+
+const getMaxGroupLength = (documents, events) => {
+	const combinedElements = [...documents, ...events];
+	let maxGroup = [];
+	if (combinedElements.length > 0) {
+		maxGroup = combinedElements.reduce((curr, acc) => (
+			curr.length > acc.length ? curr : acc
+		));
+	}
+
+	return maxGroup.length;
+};
 
 const filterGroupByTags = (filteredTags, group) => group
 	.filter(({ commonTags }) => (commonTags || [])
@@ -110,31 +157,75 @@ const TimelineItem = onlyUpdateForKeys([
 	hoveredElement,
 	hovered,
 	pinned,
-	isCurrentElement,
+	currentElement,
+	group,
 	symbol,
+	itemType,
 	onClick,
+	events,
+	documents,
 	onMouseEnter,
 	onMouseLeave,
-}) => (
-	<Document
-		x={x - (docSize / 2)}
-		y={y - (docSize / 2)}
-		width={docSize}
-		height={docSize}
-		angle={angle}
-		className={[
-			hovered ? 'hovered' : '',
-			!hoveredElement && pinned ? 'pinned' : '',
-		].join(' ')}
-		onMouseEnter={onMouseEnter}
-		onMouseLeave={onMouseLeave}
-		{...CIRCLE_CENTER}
-		onClick={onClick}
-		current={isCurrentElement}
-	>
-		<Symbol>{symbol}</Symbol>
-	</Document>
-));
+}) => {
+	const labelIsActive = angle === 0 || angle === 320;
+	const showGroupIndicator = group.length > 1;
+	const maxGroupLength = getMaxGroupLength(documents, events);
+	const labelMargin = itemType === 'document'
+		? LABEL_MARGIN + RADIUS_OUTER - RADIUS_INNER
+		: LABEL_MARGIN;
+	const labelRadius = itemType === 'document'
+		? RADIUS_INNER + (RADIUS_INNER - RADIUS_OUTER) - LABEL_MARGIN
+		: RADIUS_OUTER - LABEL_MARGIN;
+	const labelPosition = getDateLabelPosition(
+		x,
+		y,
+		labelRadius,
+		angle,
+	);
+	return (
+		<Document
+			x={x - (docSize / 2)}
+			y={y - (docSize / 2)}
+			width={docSize}
+			height={docSize}
+			angle={angle}
+			className={[
+				hovered ? 'hovered' : '',
+				!hoveredElement && pinned ? 'pinned' : '',
+			].join(' ')}
+			onMouseEnter={onMouseEnter}
+			onMouseLeave={onMouseLeave}
+			{...CIRCLE_CENTER}
+			onClick={onClick}
+			current={currentElement}
+		>
+			<Symbol
+				current={currentElement}
+				active={labelIsActive}
+				rotation={angle}
+				labelMargin={labelMargin}
+			>
+				{symbol}
+			</Symbol>
+			<DateLabel
+				position={labelPosition}
+				active={labelIsActive}
+				current={currentElement}
+			>
+				{formatHumanDateShort(currentElement ? currentElement.date : group[0].date)}
+			</DateLabel>
+			{
+				showGroupIndicator && (
+					<ItemCountIndicator
+						rotation={angle}
+						itemCountScale={group.length / maxGroupLength}
+						inner
+					/>
+				)
+			}
+		</Document>
+	);
+});
 
 const CircleTimeline = ({
 	item,
@@ -151,22 +242,30 @@ const CircleTimeline = ({
 	tags,
 }) => {
 	const createDocumentMapper = (itemType, symbol) => (group) => {
-		const filtredGroup = isFilteredByTag(filteredTags, tags)
+		const filteredGroup = isFilteredByTag(filteredTags, tags)
 			? filterGroupByTags(filteredTags, group) : group;
-		if (filtredGroup.length === 0) return null;
-		const { angle, id: docId } = filtredGroup[0];
+		if (filteredGroup.length === 0) return null;
+		const { angle, id: docId } = filteredGroup[0];
 		const radius = itemType === 'document' ? RADIUS_INNER : RADIUS_OUTER;
+		const currentElement = group.find(({ id }) => id === item.id);
+		const hovered = isHovered(group, hoveredElement, itemType);
+		const pinned = isHovered(group, pinnedElement, itemType);
+
 		return (
 			<TimelineItem
 				key={`${itemType}-${docId}`}
 				x={getXByAngle(radius, (angle || 0))}
 				y={getYByAngle(radius, (angle || 0))}
 				docSize={14}
-				hovered={isHovered(filtredGroup, hoveredElement, itemType)}
-				pinned={isHovered(filtredGroup, pinnedElement, itemType)}
-				isCurrentElement={filtredGroup.find(({ id }) => id === item.id)}
+				documents={documents}
+				events={events}
+				group={group}
+				itemType={itemType}
+				hovered={hovered}
+				pinned={pinned}
+				currentElement={currentElement}
 				onMouseEnter={() => setHoveredElement(
-					filtredGroup.map((groupEl) => ({ ...groupEl, itemType })),
+					filteredGroup.map((groupEl) => ({ ...groupEl, itemType })),
 				)}
 				onMouseLeave={() => setHoveredElement(null)}
 				onClick={() => {
@@ -179,7 +278,7 @@ const CircleTimeline = ({
 						return setPinnedElement(null);
 					}
 					return setPinnedElement(
-						filtredGroup.map((groupEl) => ({ ...groupEl, itemType })),
+						filteredGroup.map((groupEl) => ({ ...groupEl, itemType })),
 					);
 				}}
 				{...{
