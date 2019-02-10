@@ -8,7 +8,7 @@ export const Container = styled.div`
 `;
 
 export const LeftSidebar = styled.aside`
-	flex: 0 0 28rem;
+	flex: 0 0 25rem;
 	height: calc(100vh - 8rem);
 	background: white;
 	position: relative;
@@ -17,7 +17,7 @@ export const LeftSidebar = styled.aside`
 `;
 
 export const RightSidebar = styled.aside`
-	flex: 0 0 28rem;
+	flex: 0 0 25rem;
 	height: calc(100vh - 4.5rem);
 	background: white;
 	position: relative;

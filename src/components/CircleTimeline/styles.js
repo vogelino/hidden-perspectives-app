@@ -12,10 +12,10 @@ export const CircleContainer = styled.div`
 `;
 
 export const CircleContent = styled.div`
-	height: 40rem;
-	width: 40rem;
-	max-width: 100%;
-	max-height: calc(100% - 4rem);
+	height: calc(100vw - 50rem);
+	width: calc(100vw - 50rem);
+	max-width: 40rem;
+	max-height: 40rem;
 	flex-grow: 0;
 	position: relative;
 `;
