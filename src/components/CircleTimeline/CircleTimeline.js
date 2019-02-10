@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { onlyUpdateForKeys } from 'recompose';
 import BubbleChart from '../BubbleChart';
 import { EventLegend, DocumentLegend } from '../Legend/Legend';
+import CentralElement from './CentralElement';
 import { isHovered } from '../../utils/timelineUtil';
 import { withoutReRender } from '../../utils/hocUtil';
 import {
@@ -202,6 +203,7 @@ const CircleTimeline = ({
 					{documents.map(createDocumentMapper('document', '▲'))}
 					{events.map(createDocumentMapper('event', '●'))}
 				</CircleSvg>
+				<CentralElement {...item} />
 				<BubbleChartContainer>
 					<BubbleChart
 						items={protagonists}
