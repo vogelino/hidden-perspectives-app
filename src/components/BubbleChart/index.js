@@ -5,7 +5,7 @@ import {
 	withState,
 	withHandlers,
 } from 'recompose';
-import { identity } from 'ramda';
+import { prop } from 'ramda';
 import BubbleChart from './BubbleChart';
 import { calcBubbleLayout, calcForceLayout } from './calculateChartLayout';
 import { getWikipediaImage } from '../../utils/imageUtil';
@@ -63,17 +63,16 @@ export default compose(
 				setImages([]);
 				const loadAllImages = bubbleLayoutItems.map((item) => {
 					const { id, name } = item.data;
-					const size = Math.ceil(item.r * 2);
-					return getWikipediaImage(name, id, size).then((url) => ({
+					return getWikipediaImage(name, id, 120).then((url) => ({
 						id,
 						url,
-						size,
+						size: Math.round(item.r * 2),
 						x: item.x - item.r,
 						y: item.y - item.r,
 					}));
 				});
 
-				Promise.all(loadAllImages).then((images) => setImages(images.filter(identity)));
+				Promise.all(loadAllImages).then((images) => setImages(images.filter(prop('url'))));
 			}
 		},
 	}),

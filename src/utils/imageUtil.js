@@ -15,14 +15,21 @@ const getImageCache = () => {
 	return cacheString ? JSON.parse(cacheString) : {};
 };
 
+
 const imageCache = getImageCache();
+
+const getFromCache = (id, size) => imageCache[`${id}-${size}`];
+const setToCache = (id, size, url) => {
+	imageCache[`${id}-${size}`] = { id, size, url };
+};
 
 const updateImageCache = debounce(() => {
 	window.localStorage.setItem('hp-protagonist-images', JSON.stringify(imageCache));
 }, 200, { trailing: true });
 
 export const getWikipediaImage = (pageName, id, size) => {
-	if (imageCache[id]) return Promise.resolve(imageCache[id].url);
+	const cacheImage = getFromCache(id, size);
+	if (cacheImage) return Promise.resolve(cacheImage.url);
 	return wiki(({
 		apiUrl: 'https://en.wikipedia.org/w/api.php',
 		origin: '*',
@@ -34,12 +41,12 @@ export const getWikipediaImage = (pageName, id, size) => {
 
 			image.onload = function onImageLoad() {
 				resolve(this.src);
-				imageCache[id] = { id, url: this.src };
+				setToCache(id, size, this.src);
 				updateImageCache();
 			};
 			image.onerror = function onImageError() {
 				resolve(undefined);
-				imageCache[id] = { id };
+				setToCache(id, size);
 				updateImageCache();
 			};
 			// eslint-disable-next-line prefer-destructuring
