@@ -43,6 +43,7 @@ export const Thumbnail = styled.div`
 	margin: 0 1rem .5rem 0;
 	width: 4rem;
 	overflow: hidden;
+	pointer-events: none;
 `;
 
 export const Subtitle = styled(Headline)`

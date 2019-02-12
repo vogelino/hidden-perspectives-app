@@ -200,22 +200,6 @@ const TimelineItem = onlyUpdateForKeys([
 			onClick={onClick}
 			current={currentElement}
 		>
-			<Symbol
-				current={currentElement}
-				active={labelIsActive}
-				rotation={angle}
-				labelMargin={labelMargin}
-				itemType={itemType}
-			>
-				<IconItem itemType={itemType} isCurrent={isCurrent} hovered={hovered} />
-			</Symbol>
-			<DateLabel
-				position={labelPosition}
-				active={labelIsActive}
-				current={currentElement}
-			>
-				{formatHumanDateShort(currentElement ? currentElement.date : group[0].date)}
-			</DateLabel>
 			{
 				showGroupIndicator && (
 					<ItemCountIndicator
@@ -225,6 +209,27 @@ const TimelineItem = onlyUpdateForKeys([
 					/>
 				)
 			}
+			<Symbol
+				current={currentElement}
+				active={labelIsActive}
+				rotation={angle}
+				labelMargin={labelMargin}
+				itemType={itemType}
+			>
+				<IconItem
+					itemType={itemType}
+					isCurrent={isCurrent}
+					hovered={hovered}
+					pinned={!hoveredElement && pinned}
+				/>
+			</Symbol>
+			<DateLabel
+				position={labelPosition}
+				active={labelIsActive}
+				current={currentElement}
+			>
+				{formatHumanDateShort(currentElement ? currentElement.date : group[0].date)}
+			</DateLabel>
 		</Document>
 	);
 });
@@ -258,7 +263,7 @@ const CircleTimeline = ({
 				key={`${itemType}-${docId}`}
 				x={getXByAngle(radius, (angle || 0))}
 				y={getYByAngle(radius, (angle || 0))}
-				docSize={14}
+				docSize={16}
 				documents={documents}
 				events={events}
 				group={group}
