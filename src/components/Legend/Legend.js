@@ -24,9 +24,9 @@ const legendDefaultProps = {
 	isLoading: true,
 };
 
-const createLegendComponent = (label, symbol) => {
+const createLegendComponent = (label, itemType) => {
 	const Legend = ({ position, itemCount, isLoading }) => (
-		<LegendLabel symbol={symbol} position={position}>
+		<LegendLabel itemType={itemType} position={position}>
 			{getCountSuffix(label, itemCount, isLoading)}
 		</LegendLabel>
 	);
@@ -37,9 +37,9 @@ const createLegendComponent = (label, symbol) => {
 	return Legend;
 };
 
-export const DocumentLegend = createLegendComponent('Documents');
-export const EventLegend = createLegendComponent('Events', '●');
-export const ProtagonistLegend = createLegendComponent('Protagonists', '◎');
+export const DocumentLegend = createLegendComponent('Documents', 'document');
+export const EventLegend = createLegendComponent('Events', 'event');
+export const ProtagonistLegend = createLegendComponent('Protagonists', 'stakeholder');
 
 export const MainTimelineLegend = ({
 	documentsCount,

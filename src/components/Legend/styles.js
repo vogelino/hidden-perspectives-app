@@ -1,24 +1,17 @@
 import styled from 'styled-components';
 
 export const LegendLabel = styled.span`
-	position: relative;
-	font-size: .875rem;
+	background-image: url("${({ itemType }) => `/icons/${itemType}.svg`}");
+	background-size: 18px;
+	background-position: left -0.2rem;
+	background-repeat: no-repeat;
 	display: inline-block;
 	color: ${({ theme }) => theme.colors.gray600};
 	${({ position }) => (position !== 'center' && `float: ${position};`)}
 	${({ position }) => (position === 'center' && 'margin: 0 auto;')}
+	font-size: .875rem;
+	padding-left: 1.5rem;
 	user-select: none;
-
-	&:before {
-		content: '${({ symbol }) => (symbol || '▲')}';
-		transform: scale(${({ symbol }) => (symbol ? 1 : 0.7)});
-		font-family: Arial, sans-serif;
-		font-size: 1rem;
-		line-height: 1rem;
-		display: inline-block;
-		margin-right: 0.5rem;
-		vertical-align: middle;
-	}
 `;
 
 export const MainTimelineContainer = styled.div`

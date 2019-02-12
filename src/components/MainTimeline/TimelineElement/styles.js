@@ -18,9 +18,9 @@ export const EventTitle = styled.span`
 	cursor: pointer;
 `;
 
-export const Symbol = styled.span`
+export const IconContainer = styled.span`
 	position: absolute;
-	top: 0;
+	top: -1px;
 	transition: color 200ms ease-out;
 	color: ${({ theme }) => theme.gray500};
 	font-family: Arial, sans-serif;
@@ -49,13 +49,13 @@ export const EventTitleContainer = styled.div`
 		margin-bottom: 0;
 	}
 
-	${Symbol}  {
+	${IconContainer}  {
 		${({ right }) => (right ? 'right' : 'left')}: 0;
 		${({ right }) => (right && 'font-size: 14px;')}
 	}
 
-	&.pinned ${Symbol},
-	&.hovered ${Symbol} {
+	&.pinned ${IconContainer},
+	&.hovered ${IconContainer} {
 		color: ${({ theme }) => theme.primaryDark};
 		background: ${({ theme }) => theme.primaryLight};
 	}
