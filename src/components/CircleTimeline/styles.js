@@ -78,6 +78,9 @@ export const DateLabel = styled.span`
 `;
 
 export const Symbol = styled.span`
+	background-image: url('/icons/${({ itemType }) => itemType}.svg');
+	background-repeat: no-repeat;
+	background-position: center center;
 	font-size: ${({ children }) => (children === '▲' ? '.65rem' : '.875rem')};
 	pointer-events: none;
 	width: .875rem;

@@ -158,7 +158,6 @@ const TimelineItem = onlyUpdateForKeys([
 	pinned,
 	currentElement,
 	group,
-	symbol,
 	itemType,
 	onClick,
 	events,
@@ -203,9 +202,8 @@ const TimelineItem = onlyUpdateForKeys([
 				active={labelIsActive}
 				rotation={angle}
 				labelMargin={labelMargin}
-			>
-				{symbol}
-			</Symbol>
+				itemType={itemType}
+			/>
 			<DateLabel
 				position={labelPosition}
 				active={labelIsActive}
@@ -240,7 +238,7 @@ const CircleTimeline = ({
 	filteredTags,
 	tags,
 }) => {
-	const createDocumentMapper = (itemType, symbol) => (group) => {
+	const createDocumentMapper = (itemType) => (group) => {
 		const filteredGroup = isFilteredByTag(filteredTags, tags)
 			? filterGroupByTags(filteredTags, group) : group;
 		if (filteredGroup.length === 0) return null;
@@ -283,7 +281,6 @@ const CircleTimeline = ({
 				{...{
 					angle: angle || 0,
 					hoveredElement,
-					symbol,
 				}}
 			/>
 		);
