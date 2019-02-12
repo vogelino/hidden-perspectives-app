@@ -7,19 +7,15 @@ export const Container = styled.div`
 	width: 100%;
 `;
 
-export const LeftSidebar = styled.aside`
-	flex: 0 0 28rem;
+export const Sidebar = styled.aside`
+	flex: 0 0 25rem;
 	height: calc(100vh - 4.5rem);
 	background: white;
 	position: relative;
 	z-index: 1;
-	padding: 9rem 2rem 0;
+	overflow: auto;
 `;
 
-export const RightSidebar = styled.aside`
-	flex: 0 0 28rem;
-	height: calc(100vh - 4.5rem);
-	background: white;
-	position: relative;
-	z-index: 1;
+export const LeftSidebarContent = styled.div`
+	padding: 6rem 2rem 2rem;
 `;

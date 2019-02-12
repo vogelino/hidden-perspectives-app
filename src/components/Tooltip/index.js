@@ -86,12 +86,14 @@ export default compose(
 		prefetchedData,
 		subtitle,
 		summary,
+		thumbnailUrl,
 		isLoading,
 	}) => ({
 		path: `/${itemType}/context/${id}`,
 		itemTypeName: ucFirst(itemType),
 		subtitle: subtitle || getPrefetchedData('subtitle', prefetchedData),
 		summary: summary || getPrefetchedData('summary', prefetchedData),
+		thumbnailUrl: thumbnailUrl || getPrefetchedData('thumbnailUrl', prefetchedData),
 		isLoading: !prefetchedData && isLoading,
 	})),
 	withHandlers({

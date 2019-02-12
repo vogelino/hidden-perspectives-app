@@ -25,8 +25,8 @@ const OriginalView = ({
 			<Content>
 				<Document
 					file={file}
-					loading=""
-					error=""
+					loading=" "
+					error=" "
 					renderMode="canvas"
 					onLoadSuccess={({ _pdfInfo }) => {
 						setPagesCount(_pdfInfo.numPages);

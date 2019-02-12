@@ -8,6 +8,10 @@ export const TitleWrapper = styled.div`
 export const Title = styled(Headline)`
 	display: inline;
 	cursor: pointer;
+	box-decoration-break: clone;
+	border-radius: 2px;
+	padding: 0 .4rem;
+	margin-left: -0.4rem;
 
 	a {
 		text-decoration: none;

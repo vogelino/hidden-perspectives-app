@@ -6,6 +6,6 @@ export const Items = styled.div`
 	position: relative;
 	overflow-x: hidden;
 	overflow-y: auto;
-	padding: 9.8rem 2rem 2rem;
+	padding: 6rem 2rem 2rem;
 	scroll-behavior: smooth;
 `;

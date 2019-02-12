@@ -5,9 +5,10 @@ import {
 	withState,
 	withHandlers,
 } from 'recompose';
+import { prop } from 'ramda';
 import BubbleChart from './BubbleChart';
 import { calcBubbleLayout, calcForceLayout } from './calculateChartLayout';
-import { getWikipediaImagePerUrl } from '../../utils/imageUtil';
+import { getWikipediaImage } from '../../utils/imageUtil';
 
 const formatItems = (bubblesData, activeId) => {
 	const formattedData = Object.keys(bubblesData).map((key) => ({
@@ -21,17 +22,6 @@ const formatItems = (bubblesData, activeId) => {
 		name: 'protagonists',
 		children: formattedData.filter((item) => !item.isActive),
 	};
-};
-
-const getImageCache = () => {
-	const cacheString = window.localStorage.getItem('hp-protagonist-images');
-	return cacheString ? JSON.parse(cacheString) : {};
-};
-
-let imageCache;
-
-const updateImageCache = () => {
-	window.localStorage.setItem('hp-protagonist-images', JSON.stringify(imageCache));
 };
 
 export default compose(
@@ -73,48 +63,22 @@ export default compose(
 				setImages([]);
 				const loadAllImages = bubbleLayoutItems.map((item) => {
 					const { id, name } = item.data;
-					const size = Math.ceil(item.r * 2);
-					if (Object.hasOwnProperty.call(imageCache, id)) {
-						return Promise.resolve({
-							id,
-							url: imageCache[id],
-							size,
-							x: item.x - item.r,
-							y: item.y - item.r,
-						});
-					}
-					return getWikipediaImagePerUrl(name, size).then((url) => ({
+					return getWikipediaImage(name, id, 120).then((url) => ({
 						id,
 						url,
-						size,
+						size: Math.round(item.r * 2),
 						x: item.x - item.r,
 						y: item.y - item.r,
 					}));
 				});
 
-				Promise.all(loadAllImages).then((images) => {
-					const newImages = [];
-					images.forEach((image) => {
-						if (!imageCache[image.id]) {
-							imageCache[image.id] = image.url || false;
-						}
-						if (!image.url) return;
-						newImages.push(image);
-					});
-					setImages(newImages);
-				});
+				Promise.all(loadAllImages).then((images) => setImages(images.filter(prop('url'))));
 			}
 		},
 	}),
 	lifecycle({
-		componentDidMount() {
-			imageCache = getImageCache();
-		},
 		componentDidUpdate(prevProps) {
 			if (prevProps.bubbleLayoutItems === this.props.bubbleLayoutItems) return;
-			if (prevProps.images !== this.props.images) {
-				updateImageCache();
-			}
 			this.props.fetchImages(prevProps);
 		},
 	}),
