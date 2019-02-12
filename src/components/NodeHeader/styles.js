@@ -6,11 +6,11 @@ export const Container = styled.header`
 	position: ${({ isStatic }) => (isStatic ? 'static' : 'fixed')};
 	top: 4.5rem;
 	left: 0;
-	height: 7.8rem;
 	width: 100%;
 	z-index: 2;
 	background: rgba(255,255,255,.95);
 	box-shadow: 0 .5rem 2rem .5rem rgba(255,255,255,.6);
+	border-bottom: 1px solid ${({ theme }) => theme.gray100};
 `;
 
 export const TabsContainer = styled.nav`
@@ -19,13 +19,6 @@ export const TabsContainer = styled.nav`
 	justify-content: space-around;
 	z-index: 1;
 	height: 3.5rem;
-`;
-
-export const NodeTitleContainer = styled.header`
-	height: 4.3rem;
-	display: flex;
-	position: relative;
-	z-index: 2;
 `;
 
 export const Tabs = styled.nav`
@@ -65,7 +58,7 @@ export const Tab = styled(NavLink)`
 
 const StyledButton = styled(Button)`
 	position: absolute;
-	top: 1.25rem;
+	top: .25rem;
 
 	& > button {
 		font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -89,9 +82,9 @@ const StyledButton = styled(Button)`
 `;
 
 export const BackButton = styled(StyledButton)`
-	left: 1rem;
+	left: .5rem;
 `;
 
 export const EditButton = styled(StyledButton)`
-	right: 1rem;
+	right: .5rem;
 `;

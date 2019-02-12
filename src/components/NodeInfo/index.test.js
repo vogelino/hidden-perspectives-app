@@ -1,10 +1,10 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import NodeTitle from './NodeTitle';
+import NodeInfo from './NodeInfo';
 
-describe('NodeTitle component', () => {
+describe('NodeInfo component', () => {
 	const fieldset = shallow(
-		<NodeTitle
+		<NodeInfo
 			title="Yo what's up?"
 			subtitle="Hey!"
 		/>,

@@ -6,16 +6,16 @@ export const CircleContainer = styled.div`
     justify-content: center;
 	flex: 1 1;
 	position: relative;
-	min-height: calc(100vh - 15.3rem);
-	max-height: calc(100vh - 15.3rem);
-	margin-top: 10.8rem;
+	min-height: calc(100vh - 8rem);
+	max-height: calc(100vh - 8rem);
+	margin-top: 3.5rem;
 `;
 
 export const CircleContent = styled.div`
-	height: 40rem;
-	width: 40rem;
-	max-width: 100%;
-	max-height: calc(100% - 4rem);
+	height: calc(100vw - 50rem);
+	width: calc(100vw - 50rem);
+	max-width: 40rem;
+	max-height: 40rem;
 	flex-grow: 0;
 	position: relative;
 `;

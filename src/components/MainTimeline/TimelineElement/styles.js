@@ -16,6 +16,9 @@ export const EventTitle = styled.span`
 	color: ${({ theme }) => theme.gray900};
 	transition: background 100ms ease-out, color 100ms ease-out;
 	cursor: pointer;
+	box-decoration-break: clone;
+	padding: 0 .3rem;
+	border-radius: 2px;
 `;
 
 export const IconContainer = styled.span`
