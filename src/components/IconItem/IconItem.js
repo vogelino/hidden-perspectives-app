@@ -34,6 +34,7 @@ const getStakeholderIcon = (fillColor, strokeColor) => (
 );
 
 const getSvgContent = (itemType, light) => {
+	// TODO: Use colors from theme
 	const fillColor = light ? 'pink' : '#6F767D';
 	const strokeColor = light ? 'pink' : '#1B2733';
 

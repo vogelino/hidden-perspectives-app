@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Tooltip from '../../Tooltip';
+import IconItem from '../../IconItem';
 import {
 	Item,
 	TitleWrapper,
@@ -8,7 +9,7 @@ import {
 	SecondaryInfo,
 	ItemDate,
 	Type,
-	Symbol,
+	IconContainer,
 } from './styles';
 
 const classIf = (className, predicate) => (predicate && className) || '';
@@ -54,7 +55,9 @@ const Summary = ({
 				}}
 			>
 				<SecondaryInfo variant="h6">
-					<Symbol isEvent={itemType === 'event'} />
+					<IconContainer>
+						<IconItem size={20} itemType={itemType} />
+					</IconContainer>
 					<ItemDate>{date}</ItemDate>
 					<Type>{type}</Type>
 				</SecondaryInfo>
