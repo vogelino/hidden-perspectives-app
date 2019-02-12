@@ -10,7 +10,7 @@ const CentralElement = ({
 }) => {
 	if (image) return <Circle style={{ backgroundImage: `url("${image}")` }} />;
 	if (original) return <Circle><Pdf file={original} width={160} /></Circle>;
-	if (itemType === 'event') return <Circle>{formattedDate}</Circle>;
+	if (itemType === 'event') return <Circle>{formattedDate.split(' ').map((string) => <div key={string}>{string}</div>)}</Circle>;
 	return <Circle />;
 };
 

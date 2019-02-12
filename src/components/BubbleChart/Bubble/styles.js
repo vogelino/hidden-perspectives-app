@@ -40,6 +40,8 @@ export const BubbleCircle = styled.circle.attrs({
 	opacity: ${({ isLoading }) => (isLoading ? 0 : 1)};
 	filter: url(${getFilterUrl});
 	font-weight: bold;
+	stroke-width: 1px;
+	stroke: ${({ theme }) => theme.commonBorderColor};
 `;
 
 export const BubbleText = styled(Text)`

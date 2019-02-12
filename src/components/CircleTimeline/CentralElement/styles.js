@@ -27,7 +27,6 @@ export const Circle = styled.div`
 	background-position: center center;
 	padding: .75rem 1rem;
 	text-align: center;
-	text-align: center;
 
 	.react-pdf__Document {
 		width: calc(5rem - 6px);
