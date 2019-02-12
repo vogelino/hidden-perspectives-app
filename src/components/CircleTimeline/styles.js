@@ -85,7 +85,8 @@ export const Symbol = styled.span`
 	line-height: ${({ children }) => (children === '▲' ? '.5rem' : '.4rem')};
 	text-decoration: none;
 	float: left;
-	padding-top: 3px;
+	margin-left: -1px;
+	margin-top: -1px;
 	font-family: Arial, sans-serif;
 	user-select: none;
 

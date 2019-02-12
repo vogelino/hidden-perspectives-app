@@ -15,6 +15,8 @@ const colors = {
 	usRed: '#D7062C',
 	iranGreen: '#2523A0',
 	iranRed: '#D7062C',
+	iconFillPrimary: '#6F767D',
+	iconStrokePrimary: '#1B2733',
 };
 
 const selectTheme = {

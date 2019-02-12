@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Tooltip from '../../Tooltip';
+import IconItem from '../../IconItem';
 import {
 	Container,
 	EventTitleContainer,
 	EventTitle,
-	Symbol,
+	IconContainer,
 } from './styles';
 
 const TimelineElement = ({
@@ -32,7 +33,9 @@ const TimelineElement = ({
 			onMouseLeave={() => hoverHandler(null)}
 			onClick={() => clickHandler({ id, itemType, ...itemProps })}
 		>
-			<Symbol>{itemType === 'document' ? '▲' : '●'}</Symbol>
+			<IconContainer>
+				<IconItem itemType={itemType} hovered={hovered} size={18} />
+			</IconContainer>
 			<Tooltip
 				id={id}
 				itemType={itemType}

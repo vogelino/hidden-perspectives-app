@@ -26,6 +26,7 @@ export const SecondaryInfo = styled(Headline)`
 `;
 
 export const ItemDate = styled.span`
+	margin-left: 1.5rem;
 	margin-right: .875rem;
 `;
 
@@ -43,15 +44,8 @@ export const Item = styled.div`
 	}
 `;
 
-export const Symbol = styled.span`
-	font-size: ${({ isEvent }) => (isEvent ? '1.2rem' : '.8rem')};
-	line-height: .8rem;
-	margin-right: .5rem;
-	display: inline-block;
-	opacity: .8;
-	font-family: Arial, sans-serif;
-	
-	&:before {
-		content: '${({ isEvent }) => (isEvent ? '●' : '▲')}';
-	}
+export const IconContainer = styled.span`
+	left: -3px;	
+	position: absolute;
+	top: 0;
 `;

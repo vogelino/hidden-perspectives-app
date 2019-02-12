@@ -6,6 +6,7 @@ import { EventLegend, DocumentLegend } from '../Legend/Legend';
 import { isHovered } from '../../utils/timelineUtil';
 import { formatHumanDateShort } from '../../utils/dateUtil';
 import { withoutReRender } from '../../utils/hocUtil';
+import IconItem from '../IconItem';
 import {
 	CircleContainer,
 	CircleContent,
@@ -158,7 +159,6 @@ const TimelineItem = onlyUpdateForKeys([
 	pinned,
 	currentElement,
 	group,
-	symbol,
 	itemType,
 	onClick,
 	events,
@@ -169,6 +169,7 @@ const TimelineItem = onlyUpdateForKeys([
 	const labelIsActive = angle === 0 || angle === 320;
 	const showGroupIndicator = group.length > 1;
 	const maxGroupLength = getMaxGroupLength(documents, events);
+	const isCurrent = currentElement !== undefined;
 	const labelMargin = itemType === 'document'
 		? LABEL_MARGIN + RADIUS_OUTER - RADIUS_INNER
 		: LABEL_MARGIN;
@@ -181,6 +182,7 @@ const TimelineItem = onlyUpdateForKeys([
 		labelRadius,
 		angle,
 	);
+
 	return (
 		<Document
 			x={x - (docSize / 2)}
@@ -203,8 +205,9 @@ const TimelineItem = onlyUpdateForKeys([
 				active={labelIsActive}
 				rotation={angle}
 				labelMargin={labelMargin}
+				itemType={itemType}
 			>
-				{symbol}
+				<IconItem itemType={itemType} isCurrent={isCurrent} hovered={hovered} />
 			</Symbol>
 			<DateLabel
 				position={labelPosition}
@@ -240,7 +243,7 @@ const CircleTimeline = ({
 	filteredTags,
 	tags,
 }) => {
-	const createDocumentMapper = (itemType, symbol) => (group) => {
+	const createDocumentMapper = (itemType) => (group) => {
 		const filteredGroup = isFilteredByTag(filteredTags, tags)
 			? filterGroupByTags(filteredTags, group) : group;
 		if (filteredGroup.length === 0) return null;
@@ -283,7 +286,6 @@ const CircleTimeline = ({
 				{...{
 					angle: angle || 0,
 					hoveredElement,
-					symbol,
 				}}
 			/>
 		);
