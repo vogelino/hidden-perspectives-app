@@ -78,9 +78,6 @@ export const DateLabel = styled.span`
 `;
 
 export const Symbol = styled.span`
-	background-image: url('/icons/${({ itemType }) => itemType}.svg');
-	background-repeat: no-repeat;
-	background-position: center center;
 	font-size: ${({ children }) => (children === '▲' ? '.65rem' : '.875rem')};
 	pointer-events: none;
 	width: .875rem;
@@ -88,7 +85,8 @@ export const Symbol = styled.span`
 	line-height: ${({ children }) => (children === '▲' ? '.5rem' : '.4rem')};
 	text-decoration: none;
 	float: left;
-	padding-top: 3px;
+	margin-left: -1px;
+	margin-top: -1px;
 	font-family: Arial, sans-serif;
 	user-select: none;
 

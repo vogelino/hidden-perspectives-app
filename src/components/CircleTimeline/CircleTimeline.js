@@ -6,6 +6,7 @@ import { EventLegend, DocumentLegend } from '../Legend/Legend';
 import { isHovered } from '../../utils/timelineUtil';
 import { formatHumanDateShort } from '../../utils/dateUtil';
 import { withoutReRender } from '../../utils/hocUtil';
+import IconItem from '../IconItem';
 import {
 	CircleContainer,
 	CircleContent,
@@ -168,6 +169,7 @@ const TimelineItem = onlyUpdateForKeys([
 	const labelIsActive = angle === 0 || angle === 320;
 	const showGroupIndicator = group.length > 1;
 	const maxGroupLength = getMaxGroupLength(documents, events);
+	const isCurrent = currentElement !== undefined;
 	const labelMargin = itemType === 'document'
 		? LABEL_MARGIN + RADIUS_OUTER - RADIUS_INNER
 		: LABEL_MARGIN;
@@ -180,6 +182,7 @@ const TimelineItem = onlyUpdateForKeys([
 		labelRadius,
 		angle,
 	);
+
 	return (
 		<Document
 			x={x - (docSize / 2)}
@@ -203,7 +206,9 @@ const TimelineItem = onlyUpdateForKeys([
 				rotation={angle}
 				labelMargin={labelMargin}
 				itemType={itemType}
-			/>
+			>
+				<IconItem itemType={itemType} light={isCurrent} />
+			</Symbol>
 			<DateLabel
 				position={labelPosition}
 				active={labelIsActive}
