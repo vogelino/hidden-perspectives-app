@@ -207,7 +207,7 @@ const TimelineItem = onlyUpdateForKeys([
 				labelMargin={labelMargin}
 				itemType={itemType}
 			>
-				<IconItem itemType={itemType} light={isCurrent} />
+				<IconItem itemType={itemType} isCurrent={isCurrent} hovered={hovered} />
 			</Symbol>
 			<DateLabel
 				position={labelPosition}

@@ -33,11 +33,7 @@ const getStakeholderIcon = (fillColor, strokeColor) => (
 	</g>
 );
 
-const getSvgContent = (itemType, light) => {
-	// TODO: Use colors from theme
-	const fillColor = light ? 'pink' : '#6F767D';
-	const strokeColor = light ? 'pink' : '#1B2733';
-
+const getSvgContent = (itemType, fillColor, strokeColor) => {
 	switch (itemType) {
 	case 'event': return getEventIcon(fillColor, strokeColor);
 	case 'document': return getDocumentIcon(fillColor, strokeColor);
@@ -46,29 +42,57 @@ const getSvgContent = (itemType, light) => {
 	}
 };
 
-const IconItem = ({ itemType, light, size }) => (
-	<IconContainer size={size}>
-		<IconItemStyled
-			height="16"
-			width="16"
-			viewBox="0 0 16 16"
-			preserveAspectRatio="none"
-			fill="none"
-			xmlns="http://www.w3.org/2000/svg"
-		>
-			{getSvgContent(itemType, light)}
-		</IconItemStyled>
-	</IconContainer>
-);
+const IconItem = ({
+	itemType,
+	isCurrent,
+	hovered,
+	size,
+	theme,
+}) => {
+	const {
+		primaryDark,
+		iconFillPrimary,
+		iconStrokePrimary,
+	} = theme;
+
+	let fillColor = iconFillPrimary;
+	let strokeColor = iconStrokePrimary;
+
+	if (hovered) {
+		fillColor = primaryDark;
+		strokeColor = primaryDark;
+	} else if (isCurrent) {
+		fillColor = 'white';
+		strokeColor = 'white';
+	}
+
+	return (
+		<IconContainer size={size}>
+			<IconItemStyled
+				height="16"
+				width="16"
+				viewBox="0 0 16 16"
+				preserveAspectRatio="none"
+				fill="none"
+				xmlns="http://www.w3.org/2000/svg"
+			>
+				{getSvgContent(itemType, fillColor, strokeColor)}
+			</IconItemStyled>
+		</IconContainer>
+	);
+};
 
 IconItem.propTypes = {
 	itemType: PropTypes.string.isRequired,
-	light: PropTypes.bool,
+	theme: PropTypes.shape().isRequired,
+	isCurrent: PropTypes.bool,
+	hovered: PropTypes.bool,
 	size: PropTypes.number,
 };
 
 IconItem.defaultProps = {
-	light: false,
+	isCurrent: false,
+	hovered: false,
 	size: 16,
 };
 
