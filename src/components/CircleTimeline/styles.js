@@ -81,11 +81,9 @@ export const DateLabel = styled.span`
 `;
 
 export const Symbol = styled.span`
-	font-size: ${({ children }) => (children === '▲' ? '.65rem' : '.875rem')};
 	pointer-events: none;
 	width: 1rem;
 	height: 1rem;
-	line-height: ${({ children }) => (children === '▲' ? '.5rem' : '.4rem')};
 	text-decoration: none;
 	float: left;
 	font-family: Arial, sans-serif;
