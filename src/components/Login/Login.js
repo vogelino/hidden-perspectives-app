@@ -11,6 +11,9 @@ import {
 	AlertsContainer,
 } from './styles';
 
+// REMOVE THE PRODUCTION CHECK WHEN YOU PLAN TO INTRODUCE SIGN UP
+const isProduction = process && process.env && process.env.NODE_ENV === 'production';
+
 const required = (value) => {
 	const error = 'This field is required!';
 	if (Array.isArray(value) && value.length === 0) return error;
@@ -81,8 +84,9 @@ const Login = ({
 					pristine,
 				}) => (
 					<form onSubmit={handleSubmit}>
-						<Fieldset title={login ? loginTitle : signupTitle}>
-							{!login && (
+						{/* REMOVE THE PRODUCTION CHECK WHEN YOU PLAN TO INTRODUCE SIGN UP */}
+						<Fieldset title={login || isProduction ? loginTitle : signupTitle}>
+							{!login && !isProduction && (
 								<>
 									<Field
 										name="name"
@@ -120,17 +124,20 @@ const Login = ({
 							))}
 						</AlertsContainer>
 						<Button primary type="submit" disabled={submitting || pristine}>
-							{login ? loginButtonText : signupButtonText}
+							{/* REMOVE THE PRODUCTION CHECK WHEN YOU PLAN TO INTRODUCE SIGN UP */}
+							{login || isProduction ? loginButtonText : signupButtonText}
 						</Button>
-						<Button
-							onClick={(evt) => {
-								evt.preventDefault();
-								evt.stopPropagation();
-								onLoginMethodChange(!login);
-							}}
-						>
-							{login ? callToSignupText : callToLoginText}
-						</Button>
+						{!isProduction && (
+							<Button
+								onClick={(evt) => {
+									evt.preventDefault();
+									evt.stopPropagation();
+									onLoginMethodChange(!login);
+								}}
+							>
+								{login ? callToSignupText : callToLoginText}
+							</Button>
+						)}
 					</form>
 				)}
 			/>
