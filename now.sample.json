@@ -38,12 +38,8 @@
 			"dest": "/favicon.ico"
 		},
 		{
-			"src": "^/manifest.json",
-			"dest": "/manifest.json"
-		},
-		{
-			"src": "^/asset-manifest.json",
-			"dest": "/asset-manifest.json"
+			"src": "^/site.webmabnifest",
+			"dest": "/site.webmabnifest"
 		},
 		{
 			"src": "^/(.*).(png|svg|jpg|json|xml|js)$",
