@@ -1,0 +1,43 @@
+import {
+	onlyUpdateForKeys,
+	withState,
+	compose,
+	lifecycle,
+	withProps,
+} from 'recompose';
+import { getWikipediaImage } from '../../../utils/imageUtil';
+import CentralElement from './CentralElement';
+import { formatHumanDateShort } from '../../../utils/dateUtil';
+
+const getStakeholderImage = ({ title, id, setImage }) => {
+	getWikipediaImage(title, id, 80).then(setImage);
+};
+
+export default compose(
+	withState('image', 'setImage', undefined),
+	withProps(({ date }) => ({
+		formattedDate: formatHumanDateShort(date),
+	})),
+	lifecycle({
+		componentDidMount() {
+			if (this.props.itemType === 'stakeholder') {
+				getStakeholderImage(this.props);
+			}
+		},
+		componentDidUpdate(prevProps) {
+			if (this.props.id !== prevProps.id) {
+				this.props.setImage(undefined);
+				if (this.props.itemType === 'stakeholder') {
+					getStakeholderImage(this.props);
+				}
+			}
+		},
+	}),
+	onlyUpdateForKeys([
+		'itemType',
+		'id',
+		'date',
+		'original',
+		'image',
+	]),
+)(CentralElement);
