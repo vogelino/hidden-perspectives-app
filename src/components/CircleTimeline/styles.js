@@ -86,7 +86,6 @@ export const Symbol = styled.span`
 	height: 1rem;
 	text-decoration: none;
 	float: left;
-	font-family: Arial, sans-serif;
 	user-select: none;
 	border-radius: 50%;
 	background: ${({ current, theme }) => (current ? theme.primary : 'white')};

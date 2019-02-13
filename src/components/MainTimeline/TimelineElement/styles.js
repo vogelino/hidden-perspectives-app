@@ -26,7 +26,6 @@ export const IconContainer = styled.span`
 	top: -1px;
 	transition: color 200ms ease-out;
 	color: ${({ theme }) => theme.gray500};
-	font-family: Arial, sans-serif;
 	font-size: 18px;
 	line-height: 17px;
 	width: 18px;

@@ -305,8 +305,8 @@ const CircleTimeline = ({
 				>
 					<Circles />
 					<Legends {...{ itemCounts, isLoading }} />
-					{documents.map(createDocumentMapper('document', '▲'))}
-					{events.map(createDocumentMapper('event', '●'))}
+					{documents.map(createDocumentMapper('document'))}
+					{events.map(createDocumentMapper('event'))}
 				</CircleSvg>
 				<BubbleChartContainer>
 					<BubbleChart
