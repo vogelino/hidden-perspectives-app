@@ -8,4 +8,5 @@ export const Container = styled.div`
 	margin: 0 1rem .5rem 0;
 	width: ${prop('width')}px;
 	overflow: hidden;
+	pointer-events: none;
 `;
