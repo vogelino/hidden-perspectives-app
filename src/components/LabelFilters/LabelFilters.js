@@ -37,9 +37,11 @@ const LabelFilters = ({
 		{tags.length > 0 && (
 			<Headline variant="h5">
 				{'Keywords'}
-				<AllNoneText onClick={getToggleHandler({ tags, filteredTags, ...otherProps })}>
-					{'Toggle all/none'}
-				</AllNoneText>
+				{tags.length > 1 && (
+					<AllNoneText onClick={getToggleHandler({ tags, filteredTags, ...otherProps })}>
+						{'Toggle all/none'}
+					</AllNoneText>
+				)}
 			</Headline>
 		)}
 		<br />
@@ -50,7 +52,7 @@ const LabelFilters = ({
 				isActive={filteredTags.find((filteredTagId) => filteredTagId === id)}
 				onMouseEnter={() => setHoveredElement({ id, itemType: 'tag' })}
 				onMouseLeave={() => setHoveredElement(null)}
-				onClick={getClickHandler({ ...otherProps, filteredTags, id })}
+				onClick={tags.length > 1 ? getClickHandler({ ...otherProps, filteredTags, id }) : () => {	}}
 			>
 				{name}
 			</Tag>

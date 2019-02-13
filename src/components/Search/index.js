@@ -183,11 +183,11 @@ export default compose(
 			const { activeResult, setActiveResult, searchResults } = props;
 			const indexOfCurrent = findIndex(propEq('id', activeResult), searchResults);
 			const newIndex = indexOfCurrent + (evt.code === 'ArrowDown' ? 1 : -1);
-			if (newIndex > (searchResults.length - 1)) {
+			if (searchResults.length && newIndex > (searchResults.length - 1)) {
 				setActiveResult(searchResults[0].id);
 				return;
 			}
-			if (newIndex < 0) {
+			if (searchResults.length && newIndex < 0) {
 				setActiveResult(searchResults[searchResults.length - 1].id);
 				return;
 			}
