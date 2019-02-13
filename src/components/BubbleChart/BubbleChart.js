@@ -6,7 +6,6 @@ import {
 	BubbleChartContainer,
 	BubblesSvg,
 	BubblesLoadingContainer,
-	Text,
 } from './styles';
 import Bubble from './Bubble';
 import BubbleChartTooltip from './BubbleChartTooltip';
@@ -161,20 +160,18 @@ const BubbleChart = ({
 				))}
 			</defs>
 			{
-				isEmpty(bubbleLayoutItems) && !isLoading
-					? <Text x={diameter / 2} y={diameter / 2}>No protagonists</Text>
-					: (
-						<Bubbles
-							activeElementId={activeElementId}
-							bubbleLayoutItems={bubbleLayoutItems}
-							isLoading={isLoading}
-							hoveredElement={hoveredElement}
-							setHoveredElement={setHoveredElement}
-							pinnedElement={pinnedElement}
-							setPinnedElement={setPinnedElement}
-							images={images}
-						/>
-					)
+				!isEmpty(bubbleLayoutItems) && !isLoading && (
+					<Bubbles
+						activeElementId={activeElementId}
+						bubbleLayoutItems={bubbleLayoutItems}
+						isLoading={isLoading}
+						hoveredElement={hoveredElement}
+						setHoveredElement={setHoveredElement}
+						pinnedElement={pinnedElement}
+						setPinnedElement={setPinnedElement}
+						images={images}
+					/>
+				)
 			}
 		</BubblesSvg>
 		<BubblesLoadingContainer isLoading={isLoading}>

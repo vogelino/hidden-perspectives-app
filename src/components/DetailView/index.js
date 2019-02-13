@@ -397,6 +397,7 @@ const getItemParser = (props) => ({ data }) => {
 
 	setItem({
 		id: item.id,
+		date: either(prop('eventStartDate'), prop('documentPublicationDate'))(item),
 		title: getResponseProp('title', itemType, item),
 		subtitle: getItemSubtitle(item, itemType),
 		description: getItemDescription(item, itemType),

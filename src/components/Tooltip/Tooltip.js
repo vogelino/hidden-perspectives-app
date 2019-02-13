@@ -11,7 +11,6 @@ import {
 	head,
 	splitAt,
 } from 'ramda';
-import { pdfjs, Document, Page } from 'react-pdf';
 import {
 	Trigger,
 	Container,
@@ -19,10 +18,8 @@ import {
 	Subtitle,
 	Summary,
 	ExploreButton,
-	Thumbnail,
 } from './styles';
-
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
+import PdfThumbnail from '../PdfThumbnail';
 
 const SUMMARY_MAX_LEN = 200;
 const isBiggerThanMax = pipe(length, lt(SUMMARY_MAX_LEN));
@@ -44,25 +41,17 @@ const Tooltip = ({
 	itemTypeName,
 	path,
 	noSubtitle,
+	withLink,
 	...rest
 }) => (
 	<Container id={`tooltip-${id}`} position={position} {...rest}>
 		<Content>
 			{!isLoading && thumbnailUrl && (
-				<Thumbnail>
-					<Document
-						file={thumbnailUrl}
-						loading=" "
-						error=" "
-						renderMode="canvas"
-					>
-						<Page pageNumber={1} width={64} />
-					</Document>
-				</Thumbnail>
+				<PdfThumbnail file={thumbnailUrl} />
 			)}
 			{!noSubtitle && <Subtitle variant="h6">{isLoading ? 'Loading...' : subtitle}</Subtitle>}
 			{!isLoading && <Summary>{getSummary(summary)}</Summary>}
-			{path && (
+			{withLink && path && (
 				<ExploreButton
 					to={path}
 					primary
@@ -83,6 +72,7 @@ Tooltip.propTypes = {
 	path: PropTypes.string,
 	isLoading: PropTypes.bool,
 	noSubtitle: PropTypes.bool,
+	withLink: PropTypes.bool,
 	position: PropTypes.oneOf(['left', 'right']),
 	itemTypeName: PropTypes.oneOf(['Event', 'Document', 'Protagonist']),
 };
@@ -94,6 +84,7 @@ Tooltip.defaultProps = {
 	thumbnailUrl: undefined,
 	path: '',
 	isLoading: true,
+	withLink: true,
 	noSubtitle: false,
 	position: 'right',
 	itemTypeName: 'Document',

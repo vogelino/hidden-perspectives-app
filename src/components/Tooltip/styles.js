@@ -21,7 +21,13 @@ export const Content = styled.div`
 	background: white;
 	z-index: 10;
 	text-align: left;
-	box-shadow: 0 .5rem 1rem rgba(0,0,0,.1); 
+	box-shadow: 0 .5rem 1rem rgba(0,0,0,.1);
+
+	&::after {
+		content: '';
+		clear: both;
+		display: table;
+	}
 `;
 
 export const Trigger = styled.div`
@@ -34,16 +40,6 @@ export const Trigger = styled.div`
 		opacity: 1;
 		pointer-events: all;
 	}
-`;
-
-export const Thumbnail = styled.div`
-	float: left;
-	border-radius: 4px;
-	border: 1px solid ${({ theme }) => theme.gray200};
-	margin: 0 1rem .5rem 0;
-	width: 4rem;
-	overflow: hidden;
-	pointer-events: none;
 `;
 
 export const Subtitle = styled(Headline)`
