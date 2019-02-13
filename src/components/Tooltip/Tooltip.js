@@ -41,6 +41,7 @@ const Tooltip = ({
 	itemTypeName,
 	path,
 	noSubtitle,
+	withLink,
 	...rest
 }) => (
 	<Container id={`tooltip-${id}`} position={position} {...rest}>
@@ -50,7 +51,7 @@ const Tooltip = ({
 			)}
 			{!noSubtitle && <Subtitle variant="h6">{isLoading ? 'Loading...' : subtitle}</Subtitle>}
 			{!isLoading && <Summary>{getSummary(summary)}</Summary>}
-			{path && (
+			{withLink && path && (
 				<ExploreButton
 					to={path}
 					primary
@@ -71,6 +72,7 @@ Tooltip.propTypes = {
 	path: PropTypes.string,
 	isLoading: PropTypes.bool,
 	noSubtitle: PropTypes.bool,
+	withLink: PropTypes.bool,
 	position: PropTypes.oneOf(['left', 'right']),
 	itemTypeName: PropTypes.oneOf(['Event', 'Document', 'Protagonist']),
 };
@@ -82,6 +84,7 @@ Tooltip.defaultProps = {
 	thumbnailUrl: undefined,
 	path: '',
 	isLoading: true,
+	withLink: true,
 	noSubtitle: false,
 	position: 'right',
 	itemTypeName: 'Document',

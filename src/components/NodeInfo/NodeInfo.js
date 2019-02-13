@@ -30,7 +30,7 @@ const NodeInfo = ({
 	image,
 	original,
 }) => {
-	const isLonger = isDescriptionLonger(description);
+	const isLonger = description && isDescriptionLonger(description);
 	const clickHandler = isLonger ? () => toggleDescriptionExpansion(!descriptionExpanded) : () => {};
 	return (
 		<Container>
