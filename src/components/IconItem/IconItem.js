@@ -13,7 +13,7 @@ const getDocumentIcon = (fillColor, strokeColor) => (
 const getEventIcon = (fillColor, strokeColor) => (
 	<g>
 		<rect x="4" y="5" width="8" height="3" rx="1" fill={fillColor} />
-		<rect x="4.5" y="4.5" width="7" height="7" rx=".5" stroke={strokeColor} />
+		<rect x="4.5" y="4.5" width="7" height="7" rx="0.51" stroke={strokeColor} />
 		<path fill={fillColor} stroke="fillColor" strokeWidth=".5" d="M6.25 3.25h.5v2.5h-.5z" />
 		<path opacity=".84" fill={strokeColor} d="M11 7v1H5V7z" />
 		<path fill={fillColor} stroke="fillColor" strokeWidth=".5" d="M9.25 3.25h.5v2.5h-.5z" />

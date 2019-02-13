@@ -15,7 +15,7 @@ export const CircleContent = styled.div`
 	height: calc(100vw - 50rem);
 	width: calc(100vw - 50rem);
 	max-width: 40rem;
-	max-height: 40rem;
+	max-height: 70vh;
 	flex-grow: 0;
 	position: relative;
 `;
