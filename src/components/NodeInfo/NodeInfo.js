@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { pdfjs, Document, Page } from 'react-pdf';
 import {
 	Container,
 	Title,
@@ -11,8 +10,7 @@ import {
 	TitleContainer,
 	StakholderImage,
 } from './styles';
-
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
+import PdfThumbnail from '../PdfThumbnail';
 
 const DESCRIPTION_MAX_LENGTH = 400;
 
@@ -32,22 +30,13 @@ const NodeInfo = ({
 	image,
 	original,
 }) => {
-	const isLonger = isDescriptionLonger(description);
+	const isLonger = description && isDescriptionLonger(description);
 	const clickHandler = isLonger ? () => toggleDescriptionExpansion(!descriptionExpanded) : () => {};
 	return (
 		<Container>
 			<TitleContainer>
 				{image && <StakholderImage image={image} />}
-				{original && (
-					<Document
-						file={original}
-						loading=" "
-						error=" "
-						renderMode="canvas"
-					>
-						<Page pageNumber={1} width={64} />
-					</Document>
-				)}
+				{original && <PdfThumbnail file={original} />}
 				{subtitle && (
 					<Subtitle variant="h6">{subtitle}</Subtitle>
 				)}

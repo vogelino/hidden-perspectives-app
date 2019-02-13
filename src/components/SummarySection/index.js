@@ -12,6 +12,12 @@ import SummarySection from './SummarySection';
 const formatEvents = (events) => flatten(events).map(formatGraphcoolEvent);
 const formatDocuments = (documents) => flatten(documents).map(formatGraphcoolDocument);
 
+const scrollToCurrent = () => {
+	const currentElement = document.querySelector('.summary-element.current');
+	if (!currentElement) return;
+	currentElement.scrollIntoView({ behavior: 'smooth' });
+};
+
 export default compose(
 	withProps(({ events, documents }) => ({
 		items: sortWith(
@@ -20,6 +26,9 @@ export default compose(
 		),
 	})),
 	lifecycle({
+		componentDidMount() {
+			scrollToCurrent();
+		},
 		componentWillUpdate(nextProps) {
 			const { hoveredElement } = nextProps;
 			const hoveredElementIsArray = Array.isArray(hoveredElement);
@@ -29,9 +38,12 @@ export default compose(
 				element.scrollIntoView({ behavior: 'smooth' });
 			}
 		},
-		componentDidUpdate() {
+		componentDidUpdate(prevProps) {
 			if (!this.props.hoveredElement) {
 				document.getElementById('summary-section').scroll();
+			}
+			if (this.props.id !== prevProps.id) {
+				scrollToCurrent();
 			}
 		},
 	}),

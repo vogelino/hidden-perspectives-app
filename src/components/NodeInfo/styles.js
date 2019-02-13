@@ -117,4 +117,5 @@ export const StakholderImage = styled.div`
 	background-size: cover;
 	margin: 0 1rem 1rem 0;
 	margin-top: -0.25rem;
+	border: 1px solid ${({ theme }) => theme.commonBorderColor};
 `;

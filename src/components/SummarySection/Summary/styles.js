@@ -12,6 +12,7 @@ export const Title = styled(Headline)`
 	border-radius: 2px;
 	padding: 0 .4rem;
 	margin-left: -0.4rem;
+	transition: color 200ms ease-out, background 200ms ease-out;
 
 	a {
 		text-decoration: none;
@@ -36,6 +37,11 @@ export const Type = styled.span`
 
 export const Item = styled.div`
 	margin-bottom: 2rem;
+
+	&.current ${Title} {
+		background: ${({ theme }) => theme.primary};
+		color: white;
+	}
 
 	&.pinned ${Title},
 	&.hovered ${Title} {

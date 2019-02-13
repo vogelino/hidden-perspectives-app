@@ -13,8 +13,15 @@ import {
 } from './styles';
 
 const classIf = (className, predicate) => (predicate && className) || '';
-const getSummaryClass = ({ hoveredElement, hovered, pinned }) => [
+const getSummaryClass = ({
+	current,
+	hoveredElement,
+	hovered,
+	pinned,
+}) => [
+	'summary-element',
 	classIf('hovered', hovered),
+	classIf('current', current),
 	classIf('pinned', !hoveredElement && pinned),
 ].join(' ');
 
@@ -24,7 +31,8 @@ const Summary = ({
 	hoverHandler,
 	clickHandler,
 	setComponentRef,
-	...item
+	item,
+	...summmary
 }) => {
 	const {
 		id,
@@ -36,26 +44,34 @@ const Summary = ({
 		title,
 		summary,
 		thumbnailUrl,
-	} = item;
+	} = summmary;
+
+	const current = id === item.id;
 
 	return (
 		<Item
-			className={getSummaryClass({ hovered, pinned, hoveredElement })}
+			className={getSummaryClass({
+				id,
+				hovered,
+				pinned,
+				current,
+			})}
 			id={`summary-${id}`}
 			ref={setComponentRef}
-			onMouseEnter={() => hoverHandler({ ...item, itemType })}
+			onMouseEnter={() => hoverHandler({ ...summmary, itemType })}
 			onMouseLeave={() => hoverHandler(null)}
-			onClick={() => clickHandler({ ...item, itemType })}
+			onClick={() => clickHandler({ ...summmary, itemType })}
 		>
 			<Tooltip
 				id={id}
 				itemType={itemType}
 				position="left"
 				prefetchedData={{
-					summary,
-					thumbnailUrl,
-					subtitle: '',
+					summary: !current && summary,
+					thumbnailUrl: !current && thumbnailUrl,
+					subtitle: current ? `You are already on this ${type.toLowerCase()}` : '',
 				}}
+				withLink={!current}
 			>
 				<SecondaryInfo variant="h6">
 					<IconContainer>
@@ -81,6 +97,9 @@ Summary.propTypes = {
 	summary: PropTypes.string,
 	hovered: PropTypes.bool,
 	pinned: PropTypes.bool,
+	item: PropTypes.shape({
+		id: PropTypes.string.isRequired,
+	}).isRequired,
 	hoveredElement: PropTypes.oneOfType([
 		PropTypes.shape({
 			id: PropTypes.string.isRequired,
