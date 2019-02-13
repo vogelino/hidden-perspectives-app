@@ -21,7 +21,13 @@ export const Content = styled.div`
 	background: white;
 	z-index: 10;
 	text-align: left;
-	box-shadow: 0 .5rem 1rem rgba(0,0,0,.1); 
+	box-shadow: 0 .5rem 1rem rgba(0,0,0,.1);
+
+	&::after {
+		content: '';
+		clear: both;
+		display: table;
+	}
 `;
 
 export const Trigger = styled.div`

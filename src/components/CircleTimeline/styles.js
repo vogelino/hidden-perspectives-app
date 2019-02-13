@@ -75,20 +75,20 @@ export const DateLabel = styled.span`
 		)
 	`};
 	white-space: nowrap;
+	padding: 4px 5px 2px;
+	border-radius: 8px;
+	background: white;
 `;
 
 export const Symbol = styled.span`
-	font-size: ${({ children }) => (children === '▲' ? '.65rem' : '.875rem')};
 	pointer-events: none;
-	width: .875rem;
-	height: .875rem;
-	line-height: ${({ children }) => (children === '▲' ? '.5rem' : '.4rem')};
+	width: 1rem;
+	height: 1rem;
 	text-decoration: none;
 	float: left;
-	margin-left: -1px;
-	margin-top: -1px;
-	font-family: Arial, sans-serif;
 	user-select: none;
+	border-radius: 50%;
+	background: ${({ current, theme }) => (current ? theme.primary : 'white')};
 
 	&::before {
 		background-color: ${({ theme, current }) => (current
@@ -104,6 +104,7 @@ export const Symbol = styled.span`
 		transform-origin: left;
 		width: ${({ labelMargin }) => `${labelMargin - 3}px`};
 		z-index: -1;
+		box-shadow: 0 0 0 3px white;
 	}
 `;
 
@@ -123,14 +124,13 @@ export const ItemCountIndicator = styled.span`
 	z-index: -2;
 	user-select: none;
 	font-family: Arial, sans-serif;
+	box-shadow: 0 0 0 2px white;
 `;
 
 export const Document = styled.foreignObject`
 	position: relative;
 	text-align: center;
 	cursor: pointer;
-	border-radius: 50%;
-	background: ${({ current, theme }) => (current ? theme.primary : 'none')};
 	color: ${({ current, theme }) => (current ? 'white' : theme.gray500)};
 	${({ current }) => !current && 'text-shadow: -2px -2px 0 white, 2px -2px 0 white, -2px 2px 0 white, 2px 2px 0 white;'}
 	overflow: visible;
@@ -139,19 +139,20 @@ export const Document = styled.foreignObject`
 		${DateLabel} {
 			opacity: 1;
 		}
-		${Symbol} {
-			&::before {
-				background-color: ${({ theme }) => theme.primaryLight};
-				opacity: 1;
-			}
+
+		${Symbol}::before {
+			opacity: 1;
 		}
 	}
 	
 	&.pinned,
 	&.hovered {
 		color: ${({ theme }) => theme.primaryDark};
-		background: ${({ theme }) => theme.primaryLight};
 		text-shadow: none;
+
+		${Symbol} {
+			background-color: ${({ theme }) => theme.primaryLight};
+		}
 
 		${ItemCountIndicator} {
 			background-color: ${({ theme }) => theme.primaryLight};
