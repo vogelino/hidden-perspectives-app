@@ -7,6 +7,7 @@ export const Container = styled.div`
 	border: 1px solid ${({ theme }) => theme.gray200};
 	margin: 0 1rem .5rem 0;
 	width: ${prop('width')}px;
+	min-height: ${prop('width')}px;
 	overflow: hidden;
 	pointer-events: none;
 `;

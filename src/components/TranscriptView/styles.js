@@ -1,11 +1,17 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-	overflow-y: auto;
 	height: calc(100vh - 4.5rem);
 	margin-top: 4.5rem;
-	padding-top: 7.8rem;
 	width: 100%;
+	display: flex;
+`;
+
+export const TranscriptScrollContainer = styled.div`
+	padding-top: 3.5rem;
+	height: calc(100vh - 4.5rem);
+	overflow-y: auto;
+	width: calc(100vw - 25rem);
 `;
 
 export const Content = styled.div`

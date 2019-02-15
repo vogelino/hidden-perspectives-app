@@ -22,6 +22,10 @@ export default compose(
 			if (this.props.itemType === 'stakeholder') return getStakeholderImage(this.props);
 			return undefined;
 		},
+		componentDidUpdate(prevProps) {
+			if (this.props.id !== prevProps.id) return getStakeholderImage(this.props);
+			return undefined;
+		},
 	}),
 	onlyUpdateForKeys([
 		'item',
