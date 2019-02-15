@@ -60,3 +60,7 @@ export const Summary = styled.p`
 export const ExploreButton = styled(Button)`
 	margin-top: 0.5rem;
 `;
+
+export const AuthorsContainer = styled.div`
+	margin-top: 1rem;
+`;

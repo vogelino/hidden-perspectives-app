@@ -11,6 +11,9 @@ import {
 	head,
 	splitAt,
 } from 'ramda';
+import PdfThumbnail from '../PdfThumbnail';
+import Headline from '../_library/Headline';
+import Stakeholder from '../_library/Stakeholder';
 import {
 	Trigger,
 	Container,
@@ -18,8 +21,8 @@ import {
 	Subtitle,
 	Summary,
 	ExploreButton,
+	AuthorsContainer,
 } from './styles';
-import PdfThumbnail from '../PdfThumbnail';
 
 const SUMMARY_MAX_LEN = 200;
 const isBiggerThanMax = pipe(length, lt(SUMMARY_MAX_LEN));
@@ -42,6 +45,7 @@ const Tooltip = ({
 	path,
 	noSubtitle,
 	withLink,
+	authors,
 	...rest
 }) => (
 	<Container id={`tooltip-${id}`} position={position} {...rest}>
@@ -51,6 +55,20 @@ const Tooltip = ({
 			)}
 			{!noSubtitle && <Subtitle variant="h6">{isLoading ? 'Loading...' : subtitle}</Subtitle>}
 			{!isLoading && <Summary>{getSummary(summary)}</Summary>}
+			{authors.length > 0 && (
+				<AuthorsContainer>
+					<Headline variant="h6">{authors.length === 1 ? 'Author' : 'Authors'}</Headline>
+					{authors.map((author) => (
+						<Stakeholder
+							key={author.id}
+							id={author.id}
+							to={`/protagonist/context/${author.id}`}
+						>
+							{author.name}
+						</Stakeholder>
+					))}
+				</AuthorsContainer>
+			)}
 			{withLink && path && (
 				<ExploreButton
 					to={path}
@@ -75,6 +93,10 @@ Tooltip.propTypes = {
 	withLink: PropTypes.bool,
 	position: PropTypes.oneOf(['left', 'right']),
 	itemTypeName: PropTypes.oneOf(['Event', 'Document', 'Protagonist']),
+	authors: PropTypes.arrayOf(PropTypes.shape({
+		id: PropTypes.string.isRequired,
+		name: PropTypes.string.isRequired,
+	})),
 };
 
 Tooltip.defaultProps = {
@@ -88,6 +110,7 @@ Tooltip.defaultProps = {
 	noSubtitle: false,
 	position: 'right',
 	itemTypeName: 'Document',
+	authors: [],
 };
 
 const TooltipTrigger = ({

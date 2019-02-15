@@ -123,6 +123,10 @@ const getAdditionalReturnValuesByType = (type) => (
 		documentKind {
 			id
 			name
+		}
+		documentAuthors {
+			id
+			stakeholderFullName
 		}`
 		: 'eventStartDate'
 );

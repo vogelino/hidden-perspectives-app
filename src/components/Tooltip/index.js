@@ -87,6 +87,7 @@ export default compose(
 		subtitle,
 		summary,
 		thumbnailUrl,
+		authors,
 		isLoading,
 	}) => ({
 		path: `/${itemType}/context/${id}`,
@@ -94,6 +95,7 @@ export default compose(
 		subtitle: subtitle || getPrefetchedData('subtitle', prefetchedData),
 		summary: summary || getPrefetchedData('summary', prefetchedData),
 		thumbnailUrl: thumbnailUrl || getPrefetchedData('thumbnailUrl', prefetchedData),
+		authors: authors || getPrefetchedData('authors', prefetchedData),
 		isLoading: !prefetchedData && isLoading,
 	})),
 	withHandlers({
