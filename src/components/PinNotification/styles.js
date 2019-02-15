@@ -7,15 +7,14 @@ export const Container = styled.div`
     color: white;
     display: ${({ hidden }) => (hidden ? 'none' : 'block')};
     font-size: .875rem;
+    left: 50%;
     line-height: 1.5rem;
     overflow: hidden;
     padding: 0.4rem 2.5rem 0.2rem 2.75rem;
     position: absolute;
-    right: ${({ alignRight }) => (alignRight ? '0' : '50%')};
     text-align: center;
-    top: ${({ alignRight }) => (alignRight ? '1' : '0.5')}rem;
+    top: 0.5rem;
     transform: translateX(-50%);
-    transform: translateX(${({ alignRight }) => (alignRight ? '0' : '50%')});
     z-index: 11;
 `;
 

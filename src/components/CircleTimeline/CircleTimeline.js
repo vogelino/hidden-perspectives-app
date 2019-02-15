@@ -104,7 +104,6 @@ const getPinNotification = (pinnedElement, setPinnedElement) => {
 			title={title}
 			itemType={itemType}
 			closeCallback={() => setPinnedElement(null)}
-			alignRight
 		/>
 	);
 };
