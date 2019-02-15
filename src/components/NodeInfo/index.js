@@ -27,5 +27,6 @@ export default compose(
 		'item',
 		'image',
 		'descriptionExpanded',
+		'authors',
 	]),
 )(NodeInfo);

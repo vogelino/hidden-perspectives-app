@@ -37,6 +37,10 @@ const DOCUMENT_QUERY = gql`
 				id
 				url
 			}
+			documentAuthors {
+				id
+				stakeholderFullName
+			}
 		}
 	}
 `;
@@ -48,6 +52,7 @@ const getDataParser = ({
 	setThumbnailUrl,
 	setSummary,
 	stopLoading,
+	setAuthors,
 }) => ({ data }) => {
 	const item = data[ucFirst(itemType)];
 	const {
@@ -55,6 +60,7 @@ const getDataParser = ({
 		type,
 		thumbnailUrl,
 		summary,
+		authors,
 	} = itemType === 'event'
 		? formatGraphcoolEvent(item)
 		: formatGraphcoolDocument(item);
@@ -63,6 +69,7 @@ const getDataParser = ({
 	setSubtitle(type);
 	setThumbnailUrl(thumbnailUrl);
 	setSummary(summary);
+	setAuthors(authors || []);
 	stopLoading();
 };
 
@@ -79,6 +86,7 @@ export default compose(
 	withState('title', 'setTitle', undefined),
 	withState('subtitle', 'setSubtitle', undefined),
 	withState('thumbnailUrl', 'setThumbnailUrl', undefined),
+	withState('authors', 'setAuthors', []),
 	withState('summary', 'setSummary', undefined),
 	withProps(({
 		itemType,
@@ -87,6 +95,7 @@ export default compose(
 		subtitle,
 		summary,
 		thumbnailUrl,
+		authors,
 		isLoading,
 	}) => ({
 		path: `/${itemType}/context/${id}`,
@@ -94,6 +103,7 @@ export default compose(
 		subtitle: subtitle || getPrefetchedData('subtitle', prefetchedData),
 		summary: summary || getPrefetchedData('summary', prefetchedData),
 		thumbnailUrl: thumbnailUrl || getPrefetchedData('thumbnailUrl', prefetchedData),
+		authors: authors.length === 0 ? getPrefetchedData('authors', prefetchedData) : authors,
 		isLoading: !prefetchedData && isLoading,
 	})),
 	withHandlers({

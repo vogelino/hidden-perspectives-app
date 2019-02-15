@@ -59,6 +59,10 @@ const DOCUMENT_QUERY = gql`
 				id
 				stakeholderFullName
 			}
+			documentAuthors {
+				id
+				stakeholderFullName
+			}
 			documentDescription
 			documentFiles {
 				url
@@ -119,6 +123,10 @@ const getAdditionalReturnValuesByType = (type) => (
 		documentKind {
 			id
 			name
+		}
+		documentAuthors {
+			id
+			stakeholderFullName
 		}`
 		: 'eventStartDate'
 );
@@ -257,6 +265,14 @@ const getItemOriginal = (item, itemType) => {
 	if (itemType !== 'document') return undefined;
 	return item.documentFiles && item.documentFiles.length > 0
 		? item.documentFiles[0].url : undefined;
+};
+
+const getItemAuthors = (item, itemType) => {
+	if (itemType !== 'document') return [];
+	return item.documentAuthors.map((author) => ({
+		id: author.id,
+		name: author.stakeholderFullName,
+	}));
 };
 
 const getQuery = (item, itemType) => {
@@ -402,6 +418,7 @@ const getItemParser = (props) => ({ data }) => {
 		subtitle: getItemSubtitle(item, itemType),
 		description: getItemDescription(item, itemType),
 		original: getItemOriginal(item, itemType),
+		authors: getItemAuthors(item, itemType),
 		itemType,
 	});
 

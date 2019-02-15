@@ -119,3 +119,7 @@ export const StakholderImage = styled.div`
 	margin-top: -0.25rem;
 	border: 1px solid ${({ theme }) => theme.commonBorderColor};
 `;
+
+export const AuthorsContainer = styled.div`
+	margin-top: 1.5rem;
+`;
