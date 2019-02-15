@@ -179,6 +179,7 @@ const TimelineItem = onlyUpdateForKeys([
 	group,
 	itemType,
 	onClick,
+	onBlurCallback,
 	events,
 	documents,
 	onMouseEnter,
@@ -216,7 +217,9 @@ const TimelineItem = onlyUpdateForKeys([
 			onMouseLeave={onMouseLeave}
 			{...CIRCLE_CENTER}
 			onClick={onClick}
+			onBlur={onBlurCallback}
 			current={currentElement}
+			tabIndex={0}
 		>
 			{
 				showGroupIndicator && (
@@ -306,6 +309,7 @@ const CircleTimeline = ({
 						filteredGroup.map((groupEl) => ({ ...groupEl, itemType })),
 					);
 				}}
+				onBlurCallback={() => setPinnedElement(null)}
 				{...{
 					angle: angle || 0,
 					hoveredElement,

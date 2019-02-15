@@ -158,6 +158,10 @@ export const Document = styled.foreignObject`
 			background-color: ${({ theme }) => theme.primaryLight};
 		}
 	}
+
+	&:focus {
+		outline: none;
+	}
 `;
 
 export const BubbleChartContainer = styled.div`
