@@ -295,10 +295,12 @@ const structureStakeholderData = (data) => {
 			{
 				label: 'Documents',
 				value: documentsMentionedIn.map(mapDocuments),
+				ValueComponent: passValueAsChild(Stakeholder, 'document'),
 			},
 			{
 				label: 'Events',
 				value: eventsInvolvedIn.map(mapEvents),
+				ValueComponent: passValueAsChild(Stakeholder, 'event'),
 			},
 		].filter(hasValue),
 	};
