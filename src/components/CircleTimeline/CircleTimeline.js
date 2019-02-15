@@ -8,6 +8,7 @@ import { isHovered } from '../../utils/timelineUtil';
 import { formatHumanDateShort } from '../../utils/dateUtil';
 import { withoutReRender } from '../../utils/hocUtil';
 import IconItem from '../IconItem';
+import PinNotification from '../PinNotification';
 import {
 	CircleContainer,
 	CircleContent,
@@ -90,6 +91,23 @@ const isFilteredByTag = (filteredTags, tags) => (
 	filteredTags.length > 0
 	&& filteredTags.length !== tags.length
 );
+
+const getPinNotification = (pinnedElement, setPinnedElement) => {
+	const isArray = pinnedElement && pinnedElement.length > 0;
+	const itemType = isArray
+		? pinnedElement[0].itemType
+		: pinnedElement.itemType;
+	const title = `Unpin selected ${isArray && pinnedElement.length > 0 ? 'items' : 'item'}`;
+
+	return (
+		<PinNotification
+			title={title}
+			itemType={itemType}
+			closeCallback={() => setPinnedElement(null)}
+			alignRight
+		/>
+	);
+};
 
 const Circles = withoutReRender(() => (
 	<>
@@ -296,6 +314,12 @@ const CircleTimeline = ({
 			/>
 		);
 	};
+
+	const PinnedElementNotification = pinnedElement && getPinNotification(
+		pinnedElement,
+		setPinnedElement,
+	);
+
 	return (
 		<CircleContainer>
 			<CircleContent>
@@ -324,6 +348,7 @@ const CircleTimeline = ({
 					/>
 				</BubbleChartContainer>
 			</CircleContent>
+			{PinnedElementNotification}
 		</CircleContainer>
 	);
 };

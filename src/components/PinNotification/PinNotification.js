@@ -7,8 +7,13 @@ import IconItem from '../IconItem';
 import { getShortenedString } from '../../utils/stringUtil';
 
 const NOTIFICATION_MAX_LEN = 70;
-const PinNotification = ({ title, itemType, closeCallback }) => (
-	<Container>
+const PinNotification = ({
+	title,
+	itemType,
+	closeCallback,
+	alignRight,
+}) => (
+	<Container alignRight={alignRight}>
 		<IconWrapper>
 			<IconItem
 				itemType={itemType}
@@ -25,10 +30,12 @@ PinNotification.propTypes = {
 	title: PropTypes.string.isRequired,
 	itemType: PropTypes.string.isRequired,
 	closeCallback: PropTypes.func,
+	alignRight: PropTypes.bool,
 };
 
 PinNotification.defaultProps = {
 	closeCallback: () => null,
+	alignRight: false,
 };
 
 export default PinNotification;
