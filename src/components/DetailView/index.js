@@ -59,6 +59,10 @@ const DOCUMENT_QUERY = gql`
 				id
 				stakeholderFullName
 			}
+			documentAuthors {
+				id
+				stakeholderFullName
+			}
 			documentDescription
 			documentFiles {
 				url
@@ -259,6 +263,14 @@ const getItemOriginal = (item, itemType) => {
 		? item.documentFiles[0].url : undefined;
 };
 
+const getItemAuthors = (item, itemType) => {
+	if (itemType !== 'document') return [];
+	return item.documentAuthors.map((author) => ({
+		id: author.id,
+		name: author.stakeholderFullName,
+	}));
+};
+
 const getQuery = (item, itemType) => {
 	let query;
 	let tags = [];
@@ -402,6 +414,7 @@ const getItemParser = (props) => ({ data }) => {
 		subtitle: getItemSubtitle(item, itemType),
 		description: getItemDescription(item, itemType),
 		original: getItemOriginal(item, itemType),
+		authors: getItemAuthors(item, itemType),
 		itemType,
 	});
 

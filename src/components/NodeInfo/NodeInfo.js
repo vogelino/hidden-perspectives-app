@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import PdfThumbnail from '../PdfThumbnail';
+import Stakeholder from '../_library/Stakeholder';
 import {
 	Container,
 	Title,
@@ -9,8 +11,9 @@ import {
 	ShowMoreText,
 	TitleContainer,
 	StakholderImage,
+	AuthorsContainer,
 } from './styles';
-import PdfThumbnail from '../PdfThumbnail';
+import Headline from '../_library/Headline';
 
 const DESCRIPTION_MAX_LENGTH = 400;
 
@@ -29,6 +32,7 @@ const NodeInfo = ({
 	toggleDescriptionExpansion,
 	image,
 	original,
+	authors,
 }) => {
 	const isLonger = description && isDescriptionLonger(description);
 	const clickHandler = isLonger ? () => toggleDescriptionExpansion(!descriptionExpanded) : () => {};
@@ -53,6 +57,21 @@ const NodeInfo = ({
 					)}
 				</Description>
 			)}
+
+			{authors.length > 0 && (
+				<AuthorsContainer>
+					<Headline variant="h6">{authors.length === 1 ? 'Author' : 'Authors'}</Headline>
+					{authors.map(({ id, name }) => (
+						<Stakeholder
+							key={id}
+							id={id}
+							to={`/protagonist/context/${id}`}
+						>
+							{name}
+						</Stakeholder>
+					))}
+				</AuthorsContainer>
+			)}
 		</Container>
 	);
 };
@@ -65,6 +84,10 @@ NodeInfo.propTypes = {
 	image: PropTypes.string,
 	descriptionExpanded: PropTypes.bool.isRequired,
 	toggleDescriptionExpansion: PropTypes.func.isRequired,
+	authors: PropTypes.arrayOf(PropTypes.shape({
+		id: PropTypes.string.isRequired,
+		name: PropTypes.string.isRequired,
+	})),
 };
 
 NodeInfo.defaultProps = {
@@ -72,6 +95,7 @@ NodeInfo.defaultProps = {
 	description: undefined,
 	image: undefined,
 	original: undefined,
+	authors: [],
 };
 
 export default NodeInfo;
