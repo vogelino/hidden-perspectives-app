@@ -63,4 +63,6 @@ export const ExploreButton = styled(Button)`
 
 export const AuthorsContainer = styled.div`
 	margin-top: 1rem;
+	float: left;
+	width: 100%;
 `;
