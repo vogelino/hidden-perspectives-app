@@ -1,17 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-	ifElse,
-	identity,
-	pipe,
-	length,
-	lt,
-	join,
-	append,
-	head,
-	splitAt,
-} from 'ramda';
-import {
 	Trigger,
 	Container,
 	Content,
@@ -19,18 +8,10 @@ import {
 	Summary,
 	ExploreButton,
 } from './styles';
+import { getShortenedString } from '../../utils/stringUtil';
 import PdfThumbnail from '../PdfThumbnail';
 
 const SUMMARY_MAX_LEN = 200;
-const isBiggerThanMax = pipe(length, lt(SUMMARY_MAX_LEN));
-const shortenToMax = pipe(
-	splitAt(SUMMARY_MAX_LEN),
-	head,
-	append('…'),
-	join(''),
-);
-const getSummary = ifElse(isBiggerThanMax, shortenToMax, identity);
-
 const Tooltip = ({
 	id,
 	subtitle,
@@ -50,7 +31,7 @@ const Tooltip = ({
 				<PdfThumbnail file={thumbnailUrl} />
 			)}
 			{!noSubtitle && <Subtitle variant="h6">{isLoading ? 'Loading...' : subtitle}</Subtitle>}
-			{!isLoading && <Summary>{getSummary(summary)}</Summary>}
+			{!isLoading && <Summary>{getShortenedString(summary, SUMMARY_MAX_LEN)}</Summary>}
 			{withLink && path && (
 				<ExploreButton
 					to={path}

@@ -7,6 +7,7 @@ import { LoadingContainer } from '../LoadingIndicator/styles';
 import LoadingIndicator from '../LoadingIndicator';
 import TimelineItems from './TimelineItems';
 import Protagonists from './Protagonists';
+import PinNotification from '../PinNotification';
 import { MainTimelineLegend } from '../Legend';
 
 const parseTimelineItems = (years) => {
@@ -16,6 +17,12 @@ const parseTimelineItems = (years) => {
 	}, []);
 
 	return months;
+};
+
+const getPinNotification = (pinnedElement) => {
+	const { itemType } = pinnedElement;
+	const title = itemType === 'stakeholder' ? pinnedElement.name : pinnedElement[`${itemType}Title`];
+	return <PinNotification title={title} itemType={itemType} />;
 };
 
 const MainTimeline = ({
@@ -39,6 +46,8 @@ const MainTimeline = ({
 	onTimelineScroll,
 }) => {
 	const items = parseTimelineItems(timelineItems);
+	const PinnedElementNotification = pinnedElement && getPinNotification(pinnedElement);
+
 	return (
 		<Container id="mainTimeline">
 			<LoadingContainer isLoading={isLoading}>
@@ -82,6 +91,7 @@ const MainTimeline = ({
 					onTimelineScroll={onTimelineScroll}
 				/>
 			)}
+			{PinnedElementNotification}
 		</Container>
 	);
 };
