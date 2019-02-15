@@ -18,6 +18,7 @@ const Bubble = ({
 	setHoveredElement,
 	pinned,
 	clickHandler,
+	onBlurCallback,
 	textNodeWidth,
 	isLoading,
 	image,
@@ -39,6 +40,8 @@ const Bubble = ({
 			onMouseEnter={() => setHoveredElement({ itemType: 'stakeholder', ...data })}
 			onMouseLeave={() => setHoveredElement(null)}
 			onClick={() => clickHandler({ itemType: 'stakeholder', ...data })}
+			tabIndex={0}
+			onBlur={onBlurCallback}
 		>
 			<BubbleCircle
 				cx={x}
@@ -86,6 +89,7 @@ Bubble.propTypes = {
 	setComponentRef: PropTypes.func,
 	setHoveredElement: PropTypes.func,
 	clickHandler: PropTypes.func,
+	onBlurCallback: PropTypes.func,
 	image: PropTypes.shape({
 		id: PropTypes.string.isRequired,
 		url: PropTypes.string,
@@ -100,6 +104,7 @@ Bubble.defaultProps = {
 	setComponentRef: () => {},
 	setHoveredElement: () => {},
 	clickHandler: () => {},
+	onBlurCallback: () => null,
 	textNodeWidth: undefined,
 	image: undefined,
 };

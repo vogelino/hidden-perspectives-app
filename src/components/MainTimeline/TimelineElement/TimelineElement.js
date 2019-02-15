@@ -18,6 +18,7 @@ const TimelineElement = ({
 	title,
 	hoverHandler,
 	clickHandler,
+	onBlurCallback,
 	...itemProps
 }) => (
 	<Container>
@@ -32,6 +33,8 @@ const TimelineElement = ({
 			onMouseEnter={() => hoverHandler({ id, itemType, ...itemProps })}
 			onMouseLeave={() => hoverHandler(null)}
 			onClick={() => clickHandler({ id, itemType, ...itemProps })}
+			onBlur={onBlurCallback}
+			tabIndex={0}
 		>
 			<IconContainer>
 				<IconItem itemType={itemType} hovered={hovered} size={18} />
@@ -58,6 +61,12 @@ TimelineElement.propTypes = {
 	clickHandler: PropTypes.func.isRequired,
 	hovered: PropTypes.bool.isRequired,
 	pinned: PropTypes.bool.isRequired,
+	onBlurCallback: PropTypes.func,
+};
+
+
+TimelineElement.defaultProps = {
+	onBlurCallback: () => null,
 };
 
 export default TimelineElement;
