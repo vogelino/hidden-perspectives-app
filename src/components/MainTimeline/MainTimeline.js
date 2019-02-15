@@ -19,10 +19,16 @@ const parseTimelineItems = (years) => {
 	return months;
 };
 
-const getPinNotification = (pinnedElement) => {
+const getPinNotification = (pinnedElement, setPinnedElement) => {
 	const { itemType } = pinnedElement;
 	const title = itemType === 'stakeholder' ? pinnedElement.name : pinnedElement[`${itemType}Title`];
-	return <PinNotification title={title} itemType={itemType} />;
+	return (
+		<PinNotification
+			title={title}
+			itemType={itemType}
+			closeCallback={() => setPinnedElement(null)}
+		/>
+	);
 };
 
 const MainTimeline = ({
@@ -46,7 +52,10 @@ const MainTimeline = ({
 	onTimelineScroll,
 }) => {
 	const items = parseTimelineItems(timelineItems);
-	const PinnedElementNotification = pinnedElement && getPinNotification(pinnedElement);
+	const PinnedElementNotification = pinnedElement && getPinNotification(
+		pinnedElement,
+		setPinnedElement,
+	);
 
 	return (
 		<Container id="mainTimeline">
