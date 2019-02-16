@@ -16,6 +16,7 @@ import MetadataView from './MetadataView';
 import { getFormattedDate } from '../../utils/dateUtil';
 import Tag from '../_library/Tag';
 import Stakeholder from '../_library/Stakeholder';
+import Item from '../_library/Item';
 
 const DOCUMENT_QUERY = gql`
 	query GetDocument($id: ID!) {
@@ -145,6 +146,7 @@ const passValueAsChild = (Component, itemType) => {
 		<Component
 			{...props}
 			to={itemType && `/${itemType}/context/${props.id}`}
+			itemType={itemType}
 		>
 			{value}
 		</Component>
@@ -295,12 +297,12 @@ const structureStakeholderData = (data) => {
 			{
 				label: 'Documents',
 				value: documentsMentionedIn.map(mapDocuments),
-				ValueComponent: passValueAsChild(Stakeholder, 'document'),
+				ValueComponent: passValueAsChild(Item, 'document'),
 			},
 			{
 				label: 'Events',
 				value: eventsInvolvedIn.map(mapEvents),
-				ValueComponent: passValueAsChild(Stakeholder, 'event'),
+				ValueComponent: passValueAsChild(Item, 'event'),
 			},
 		].filter(hasValue),
 	};
