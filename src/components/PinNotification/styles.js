@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-    background-color: ${({ theme }) => theme.primary};
+    background-color: ${({ theme }) => theme.primaryLight};
     border-radius: 2rem;
     box-shadow: 0 .5rem 1rem rgba(0,0,0,.1);
-    color: white;
+    color: ${({ theme }) => theme.primaryDark};
     display: ${({ hidden }) => (hidden ? 'none' : 'block')};
     font-size: .875rem;
     left: 50%;
@@ -19,11 +19,11 @@ export const Container = styled.div`
 `;
 
 export const IconWrapper = styled.span`
-    background: rgba(255,255,255,.1);
-    border-right: 1px solid rgba(255,255,255,.2);
+    background: ${({ theme }) => theme.primaryDark10};
+    border-right: 1px solid ${({ theme }) => theme.primaryDark25};
     height: 2.2rem;
     left: 0;
-    padding-left: 4px;
+    padding-left: 6px;
     padding-top: 7px;
     position: absolute;
     top: 0;
@@ -50,6 +50,6 @@ export const CloseButton = styled.div`
     width: 2rem;
 
     &:hover {
-        background: rgba(255,255,255,.1);
+        background: ${({ theme }) => theme.primaryDark10};
     }
 `;

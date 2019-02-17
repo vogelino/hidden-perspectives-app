@@ -14,8 +14,8 @@ const PinNotification = ({
 		<IconWrapper>
 			<IconItem
 				itemType={itemType}
-				isCurrent
 				size={18}
+				pinned
 			/>
 		</IconWrapper>
 		<Title>{title}</Title>
