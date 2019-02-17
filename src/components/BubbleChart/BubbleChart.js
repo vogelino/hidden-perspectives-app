@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { isEmpty } from 'ramda';
 import {
 	BubbleChartContainer,
 	BubblesSvg,
@@ -11,48 +10,18 @@ import BubbleChartImages from './BubbleChartImages';
 import Bubbles from './Bubbles';
 import LoadingIndicator from '../LoadingIndicator';
 
-const BubbleChart = ({
-	bubbleLayoutItems,
-	isLoading,
-	diameter,
-	hoveredElement,
-	setHoveredElement,
-	pinnedElement,
-	setPinnedElement,
-	activeElementId,
-	images,
-}) => (
-	<BubbleChartContainer diameter={diameter}>
+const BubbleChart = (props) => (
+	<BubbleChartContainer {...props}>
 		<BubblesSvg
-			isLoading={isLoading}
-			viewBox={`0 0 ${diameter} ${diameter}`}
+			{...props}
+			viewBox={`0 0 ${props.diameter} ${props.diameter}`}
 			preserveAspectRatio="xMidYMid meet"
 		>
-			<BubbleChartImages images={images} />
-			{
-				!isEmpty(bubbleLayoutItems) && !isLoading && (
-					<Bubbles
-						activeElementId={activeElementId}
-						bubbleLayoutItems={bubbleLayoutItems}
-						isLoading={isLoading}
-						hoveredElement={hoveredElement}
-						setHoveredElement={setHoveredElement}
-						pinnedElement={pinnedElement}
-						setPinnedElement={setPinnedElement}
-						images={images}
-					/>
-				)
-			}
+			<BubbleChartImages {...props} />
+			{props.bubbleLayoutItems.length && !props.isLoading && <Bubbles {...props} />}
 		</BubblesSvg>
-		<BubblesLoadingContainer isLoading={isLoading}>
-			<LoadingIndicator />
-		</BubblesLoadingContainer>
-		<BubbleChartTooltips
-			bubbleLayoutItems={bubbleLayoutItems}
-			hoveredElement={hoveredElement}
-			pinnedElement={pinnedElement}
-			diameter={diameter}
-		/>
+		<BubblesLoadingContainer {...props}><LoadingIndicator /></BubblesLoadingContainer>
+		<BubbleChartTooltips {...props} />
 	</BubbleChartContainer>
 );
 

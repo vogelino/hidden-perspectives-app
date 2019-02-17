@@ -9,7 +9,7 @@ const Bubbles = ({
 	images,
 	setPinnedElement,
 	activeElementId,
-	...props
+	...rest
 }) => bubbleLayoutItems.map((bubbleData) => {
 	const hovered = isHovered(bubbleData.data, hoveredElement, 'stakeholder');
 	const pinned = isHovered(bubbleData.data, pinnedElement, 'stakeholder');
@@ -25,7 +25,7 @@ const Bubbles = ({
 				return setPinnedElement(pinEl);
 			}}
 			{...bubbleData}
-			{...props}
+			{...rest}
 		/>
 	);
 });
