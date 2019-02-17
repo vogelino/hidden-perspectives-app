@@ -1,44 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { isEmpty } from 'ramda';
-import { isHovered } from '../../utils/timelineUtil';
 import {
 	BubbleChartContainer,
 	BubblesSvg,
 	BubblesLoadingContainer,
 } from './styles';
-import Bubble from './Bubble';
 import BubbleChartTooltips from './BubbleChartTooltips';
 import BubbleChartImages from './BubbleChartImages';
+import Bubbles from './Bubbles';
 import LoadingIndicator from '../LoadingIndicator';
-
-const Bubbles = ({
-	bubbleLayoutItems,
-	hoveredElement,
-	pinnedElement,
-	images,
-	setPinnedElement,
-	activeElementId,
-	...props
-}) => bubbleLayoutItems.map((bubbleData) => {
-	const hovered = isHovered(bubbleData.data, hoveredElement, 'stakeholder');
-	const pinned = isHovered(bubbleData.data, pinnedElement, 'stakeholder');
-	return (
-		<Bubble
-			key={`bubble-link-${bubbleData.data.name}`}
-			hovered={hovered}
-			pinned={!hoveredElement && pinned}
-			isActive={activeElementId === bubbleData.data.id}
-			image={images.find(({ id }) => id === bubbleData.data.id)}
-			clickHandler={(pinEl) => {
-				if (pinnedElement && pinnedElement.id === pinEl.id) return setPinnedElement(null);
-				return setPinnedElement(pinEl);
-			}}
-			{...bubbleData}
-			{...props}
-		/>
-	);
-});
 
 const BubbleChart = ({
 	bubbleLayoutItems,
