@@ -15,21 +15,18 @@ const Tooltips = ({
 	bubbleLayoutItems,
 	hoveredElement,
 	diameter,
-}) => bubbleLayoutItems.map((bubbleData) => {
-	const {
-		data,
-		x,
-		y,
-		r,
-	} = bubbleData;
-
-	const { name, value } = data;
+}) => bubbleLayoutItems.map(({
+	data: { id, name, value },
+	x,
+	y,
+	r,
+}) => {
 	const toRelativePosition = (pos) => pos * 100 / diameter;
 
 	return (
 		<BubbleChartTooltip
 			key={`tooltip-${name}`}
-			visible={hoveredElement && hoveredElement.id === data.id}
+			visible={hoveredElement && hoveredElement.id === id}
 			x={toRelativePosition(x)}
 			y={toRelativePosition(y + r)}
 			text={name}
