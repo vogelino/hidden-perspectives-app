@@ -112,14 +112,20 @@ const getPinNotification = (pinnedElement, setPinnedElement) => {
 		itemTitle = itemType === 'stakeholder' ? item.name : item.title;
 	}
 
-	const formattedItemTitle = `You pinned the ${itemType} “${getShortenedString(itemTitle, maxTitleLength)}”`;
+	const displayItemType = itemType === 'stakeholder' ? 'protagonist' : itemType;
+	const formattedItemTitle = `You pinned the ${displayItemType} “${getShortenedString(itemTitle, maxTitleLength)}”`;
 	const formattedGroupTitle = `You pinned ${itemTitle}`;
 
 	return (
 		<PinNotification
-			title={isGroupOfElements ? formattedGroupTitle : formattedItemTitle}
+			title={
+				isGroupOfElements && pinnedElement.length > 1
+					? formattedGroupTitle
+					: formattedItemTitle
+			}
 			itemType={itemType}
 			closeCallback={() => setPinnedElement(null)}
+			path={`/${displayItemType}/context/${item.id}`}
 		/>
 	);
 };

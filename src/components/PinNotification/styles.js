@@ -19,7 +19,7 @@ export const IconWrapper = styled.span`
     border-right: 1px solid ${({ theme }) => theme.primaryDark25};
     height: 2.2rem;
     left: 0;
-    padding-left: 6px;
+    padding-left: 5px;
     padding-top: 7px;
     position: absolute;
     top: 0;
@@ -31,13 +31,23 @@ export const Title = styled.div`
     white-space: nowrap;
 `;
 
+export const ItemLink = styled.a`
+    color: ${({ theme }) => theme.primaryDark};
+    cursor: pointer;
+    display: inline-block;
+
+	&:hover ${Title} {
+		text-decoration: underline;
+	}
+`;
+
 export const CloseButton = styled.div`
     content: '✕';
     cursor: pointer;
     height: 2rem;
     font-weight: bold;
     line-height: 2.15rem;
-    padding-right: 4px;
+    padding-right: 3px;
     position: absolute;
     right: 0;
     top: 50%;

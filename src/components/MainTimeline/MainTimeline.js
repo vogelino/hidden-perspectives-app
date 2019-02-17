@@ -25,11 +25,13 @@ const getPinNotification = (pinnedElement, setPinnedElement) => {
 	const { itemType } = pinnedElement;
 	const title = itemType === 'stakeholder' ? pinnedElement.name : pinnedElement[`${itemType}Title`];
 	const displayTitle = `You pinned the ${itemType} “${getShortenedString(title, maxTitleLength)}”`;
+	const displayItemType = itemType === 'stakeholder' ? 'protagonist' : itemType;
 	return (
 		<PinNotification
 			title={displayTitle}
 			itemType={itemType}
 			closeCallback={() => setPinnedElement(null)}
+			path={`/${displayItemType}/context/${pinnedElement.id}`}
 		/>
 	);
 };
