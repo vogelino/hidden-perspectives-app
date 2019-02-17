@@ -9,6 +9,7 @@ import { formatHumanDateShort } from '../../utils/dateUtil';
 import { withoutReRender } from '../../utils/hocUtil';
 import IconItem from '../IconItem';
 import PinNotification from '../PinNotification';
+import { getShortenedString } from '../../utils/stringUtil';
 import {
 	CircleContainer,
 	CircleContent,
@@ -92,16 +93,30 @@ const isFilteredByTag = (filteredTags, tags) => (
 	&& filteredTags.length !== tags.length
 );
 
+
 const getPinNotification = (pinnedElement, setPinnedElement) => {
-	const isArray = pinnedElement && pinnedElement.length > 0;
-	const itemType = isArray
-		? pinnedElement[0].itemType
-		: pinnedElement.itemType;
-	const title = `Unpin selected ${isArray && pinnedElement.length > 0 ? 'items' : 'item'}`;
+	const maxTitleLength = 70;
+	const isGroupOfElements = pinnedElement && Array.isArray(pinnedElement);
+	const item = isGroupOfElements
+		? pinnedElement[0]
+		: pinnedElement;
+	const { itemType } = item;
+
+	let itemTitle;
+	if (isGroupOfElements && pinnedElement.length > 1) {
+		itemTitle = `a group of ${pinnedElement.length} ${itemType}s`;
+	} else if (isGroupOfElements && pinnedElement.length === 1) {
+		itemTitle = itemType === 'stakeholder' ? item.name : item[`${itemType}Title`];
+	} else {
+		itemTitle = itemType === 'stakeholder' ? item.name : item.title;
+	}
+
+	const formattedItemTitle = `You pinned the ${itemType} “${getShortenedString(itemTitle, maxTitleLength)}”`;
+	const formattedGroupTitle = `You pinned ${itemTitle}`;
 
 	return (
 		<PinNotification
-			title={title}
+			title={isGroupOfElements ? formattedGroupTitle : formattedItemTitle}
 			itemType={itemType}
 			closeCallback={() => setPinnedElement(null)}
 		/>

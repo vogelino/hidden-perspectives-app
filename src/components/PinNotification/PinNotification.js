@@ -4,9 +4,7 @@ import {
 	Container, Title, IconWrapper, CloseButton,
 } from './styles';
 import IconItem from '../IconItem';
-import { getShortenedString } from '../../utils/stringUtil';
 
-const NOTIFICATION_MAX_LEN = 70;
 const PinNotification = ({
 	title,
 	itemType,
@@ -20,7 +18,7 @@ const PinNotification = ({
 				size={18}
 			/>
 		</IconWrapper>
-		<Title>{getShortenedString(title, NOTIFICATION_MAX_LEN)}</Title>
+		<Title>{title}</Title>
 		<CloseButton onClick={closeCallback}>✕</CloseButton>
 	</Container>
 );

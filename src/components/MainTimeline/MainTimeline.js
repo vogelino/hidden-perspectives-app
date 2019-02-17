@@ -9,6 +9,7 @@ import TimelineItems from './TimelineItems';
 import Protagonists from './Protagonists';
 import PinNotification from '../PinNotification';
 import { MainTimelineLegend } from '../Legend';
+import { getShortenedString } from '../../utils/stringUtil';
 
 const parseTimelineItems = (years) => {
 	const months = years.reduce((acc, cur) => {
@@ -20,11 +21,13 @@ const parseTimelineItems = (years) => {
 };
 
 const getPinNotification = (pinnedElement, setPinnedElement) => {
+	const maxTitleLength = 70;
 	const { itemType } = pinnedElement;
 	const title = itemType === 'stakeholder' ? pinnedElement.name : pinnedElement[`${itemType}Title`];
+	const displayTitle = `You pinned the ${itemType} “${getShortenedString(title, maxTitleLength)}”`;
 	return (
 		<PinNotification
-			title={title}
+			title={displayTitle}
 			itemType={itemType}
 			closeCallback={() => setPinnedElement(null)}
 		/>
