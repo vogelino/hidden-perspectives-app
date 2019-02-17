@@ -44,7 +44,7 @@ const NodeInfo = ({
 				{subtitle && (
 					<Subtitle variant="h6">{subtitle}</Subtitle>
 				)}
-				<Title variant="h4">{title}</Title>
+				{title && <Title variant="h4">{title}</Title>}
 			</TitleContainer>
 			{description && (
 				<Description onClick={clickHandler} expanded={descriptionExpanded || !isLonger}>
@@ -78,7 +78,7 @@ const NodeInfo = ({
 
 NodeInfo.propTypes = {
 	subtitle: PropTypes.string,
-	title: PropTypes.string.isRequired,
+	title: PropTypes.string,
 	description: PropTypes.string,
 	original: PropTypes.string,
 	image: PropTypes.string,
@@ -91,6 +91,7 @@ NodeInfo.propTypes = {
 };
 
 NodeInfo.defaultProps = {
+	title: undefined,
 	subtitle: undefined,
 	description: undefined,
 	image: undefined,

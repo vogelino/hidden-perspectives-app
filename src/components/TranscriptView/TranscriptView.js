@@ -10,10 +10,12 @@ import {
 	addIndex,
 } from 'ramda';
 import LoadingIndicator from '../LoadingIndicator';
+import NodeSidebar from '../NodeSidebar';
 import { LoadingContainer } from '../LoadingIndicator/styles';
 import {
 	Container,
 	Content,
+	TranscriptScrollContainer,
 	Transcript,
 	Line,
 	LineContent,
@@ -32,20 +34,24 @@ const formatTranscript = pipe(
 	addIndex(map)(wrapIntoSpan),
 );
 
-const TranscriptView = ({ isLoading, transcript }) => (
+const TranscriptView = ({ isLoading, transcript, id }) => (
 	<Container>
 		<LoadingContainer isLoading={isLoading}>
 			<LoadingIndicator />
 		</LoadingContainer>
+		<NodeSidebar id={id} itemType="document" />
 		{transcript && !isLoading && (
-			<Content>
-				<Transcript>{formatTranscript(transcript)}</Transcript>
-			</Content>
+			<TranscriptScrollContainer>
+				<Content>
+					<Transcript>{formatTranscript(transcript)}</Transcript>
+				</Content>
+			</TranscriptScrollContainer>
 		)}
 	</Container>
 );
 
 TranscriptView.propTypes = {
+	id: PropTypes.string.isRequired,
 	transcript: PropTypes.string,
 	isLoading: PropTypes.bool,
 };

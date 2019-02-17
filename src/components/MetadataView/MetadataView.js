@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 import MetadataRow from '../_library/MetadataRow';
 import Fieldset from '../_library/Fieldset';
 import LoadingIndicator from '../LoadingIndicator';
+import NodeSidebar from '../NodeSidebar';
 import { LoadingContainer } from '../LoadingIndicator/styles';
-import { Container, Content } from './styles';
+import { Container, Content, ScrollContainer } from './styles';
 
 const DefaultValueComponent = ({ value }) => value;
 DefaultValueComponent.propTypes = {
@@ -15,33 +16,43 @@ DefaultValueComponent.propTypes = {
 	]).isRequired,
 };
 
-const MetadataView = ({ data, isLoading }) => (
+const MetadataView = ({
+	data,
+	isLoading,
+	id,
+	itemType,
+}) => (
 	<Container>
-		<Content>
-			<LoadingContainer isLoading={isLoading}>
-				<LoadingIndicator />
-			</LoadingContainer>
-			{data.map(({ values, groupLabel }) => (
-				<Fieldset title={groupLabel} key={groupLabel}>
-					{values.map(({ label, ValueComponent = DefaultValueComponent, value }) => (
-						<MetadataRow key={label} label={label}>
-							{Array.isArray(value)
-								? value.map(({ name, ...props }) => (
-									<ValueComponent
-										{...props}
-										key={name}
-										value={name}
-									/>
-								)) : <ValueComponent value={value} />}
-						</MetadataRow>
-					))}
-				</Fieldset>
-			))}
-		</Content>
+		<LoadingContainer isLoading={isLoading}>
+			<LoadingIndicator />
+		</LoadingContainer>
+		<NodeSidebar id={id} itemType={itemType} />
+		<ScrollContainer>
+			<Content>
+				{data.map(({ values, groupLabel }) => (
+					<Fieldset title={groupLabel} key={groupLabel}>
+						{values.map(({ label, ValueComponent = DefaultValueComponent, value }) => (
+							<MetadataRow key={label} label={label}>
+								{Array.isArray(value)
+									? value.map(({ name, ...props }) => (
+										<ValueComponent
+											{...props}
+											key={name}
+											value={name}
+										/>
+									)) : <ValueComponent value={value} />}
+							</MetadataRow>
+						))}
+					</Fieldset>
+				))}
+			</Content>
+		</ScrollContainer>
 	</Container>
 );
 
 MetadataView.propTypes = {
+	id: PropTypes.string.isRequired,
+	itemType: PropTypes.string.isRequired,
 	isLoading: PropTypes.bool,
 	data: PropTypes.arrayOf(PropTypes.shape({
 		groupLabel: PropTypes.string.isRequired,
