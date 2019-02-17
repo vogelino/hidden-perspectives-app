@@ -19,7 +19,14 @@ export default compose(
 	withState('image', 'setImage', undefined),
 	lifecycle({
 		componentDidMount() {
-			if (this.props.itemType === 'stakeholder') return getStakeholderImage(this.props);
+			if (this.props.itemType === 'stakeholder'
+				|| this.props.itemType === 'location') return getStakeholderImage(this.props);
+			return undefined;
+		},
+		componentDidUpdate(prevProps) {
+			if (this.props.id !== prevProps.id
+				&& (this.props.itemType === 'stakeholder'
+				|| this.props.itemType === 'location')) return getStakeholderImage(this.props);
 			return undefined;
 		},
 	}),
@@ -27,5 +34,6 @@ export default compose(
 		'item',
 		'image',
 		'descriptionExpanded',
+		'authors',
 	]),
 )(NodeInfo);

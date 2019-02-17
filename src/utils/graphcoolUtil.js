@@ -22,6 +22,7 @@ export const formatGraphcoolDocument = ({
 	documentDescription,
 	documentKind,
 	documentFiles,
+	documentAuthors,
 	...rest
 }) => ({
 	...rest,
@@ -33,6 +34,10 @@ export const formatGraphcoolDocument = ({
 	thumbnailUrl: documentFiles && documentFiles.length
 		? documentFiles[0].url
 		: undefined,
+	authors: (documentAuthors || []).map((author) => ({
+		id: author.id,
+		name: author.stakeholderFullName,
+	})),
 });
 
 

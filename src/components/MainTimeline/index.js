@@ -37,6 +37,10 @@ const ALL_EVENTS_AND_DOCUMENTS = gql`
 				id
 				stakeholderFullName
 			}
+			documentAuthors {
+				id
+				stakeholderFullName
+			}
 		}
 	}
 `;
@@ -44,7 +48,7 @@ const ALL_EVENTS_AND_DOCUMENTS = gql`
 const getFilterArgsForQuery = (type, itemIds) => map((id) => `{ id: "${id}" }`, itemIds);
 
 const builtProtagonistQueryStringByType = (type, itemIds) => {
-	const stakeholdersFieldName =		type === 'document' ? 'mentionedStakeholders' : 'eventStakeholders';
+	const stakeholdersFieldName = type === 'document' ? 'mentionedStakeholders' : 'eventStakeholders';
 	const query = `
 		all${ucFirst(type)}s(
 			filter: {

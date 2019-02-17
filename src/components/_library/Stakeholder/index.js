@@ -9,5 +9,10 @@ export default compose(
 			const { setImage, children: name, id } = this.props;
 			getWikipediaImage(name, id, 64).then(setImage);
 		},
+		componentDidUpdate(prevProps) {
+			const { setImage, children: name, id } = this.props;
+			if (prevProps.id === id) return;
+			getWikipediaImage(name, id, 64).then(setImage);
+		},
 	}),
 )(Stakeholder);

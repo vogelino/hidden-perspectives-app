@@ -20,14 +20,16 @@ export default compose(
 	})),
 	lifecycle({
 		componentDidMount() {
-			if (this.props.itemType === 'stakeholder') {
+			if (this.props.itemType === 'stakeholder'
+				|| this.props.itemType === 'location') {
 				getStakeholderImage(this.props);
 			}
 		},
 		componentDidUpdate(prevProps) {
 			if (this.props.id !== prevProps.id) {
 				this.props.setImage(undefined);
-				if (this.props.itemType === 'stakeholder') {
+				if (this.props.itemType === 'stakeholder'
+					|| this.props.itemType === 'location') {
 					getStakeholderImage(this.props);
 				}
 			}

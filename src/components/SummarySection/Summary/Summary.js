@@ -32,7 +32,7 @@ const Summary = ({
 	clickHandler,
 	setComponentRef,
 	item,
-	...summmary
+	...rest
 }) => {
 	const {
 		id,
@@ -44,8 +44,9 @@ const Summary = ({
 		title,
 		summary,
 		thumbnailUrl,
+		authors,
 		onBlurCallback,
-	} = summmary;
+	} = rest;
 
 	const current = id === item.id;
 
@@ -59,9 +60,9 @@ const Summary = ({
 			})}
 			id={`summary-${id}`}
 			ref={setComponentRef}
-			onMouseEnter={() => hoverHandler({ ...summmary, itemType })}
+			onMouseEnter={() => hoverHandler({ ...rest, itemType })}
 			onMouseLeave={() => hoverHandler(null)}
-			onClick={() => clickHandler({ ...summmary, itemType })}
+			onClick={() => clickHandler({ ...rest, itemType })}
 			onBlur={onBlurCallback}
 			tabIndex={0}
 		>
@@ -73,6 +74,7 @@ const Summary = ({
 					summary: !current && summary,
 					thumbnailUrl: !current && thumbnailUrl,
 					subtitle: current ? `You are already on this ${type.toLowerCase()}` : '',
+					authors: !current && authors,
 				}}
 				withLink={!current}
 			>
