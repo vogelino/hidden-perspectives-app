@@ -3,6 +3,7 @@ import {
 	lifecycle,
 	withState,
 	withHandlers,
+	onlyUpdateForKeys,
 } from 'recompose';
 import Bubble from './Bubble';
 
@@ -21,4 +22,7 @@ export default compose(
 			this.props.setTextNodeWidth();
 		},
 	}),
+	onlyUpdateForKeys([
+		'data',
+	]),
 )(Bubble);
