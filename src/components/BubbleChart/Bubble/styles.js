@@ -21,11 +21,9 @@ export const BubbleActiveCircle = styled.circle.attrs({
 	stroke: ${({ theme }) => theme.primary};
 `;
 
-export const BubbleCircle = styled.circle.attrs({
-	style: ({ r }) => ({
-		height: `${r * 2}px`,
-	}),
-})`
+export const BubbleCircle = styled.circle.attrs(({ r }) => ({
+	style: { height: `${r * 2}px` },
+}))`
 	align-items: center;
 	${({
 		fill,

@@ -1,11 +1,11 @@
 import styled from 'styled-components';
 
-export const Tooltip = styled.div.attrs({
-	style: ({ y, x }) => ({
+export const Tooltip = styled.div.attrs(({ y, x }) => ({
+	style: {
 		top: `${y}%`,
 		left: `${x}%`,
-	}),
-})`
+	},
+}))`
 	background: ${({ theme }) => theme.primaryLight};
 	border: 1px solid white;
 	border-radius: 1rem;
