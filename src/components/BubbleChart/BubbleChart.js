@@ -8,32 +8,8 @@ import {
 	BubblesLoadingContainer,
 } from './styles';
 import Bubble from './Bubble';
-import BubbleChartTooltip from './BubbleChartTooltip';
+import BubbleChartTooltips from './BubbleChartTooltips';
 import LoadingIndicator from '../LoadingIndicator';
-
-const Tooltips = ({
-	bubbleLayoutItems,
-	hoveredElement,
-	diameter,
-}) => bubbleLayoutItems.map(({
-	data: { id, name, value },
-	x,
-	y,
-	r,
-}) => {
-	const toRelativePosition = (pos) => pos * 100 / diameter;
-
-	return (
-		<BubbleChartTooltip
-			key={`tooltip-${name}`}
-			visible={hoveredElement && hoveredElement.id === id}
-			x={toRelativePosition(x)}
-			y={toRelativePosition(y + r)}
-			text={name}
-			value={value}
-		/>
-	);
-});
 
 const Bubbles = ({
 	bubbleLayoutItems,
@@ -192,7 +168,7 @@ const BubbleChart = ({
 		<BubblesLoadingContainer isLoading={isLoading}>
 			<LoadingIndicator />
 		</BubblesLoadingContainer>
-		<Tooltips
+		<BubbleChartTooltips
 			bubbleLayoutItems={bubbleLayoutItems}
 			hoveredElement={hoveredElement}
 			pinnedElement={pinnedElement}
