@@ -25,6 +25,7 @@ export const Tooltip = styled.div`
 	z-index: 2;
 	top: 90%;
 	left: 50%;
+	pointer-events: none;
 
 	&:hover > ${Name} {
 		text-decoration: underline;
