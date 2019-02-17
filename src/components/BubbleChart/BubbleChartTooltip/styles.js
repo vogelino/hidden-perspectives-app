@@ -1,11 +1,13 @@
 import styled from 'styled-components';
 
-export const Wrapper = styled.foreignObject`
-	position: absolute;
-	overflow: visible;
-	opacity: ${({ visible }) => (visible ? 1 : 0)};
-	transition: opacity 150ms ease-out;
-	z-index: 1;
+export const Name = styled.span`
+`;
+
+export const TooltipNumber = styled.span`
+	background: ${({ theme }) => theme.primaryDark10};
+	border-left: 1px solid ${({ theme }) => theme.primaryDark25};
+	margin-left: .75rem;
+	padding: 0.5rem 0.75rem 0.5rem 0.65rem;
 `;
 
 export const Tooltip = styled.div`
@@ -23,12 +25,24 @@ export const Tooltip = styled.div`
 	z-index: 2;
 	top: 90%;
 	left: 50%;
-	pointer-events: ${({ visible }) => (visible ? 'all' : 'none')};
+
+	&:hover > ${Name} {
+		text-decoration: underline;
+	}
 `;
 
-export const TooltipNumber = styled.span`
-	background: ${({ theme }) => theme.primaryDark10};
-	border-left: 1px solid ${({ theme }) => theme.primaryDark25};
-	margin-left: .75rem;
-	padding: 0.5rem 0.75rem 0.5rem 0.65rem;
+export const Wrapper = styled.foreignObject`
+	position: absolute;
+	overflow: visible;
+	z-index: 1;
+	transition: opacity 200ms ease-out;
+	opacity: 0;
+
+	&:hover {
+		opacity: 1;
+	}
+
+	&:hover ${Tooltip} {
+		pointer-events: all;
+	}
 `;

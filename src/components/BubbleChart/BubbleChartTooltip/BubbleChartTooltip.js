@@ -1,6 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Wrapper, Tooltip, TooltipNumber } from './styles';
+import {
+	Wrapper,
+	Tooltip,
+	TooltipNumber,
+	Name,
+} from './styles';
 
 const BubbleChartTooltip = ({
 	text,
@@ -9,6 +14,7 @@ const BubbleChartTooltip = ({
 	y,
 	r,
 	value,
+	onClick,
 }) => (
 	<Wrapper
 		x={x - r}
@@ -18,7 +24,7 @@ const BubbleChartTooltip = ({
 		visible={visible}
 	>
 		<Tooltip>
-			{text}
+			<Name onClick={onClick}>{text}</Name>
 			<TooltipNumber>{value}</TooltipNumber>
 		</Tooltip>
 	</Wrapper>
@@ -31,6 +37,7 @@ BubbleChartTooltip.propTypes = {
 	text: PropTypes.string,
 	visible: PropTypes.bool,
 	value: PropTypes.number,
+	onClick: PropTypes.func,
 };
 
 BubbleChartTooltip.defaultProps = {
@@ -40,6 +47,7 @@ BubbleChartTooltip.defaultProps = {
 	text: '',
 	visible: false,
 	value: 0,
+	onClick: () => {},
 };
 
 export default BubbleChartTooltip;

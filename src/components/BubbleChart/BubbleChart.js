@@ -14,7 +14,6 @@ const BubbleChart = (props) => (
 		<BubblesSvg
 			{...props}
 			viewBox={`0 0 ${props.diameter} ${props.diameter}`}
-			preserveAspectRatio="xMidYMid meet"
 		>
 			<BubbleChartImages {...props} />
 			{props.bubbleLayoutItems.length && !props.isLoading && <Bubbles {...props} />}

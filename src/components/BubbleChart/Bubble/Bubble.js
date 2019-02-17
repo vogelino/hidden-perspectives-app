@@ -23,6 +23,7 @@ const Bubble = ({
 	textNodeWidth,
 	isLoading,
 	image,
+	history,
 }) => {
 	const {
 		name,
@@ -86,6 +87,10 @@ const Bubble = ({
 					setHoveredElement({ itemType: 'stakeholder', ...data });
 				}}
 				onMouseLeave={() => setHoveredElement(null)}
+				onClick={(evt) => {
+					evt.preventDefault();
+					history.push(`/protagonist/context/${id}`);
+				}}
 			/>
 		</Container>
 	);
@@ -116,6 +121,9 @@ Bubble.propTypes = {
 		id: PropTypes.string.isRequired,
 		itemType: PropTypes.string.isRequired,
 	}),
+	history: PropTypes.shape({
+		push: PropTypes.func.isRequired,
+	}).isRequired,
 };
 
 Bubble.defaultProps = {
