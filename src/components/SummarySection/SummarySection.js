@@ -40,6 +40,7 @@ const SummarySection = ({
 						}
 						return setPinnedElement({ ...item, itemType });
 					}}
+					onBlurCallback={() => setPinnedElement(null)}
 				/>
 			);
 		})}

@@ -81,6 +81,7 @@ class TimelineItemsClass extends React.PureComponent {
 					}
 					return setPinnedElement(pinEl);
 				}}
+				onBlurCallback={() => setPinnedElement(null)}
 			/>
 		);
 

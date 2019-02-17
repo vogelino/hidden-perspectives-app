@@ -8,6 +8,8 @@ import { isHovered } from '../../utils/timelineUtil';
 import { formatHumanDateShort } from '../../utils/dateUtil';
 import { withoutReRender } from '../../utils/hocUtil';
 import IconItem from '../IconItem';
+import PinNotification from '../PinNotification';
+import { getShortenedString } from '../../utils/stringUtil';
 import {
 	CircleContainer,
 	CircleContent,
@@ -21,6 +23,7 @@ import {
 	EventLegendContainer,
 	DocumentLegendContainer,
 	BubbleChartContainer,
+	PinNotificationWrapper,
 } from './styles';
 
 const toRadian = (angle) => angle * (Math.PI / 180);
@@ -90,6 +93,42 @@ const isFilteredByTag = (filteredTags, tags) => (
 	filteredTags.length > 0
 	&& filteredTags.length !== tags.length
 );
+
+
+const getPinNotification = (pinnedElement, setPinnedElement) => {
+	const maxTitleLength = 70;
+	const isGroupOfElements = pinnedElement && Array.isArray(pinnedElement);
+	const item = isGroupOfElements
+		? pinnedElement[0]
+		: pinnedElement;
+	const { itemType } = item;
+
+	let itemTitle;
+	if (isGroupOfElements && pinnedElement.length > 1) {
+		itemTitle = `a group of ${pinnedElement.length} ${itemType}s`;
+	} else if (isGroupOfElements && pinnedElement.length === 1) {
+		itemTitle = itemType === 'stakeholder' ? item.name : item[`${itemType}Title`];
+	} else {
+		itemTitle = itemType === 'stakeholder' ? item.name : item.title;
+	}
+
+	const displayItemType = itemType === 'stakeholder' ? 'protagonist' : itemType;
+	const formattedItemTitle = `You pinned the ${displayItemType} “${getShortenedString(itemTitle, maxTitleLength)}”`;
+	const formattedGroupTitle = `You pinned ${itemTitle}`;
+
+	return (
+		<PinNotification
+			title={
+				isGroupOfElements && pinnedElement.length > 1
+					? formattedGroupTitle
+					: formattedItemTitle
+			}
+			itemType={itemType}
+			closeCallback={() => setPinnedElement(null)}
+			path={`/${displayItemType}/context/${item.id}`}
+		/>
+	);
+};
 
 const Circles = withoutReRender(() => (
 	<>
@@ -162,6 +201,7 @@ const TimelineItem = onlyUpdateForKeys([
 	group,
 	itemType,
 	onClick,
+	onBlurCallback,
 	events,
 	documents,
 	onMouseEnter,
@@ -199,7 +239,9 @@ const TimelineItem = onlyUpdateForKeys([
 			onMouseLeave={onMouseLeave}
 			{...CIRCLE_CENTER}
 			onClick={onClick}
+			onBlur={onBlurCallback}
 			current={currentElement}
+			tabIndex={0}
 		>
 			{
 				showGroupIndicator && (
@@ -289,6 +331,7 @@ const CircleTimeline = ({
 						filteredGroup.map((groupEl) => ({ ...groupEl, itemType })),
 					);
 				}}
+				onBlurCallback={() => setPinnedElement(null)}
 				{...{
 					angle: angle || 0,
 					hoveredElement,
@@ -296,6 +339,12 @@ const CircleTimeline = ({
 			/>
 		);
 	};
+
+	const PinnedElementNotification = pinnedElement && getPinNotification(
+		pinnedElement,
+		setPinnedElement,
+	);
+
 	return (
 		<CircleContainer>
 			<CircleContent>
@@ -324,6 +373,9 @@ const CircleTimeline = ({
 					/>
 				</BubbleChartContainer>
 			</CircleContent>
+			<PinNotificationWrapper>
+				{PinnedElementNotification}
+			</PinNotificationWrapper>
 		</CircleContainer>
 	);
 };

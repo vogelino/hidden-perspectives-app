@@ -158,6 +158,10 @@ export const Document = styled.foreignObject`
 			background-color: ${({ theme }) => theme.primaryLight};
 		}
 	}
+
+	&:focus {
+		outline: none;
+	}
 `;
 
 export const BubbleChartContainer = styled.div`
@@ -170,4 +174,12 @@ export const BubbleChartContainer = styled.div`
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
+`;
+
+export const PinNotificationWrapper = styled.div`
+	left: 50%;
+	position: absolute;
+	top: 0.5rem;
+	transform: translateX(-50%);
+	z-index: 11;
 `;

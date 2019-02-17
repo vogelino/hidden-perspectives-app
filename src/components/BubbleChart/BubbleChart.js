@@ -60,6 +60,7 @@ const Bubbles = ({
 				if (pinnedElement && pinnedElement.id === pinEl.id) return setPinnedElement(null);
 				return setPinnedElement(pinEl);
 			}}
+			onBlurCallback={() => setPinnedElement(null)}
 			{...bubbleData}
 			{...props}
 		/>
