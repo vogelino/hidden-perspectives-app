@@ -16,6 +16,7 @@ import MetadataView from './MetadataView';
 import { getFormattedDate } from '../../utils/dateUtil';
 import Tag from '../_library/Tag';
 import Stakeholder from '../_library/Stakeholder';
+import Item from '../_library/Item';
 
 const DOCUMENT_QUERY = gql`
 	query GetDocument($id: ID!) {
@@ -145,6 +146,7 @@ const passValueAsChild = (Component, itemType) => {
 		<Component
 			{...props}
 			to={itemType && `/${itemType}/context/${props.id}`}
+			itemType={itemType}
 		>
 			{value}
 		</Component>
@@ -185,7 +187,11 @@ const structureDocumentData = (data) => {
 				value: data.mentionedStakeholders.map(mapStakeholder),
 				ValueComponent: passValueAsChild(Stakeholder, 'protagonist'),
 			},
-			{ label: 'Locations', value: data.mentionedLocations.map(mapLocation) },
+			{
+				label: 'Locations',
+				value: data.mentionedLocations.map(mapLocation),
+				ValueComponent: passValueAsChild(Item, 'location'),
+			},
 		].filter(hasValue),
 	};
 
@@ -238,7 +244,11 @@ const structureEventData = (data) => {
 				value: eventStakeholders.map(mapStakeholder),
 				ValueComponent: passValueAsChild(Stakeholder, 'protagonist'),
 			},
-			{ label: 'Locations', value: eventLocations.map(mapLocation) },
+			{
+				label: 'Locations',
+				value: eventLocations.map(mapLocation),
+				ValueComponent: passValueAsChild(Item, 'location'),
+			},
 		].filter(hasValue),
 	};
 
@@ -285,6 +295,7 @@ const structureStakeholderData = (data) => {
 			{
 				label: 'Documents',
 				value: documents.map(mapDocuments),
+				ValueComponent: passValueAsChild(Item, 'document'),
 			},
 		].filter(hasValue),
 	};
@@ -295,10 +306,12 @@ const structureStakeholderData = (data) => {
 			{
 				label: 'Documents',
 				value: documentsMentionedIn.map(mapDocuments),
+				ValueComponent: passValueAsChild(Item, 'document'),
 			},
 			{
 				label: 'Events',
 				value: eventsInvolvedIn.map(mapEvents),
+				ValueComponent: passValueAsChild(Item, 'event'),
 			},
 		].filter(hasValue),
 	};
@@ -334,10 +347,12 @@ const structureLocationData = (data) => {
 			{
 				label: 'Documents',
 				value: documentsMentionedIn.map(mapDocuments),
+				ValueComponent: passValueAsChild(Item, 'document'),
 			},
 			{
 				label: 'Events',
 				value: locationEvents.map(mapEvents),
+				ValueComponent: passValueAsChild(Item, 'event'),
 			},
 		].filter(hasValue),
 	};

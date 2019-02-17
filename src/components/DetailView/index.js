@@ -298,7 +298,7 @@ const getProtagonists = (item, itemType, allDocuments, allEvents) => {
 	const items = itemType === 'stakeholder' || itemType === 'location' ? union(allDocuments, allEvents) : [item];
 
 	const protagonists = items.reduce((allProtagonists, currentItem) => {
-		const stakeholdersValue = either(prop('eventStakeholders'), prop('mentionedStakeholders'))(currentItem);
+		const stakeholdersValue = either(prop('eventStakeholders'), prop('mentionedStakeholders'))(currentItem) || [];
 		const stakeholders = stakeholdersValue.reduce((acc, current) => ({
 			...acc,
 			[current.id]: (acc[current.id] || []).concat(current),
