@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { findIndex } from 'ramda';
-import { Container } from './styles';
+import { Container, PinNotificationWrapper } from './styles';
 import Minimap from './Minimap';
 import { LoadingContainer } from '../LoadingIndicator/styles';
 import LoadingIndicator from '../LoadingIndicator';
@@ -103,7 +103,9 @@ const MainTimeline = ({
 					onTimelineScroll={onTimelineScroll}
 				/>
 			)}
-			{PinnedElementNotification}
+			<PinNotificationWrapper>
+				{PinnedElementNotification}
+			</PinNotificationWrapper>
 		</Container>
 	);
 };

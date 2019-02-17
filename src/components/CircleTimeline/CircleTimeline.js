@@ -23,6 +23,7 @@ import {
 	EventLegendContainer,
 	DocumentLegendContainer,
 	BubbleChartContainer,
+	PinNotificationWrapper,
 } from './styles';
 
 const toRadian = (angle) => angle * (Math.PI / 180);
@@ -366,7 +367,9 @@ const CircleTimeline = ({
 					/>
 				</BubbleChartContainer>
 			</CircleContent>
-			{PinnedElementNotification}
+			<PinNotificationWrapper>
+				{PinnedElementNotification}
+			</PinNotificationWrapper>
 		</CircleContainer>
 	);
 };
