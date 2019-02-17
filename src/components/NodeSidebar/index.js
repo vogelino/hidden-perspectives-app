@@ -14,6 +14,10 @@ const EVENT_QUERY = gql`
 			eventTitle
 			eventStartDate
 			eventDescription
+			eventLocations {
+				id
+				locationName
+			}
 		}
 	}
 `;
@@ -34,7 +38,12 @@ const DOCUMENT_QUERY = gql`
 				stakeholderFullName
 			}
 			documentFiles {
+				id
 				url
+			}
+			mentionedLocations {
+				id
+				locationName
 			}
 		}
 	}
@@ -96,6 +105,13 @@ const getItemAuthors = (item, itemType) => {
 	}));
 };
 
+const mapLocation = ({ id, locationName: name }) => ({ id, name });
+const getItemLocations = (item, itemType) => {
+	if (itemType === 'document') return item.mentionedLocations.map(mapLocation);
+	if (itemType === 'event') return item.eventLocations.map(mapLocation);
+	return [];
+};
+
 const getQueryByItemType = (itemType) => {
 	switch (itemType) {
 	case 'event': return EVENT_QUERY;
@@ -123,6 +139,7 @@ const getItemParser = (props) => ({ data }) => {
 		description: getItemDescription(item, itemType),
 		original: getItemOriginal(item, itemType),
 		authors: getItemAuthors(item, itemType),
+		locations: getItemLocations(item, itemType),
 		itemType,
 	});
 	stopLoading();

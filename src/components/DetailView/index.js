@@ -37,6 +37,10 @@ const EVENT_QUERY = gql`
 				stakeholderFullName
 			}
 			eventDescription
+			eventLocations {
+				id
+				locationName
+			}
 		}
 	}
 `;
@@ -66,6 +70,10 @@ const DOCUMENT_QUERY = gql`
 			documentDescription
 			documentFiles {
 				url
+			}
+			mentionedLocations {
+				id
+				locationName
 			}
 		}
 	}
@@ -275,6 +283,13 @@ const getItemAuthors = (item, itemType) => {
 	}));
 };
 
+const mapLocation = ({ id, locationName: name }) => ({ id, name });
+const getItemLocations = (item, itemType) => {
+	if (itemType === 'document') return item.mentionedLocations.map(mapLocation);
+	if (itemType === 'event') return item.eventLocations.map(mapLocation);
+	return [];
+};
+
 const getQuery = (item, itemType) => {
 	let query;
 	let tags = [];
@@ -419,6 +434,7 @@ const getItemParser = (props) => ({ data }) => {
 		description: getItemDescription(item, itemType),
 		original: getItemOriginal(item, itemType),
 		authors: getItemAuthors(item, itemType),
+		locations: getItemLocations(item, itemType),
 		itemType,
 	});
 

@@ -12,6 +12,11 @@ export const Container = styled.span`
 	position: relative;
 	padding-left: 1.2rem;
 	min-height: 2rem;
+	${({ nowrap }) => nowrap && `
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		overflow: hidden;
+	`}
 `;
 
 export const Text = styled.span`
