@@ -26,6 +26,7 @@ export const BubblesSvg = styled.svg`
     top: 50%;
     transform: translate(-50%, -50%);
     width: auto;
+    overflow: visible;
 `;
 
 export const BubblesLoadingContainer = styled.div`

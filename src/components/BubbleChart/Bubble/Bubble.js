@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { getCapsOnlyInitials } from '../../../utils/stringUtil';
+import BubbleChartTooltip from '../BubbleChartTooltip';
 import {
 	BubbleCircle,
 	Container,
@@ -15,6 +16,7 @@ const Bubble = ({
 	r,
 	setComponentRef,
 	hovered,
+	hoveredElement,
 	setHoveredElement,
 	pinned,
 	clickHandler,
@@ -22,7 +24,12 @@ const Bubble = ({
 	isLoading,
 	image,
 }) => {
-	const { name, id, isActive } = data;
+	const {
+		name,
+		id,
+		isActive,
+		value,
+	} = data;
 
 	const maxFontSize = 16;
 	const margin = 12;
@@ -34,6 +41,7 @@ const Bubble = ({
 		fontSize = Math.floor((innerD / textNodeWidth) * fontSize);
 		fontSize = Math.min(maxFontSize, fontSize);
 	}
+
 	return (
 		<Container
 			onMouseEnter={() => setHoveredElement({ itemType: 'stakeholder', ...data })}
@@ -66,6 +74,19 @@ const Bubble = ({
 			>
 				{initials}
 			</BubbleText>
+			<BubbleChartTooltip
+				key={`tooltip-${name}`}
+				visible={hoveredElement && hoveredElement.id === id}
+				x={x}
+				y={y}
+				r={r}
+				text={name}
+				value={value}
+				onMouseEnter={() => {
+					setHoveredElement({ itemType: 'stakeholder', ...data });
+				}}
+				onMouseLeave={() => setHoveredElement(null)}
+			/>
 		</Container>
 	);
 };
@@ -91,6 +112,10 @@ Bubble.propTypes = {
 		url: PropTypes.string,
 		size: PropTypes.number.isRequired,
 	}),
+	hoveredElement: PropTypes.shape({
+		id: PropTypes.string.isRequired,
+		itemType: PropTypes.string.isRequired,
+	}),
 };
 
 Bubble.defaultProps = {
@@ -102,6 +127,7 @@ Bubble.defaultProps = {
 	clickHandler: () => {},
 	textNodeWidth: undefined,
 	image: undefined,
+	hoveredElement: undefined,
 };
 
 export default Bubble;
