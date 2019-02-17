@@ -187,7 +187,11 @@ const structureDocumentData = (data) => {
 				value: data.mentionedStakeholders.map(mapStakeholder),
 				ValueComponent: passValueAsChild(Stakeholder, 'protagonist'),
 			},
-			{ label: 'Locations', value: data.mentionedLocations.map(mapLocation) },
+			{
+				label: 'Locations',
+				value: data.mentionedLocations.map(mapLocation),
+				ValueComponent: passValueAsChild(Item, 'location'),
+			},
 		].filter(hasValue),
 	};
 
@@ -240,7 +244,11 @@ const structureEventData = (data) => {
 				value: eventStakeholders.map(mapStakeholder),
 				ValueComponent: passValueAsChild(Stakeholder, 'protagonist'),
 			},
-			{ label: 'Locations', value: eventLocations.map(mapLocation) },
+			{
+				label: 'Locations',
+				value: eventLocations.map(mapLocation),
+				ValueComponent: passValueAsChild(Item, 'location'),
+			},
 		].filter(hasValue),
 	};
 
@@ -287,6 +295,7 @@ const structureStakeholderData = (data) => {
 			{
 				label: 'Documents',
 				value: documents.map(mapDocuments),
+				ValueComponent: passValueAsChild(Item, 'document'),
 			},
 		].filter(hasValue),
 	};
@@ -338,10 +347,12 @@ const structureLocationData = (data) => {
 			{
 				label: 'Documents',
 				value: documentsMentionedIn.map(mapDocuments),
+				ValueComponent: passValueAsChild(Item, 'document'),
 			},
 			{
 				label: 'Events',
 				value: locationEvents.map(mapEvents),
+				ValueComponent: passValueAsChild(Item, 'event'),
 			},
 		].filter(hasValue),
 	};
