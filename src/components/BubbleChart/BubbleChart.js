@@ -101,6 +101,64 @@ GradientMapFilter.propTypes = {
 	blue: PropTypes.string.isRequired,
 };
 
+const ImagesDefs = ({ images }) => (
+	<defs>
+		<GradientMapFilter
+			id="image-color-filter"
+			red="0.3 0.87"
+			green="0.34 0.89"
+			blue="0.38 0.9"
+		/>
+		<GradientMapFilter
+			id="image-color-filter-hover"
+			red="0.39 0.8 1"
+			green="0.15 0.57 0.93"
+			blue="0.06 0.33 0.78"
+		/>
+
+		{images.map(({
+			id,
+			url,
+			size,
+			x,
+			y,
+		}) => (
+			<pattern
+				key={id}
+				id={`image-def-${id}`}
+				x={x}
+				y={y}
+				patternUnits="userSpaceOnUse"
+				height={size}
+				width={size}
+			>
+				<image
+					x="0"
+					y="0"
+					xlinkHref={url}
+					preserveAspectRatio="xMinYMin slice"
+					width={size}
+					height={size}
+				/>
+			</pattern>
+		))}
+	</defs>
+);
+
+ImagesDefs.propTypes = {
+	images: PropTypes.arrayOf(PropTypes.shape({
+		id: PropTypes.string.isRequired,
+		url: PropTypes.string,
+		size: PropTypes.number.isRequired,
+		x: PropTypes.number.isRequired,
+		y: PropTypes.number.isRequired,
+	})),
+};
+
+ImagesDefs.defaultProps = {
+	images: [],
+};
+
 const BubbleChart = ({
 	bubbleLayoutItems,
 	isLoading,
@@ -118,47 +176,7 @@ const BubbleChart = ({
 			viewBox={`0 0 ${diameter} ${diameter}`}
 			preserveAspectRatio="xMidYMid meet"
 		>
-			<defs>
-				<GradientMapFilter
-					id="image-color-filter"
-					red="0.3 0.87"
-					green="0.34 0.89"
-					blue="0.38 0.9"
-				/>
-				<GradientMapFilter
-					id="image-color-filter-hover"
-					red="0.39 0.8 1"
-					green="0.15 0.57 0.93"
-					blue="0.06 0.33 0.78"
-				/>
-
-				{images.map(({
-					id,
-					url,
-					size,
-					x,
-					y,
-				}) => (
-					<pattern
-						key={id}
-						id={`image-def-${id}`}
-						x={x}
-						y={y}
-						patternUnits="userSpaceOnUse"
-						height={size}
-						width={size}
-					>
-						<image
-							x="0"
-							y="0"
-							xlinkHref={url}
-							preserveAspectRatio="xMinYMin slice"
-							width={size}
-							height={size}
-						/>
-					</pattern>
-				))}
-			</defs>
+			<ImagesDefs images={images} />
 			{
 				!isEmpty(bubbleLayoutItems) && !isLoading && (
 					<Bubbles
