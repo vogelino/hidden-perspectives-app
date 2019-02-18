@@ -1,13 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { findIndex } from 'ramda';
-import { Container } from './styles';
+import { Container, PinNotificationWrapper } from './styles';
 import Minimap from './Minimap';
 import { LoadingContainer } from '../LoadingIndicator/styles';
 import LoadingIndicator from '../LoadingIndicator';
 import TimelineItems from './TimelineItems';
 import Protagonists from './Protagonists';
+import PinNotification from '../PinNotification';
 import { MainTimelineLegend } from '../Legend';
+import { getShortenedString } from '../../utils/stringUtil';
 
 const parseTimelineItems = (years) => {
 	const months = years.reduce((acc, cur) => {
@@ -16,6 +18,22 @@ const parseTimelineItems = (years) => {
 	}, []);
 
 	return months;
+};
+
+const getPinNotification = (pinnedElement, setPinnedElement) => {
+	const maxTitleLength = 70;
+	const { itemType } = pinnedElement;
+	const title = itemType === 'stakeholder' ? pinnedElement.name : pinnedElement[`${itemType}Title`];
+	const displayTitle = `You pinned the ${itemType} “${getShortenedString(title, maxTitleLength)}”`;
+	const displayItemType = itemType === 'stakeholder' ? 'protagonist' : itemType;
+	return (
+		<PinNotification
+			title={displayTitle}
+			itemType={itemType}
+			closeCallback={() => setPinnedElement(null)}
+			path={`/${displayItemType}/context/${pinnedElement.id}`}
+		/>
+	);
 };
 
 const MainTimeline = ({
@@ -39,6 +57,11 @@ const MainTimeline = ({
 	onTimelineScroll,
 }) => {
 	const items = parseTimelineItems(timelineItems);
+	const PinnedElementNotification = pinnedElement && getPinNotification(
+		pinnedElement,
+		setPinnedElement,
+	);
+
 	return (
 		<Container id="mainTimeline">
 			<LoadingContainer isLoading={isLoading}>
@@ -82,6 +105,9 @@ const MainTimeline = ({
 					onTimelineScroll={onTimelineScroll}
 				/>
 			)}
+			<PinNotificationWrapper>
+				{PinnedElementNotification}
+			</PinNotificationWrapper>
 		</Container>
 	);
 };

@@ -4,6 +4,10 @@ import { Text } from '../styles';
 export const Container = styled.g`
 	pointer-events: all;
 	cursor: pointer;
+
+	&:focus {
+		outline: none;
+	}
 `;
 
 const getFilterUrl = ({ isHovered, isPinned, isActive }) => {

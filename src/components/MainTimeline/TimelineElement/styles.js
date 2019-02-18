@@ -67,4 +67,8 @@ export const EventTitleContainer = styled.div`
 		color: ${({ theme }) => theme.primaryDark};
 		background: ${({ theme }) => theme.primaryLight};
 	}
+
+	&:focus {
+		outline: none;
+	}
 `;

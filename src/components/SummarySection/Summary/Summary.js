@@ -45,6 +45,7 @@ const Summary = ({
 		summary,
 		thumbnailUrl,
 		authors,
+		onBlurCallback,
 	} = rest;
 
 	const current = id === item.id;
@@ -62,6 +63,8 @@ const Summary = ({
 			onMouseEnter={() => hoverHandler({ ...rest, itemType })}
 			onMouseLeave={() => hoverHandler(null)}
 			onClick={() => clickHandler({ ...rest, itemType })}
+			onBlur={onBlurCallback}
+			tabIndex={0}
 		>
 			<Tooltip
 				id={id}
@@ -129,6 +132,7 @@ Summary.propTypes = {
 	date: PropTypes.string,
 	hoverHandler: PropTypes.func,
 	clickHandler: PropTypes.func,
+	onBlurCallback: PropTypes.func,
 	setComponentRef: PropTypes.func,
 	title: PropTypes.string,
 };
@@ -145,6 +149,7 @@ Summary.defaultProps = {
 	pinned: false,
 	hoverHandler: () => {},
 	clickHandler: () => {},
+	onBlurCallback: () => null,
 	setComponentRef: () => {},
 };
 

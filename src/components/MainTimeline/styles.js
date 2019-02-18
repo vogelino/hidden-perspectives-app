@@ -12,3 +12,12 @@ export const Container = styled.div`
 		outline: none;
 	}
 `;
+
+export const PinNotificationWrapper = styled.div`
+	left: calc(50vw - 6rem);
+	position: absolute;
+	top: 0.5rem;
+	transform: translateX(-50%);
+	z-index: 11;
+`;
+

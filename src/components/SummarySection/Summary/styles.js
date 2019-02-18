@@ -48,6 +48,10 @@ export const Item = styled.div`
 		background: ${({ theme }) => theme.primaryLight};
 		color: ${({ theme }) => theme.primaryDark};
 	}
+
+	&:focus {
+		outline: none;
+	}
 `;
 
 export const IconContainer = styled.span`
