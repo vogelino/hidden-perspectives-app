@@ -25,11 +25,10 @@ export const BubbleActiveCircle = styled.circle.attrs({
 	stroke: ${({ theme }) => theme.primary};
 `;
 
-export const BubbleCircle = styled.circle.attrs({
-	style: ({ r }) => ({
-		height: `${r * 2}px`,
-	}),
-})`
+export const BubbleCircle = styled.circle.attrs(({ r }) => ({
+	style: { height: `${r * 2}px` },
+}))`
+	position: relative;
 	align-items: center;
 	${({
 		fill,
@@ -46,6 +45,7 @@ export const BubbleCircle = styled.circle.attrs({
 	font-weight: bold;
 	stroke-width: 1px;
 	stroke: ${({ theme }) => theme.commonBorderColor};
+	z-index: -1;
 `;
 
 export const BubbleText = styled(Text)`

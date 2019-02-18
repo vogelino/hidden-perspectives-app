@@ -3,10 +3,13 @@ import {
 	lifecycle,
 	withState,
 	withHandlers,
+	shouldUpdate,
 } from 'recompose';
+import { withRouter } from 'react-router-dom';
 import Bubble from './Bubble';
 
 export default compose(
+	withRouter,
 	withState('componentRef', 'setComponentRef', undefined),
 	withState('textNodeWidth', 'setTextNodeWidth', undefined),
 	withHandlers({
@@ -21,4 +24,11 @@ export default compose(
 			this.props.setTextNodeWidth();
 		},
 	}),
+	shouldUpdate((props, nextProps) => (
+		props.data.id !== nextProps.data.id
+		|| props.hovered !== nextProps.hovered
+		|| props.pinned !== nextProps.pinned
+		|| props.textNodeWidth !== nextProps.textNodeWidth
+		|| props.image !== nextProps.image
+	)),
 )(Bubble);
