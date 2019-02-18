@@ -12,14 +12,19 @@ const RawItem = ({ children }) => (
 	</Container>
 );
 
-const Item = ({ children, itemType, to }) => (to ? (
+const Item = ({
+	children,
+	itemType,
+	to,
+	...rest
+}) => (to ? (
 	<Link to={to}>
-		<Container itemType={itemType}>
+		<Container itemType={itemType} {...rest}>
 			<Text>{children}</Text>
 		</Container>
 	</Link>
 ) : (
-	<Container itemType={itemType}>
+	<Container itemType={itemType} {...rest}>
 		<Text>{children}</Text>
 	</Container>
 ));
