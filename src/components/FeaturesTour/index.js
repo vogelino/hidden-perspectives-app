@@ -25,7 +25,7 @@ const steps = {
 			content: 'This is a Document for instance. They contain information relevant to the US-Iran political relationship.',
 		},
 		{
-			title: 'Documents',
+			title: 'Event',
 			selector: '.timeline-event[data-id="3-12"]',
 			content: 'And this is how an Event looks like.',
 		},
