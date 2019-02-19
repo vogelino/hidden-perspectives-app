@@ -151,6 +151,7 @@ const getEventsAndDocuments = ({
 	setMinimapItems,
 	setDocumentsCount,
 	setEventsCount,
+	setTourIsOpen,
 }) => ({ data: { allEvents: events, allDocuments: documents } }) => {
 	const items = parseItems({
 		events,
@@ -166,6 +167,7 @@ const getEventsAndDocuments = ({
 	setDocumentsCount(documents.length);
 	setEventsCount(events.length);
 	stopLoading();
+	setTourIsOpen(true);
 };
 
 const getEventIdsInViewport = (timelineElement) => {
@@ -232,9 +234,13 @@ export default compose(
 	withState('initialProtagonistsFetched', 'setInitialProtagonistsFetched', false),
 	withState('hoveredElement', 'setHoveredElement', null),
 	withState('pinnedElement', 'setPinnedElement', null),
-	withState('activeRowIndex', 'setActiveRowIndex', 266),
+	withState('activeRowIndex', 'setActiveRowIndex', 267),
 	withState('activeYear', 'setActiveYear', '1993'),
-	withHandlers({ onTimelineScroll }),
+	withState('tourIsOpen', 'setTourIsOpen', false),
+	withHandlers({
+		onTimelineScroll,
+		onCloseTour: ({ setTourIsOpen }) => () => setTourIsOpen(false),
+	}),
 	lifecycle({
 		componentDidMount() {
 			const { props } = this;
@@ -257,6 +263,7 @@ export default compose(
 				|| (nextProps.protagonistsCount !== this.props.protagonistsCount)
 				|| (nextProps.activeRowIndex !== this.props.activeRowIndex)
 				|| (nextProps.activeYear !== this.props.activeYear)
+				|| (nextProps.tourIsOpen !== this.props.tourIsOpen)
 				|| (nextProps.hoveredElement !== this.props.hoveredElement);
 		},
 	}),

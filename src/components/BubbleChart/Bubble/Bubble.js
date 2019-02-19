@@ -51,6 +51,7 @@ const Bubble = ({
 			onClick={() => clickHandler({ itemType: 'stakeholder', ...data })}
 			tabIndex={0}
 			onBlur={onBlurCallback}
+			className={`protagonist-${id}`}
 		>
 			<BubbleCircle
 				cx={x}

@@ -5,9 +5,7 @@ import Header from '../../components/Header';
 
 const Home = () => (
 	<>
-		<Header>
-			<Search />
-		</Header>
+		<Header><Search /></Header>
 		<MainTimeline />
 	</>
 );
