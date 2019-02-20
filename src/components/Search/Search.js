@@ -5,7 +5,7 @@ import SearchResults from './SearchResults';
 import { Container } from './styles';
 
 const Search = (props) => (
-	<Container>
+	<Container className="tour-search">
 		<SearchField {...props} />
 		<SearchResults {...props} />
 	</Container>

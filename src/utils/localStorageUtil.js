@@ -1,3 +1,5 @@
+import isDate from 'date-fns/is_date';
+import differenceInMinutes from 'date-fns/difference_in_minutes';
 import { USER_ROLE, USER_ID, AUTH_TOKEN } from '../state/constants';
 
 export const getUserRole = () => localStorage.getItem(USER_ROLE);
@@ -25,6 +27,24 @@ export const logUserIn = (token, id, role) => {
 	localStorage.setItem(USER_ROLE, role);
 };
 
+const saveTour = (componentName) => {
+	const date = new Date();
+	localStorage.setItem(`hp-last-${componentName}-tour-visit`, date);
+};
+
+export const startTour = (componentName, callback) => {
+	const date = new Date();
+	const lastTourDate = localStorage.getItem(`hp-last-${componentName}-tour-visit`);
+	if (!isDate(lastTourDate)) {
+		localStorage.removeItem(`hp-last-${componentName}-tour-visit`);
+	}
+	if (lastTourDate && differenceInMinutes(lastTourDate, date) < 1) {
+		return callback(false);
+	}
+	saveTour(componentName);
+	return callback(true);
+};
+
 export const lib = {
 	isAuthenticated,
 	isAuthorized,
@@ -34,4 +54,3 @@ export const lib = {
 	logUserOut,
 	logUserIn,
 };
-

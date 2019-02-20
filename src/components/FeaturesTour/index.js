@@ -1,58 +1,55 @@
 import { compose, withProps } from 'recompose';
 import { withTheme } from 'styled-components';
 import { withRouter } from 'react-router-dom';
-import DocumentImage from './images/document.png';
-import EventImage from './images/event.png';
-import ProtagonistImage from './images/protagonists.gif';
+import DocumentImage from './images/documents.svg';
+import EventImage from './images/events.svg';
+import ProtagonistImage from './images/protagonists.svg';
 import MinimapImage from './images/minimap.gif';
-import PinningImage from './images/pinning.gif';
+import PinningImage from './images/hovering-and-pinning.gif';
+import SearchImage from './images/search.gif';
 import FeaturesTour from './FeaturesTour';
 
 const steps = {
 	mainTimeline: [
 		{
 			title: 'Welcome!',
-			content: 'This is Hidden Perspectives.',
-		},
-		{
-			title: 'Main timeline',
-			selector: '.tour-main-timeline',
-			content: 'This is the main timeline. On this area, contents of the Hidden Perspectives archive are displayed in chornology from top to bottom (oldest first)',
-		},
-		{
-			title: 'Contents',
-			selector: '.timeline-month-May-1993',
-			content: 'Contents of the main timeline consist of documents, placed on the left hand side of the timeline, and of events, placed on the right hand side of the timeline.',
+			content: 'Hidden Perspective is an interactive digital archive consisting of documents and events relating to the U.S.-Iran relationship’s history since the 1978 – 1979 Iranian revolution.',
 		},
 		{
 			title: 'Documents',
 			image: DocumentImage,
 			selector: '.timeline-event[data-id="uir003004"]',
-			content: 'This is a Document for instance. They contain information relevant to the US-Iran political relationship.',
+			content: 'Documents are symbolized by a page icon and are placed on the left of the vertical timeline.',
 		},
 		{
-			title: 'Event',
+			title: 'Events',
 			image: EventImage,
 			selector: '.timeline-event[data-id="3-12"]',
-			content: 'And this is how an Event looks like.',
-		},
-		{
-			title: 'Minimap',
-			image: MinimapImage,
-			selector: '.tour-minimap',
-			content: 'This is the minimap. It allows you to quickly jump into a specific year and/or to get a sense of the density of content for each year.',
+			content: 'Event are symbolized by a calendar icon and are placed on the right of the vertical timeline.',
 		},
 		{
 			title: 'Protagonists',
 			image: ProtagonistImage,
 			selector: '.tour-protagonists',
-			content: 'This are the protagonists involved in the visible contents of the main timeline. You can hover them to see what contents are related with each of them.',
+			content: 'These are the protagonists involved in the visible documents and events.',
+		},
+		{
+			title: 'Minimap',
+			image: MinimapImage,
+			selector: '.tour-minimap',
+			content: 'The minimap allows you to quickly jump into a specific year and to get a sense of the content\'s density of each year.',
 		},
 		{
 			title: 'Hovering & pinning',
 			image: PinningImage,
 			selector: '.protagonist-8cca25bd0a19999a594d',
-			content: 'Hovering on an element highlights other elements relating to it. If you want to preserve a group of highlighted elements visible, click on an element.',
+			content: 'Hovering on an element highlights related elements. To preserve related elements highlighted, click on an element.',
+		},
+		{
+			title: 'Searching',
+			image: SearchImage,
+			selector: '.tour-search',
+			content: 'You can search for specific contents using the search field.',
 		},
 	],
 };
