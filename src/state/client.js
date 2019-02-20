@@ -7,10 +7,16 @@ import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
 import { setContext } from 'apollo-link-context';
 import { AUTH_TOKEN } from './constants';
+import { persistCache } from 'apollo-cache-persist';
 
 import { defaults, resolvers } from './resolvers';
 
 const cache = new InMemoryCache();
+
+persistCache({
+	cache,
+	storage: window.localStorage,
+});
 
 const stateLink = withClientState({ resolvers, cache, defaults });
 
@@ -50,4 +56,3 @@ const client = new ApolloClient({
 });
 
 export default client;
-
