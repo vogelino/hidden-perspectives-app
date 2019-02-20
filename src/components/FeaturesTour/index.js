@@ -1,6 +1,11 @@
 import { compose, withProps } from 'recompose';
 import { withTheme } from 'styled-components';
 import { withRouter } from 'react-router-dom';
+import DocumentImage from './images/document.png';
+import EventImage from './images/event.png';
+import ProtagonistImage from './images/protagonists.gif';
+import MinimapImage from './images/minimap.gif';
+import PinningImage from './images/pinning.gif';
 import FeaturesTour from './FeaturesTour';
 
 const steps = {
@@ -21,26 +26,31 @@ const steps = {
 		},
 		{
 			title: 'Documents',
+			image: DocumentImage,
 			selector: '.timeline-event[data-id="uir003004"]',
 			content: 'This is a Document for instance. They contain information relevant to the US-Iran political relationship.',
 		},
 		{
 			title: 'Event',
+			image: EventImage,
 			selector: '.timeline-event[data-id="3-12"]',
 			content: 'And this is how an Event looks like.',
 		},
 		{
 			title: 'Minimap',
+			image: MinimapImage,
 			selector: '.tour-minimap',
 			content: 'This is the minimap. It allows you to quickly jump into a specific year and/or to get a sense of the density of content for each year.',
 		},
 		{
 			title: 'Protagonists',
+			image: ProtagonistImage,
 			selector: '.tour-protagonists',
 			content: 'This are the protagonists involved in the visible contents of the main timeline. You can hover them to see what contents are related with each of them.',
 		},
 		{
 			title: 'Hovering & pinning',
+			image: PinningImage,
 			selector: '.protagonist-8cca25bd0a19999a594d',
 			content: 'Hovering on an element highlights other elements relating to it. If you want to preserve a group of highlighted elements visible, click on an element.',
 		},

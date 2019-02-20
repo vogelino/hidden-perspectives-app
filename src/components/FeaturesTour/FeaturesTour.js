@@ -9,6 +9,7 @@ import {
 	StepContainer,
 	SkipLink,
 	StepButton,
+	StepImage,
 } from './styles';
 
 const FeaturesTour = ({
@@ -25,15 +26,18 @@ const FeaturesTour = ({
 			steps={steps.map((step, index) => ({
 				...step,
 				content: () => (
-					<StepContainer>
-						<StepCloseButton onClick={onClose}>✕</StepCloseButton>
-						{step.title && <StepHeadline variant="h5">{step.title}</StepHeadline>}
-						<StepContent>{step.content}</StepContent>
-						{index === 0 && <SkipLink onClick={onClose}>Skip tour</SkipLink>}
-						{index === steps.length - 1 && (
-							<StepButton onClick={onClose} primary>Let&#39;s go!</StepButton>
-						)}
-					</StepContainer>
+					<>
+						{step.image && <StepImage src={step.image} />}
+						<StepContainer>
+							<StepCloseButton onClick={onClose}>✕</StepCloseButton>
+							{step.title && <StepHeadline variant="h5">{step.title}</StepHeadline>}
+							<StepContent>{step.content}</StepContent>
+							{index === 0 && <SkipLink onClick={onClose}>Skip tour</SkipLink>}
+							{index === steps.length - 1 && (
+								<StepButton onClick={onClose} primary>Let&#39;s go!</StepButton>
+							)}
+						</StepContainer>
+					</>
 				),
 			}))}
 			isOpen={isOpen}

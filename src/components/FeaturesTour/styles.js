@@ -1,5 +1,5 @@
 import styled, { createGlobalStyle, css } from 'styled-components';
-import { darken } from 'polished';
+import { darken, transparentize } from 'polished';
 import Headline from '../_library/Headline';
 import Button from '../_library/Button';
 
@@ -37,8 +37,7 @@ export const GlobalTourStyles = createGlobalStyle`
 
 	.reactour__helper {
 		border-right: 4px;
-		box-shadow: 0 .5rem 1rem rgba(0,0,0,.1);
-		border: 1px solid ${({ theme }) => theme.gray200};
+		box-shadow: 0 0 0 1px ${({ theme }) => transparentize(0.9, theme.gray900)}, 0 .5rem 1rem rgba(0,0,0,.1);
 		padding: 0;
 
 		> div[data-tour-elem="controls"] {
@@ -102,7 +101,8 @@ export const StepCloseButton = styled.button`
 	line-height: 2.1rem;
 	${iconButtonCommonStyles}
 	color: ${({ theme }) => theme.gray600};
-	
+	background: white;
+
 	&:hover {
 		color: ${({ theme }) => theme.primaryDark};
 		background: ${({ theme }) => theme.primaryLight};
@@ -122,10 +122,21 @@ export const SkipLink = styled.div`
 
 	&:hover {
 		text-decoration: underline;
+		text-decoration: underline;
 	}
 `;
 
 export const StepButton = styled(Button)`
 	margin-top: 2rem;
 	width: 100%;
+`;
+
+export const StepImage = styled.div`
+	height: 8rem;
+	background-image: url("${({ src }) => src}");
+	background-position: center;
+	background-size: cover;
+	background-color: white;
+	border-radius: 4px 4px 0 0;
+	border-bottom: 1px solid ${({ theme }) => theme.gray200};
 `;

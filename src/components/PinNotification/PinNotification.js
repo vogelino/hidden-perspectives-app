@@ -16,8 +16,9 @@ const PinNotification = ({
 	closeCallback,
 	path,
 	history,
+	isVisible,
 }) => (
-	<Container>
+	<Container isVisible={isVisible}>
 		<IconWrapper>
 			<IconItem
 				itemType={itemType}
@@ -39,12 +40,14 @@ PinNotification.propTypes = {
 	itemType: PropTypes.string.isRequired,
 	closeCallback: PropTypes.func,
 	path: PropTypes.string,
+	isVisible: PropTypes.bool,
 	history: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 PinNotification.defaultProps = {
 	closeCallback: () => null,
 	path: '',
+	isVisible: false,
 };
 
 export default PinNotification;

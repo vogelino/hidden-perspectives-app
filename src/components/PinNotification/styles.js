@@ -12,6 +12,9 @@ export const Container = styled.div`
     padding: 0.4rem 2.5rem 0.2rem 2.75rem;
     position: relative;
     text-align: center;
+    transform: scale(${({ isVisible }) => (isVisible ? 1 : 0.5)});
+    opacity: ${({ isVisible }) => (isVisible ? 1 : 0)};
+    transition: opacity 200ms ease-out, transform 150ms cubic-bezier(.5,1.55,.37,.93);
 `;
 
 export const IconWrapper = styled.span`
