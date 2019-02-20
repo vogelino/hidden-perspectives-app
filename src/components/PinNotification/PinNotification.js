@@ -25,7 +25,12 @@ const PinNotification = ({
 				pinned
 			/>
 		</IconWrapper>
-		<ItemLink onMouseDown={() => history.push(path)}>
+		<ItemLink
+			onMouseDown={() => {
+				closeCallback();
+				history.push(path);
+			}}
+		>
 			<Title>
 				{title}
 			</Title>
