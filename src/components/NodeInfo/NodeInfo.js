@@ -39,7 +39,7 @@ const NodeInfo = ({
 	const isLonger = description && isDescriptionLonger(description);
 	const clickHandler = isLonger ? () => toggleDescriptionExpansion(!descriptionExpanded) : () => {};
 	return (
-		<Container>
+		<Container className="tour-entry-information">
 			<TitleContainer>
 				{image && <StakholderImage image={image} />}
 				{original && <PdfThumbnail file={original} />}

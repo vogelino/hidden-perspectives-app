@@ -1,12 +1,19 @@
 import { compose, withProps } from 'recompose';
 import { withTheme } from 'styled-components';
 import { withRouter } from 'react-router-dom';
+
 import DocumentImage from './images/documents.svg';
 import EventImage from './images/events.svg';
 import ProtagonistImage from './images/protagonists.svg';
 import MinimapImage from './images/minimap.gif';
 import PinningImage from './images/hovering-and-pinning.gif';
 import SearchImage from './images/search.gif';
+
+import CentralElementImage from './images/central-element.svg';
+import EntryInfoImage from './images/entry-information.svg';
+import EntryInTimeImage from './images/entry-in-time.svg';
+import RelatedEntriesImage from './images/related-entries.svg';
+
 import FeaturesTour from './FeaturesTour';
 
 const steps = {
@@ -50,6 +57,52 @@ const steps = {
 			image: SearchImage,
 			selector: '.tour-search',
 			content: 'You can search for specific contents using the search field.',
+		},
+	],
+	circleTimeline: [
+		{
+			title: 'Current entry',
+			image: CentralElementImage,
+			selector: '.tour-central-element',
+			content: 'The central element of this visualisation represents the entry you just clicked.',
+		},
+		{
+			title: 'Entry information',
+			image: EntryInfoImage,
+			selector: '.tour-entry-information',
+			content: 'More information about the current entry can be read here.',
+		},
+		{
+			title: 'The entry in its context',
+			image: EntryInTimeImage,
+			selector: '.tour-entry-on-timeline',
+			content: 'The current entry is also represented in blue on the timeline.',
+		},
+		{
+			title: 'Related entries',
+			selector: '.tour-related-entries',
+			content: 'The current entry is surrounded by related entries (documents and events sharing one identical keyword) displayed in a circular timeline (to be read clockwise).',
+		},
+		{
+			title: 'Entry keywords',
+			image: RelatedEntriesImage,
+			selector: '.tour-entry-keywords',
+			content: 'These are the current entry\'s keywords. Hover on them or enable/disable them to see which entries share the same keywords.',
+		},
+		{
+			title: 'Related entries list',
+			selector: '.tour-related-entries-list',
+			content: 'Related entries are also displayed in a list for you to explore. Hovering on any entry will highlight other entries that also relate to it.',
+		},
+		{
+			title: 'Menu tabs',
+			selector: '.tour-menu-tabs',
+			content: 'Detailled information about the entry can be found in those other tabs.',
+		},
+		{
+			title: 'Go back',
+			selector: '.tour-back-to-timeline',
+			content: 'Click on this icon to navigate back to the vertical timeline.',
 		},
 	],
 };

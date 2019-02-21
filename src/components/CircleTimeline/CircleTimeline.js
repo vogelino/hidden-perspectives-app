@@ -234,6 +234,7 @@ const TimelineItem = onlyUpdateForKeys([
 			className={[
 				hovered ? 'hovered' : '',
 				!hoveredElement && pinned ? 'pinned' : '',
+				currentElement && 'tour-entry-on-timeline',
 			].join(' ')}
 			onMouseEnter={onMouseEnter}
 			onMouseLeave={onMouseLeave}
@@ -352,6 +353,7 @@ const CircleTimeline = ({
 					id="circleContainer"
 					viewBox={`0 0 ${DIAMETER_OUTER + (MARGIN * 2)} ${DIAMETER_OUTER + (MARGIN * 2)}`}
 					preserveAspectRatio="xMidYMid meet"
+					className="tour-related-entries"
 				>
 					<Circles />
 					<Legends {...{ itemCounts, isLoading }} />

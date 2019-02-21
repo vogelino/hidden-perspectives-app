@@ -33,7 +33,7 @@ const LabelFilters = ({
 	setHoveredElement,
 	...otherProps
 }) => (
-	<>
+	<div className="tour-entry-keywords">
 		{tags.length > 0 && (
 			<Headline variant="h5">
 				{'Keywords'}
@@ -57,7 +57,7 @@ const LabelFilters = ({
 				{name}
 			</Tag>
 		))}
-	</>
+	</div>
 );
 
 LabelFilters.propTypes = {

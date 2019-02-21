@@ -73,6 +73,8 @@ const StyledButton = styled(Button)`
 		width: 2.5rem;
 		height: 2.5rem;
 		border-radius: 50%;
+		top: 0;
+		left: 0;
 
 		&:hover:not(.disabled) {
 			color: ${({ theme }) => theme.primaryDark};
@@ -82,7 +84,10 @@ const StyledButton = styled(Button)`
 `;
 
 export const BackButton = styled(StyledButton)`
-	left: .5rem;
+	left: 1rem;
+	top: .5rem;
+	width: 2.5rem;
+	height: 2.5rem;
 `;
 
 export const EditButton = styled(StyledButton)`

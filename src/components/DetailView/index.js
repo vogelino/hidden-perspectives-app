@@ -2,6 +2,7 @@ import {
 	compose,
 	lifecycle,
 	withState,
+	withHandlers,
 } from 'recompose';
 import { withApollo } from 'react-apollo';
 import gql from 'graphql-tag';
@@ -21,6 +22,7 @@ import { withLoading, withErrors, getErrorHandler } from '../../utils/hocUtil';
 import { ucFirst } from '../../utils/stringUtil';
 import { formatHumanDate } from '../../utils/dateUtil';
 import { groupItemsBy } from '../../utils/timelineUtil';
+import { startTour } from '../../utils/localStorageUtil';
 
 const EVENT_QUERY = gql`
 	query GetEvent($id: ID!) {
@@ -392,6 +394,9 @@ const getContextParser = (props, item, tags) => ({ data: { allEvents, allDocumen
 		setEvents,
 		setProtagonists,
 		setItemCounts,
+		setTourIsOpen,
+		setHoveredElement,
+		setPinnedElement,
 	} = props;
 
 	if (allDocuments.length === 0 && allEvents.length === 0) {
@@ -414,6 +419,9 @@ const getContextParser = (props, item, tags) => ({ data: { allEvents, allDocumen
 	setProtagonists(protagonists);
 
 	stopLoading();
+	setPinnedElement(null);
+	setHoveredElement(null);
+	startTour('circle-timeline', setTourIsOpen);
 };
 
 const getItemParser = (props) => ({ data }) => {
@@ -475,6 +483,10 @@ export default compose(
 	withState('pinnedElement', 'setPinnedElement', null),
 	withState('tags', 'setTags', []),
 	withState('filteredTags', 'setFilteredTags', []),
+	withState('tourIsOpen', 'setTourIsOpen', false),
+	withHandlers({
+		onTourClose: ({ setTourIsOpen }) => () => setTourIsOpen(false),
+	}),
 	lifecycle({
 		componentDidMount() {
 			performQuery(this.props);
@@ -495,6 +507,7 @@ export default compose(
 				|| this.props.itemType !== nextProps.itemType
 				|| this.props.errors !== nextProps.errors
 				|| this.props.tags !== nextProps.tags
+				|| this.props.tourIsOpen !== nextProps.tourIsOpen
 				|| this.props.filteredTags !== nextProps.filteredTags
 			);
 		},
