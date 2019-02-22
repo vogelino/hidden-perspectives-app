@@ -38,7 +38,7 @@ export const startTour = (componentName, callback) => {
 	if (!isDate(lastTourDate)) {
 		localStorage.removeItem(`hp-last-${componentName}-tour-visit`);
 	}
-	if (lastTourDate && differenceInMinutes(lastTourDate, date) < 1) {
+	if (lastTourDate && differenceInMinutes(lastTourDate, date) < 10000000000) {
 		return callback(false);
 	}
 	saveTour(componentName);
