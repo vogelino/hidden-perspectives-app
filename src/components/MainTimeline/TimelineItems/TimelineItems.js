@@ -72,7 +72,6 @@ class TimelineItemsClass extends React.PureComponent {
 				hoveredElement={hoveredElement}
 				hovered={isHovered(item, hoveredElement, itemType)}
 				hoverHandler={setHoveredElement}
-				clickHandler={() => {}}
 			/>
 		);
 

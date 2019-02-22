@@ -158,7 +158,7 @@ const TimelineItem = onlyUpdateForKeys([
 	currentElement,
 	group,
 	itemType,
-	onClick,
+	onClick = () => {},
 	events,
 	documents,
 	onMouseEnter,
@@ -266,7 +266,6 @@ const CircleTimeline = ({
 					filteredGroup.map((groupEl) => ({ ...groupEl, itemType })),
 				)}
 				onMouseLeave={() => setHoveredElement(null)}
-				onClick={() => {}}
 				{...{
 					angle: angle || 0,
 					hoveredElement,
@@ -285,8 +284,8 @@ const CircleTimeline = ({
 				>
 					<Circles />
 					<Legends {...{ itemCounts, isLoading }} />
-					{documents.map(createDocumentMapper('document'))}
-					{events.map(createDocumentMapper('event'))}
+					{!isLoading && documents.map(createDocumentMapper('document'))}
+					{!isLoading && events.map(createDocumentMapper('event'))}
 				</CircleSvg>
 				<CentralElement {...item} />
 				<BubbleChartContainer>

@@ -17,6 +17,7 @@ const TimelineElement = ({
 	title,
 	hoverHandler,
 	clickHandler,
+	history,
 	...itemProps
 }) => (
 	<Container>
@@ -29,7 +30,7 @@ const TimelineElement = ({
 			right={itemType === 'document'}
 			onMouseEnter={() => hoverHandler({ id, itemType, ...itemProps })}
 			onMouseLeave={() => hoverHandler(null)}
-			onClick={() => clickHandler({ id, itemType, ...itemProps })}
+			onClick={() => history.push(`/${itemType === 'stakeholder' ? 'protagonist' : itemType}/context/${id}`)}
 			tabIndex={0}
 		>
 			<IconContainer>
@@ -56,6 +57,9 @@ TimelineElement.propTypes = {
 	hoverHandler: PropTypes.func.isRequired,
 	clickHandler: PropTypes.func.isRequired,
 	hovered: PropTypes.bool.isRequired,
+	history: PropTypes.shape({
+		push: PropTypes.func.isRequired,
+	}).isRequired,
 };
 
 export default TimelineElement;

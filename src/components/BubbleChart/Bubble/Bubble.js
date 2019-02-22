@@ -18,7 +18,6 @@ const Bubble = ({
 	hovered,
 	hoveredElement,
 	setHoveredElement,
-	clickHandler,
 	textNodeWidth,
 	isLoading,
 	image,
@@ -46,7 +45,10 @@ const Bubble = ({
 		<Container
 			onMouseEnter={() => setHoveredElement({ itemType: 'stakeholder', ...data })}
 			onMouseLeave={() => setHoveredElement(null)}
-			onClick={() => clickHandler({ itemType: 'stakeholder', ...data })}
+			onClick={(evt) => {
+				evt.preventDefault();
+				history.push(`/protagonist/context/${id}`);
+			}}
 			tabIndex={0}
 		>
 			<BubbleCircle
@@ -108,7 +110,6 @@ Bubble.propTypes = {
 	hovered: PropTypes.bool,
 	setComponentRef: PropTypes.func,
 	setHoveredElement: PropTypes.func,
-	clickHandler: PropTypes.func,
 	image: PropTypes.shape({
 		id: PropTypes.string.isRequired,
 		url: PropTypes.string,
@@ -128,7 +129,6 @@ Bubble.defaultProps = {
 	hovered: false,
 	setComponentRef: () => {},
 	setHoveredElement: () => {},
-	clickHandler: () => {},
 	textNodeWidth: undefined,
 	image: undefined,
 	hoveredElement: undefined,

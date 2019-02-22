@@ -18,7 +18,6 @@ const Bubbles = ({
 				hovered={hovered}
 				isActive={activeElementId === bubbleData.data.id}
 				image={images.find(({ id }) => id === bubbleData.data.id)}
-				clickHandler={() => {}}
 				hoveredElement={hoveredElement}
 				{...bubbleData}
 				{...rest}

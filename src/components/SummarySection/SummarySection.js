@@ -9,6 +9,7 @@ import { Items } from './styles';
 const SummarySection = ({
 	items,
 	setHoveredElement,
+	history,
 	...props
 }) => (
 	<Items id="summary-section">
@@ -25,7 +26,9 @@ const SummarySection = ({
 					itemType={itemType}
 					hovered={isHovered(item, hoveredElement, itemType)}
 					hoverHandler={setHoveredElement}
-					clickHandler={() => {}}
+					clickHandler={() => history
+						.push(`/${itemType === 'stakeholder' ? 'protagonist' : itemType}/context/${item.id}`)
+					}
 				/>
 			);
 		})}
@@ -54,6 +57,9 @@ SummarySection.propTypes = {
 		),
 	]),
 	isLoading: PropTypes.bool,
+	history: PropTypes.shape({
+		push: PropTypes.func.isRequired,
+	}).isRequired,
 };
 
 SummarySection.defaultProps = {
