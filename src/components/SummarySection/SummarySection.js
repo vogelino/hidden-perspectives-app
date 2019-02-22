@@ -8,14 +8,13 @@ import { Items } from './styles';
 
 const SummarySection = ({
 	items,
-	setPinnedElement,
 	setHoveredElement,
 	...props
 }) => (
 	<Items id="summary-section">
 		{items.map((item) => {
 			const itemType = item.type === 'Event' ? 'event' : 'document';
-			const { hoveredElement, pinnedElement } = props;
+			const { hoveredElement } = props;
 			return (
 				<Summary
 					key={item.id}
@@ -25,22 +24,8 @@ const SummarySection = ({
 					date={formatHumanDate(item.date)}
 					itemType={itemType}
 					hovered={isHovered(item, hoveredElement, itemType)}
-					pinned={!hoveredElement && isHovered(item, pinnedElement, itemType)}
 					hoverHandler={setHoveredElement}
-					clickHandler={(pinEl) => {
-						const { id } = pinEl;
-						if (
-							pinnedElement && (
-								pinnedElement.id === id
-								|| (Array.isArray(pinnedElement)
-									&& pinnedElement.find((el) => el.id === id))
-							)
-						) {
-							return setPinnedElement(null);
-						}
-						return setPinnedElement({ ...item, itemType });
-					}}
-					onBlurCallback={() => setPinnedElement(null)}
+					clickHandler={() => {}}
 				/>
 			);
 		})}
@@ -68,19 +53,6 @@ SummarySection.propTypes = {
 			}),
 		),
 	]),
-	pinnedElement: PropTypes.oneOfType([
-		PropTypes.shape({
-			id: PropTypes.string.isRequired,
-			itemType: PropTypes.string.isRequired,
-		}),
-		PropTypes.arrayOf(
-			PropTypes.shape({
-				id: PropTypes.string.isRequired,
-				itemType: PropTypes.string.isRequired,
-			}),
-		),
-	]),
-	setPinnedElement: PropTypes.func,
 	isLoading: PropTypes.bool,
 };
 
@@ -88,8 +60,6 @@ SummarySection.defaultProps = {
 	items: [],
 	hoveredElement: null,
 	setHoveredElement: () => { },
-	pinnedElement: null,
-	setPinnedElement: () => { },
 	isLoading: true,
 };
 

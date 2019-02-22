@@ -472,7 +472,6 @@ export default compose(
 	withState('protagonists', 'setProtagonists', {}),
 	withState('itemCounts', 'setItemCounts', { eventsCount: 0, documentsCount: 0, protagonistsCount: 0 }),
 	withState('hoveredElement', 'setHoveredElement', null),
-	withState('pinnedElement', 'setPinnedElement', null),
 	withState('tags', 'setTags', []),
 	withState('filteredTags', 'setFilteredTags', []),
 	lifecycle({
@@ -490,7 +489,6 @@ export default compose(
 				|| this.props.events !== nextProps.events
 				|| this.props.protagonists !== nextProps.protagonists
 				|| this.props.hoveredElement !== nextProps.hoveredElement
-				|| this.props.pinnedElement !== nextProps.pinnedElement
 				|| this.props.isLoading !== nextProps.isLoading
 				|| this.props.itemType !== nextProps.itemType
 				|| this.props.errors !== nextProps.errors

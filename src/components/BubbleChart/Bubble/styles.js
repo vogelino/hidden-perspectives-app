@@ -10,8 +10,8 @@ export const Container = styled.g`
 	}
 `;
 
-const getFilterUrl = ({ isHovered, isPinned, isActive }) => {
-	if (isHovered || isPinned) return '#image-color-filter-hover';
+const getFilterUrl = ({ isHovered, isActive }) => {
+	if (isHovered) return '#image-color-filter-hover';
 	if (isActive) return 'none';
 	return '#image-color-filter';
 };
@@ -33,11 +33,10 @@ export const BubbleCircle = styled.circle.attrs(({ r }) => ({
 	${({
 		fill,
 		isHovered,
-		isPinned,
 		theme,
 	}) => {
 		if (fill) return '';
-		const colorFill = ((isHovered || isPinned) ? theme.primaryLight : theme.gray200);
+		const colorFill = (isHovered ? theme.primaryLight : theme.gray200);
 		return `fill: ${colorFill};`;
 	}}
 	opacity: ${({ isLoading }) => (isLoading ? 0 : 1)};
@@ -52,9 +51,8 @@ export const BubbleText = styled(Text)`
 	${({
 		hasImage,
 		isHovered,
-		isPinned,
 		isActive,
-	}) => hasImage && (isHovered || isPinned || isActive) && `
+	}) => hasImage && (isHovered || isActive) && `
 		opacity: 0;
 	`}
 	user-select: none;

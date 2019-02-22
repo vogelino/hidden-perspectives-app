@@ -4,7 +4,6 @@ import Summary from './Summary';
 
 const originalShouldUpdate = (props, nextProps) => (
 	props.hovered !== nextProps.hovered
-	|| props.pinned !== nextProps.pinned
 );
 
 const willScroll = (hoveredElement) => {

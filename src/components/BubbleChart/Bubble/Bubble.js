@@ -18,9 +18,7 @@ const Bubble = ({
 	hovered,
 	hoveredElement,
 	setHoveredElement,
-	pinned,
 	clickHandler,
-	onBlurCallback,
 	textNodeWidth,
 	isLoading,
 	image,
@@ -50,7 +48,6 @@ const Bubble = ({
 			onMouseLeave={() => setHoveredElement(null)}
 			onClick={() => clickHandler({ itemType: 'stakeholder', ...data })}
 			tabIndex={0}
-			onBlur={onBlurCallback}
 		>
 			<BubbleCircle
 				cx={x}
@@ -58,7 +55,6 @@ const Bubble = ({
 				r={r}
 				isLoading={isLoading}
 				isHovered={hovered}
-				isPinned={pinned}
 				isActive={isActive}
 				fill={image ? `url(#image-def-${id})` : undefined}
 			/>
@@ -70,7 +66,6 @@ const Bubble = ({
 				y={y}
 				isLoading={isLoading}
 				isHovered={hovered}
-				isPinned={pinned}
 				isActive={isActive}
 				fontSize={fontSize > 0 ? fontSize : 0}
 				ref={setComponentRef}
@@ -111,11 +106,9 @@ Bubble.propTypes = {
 	textNodeWidth: PropTypes.number,
 	isLoading: PropTypes.bool,
 	hovered: PropTypes.bool,
-	pinned: PropTypes.bool,
 	setComponentRef: PropTypes.func,
 	setHoveredElement: PropTypes.func,
 	clickHandler: PropTypes.func,
-	onBlurCallback: PropTypes.func,
 	image: PropTypes.shape({
 		id: PropTypes.string.isRequired,
 		url: PropTypes.string,
@@ -133,11 +126,9 @@ Bubble.propTypes = {
 Bubble.defaultProps = {
 	isLoading: false,
 	hovered: false,
-	pinned: false,
 	setComponentRef: () => {},
 	setHoveredElement: () => {},
 	clickHandler: () => {},
-	onBlurCallback: () => null,
 	textNodeWidth: undefined,
 	image: undefined,
 	hoveredElement: undefined,
