@@ -6,15 +6,16 @@ const CustomButton = ({
 	to,
 	children,
 	primary,
+	className,
 	...rest
 }) => (to ? (
 	<Link to={to} {...rest}>
-		<Button {...rest} variant={primary ? 'primary' : 'light'}>
+		<Button {...rest} variant={primary ? 'primary' : 'light'} className={className}>
 			{children}
 		</Button>
 	</Link>
 ) : (
-	<Button {...rest} variant={primary ? 'primary' : 'light'}>
+	<Button {...rest} variant={primary ? 'primary' : 'light'} className={className}>
 		{children}
 	</Button>
 ));
@@ -27,11 +28,13 @@ CustomButton.propTypes = {
 		PropTypes.element,
 		PropTypes.node,
 	]).isRequired,
+	className: PropTypes.string,
 };
 
 CustomButton.defaultProps = {
 	to: undefined,
 	primary: false,
+	className: '',
 };
 
 export default CustomButton;

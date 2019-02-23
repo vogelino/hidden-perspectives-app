@@ -58,31 +58,43 @@ export const Tab = styled(NavLink)`
 
 const StyledButton = styled(Button)`
 	position: absolute;
-	top: .25rem;
-
-	& > button {
-		font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-		border: none;
-		background: none;
-		font-size: 1.5rem;
-		line-height: 1.5rem;
-		color: ${({ theme }) => theme.gray500};
-		cursor: pointer;
-		padding: .5rem 0;
-		text-align: center;
-		width: 2.5rem;
-		height: 2.5rem;
-		border-radius: 50%;
-
-		&:hover:not(.disabled) {
-			color: ${({ theme }) => theme.primaryDark};
-			background: ${({ theme }) => theme.primaryLight};
-		}
-	}
+	top: .4rem;
+	white-space: nowrap;
+	border: none;
+	background: none;
+	cursor: pointer;
+	padding: 0;
 `;
 
 export const BackButton = styled(StyledButton)`
-	left: .5rem;
+	left: 1.25rem;
+	color: ${({ theme }) => theme.gray600};
+	line-height: 2.9rem;
+
+	&:hover:not(.disabled) {
+		background: none;
+		color: ${({ theme }) => theme.gray900};
+
+		& > span {
+			color: ${({ theme }) => theme.primaryDark};
+			background: ${({ theme }) => theme.primaryLight};
+		}
+	} 
+
+	& > span {
+		font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+		font-size: 1.5rem;
+		line-height: 1.5rem;
+		color: ${({ theme }) => theme.gray500};
+		text-align: center;
+		padding: .5rem 0;
+		width: 2.5rem;
+		height: 2.5rem;
+		border-radius: 50%;
+		float: left;
+		margin-right: 0.5rem;
+		transition: background 200ms ease-out, color 200ms ease-out;
+	}
 `;
 
 export const EditButton = styled(StyledButton)`
