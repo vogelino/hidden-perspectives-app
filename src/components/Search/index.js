@@ -12,59 +12,11 @@ import {
 	findIndex,
 } from 'ramda';
 import { withApollo } from 'react-apollo';
-import gql from 'graphql-tag';
 import { withRouter } from 'react-router-dom';
 import debounce from 'lodash.debounce';
 import { withLoading, withErrors, getErrorHandler } from '../../utils/hocUtil';
+import { getSearchQuery } from './utils';
 import Search from './Search';
-
-const SEARCH_QUERY = gql`
-	query Search($searchQuery: String!) {
-		allEvents(
-			filter: {
-				OR: [
-					{ eventTitle_contains: $searchQuery }
-					{ eventDescription_contains: $searchQuery }
-					{ eventStakeholders_some: {
-						stakeholderFullName_contains: $searchQuery
-					} }
-				]
-			}
-			first: 10
-		) {
-			id
-			eventTitle
-		}
-		allDocuments(
-			filter: {
-				OR: [
-					{ documentTitle_contains: $searchQuery }
-					{ documentDescription_contains: $searchQuery }
-					{ documentTranscript_contains: $searchQuery }
-					{ mentionedStakeholders_some: {
-						stakeholderFullName_contains: $searchQuery
-					} }
-				]
-			}
-			first: 10
-		) {
-			id
-			documentTitle
-		}
-		allStakeholders(
-			filter: {
-				OR: [
-					{ stakeholderFullName_contains: $searchQuery }
-					{ stakeholderDescription_contains: $searchQuery }
-				]
-			}
-			first: 10
-		) {
-			id
-			stakeholderFullName
-		}
-	}
-`;
 
 const getElementParser = (type, titleKey) => (items) => items.map((item) => ({
 	id: item.id,
@@ -100,7 +52,7 @@ const performQuery = debounce((client, props) => {
 	const requestTime = Date.now();
 	lastRequestTime = requestTime;
 	client.query({
-		query: SEARCH_QUERY,
+		query: getSearchQuery(10),
 		variables: { searchQuery: value },
 	})
 		.then(handleSearchResults(props, value, requestTime))
