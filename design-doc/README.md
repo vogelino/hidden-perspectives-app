@@ -9,6 +9,7 @@ Critical oral history adds to conventional methods by encouraging decision maker
 
 ## Glossary
 
+| Type | Description |
 | ------------- | ------------- |
 | Document      | Is part of an archive collected by John Tirman, Malcolm Byrne and Hussein Banai at the MIT Center for International Studies. The archive’s documents have been procured through Freedom of Information Act requests, and open source documents (published interviews, analyses, memoirs, etc.). There are scans of the original document as well as their transcripts. Furthermore, metadata have been added to each of the documents (title, summary, creation date, publication date, publisher, author, recipient, type, kind, …). Through automated named entity extraction we have added categories to the metadata, such as involved protagonists, events and locations. |
 | Event         | Is part of a list of relevant events between 1975 and 2011 curated by John Tirman et al. as part of their preparation of several “critical oral history” conferences. The events metadata categories consist of title, summary, start and end date. Through automated named entity extraction we have added categories to the metadata, such as involved protagonists, events and locations.      |
