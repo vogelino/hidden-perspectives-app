@@ -9,7 +9,7 @@ import {
 import debounce from 'lodash.debounce';
 import MainTimeline from './MainTimeline';
 import { withLoading, withErrors, getErrorHandler } from '../../utils/hocUtil';
-import { getMinimap } from '../../utils/timelineUtil';
+import { getMinimap, isFullyInViewport } from '../../utils/timelineUtil';
 import { ucFirst } from '../../utils/stringUtil';
 import isDocumentId from '../../utils/isDocumentId';
 import { getFormattedDate } from '../../utils/dateUtil';
@@ -173,6 +173,7 @@ const getEventsAndDocuments = ({
 const getEventIdsInViewport = (timelineElement) => {
 	const timelineEvents = timelineElement.getElementsByClassName('timeline-event');
 	const eventIds = [...timelineEvents]
+		.filter(isFullyInViewport)
 		.map((timelineEvent) => timelineEvent.getAttribute('data-id'));
 
 	return eventIds;
