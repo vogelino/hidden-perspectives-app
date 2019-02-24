@@ -188,7 +188,10 @@ const TimelineItem = onlyUpdateForKeys([
 			width={docSize}
 			height={docSize}
 			angle={angle}
-			className={hovered ? 'hovered' : ''}
+			className={[
+				hovered ? 'hovered' : '',
+				currentElement && 'tour-entry-on-timeline',
+			].join(' ')}
 			onMouseEnter={onMouseEnter}
 			onMouseLeave={onMouseLeave}
 			{...CIRCLE_CENTER}
@@ -282,6 +285,7 @@ const CircleTimeline = ({
 					id="circleContainer"
 					viewBox={`0 0 ${DIAMETER_OUTER + (MARGIN * 2)} ${DIAMETER_OUTER + (MARGIN * 2)}`}
 					preserveAspectRatio="xMidYMid meet"
+					className="tour-related-entries"
 				>
 					<Circles />
 					<Legends {...{ itemCounts, isLoading }} />

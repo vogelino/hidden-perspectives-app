@@ -4,7 +4,8 @@ export const Container = styled.div`
 	align-items: center;
 	border-left: 1px solid ${({ theme }) => theme.commonBorderColor};
 	display: flex;
-	height: 100%;
+	height: calc(100vh - 4.5rem);
+	margin-top: 4.5rem;
 	justify-content: center;
 	position: fixed;
 	right: 0;

@@ -66,7 +66,7 @@ const Minimap = ({
 	activeYear,
 	onClick,
 }) => (
-	<OuterContainer>
+	<OuterContainer className="tour-minimap">
 		<InnerContainer>
 			<Content>
 				<OptimizedYears items={items} activeYear={activeYear} onClick={onClick} />

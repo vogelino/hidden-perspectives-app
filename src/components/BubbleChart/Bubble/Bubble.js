@@ -50,6 +50,7 @@ const Bubble = ({
 				history.push(`/protagonist/context/${id}`);
 			}}
 			tabIndex={0}
+			className={`protagonist-${id}`}
 		>
 			<BubbleCircle
 				cx={x}

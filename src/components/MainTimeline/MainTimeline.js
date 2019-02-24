@@ -1,13 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { findIndex } from 'ramda';
-import { Container } from './styles';
+import FeaturesTour from '../FeaturesTour';
 import Minimap from './Minimap';
 import { LoadingContainer } from '../LoadingIndicator/styles';
 import LoadingIndicator from '../LoadingIndicator';
 import TimelineItems from './TimelineItems';
 import Protagonists from './Protagonists';
 import { MainTimelineLegend } from '../Legend';
+import { Container } from './styles';
 
 const parseTimelineItems = (years) => {
 	const months = years.reduce((acc, cur) => {
@@ -35,11 +36,18 @@ const MainTimeline = ({
 	activeYear,
 	setActiveYear,
 	onTimelineScroll,
+	tourIsOpen,
+	onCloseTour,
 }) => {
 	const items = parseTimelineItems(timelineItems);
 
 	return (
 		<Container id="mainTimeline">
+			<FeaturesTour
+				page="mainTimeline"
+				isOpen={tourIsOpen}
+				onClose={onCloseTour}
+			/>
 			<LoadingContainer isLoading={isLoading}>
 				<LoadingIndicator />
 			</LoadingContainer>
@@ -96,11 +104,13 @@ MainTimeline.propTypes = {
 	errors: PropTypes.arrayOf(PropTypes.string),
 	isLoading: PropTypes.bool,
 	fetchingProtagonists: PropTypes.bool,
+	tourIsOpen: PropTypes.bool,
 	onTimelineScroll: PropTypes.func,
 	setActiveRowIndex: PropTypes.func,
 	activeRowIndex: PropTypes.number,
 	setActiveYear: PropTypes.func,
 	activeYear: PropTypes.string,
+	onCloseTour: PropTypes.func,
 };
 
 MainTimeline.defaultProps = {
@@ -111,10 +121,12 @@ MainTimeline.defaultProps = {
 	minimapItems: [],
 	errors: [],
 	isLoading: true,
+	tourIsOpen: false,
 	fetchingProtagonists: true,
 	onTimelineScroll: () => {},
 	setActiveRowIndex: () => {},
 	setActiveYear: () => {},
+	onCloseTour: () => {},
 	activeRowIndex: 300,
 	activeYear: '1993',
 };

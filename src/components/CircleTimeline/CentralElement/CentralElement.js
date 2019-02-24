@@ -9,10 +9,11 @@ const CentralElement = ({
 	itemType,
 	id,
 }) => {
-	if (image) return <Circle style={{ backgroundImage: `url("${image}")` }} />;
-	if (original) return <Circle><Pdf file={original} width={160} id={id} /></Circle>;
-	if (itemType === 'event') return <Circle>{formattedDate.split(' ').map((string) => <div key={string}>{string}</div>)}</Circle>;
-	return <Circle />;
+	const cN = { className: 'tour-central-element' };
+	if (image) return <Circle {...cN} style={{ backgroundImage: `url("${image}")` }} />;
+	if (original) return <Circle {...cN}><Pdf file={original} width={160} id={id} /></Circle>;
+	if (itemType === 'event') return <Circle {...cN}>{formattedDate.split(' ').map((string) => <div key={string}>{string}</div>)}</Circle>;
+	return <Circle {...cN} />;
 };
 
 CentralElement.propTypes = {

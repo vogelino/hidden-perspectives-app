@@ -14,7 +14,7 @@ const SummarySection = ({
 	history,
 	...props
 }) => (
-	<Items id="summary-section">
+	<Items id="summary-section" className="tour-related-entries-list">
 		{items.map((item) => {
 			const itemType = item.type === 'Event' ? 'event' : 'document';
 			const { hoveredElement } = props;

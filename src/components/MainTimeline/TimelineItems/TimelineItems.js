@@ -77,7 +77,7 @@ class TimelineItemsClass extends React.PureComponent {
 
 		const year = data.key.split('-')[0];
 		return (
-			<div style={style} key={key} className="timeline-month" data-year={year}>
+			<div style={style} key={key} className={`timeline-month timeline-month-${monthLabel}-${year}`} data-year={year}>
 				{dateUnitIndex === 1 && <Year>{year}</Year>}
 				<ContainerWithStickyLabel
 					isEmpty={days.length === 0}
@@ -107,7 +107,7 @@ class TimelineItemsClass extends React.PureComponent {
 
 	render() {
 		return (
-			<div ref={this.timelineEl}>
+			<div ref={this.timelineEl} className="tour-main-timeline">
 				<List
 					height={1200}
 					overscanRowCount={0}

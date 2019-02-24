@@ -4,7 +4,7 @@ import BubbleChart from '../../BubbleChart';
 import { Container, BubbleChartWrapper } from './styles';
 
 const Stakeholders = (props) => (
-	<Container>
+	<Container className="tour-protagonists">
 		<BubbleChartWrapper>
 			<BubbleChart
 				{...props}

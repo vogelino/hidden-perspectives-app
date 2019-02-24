@@ -4,10 +4,22 @@ import CircleTimeline from '../CircleTimeline';
 import SummarySection from '../SummarySection';
 import LabelFilters from '../LabelFilters';
 import NodeInfo from '../NodeInfo';
+import FeaturesTour from '../FeaturesTour';
 import { Container, Sidebar, LeftSidebarContent } from './styles';
 
-const DetailView = ({ item, isLoading, ...rest }) => (
+const DetailView = ({
+	item,
+	isLoading,
+	tourIsOpen,
+	onTourClose,
+	...rest
+}) => (
 	<Container>
+		<FeaturesTour
+			page="circleTimeline"
+			isOpen={tourIsOpen}
+			onClose={onTourClose}
+		/>
 		{item && !isLoading && (
 			<Sidebar>
 				<LeftSidebarContent>
@@ -51,6 +63,8 @@ DetailView.propTypes = {
 		})),
 	),
 	isLoading: PropTypes.bool,
+	tourIsOpen: PropTypes.bool,
+	onTourClose: PropTypes.func,
 };
 
 DetailView.defaultProps = {
@@ -59,6 +73,8 @@ DetailView.defaultProps = {
 	documents: [],
 	events: [],
 	protagonists: {},
+	tourIsOpen: false,
+	onTourClose: () => {},
 };
 
 export default DetailView;

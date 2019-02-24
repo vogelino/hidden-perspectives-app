@@ -13,8 +13,8 @@ import { getMinimap } from '../../utils/timelineUtil';
 import { ucFirst } from '../../utils/stringUtil';
 import isDocumentId from '../../utils/isDocumentId';
 import { getFormattedDate } from '../../utils/dateUtil';
-
 import { parseItemsToDates } from './utils';
+import { startTour } from '../../utils/localStorageUtil';
 
 const ALL_EVENTS_AND_DOCUMENTS = gql`
 	{
@@ -151,6 +151,7 @@ const getEventsAndDocuments = ({
 	setMinimapItems,
 	setDocumentsCount,
 	setEventsCount,
+	setTourIsOpen,
 }) => ({ data: { allEvents: events, allDocuments: documents } }) => {
 	const items = parseItems({
 		events,
@@ -166,6 +167,7 @@ const getEventsAndDocuments = ({
 	setDocumentsCount(documents.length);
 	setEventsCount(events.length);
 	stopLoading();
+	startTour('main-timeline', setTourIsOpen);
 };
 
 const getEventIdsInViewport = (timelineElement) => {
@@ -215,6 +217,10 @@ const onTimelineScroll = (props) => debounce(
 	150,
 );
 
+const onCloseTour = ({ setTourIsOpen }) => () => {
+	setTourIsOpen(false);
+};
+
 export default compose(
 	withApollo,
 	withLoading,
@@ -229,9 +235,13 @@ export default compose(
 	withState('fetchingProtagonists', 'setFetchingProtagonists', true),
 	withState('initialProtagonistsFetched', 'setInitialProtagonistsFetched', false),
 	withState('hoveredElement', 'setHoveredElement', null),
-	withState('activeRowIndex', 'setActiveRowIndex', 266),
+	withState('activeRowIndex', 'setActiveRowIndex', 267),
 	withState('activeYear', 'setActiveYear', '1993'),
-	withHandlers({ onTimelineScroll }),
+	withState('tourIsOpen', 'setTourIsOpen', false),
+	withHandlers({
+		onTimelineScroll,
+		onCloseTour,
+	}),
 	lifecycle({
 		componentDidMount() {
 			const { props } = this;
@@ -253,6 +263,7 @@ export default compose(
 				|| (nextProps.protagonistsCount !== this.props.protagonistsCount)
 				|| (nextProps.activeRowIndex !== this.props.activeRowIndex)
 				|| (nextProps.activeYear !== this.props.activeYear)
+				|| (nextProps.tourIsOpen !== this.props.tourIsOpen)
 				|| (nextProps.hoveredElement !== this.props.hoveredElement);
 		},
 	}),

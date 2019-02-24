@@ -36,7 +36,7 @@ PdfThumbnail.propTypes = {
 	file: PropTypes.string.isRequired,
 	className: PropTypes.string,
 	width: PropTypes.number,
-	id: PropTypes.number,
+	id: PropTypes.string,
 };
 
 PdfThumbnail.defaultProps = {
