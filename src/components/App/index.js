@@ -14,6 +14,7 @@ import LocationPage from '../../pages/location';
 import LocationMetadataPage from '../../pages/locationMetadata';
 import TranscriptPage from '../../pages/transcript';
 import OriginalPage from '../../pages/original';
+import SearchPage from '../../pages/search';
 import { GlobalStyles } from './styles';
 
 const App = () => (
@@ -35,6 +36,7 @@ const App = () => (
 				<Route exact path="/protagonist/metadata/:id" component={ProtagonistMetadataPage} />
 				<Route exact path="/location/context/:id" component={LocationPage} />
 				<Route exact path="/location/metadata/:id" component={LocationMetadataPage} />
+				<Route exact path="/search/:query" component={SearchPage} />
 				<Route exact path="/login" component={Login} />
 			</>
 		</Theme>

@@ -108,15 +108,19 @@ const performQuery = debounce((client, props) => {
 		.catch(getErrorHandler(props, value, requestTime));
 }, 350, { leading: false, trailing: true });
 
+const withSearch = compose(
+	withState('searchQuery', 'setSearchQuery', ''),
+	withState('allSearchResults', 'setSearchResults', []),
+	withState('activeTab', 'setActiveTab', 'all'),
+);
+
 export default compose(
 	withApollo,
 	withLoading,
 	withErrors,
 	withRouter,
-	withState('searchQuery', 'setSearchQuery', ''),
-	withState('allSearchResults', 'setSearchResults', []),
+	withSearch,
 	withState('activeResult', 'setActiveResult', undefined),
-	withState('activeTab', 'setActiveTab', 'all'),
 	mapProps((props) => {
 		const searchResults = props.activeTab === 'all'
 			? props.allSearchResults
@@ -193,12 +197,15 @@ export default compose(
 			}
 			setActiveResult(searchResults[newIndex].id);
 		},
-		onEnter: (props) => (evt) => {
+		onEnter: ({ searchQuery, setSearchQuery, ...props }) => (evt) => {
 			evt.preventDefault();
-			props.setSearchQuery('');
 			const { history, searchResults, activeResult } = props;
 			const activeResultObj = searchResults.find(propEq('id', activeResult));
-			if (!activeResultObj) return;
+			if (!activeResultObj) {
+				history.push(`/search/${encodeURIComponent(searchQuery)}`);
+				return;
+			}
+			setSearchQuery('');
 			const { id, type } = activeResultObj;
 			const itemType = type === 'stakeholder' ? 'protagonist' : type;
 			history.push(`/${itemType}/context/${id}`);
