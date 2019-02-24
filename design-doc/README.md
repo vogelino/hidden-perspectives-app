@@ -7,7 +7,7 @@ This project has attempted to address this knowledge gap through methods typical
 
 Critical oral history adds to conventional methods by encouraging decision makers to ponder how and why they responded to events and to their counterparts. This enables some reflection that typically is not forthcoming in one-on-one interviews. The conferences, briefing documents, and scholars altogether encourage an unusual depth in considering events. This plattform therefore attempts to create a framework for scholars as well as for the public to explore this experience. For that we have automatically extracted named entities from the Events and Documents to generate links between them and uncover patterns in the data set. This automated process is subject to possible errors and biases and might have resulted in wrong links visible on this platform.
 
-##Glossary
+## Glossary
 
 | ---| --- |
 | Document   | Is part of an archive collected by John Tirman, Malcolm Byrne and Hussein Banai at the MIT Center for International Studies. The archive’s documents have been procured through Freedom of Information Act requests, and open source documents (published interviews, analyses, memoirs, etc.). There are scans of the original document as well as their transcripts. Furthermore, metadata have been added to each of the documents (title, summary, creation date, publication date, publisher, author, recipient, type, kind, …). Through automated named entity extraction we have added categories to the metadata, such as involved protagonists, events and locations. |
