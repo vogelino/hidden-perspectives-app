@@ -20,7 +20,7 @@ const steps = {
 	mainTimeline: [
 		{
 			title: 'Welcome!',
-			content: 'Hidden Perspective is an interactive digital archive consisting of documents and events relating to the U.S.-Iran relationship’s history since the 1978 – 1979 Iranian revolution.',
+			content: 'Hidden Perspectives is an interactive digital archive consisting of documents and events relating to the U.S.-Iran relationship’s history since the 1978 – 1979 Iranian revolution.',
 		},
 		{
 			title: 'Documents',
