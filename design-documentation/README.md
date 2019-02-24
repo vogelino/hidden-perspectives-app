@@ -59,7 +59,7 @@ The document tooltip contains a small thumbnail of the original file and the sum
 In the event tooltip there is only the summary shown.
 
 
-### Highlighting & pinning
+### Highlighting
 
 **Main timeline**
 
@@ -69,10 +69,6 @@ If the hovered element is a protagonist, all the linked documents and events are
 **Detail view**
 
 In the detail view by hovering you always see the linked nodes, and keywords highlighted.
-
-**Pinning**
-
-You can pin highlighted nodes, by clicking on the name. This way you can take a closer look to the connected keywords or nodes.
 
 ### Minimap
 
