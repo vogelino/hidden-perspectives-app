@@ -21,7 +21,7 @@ $ cp .env.test.local.sample .env.test.local && $EDITOR .env.test.local # For the
 And adapt the variables to match your setup
 
 ## Available scripts
-### `yarn start`
+### `yarn dev`
 
 Runs the app in development mode.<br>
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
@@ -46,6 +46,10 @@ It correctly bundles React in production mode and optimizes the build for the be
 The build is minified and the filenames include the hashes.<br>
 
 Your app is ready to be deployed.
+
+### `yarn start`
+
+Serves the build on [http://localhost:5000](http://localhost:5000).
 
 ***
 
