@@ -11,19 +11,28 @@ import {
 import { estimatedMonthHeight } from './utils';
 import ContainerWithStickyLabel from '../ContainerWithStickyLabel';
 
+const saveLastScrollIndex = (rowIndex) => {
+	const DEFAULT_SCROLL_ROW = 267;
+	if (rowIndex !== DEFAULT_SCROLL_ROW) {
+		window.lastScrolledRow = rowIndex;
+	}
+};
+
 class TimelineItemsClass extends React.PureComponent {
 	constructor(props) {
 		super(props);
 
-		this.updateStakeholders = throttle(this.updateStakeholders.bind(this), 200);
+		this.onRowsRendered = throttle(this.onRowsRendered.bind(this), 200);
 		this.handleScroll = throttle(this.handleScroll.bind(this), 100);
 		this.rowRenderer = this.rowRenderer.bind(this);
 		this.timelineEl = React.createRef();
 	}
 
-	updateStakeholders = ({ startIndex, stopIndex }) => {
+	onRowsRendered({ startIndex, stopIndex }) {
 		const data = this.props.timelineItems.slice(startIndex, stopIndex);
 		const protagonists = {};
+
+		saveLastScrollIndex(startIndex);
 
 		data.forEach((month) => {
 			month.days.forEach((day) => {
@@ -114,7 +123,7 @@ class TimelineItemsClass extends React.PureComponent {
 					rowHeight={({ index }) => estimatedMonthHeight(this.props.timelineItems[index])}
 					onScroll={this.handleScroll}
 					rowRenderer={this.rowRenderer}
-					onRowsRendered={this.updateStakeholders}
+					onRowsRendered={this.onRowsRendered}
 					rowCount={this.props.timelineItems.length}
 					scrollToIndex={this.props.activeRowIndex}
 					scrollToAlignment="start"
