@@ -34,7 +34,7 @@ const saveTour = (componentName) => {
 
 export const startTour = (componentName, callback) => {
 	const date = new Date();
-	const lastTourDate = localStorage.getItem(`hp-last-${componentName}-tour-visit`);
+	const lastTourDate = new Date(localStorage.getItem(`hp-last-${componentName}-tour-visit`));
 	if (!isDate(lastTourDate)) {
 		localStorage.removeItem(`hp-last-${componentName}-tour-visit`);
 	}

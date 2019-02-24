@@ -221,6 +221,14 @@ const onCloseTour = ({ setTourIsOpen }) => () => {
 	setTourIsOpen(false);
 };
 
+const DEFAULT_SCROLL_ROW = 267;
+
+const getDefaultActiveRowIndex = () => {
+	const { lastScrolledRow } = window;
+	if (lastScrolledRow && lastScrolledRow !== DEFAULT_SCROLL_ROW) return lastScrolledRow;
+	return DEFAULT_SCROLL_ROW;
+};
+
 export default compose(
 	withApollo,
 	withLoading,
@@ -235,7 +243,7 @@ export default compose(
 	withState('fetchingProtagonists', 'setFetchingProtagonists', true),
 	withState('initialProtagonistsFetched', 'setInitialProtagonistsFetched', false),
 	withState('hoveredElement', 'setHoveredElement', null),
-	withState('activeRowIndex', 'setActiveRowIndex', 267),
+	withState('activeRowIndex', 'setActiveRowIndex', getDefaultActiveRowIndex),
 	withState('activeYear', 'setActiveYear', '1993'),
 	withState('tourIsOpen', 'setTourIsOpen', false),
 	withHandlers({
@@ -264,6 +272,7 @@ export default compose(
 				|| (nextProps.activeRowIndex !== this.props.activeRowIndex)
 				|| (nextProps.activeYear !== this.props.activeYear)
 				|| (nextProps.tourIsOpen !== this.props.tourIsOpen)
+				|| (nextProps.activeRowIndex !== this.props.activeRowIndex)
 				|| (nextProps.hoveredElement !== this.props.hoveredElement);
 		},
 	}),
