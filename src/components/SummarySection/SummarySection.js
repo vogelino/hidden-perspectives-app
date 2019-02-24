@@ -10,12 +10,19 @@ const SummarySection = ({
 	items,
 	setPinnedElement,
 	setHoveredElement,
+	filteredTags,
+	tags,
 	...props
 }) => (
 	<Items id="summary-section">
 		{items.map((item) => {
 			const itemType = item.type === 'Event' ? 'event' : 'document';
 			const { hoveredElement, pinnedElement } = props;
+			const isIncluded = filteredTags.length === tags.length
+				|| filteredTags.length === 0
+				|| !!filteredTags.find((filteredTag) => item.commonTags
+					.find(({ id }) => filteredTag === id));
+			if (!isIncluded) return null;
 			return (
 				<Summary
 					key={item.id}
@@ -56,6 +63,10 @@ SummarySection.propTypes = {
 		summary: PropTypes.string,
 	})),
 	setHoveredElement: PropTypes.func,
+	filteredTags: PropTypes.arrayOf(PropTypes.string).isRequired,
+	tags: PropTypes.arrayOf(PropTypes.shape({
+		id: PropTypes.string.isRequired,
+	})).isRequired,
 	hoveredElement: PropTypes.oneOfType([
 		PropTypes.shape({
 			id: PropTypes.string.isRequired,
