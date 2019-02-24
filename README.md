@@ -6,6 +6,18 @@ $ git clone git@github.com:vogelino/hidden-perspectives-app.git
 $ cd hidden-perspectives-app
 ```
 
+## Managing node versions
+
+We recommend [**nvm**](https://github.com/creationix/nvm) for handeling node.js versions. You can install it using cURL:
+```sh
+curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
+```
+or Wget:
+```sh
+wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
+```
+[Read about how to use nvm here](https://github.com/creationix/nvm#usage). The currently used node version is defined in the `.nvmrc` file.
+
 ## Install the dependencies
 You have to install the project's dependencies using [Yarn](https://yarnpkg.com/en/).
 ```sh
@@ -50,6 +62,11 @@ Your app is ready to be deployed.
 ### `yarn start`
 
 Serves the build on [http://localhost:5000](http://localhost:5000).
+
+
+## Deployment
+
+We are using [**Now**](https://zeit.co/now) for deploying the app. If you would like to use Now as well you should duplicate `now.sample.json`. Rename the file to `now.json` and [configure it for your personal needs](https://zeit.co/blog/now-json).
 
 ***
 
@@ -128,6 +145,12 @@ Here is an overview of the main technologies/libraries used in this project.
     <tr>
       <td><a href="https://styled-components.com">Styled Components</a></td>
       <td>For styling the App</td>
+      <td>Free</td>
+      <td>MIT</td>
+    </tr>
+	<tr>
+      <td><a href="https://github.com/acdlite/recompose">Recompose</a></td>
+      <td>A React utility belt for function components and higher-order components</td>
       <td>Free</td>
       <td>MIT</td>
     </tr>
