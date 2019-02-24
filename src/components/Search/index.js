@@ -30,10 +30,21 @@ const parseStakeholders = getElementParser('stakeholder', 'stakeholderFullName')
 const contains = (container, containment) => container.toLowerCase()
 	.includes(containment.toLowerCase());
 
+let lastRequest;
+const requestLast = (request) => new Promise((resolve, reject) => {
+	lastRequest = request;
+	request
+		.then((res) => {
+			if (lastRequest !== request) return;
+			resolve(res);
+		})
+		.catch((err) => {
+			if (lastRequest !== request) return;
+			reject(err);
+		});
+});
 
-let lastRequestTime;
-const handleSearchResults = (props, value, requestTime) => ({ data }) => {
-	if (requestTime !== lastRequestTime) return;
+const handleSearchResults = (props, value) => ({ data }) => {
 	const { stopLoading, setSearchResults } = props;
 	const documents = parseDocuments(data.allDocuments);
 	const events = parseEvents(data.allEvents);
@@ -47,16 +58,15 @@ const handleSearchResults = (props, value, requestTime) => ({ data }) => {
 	stopLoading();
 	setSearchResults(searchResults);
 };
-const performQuery = debounce((client, props) => {
+
+const performQuery = debounce((props) => {
 	const { value } = document.getElementById('search-bar');
-	const requestTime = Date.now();
-	lastRequestTime = requestTime;
-	client.query({
+	requestLast(props.client.query({
 		query: getSearchQuery(10),
 		variables: { searchQuery: value },
-	})
-		.then(handleSearchResults(props, value, requestTime))
-		.catch(getErrorHandler(props, value, requestTime));
+	}))
+		.then(handleSearchResults(props, value))
+		.catch(getErrorHandler(props, value));
 }, 350, { leading: false, trailing: true });
 
 const withSearch = compose(
@@ -94,7 +104,6 @@ export default compose(
 				startLoading,
 				searchQuery,
 				allSearchResults,
-				client,
 			} = props;
 
 			setSearchQuery(newSearchQuery);
@@ -105,7 +114,7 @@ export default compose(
 			if (prevQueryAlreadyGaveNoResults) return;
 
 			startLoading();
-			performQuery(client, props);
+			performQuery(props);
 		},
 		onResultClick: ({ setSearchQuery, history }) => ({ id, type }) => {
 			setSearchQuery('');
@@ -133,11 +142,11 @@ export default compose(
 			const { activeResult, setActiveResult, searchResults } = props;
 			const indexOfCurrent = findIndex(propEq('id', activeResult), searchResults);
 			const newIndex = indexOfCurrent + (evt.code === 'ArrowDown' ? 1 : -1);
-			if (searchResults.length && newIndex > (searchResults.length - 1)) {
+			if (searchResults.length && (newIndex > (searchResults.length - 1) || !activeResult)) {
 				setActiveResult(searchResults[0].id);
 				return;
 			}
-			if (searchResults.length && (newIndex < 0)) {
+			if (searchResults.length && (newIndex < 0 || !activeResult)) {
 				setActiveResult(searchResults[searchResults.length - 1].id);
 				return;
 			}
