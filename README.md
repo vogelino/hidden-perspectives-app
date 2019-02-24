@@ -6,6 +6,18 @@ $ git clone git@github.com:vogelino/hidden-perspectives-app.git
 $ cd hidden-perspectives-app
 ```
 
+## Managing node versions
+
+We recommend [**nvm**](https://github.com/creationix/nvm) for handeling node.js versions. You can install it using cURL:
+```sh
+curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
+```
+or Wget:
+```sh
+wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
+```
+[Read about how to use nvm here](https://github.com/creationix/nvm#usage). The currently used node version is defined in the `.nvmrc` file.
+
 ## Install the dependencies
 You have to install the project's dependencies using [Yarn](https://yarnpkg.com/en/).
 ```sh
