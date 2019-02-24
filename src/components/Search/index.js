@@ -78,10 +78,21 @@ const parseStakeholders = getElementParser('stakeholder', 'stakeholderFullName')
 const contains = (container, containment) => container.toLowerCase()
 	.includes(containment.toLowerCase());
 
+let lastRequest;
+const requestLast = (request) => new Promise((resolve, reject) => {
+	lastRequest = request;
+	request
+		.then((res) => {
+			if (lastRequest !== request) return;
+			resolve(res);
+		})
+		.catch((err) => {
+			if (lastRequest !== request) return;
+			reject(err);
+		});
+});
 
-let lastRequestTime;
-const handleSearchResults = (props, value, requestTime) => ({ data }) => {
-	if (requestTime !== lastRequestTime) return;
+const handleSearchResults = (props, value) => ({ data }) => {
 	const { stopLoading, setSearchResults, setActiveResult } = props;
 	const documents = parseDocuments(data.allDocuments);
 	const events = parseEvents(data.allEvents);
@@ -96,16 +107,15 @@ const handleSearchResults = (props, value, requestTime) => ({ data }) => {
 	setSearchResults(searchResults);
 	setActiveResult(searchResults.length ? searchResults[0].id : undefined);
 };
+
 const performQuery = debounce((client, props) => {
 	const { value } = document.getElementById('search-bar');
-	const requestTime = Date.now();
-	lastRequestTime = requestTime;
-	client.query({
+	requestLast(client.query({
 		query: SEARCH_QUERY,
 		variables: { searchQuery: value },
-	})
-		.then(handleSearchResults(props, value, requestTime))
-		.catch(getErrorHandler(props, value, requestTime));
+	}))
+		.then(handleSearchResults(props, value))
+		.catch(getErrorHandler(props, value));
 }, 350, { leading: false, trailing: true });
 
 export default compose(
@@ -160,11 +170,9 @@ export default compose(
 		onTab: (props) => (evt) => {
 			evt.preventDefault();
 			const {
-				setActiveResult,
 				activeTab,
 				setActiveTab,
 				tabs,
-				allSearchResults,
 			} = props;
 			const indexOfCurrent = findIndex(propEq('key', activeTab), tabs);
 			const newIndex = indexOfCurrent + 1;
@@ -174,20 +182,17 @@ export default compose(
 			}
 			const newTab = tabs[newIndex].key;
 			setActiveTab(newTab);
-			if (newTab === 'all') return;
-			const filteredResults = allSearchResults.filter(propEq('type', newTab));
-			if (filteredResults.length) setActiveResult(filteredResults[0].id);
 		},
 		onArrow: (props) => (evt) => {
 			evt.preventDefault();
 			const { activeResult, setActiveResult, searchResults } = props;
 			const indexOfCurrent = findIndex(propEq('id', activeResult), searchResults);
 			const newIndex = indexOfCurrent + (evt.code === 'ArrowDown' ? 1 : -1);
-			if (searchResults.length && newIndex > (searchResults.length - 1)) {
+			if (searchResults.length && (newIndex > (searchResults.length - 1) || !activeResult)) {
 				setActiveResult(searchResults[0].id);
 				return;
 			}
-			if (searchResults.length && newIndex < 0) {
+			if (searchResults.length && (newIndex < 0 || !activeResult)) {
 				setActiveResult(searchResults[searchResults.length - 1].id);
 				return;
 			}
