@@ -1,10 +1,16 @@
-import { compose, withProps, lifecycle } from 'recompose';
+import {
+	compose,
+	withProps,
+	lifecycle,
+	onlyUpdateForPropTypes,
+} from 'recompose';
 import {
 	flatten,
 	sortWith,
 	ascend,
 	prop,
 } from 'ramda';
+import { withRouter } from 'react-router-dom';
 import { formatGraphcoolDocument, formatGraphcoolEvent } from '../../utils/graphcoolUtil';
 import { getHoveredSummary } from '../../utils/timelineUtil';
 import SummarySection from './SummarySection';
@@ -19,6 +25,7 @@ const scrollToCurrent = () => {
 };
 
 export default compose(
+	withRouter,
 	withProps(({ events, documents }) => ({
 		items: sortWith(
 			[ascend(prop('date')), ascend(prop('title'))],
@@ -47,5 +54,6 @@ export default compose(
 			}
 		},
 	}),
+	onlyUpdateForPropTypes,
 )(SummarySection);
 

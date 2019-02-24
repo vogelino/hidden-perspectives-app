@@ -1,15 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { findIndex } from 'ramda';
-import { Container, PinNotificationWrapper } from './styles';
+import { Container } from './styles';
 import Minimap from './Minimap';
 import { LoadingContainer } from '../LoadingIndicator/styles';
 import LoadingIndicator from '../LoadingIndicator';
 import TimelineItems from './TimelineItems';
 import Protagonists from './Protagonists';
-import PinNotification from '../PinNotification';
 import { MainTimelineLegend } from '../Legend';
-import { getShortenedString } from '../../utils/stringUtil';
 
 const parseTimelineItems = (years) => {
 	const months = years.reduce((acc, cur) => {
@@ -18,22 +16,6 @@ const parseTimelineItems = (years) => {
 	}, []);
 
 	return months;
-};
-
-const getPinNotification = (pinnedElement, setPinnedElement) => {
-	const maxTitleLength = 70;
-	const { itemType } = pinnedElement;
-	const title = itemType === 'stakeholder' ? pinnedElement.name : pinnedElement[`${itemType}Title`];
-	const displayTitle = `You pinned the ${itemType} “${getShortenedString(title, maxTitleLength)}”`;
-	const displayItemType = itemType === 'stakeholder' ? 'protagonist' : itemType;
-	return (
-		<PinNotification
-			title={displayTitle}
-			itemType={itemType}
-			closeCallback={() => setPinnedElement(null)}
-			path={`/${displayItemType}/context/${pinnedElement.id}`}
-		/>
-	);
 };
 
 const MainTimeline = ({
@@ -45,8 +27,6 @@ const MainTimeline = ({
 	fetchingProtagonists,
 	setHoveredElement,
 	hoveredElement,
-	setPinnedElement,
-	pinnedElement,
 	eventsCount,
 	documentsCount,
 	protagonistsCount,
@@ -57,10 +37,6 @@ const MainTimeline = ({
 	onTimelineScroll,
 }) => {
 	const items = parseTimelineItems(timelineItems);
-	const PinnedElementNotification = pinnedElement && getPinNotification(
-		pinnedElement,
-		setPinnedElement,
-	);
 
 	return (
 		<Container id="mainTimeline">
@@ -84,8 +60,6 @@ const MainTimeline = ({
 				items={bubbleChartItems}
 				hoveredElement={hoveredElement}
 				setHoveredElement={setHoveredElement}
-				pinnedElement={pinnedElement}
-				setPinnedElement={setPinnedElement}
 			/>
 			<MainTimelineLegend
 				isLoading={isLoading}
@@ -98,16 +72,11 @@ const MainTimeline = ({
 					timelineItems={items}
 					hoveredElement={hoveredElement}
 					setHoveredElement={setHoveredElement}
-					pinnedElement={pinnedElement}
-					setPinnedElement={setPinnedElement}
 					activeRowIndex={activeRowIndex}
 					setActiveYear={setActiveYear}
 					onTimelineScroll={onTimelineScroll}
 				/>
 			)}
-			<PinNotificationWrapper>
-				{PinnedElementNotification}
-			</PinNotificationWrapper>
 		</Container>
 	);
 };
@@ -123,9 +92,7 @@ MainTimeline.propTypes = {
 	protagonistsCount: PropTypes.number.isRequired,
 	bubbleChartItems: Protagonists.propTypes.items,
 	hoveredElement: TimelineItems.propTypes.hoveredElement,
-	pinnedElement: TimelineItems.propTypes.pinnedElement,
 	setHoveredElement: PropTypes.func,
-	setPinnedElement: PropTypes.func,
 	errors: PropTypes.arrayOf(PropTypes.string),
 	isLoading: PropTypes.bool,
 	fetchingProtagonists: PropTypes.bool,
@@ -138,9 +105,7 @@ MainTimeline.propTypes = {
 
 MainTimeline.defaultProps = {
 	hoveredElement: TimelineItems.defaultProps.hoveredElement,
-	pinnedElement: TimelineItems.defaultProps.pinnedElement,
 	setHoveredElement: () => {},
-	setPinnedElement: () => {},
 	timelineItems: TimelineItems.defaultProps.timelineItems,
 	bubbleChartItems: Protagonists.defaultProps.items,
 	minimapItems: [],

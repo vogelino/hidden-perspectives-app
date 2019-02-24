@@ -1,3 +1,4 @@
+import { withRouter } from 'react-router-dom';
 import TimelineElement from './TimelineElement';
 
-export default TimelineElement;
+export default withRouter(TimelineElement);
