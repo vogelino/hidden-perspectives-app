@@ -6,8 +6,8 @@ import { HttpLink } from 'apollo-link-http';
 import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
 import { setContext } from 'apollo-link-context';
-import { AUTH_TOKEN } from './constants';
 import { persistCache } from 'apollo-cache-persist';
+import { AUTH_TOKEN } from './constants';
 
 import { defaults, resolvers } from './resolvers';
 
