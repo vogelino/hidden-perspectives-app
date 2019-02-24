@@ -148,6 +148,12 @@ Here is an overview of the main technologies/libraries used in this project.
       <td>Free</td>
       <td>MIT</td>
     </tr>
+	<tr>
+      <td><a href="https://github.com/acdlite/recompose">Recompose</a></td>
+      <td>A React utility belt for function components and higher-order components</td>
+      <td>Free</td>
+      <td>MIT</td>
+    </tr>
   </tbody>
 </table>
 
