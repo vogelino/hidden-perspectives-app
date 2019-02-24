@@ -54,7 +54,7 @@ Your app is ready to be deployed.
 This project was bootstrapped using [Create React App](https://github.com/facebook/create-react-app) (CRA). CRA allows us to concentrate on business logic instead of spending lots of time on configuring the project build. Under the hood, CRA uses [Webpack](https://webpack.js.org/) to build and bundle the javascript code and any other type of imported files.
 
 ## React
-As indicated in the name "Create **React** App", CRA provides the foundation for create [React](https://reactjs.org/) apps. React is a front end library for building user interfaces. It focuses on the _View_ part in the _Model-View-Controller_ paradigm.
+As indicated in the name “Create **React** App”, CRA provides the foundation for create [React](https://reactjs.org/) apps. React is a front end library for building user interfaces. It focuses on the _View_ part in the _Model-View-Controller_ paradigm.
 
 ## React App Rewired
 We use [React App Rewired](https://github.com/timarney/react-app-rewired) to enhance the configuration not included by default by Create React App. We use it, for instance, to add compilation of [Styled Components](https://styled-components.com), which, as the name indicates, allows the creation of css-styled React component.
@@ -68,10 +68,10 @@ We use [Eslint](https://eslint.org/) to lint the javascript code, thus making su
 
 The Eslint configuration can be changed int the `.eslintrc` file. The file `.eslintignore` can be used to ignore files that aren't owned by the project or shouldn't be linted. 
 
-#### `npm run lint` or `yarn lint`
+#### `yarn lint`
 Runs eslint in the `src` folder and fixes all errors that can be fixed automatically.
 
-#### `npm run lint-latest` or `yarn lint-latest`
+#### `yarn lint-latest`
 Runs eslint on all javascript files that changed since the last commit. This script is executed as a git hook before each commit and push to prevent users to share code that doesn't respect the code style guidelines.
 
 ## Unit testing
