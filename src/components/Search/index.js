@@ -93,7 +93,7 @@ const requestLast = (request) => new Promise((resolve, reject) => {
 });
 
 const handleSearchResults = (props, value) => ({ data }) => {
-	const { stopLoading, setSearchResults, setActiveResult } = props;
+	const { stopLoading, setSearchResults } = props;
 	const documents = parseDocuments(data.allDocuments);
 	const events = parseEvents(data.allEvents);
 	const stakeholders = parseStakeholders(data.allStakeholders);
@@ -105,7 +105,6 @@ const handleSearchResults = (props, value) => ({ data }) => {
 
 	stopLoading();
 	setSearchResults(searchResults);
-	setActiveResult(searchResults.length ? searchResults[0].id : undefined);
 };
 
 const performQuery = debounce((client, props) => {
@@ -200,10 +199,10 @@ export default compose(
 		},
 		onEnter: (props) => (evt) => {
 			evt.preventDefault();
-			props.setSearchQuery('');
 			const { history, searchResults, activeResult } = props;
 			const activeResultObj = searchResults.find(propEq('id', activeResult));
 			if (!activeResultObj) return;
+			props.setSearchQuery('');
 			const { id, type } = activeResultObj;
 			const itemType = type === 'stakeholder' ? 'protagonist' : type;
 			history.push(`/${itemType}/context/${id}`);
