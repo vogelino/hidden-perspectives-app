@@ -264,6 +264,7 @@ const TimelineItem = onlyUpdateForKeys([
 					isCurrent={isCurrent}
 					hovered={hovered}
 					pinned={!hoveredElement && pinned}
+					isStack={showGroupIndicator}
 				/>
 			</Symbol>
 			<DateLabel
