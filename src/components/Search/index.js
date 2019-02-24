@@ -82,7 +82,7 @@ const contains = (container, containment) => container.toLowerCase()
 let lastRequestTime;
 const handleSearchResults = (props, value, requestTime) => ({ data }) => {
 	if (requestTime !== lastRequestTime) return;
-	const { stopLoading, setSearchResults, setActiveResult } = props;
+	const { stopLoading, setSearchResults } = props;
 	const documents = parseDocuments(data.allDocuments);
 	const events = parseEvents(data.allEvents);
 	const stakeholders = parseStakeholders(data.allStakeholders);
@@ -94,7 +94,6 @@ const handleSearchResults = (props, value, requestTime) => ({ data }) => {
 
 	stopLoading();
 	setSearchResults(searchResults);
-	setActiveResult(searchResults.length ? searchResults[0].id : undefined);
 };
 const performQuery = debounce((client, props) => {
 	const { value } = document.getElementById('search-bar');
@@ -164,11 +163,9 @@ export default compose(
 		onTab: (props) => (evt) => {
 			evt.preventDefault();
 			const {
-				setActiveResult,
 				activeTab,
 				setActiveTab,
 				tabs,
-				allSearchResults,
 			} = props;
 			const indexOfCurrent = findIndex(propEq('key', activeTab), tabs);
 			const newIndex = indexOfCurrent + 1;
@@ -178,9 +175,6 @@ export default compose(
 			}
 			const newTab = tabs[newIndex].key;
 			setActiveTab(newTab);
-			if (newTab === 'all') return;
-			const filteredResults = allSearchResults.filter(propEq('type', newTab));
-			if (filteredResults.length) setActiveResult(filteredResults[0].id);
 		},
 		onArrow: (props) => (evt) => {
 			evt.preventDefault();
@@ -191,7 +185,7 @@ export default compose(
 				setActiveResult(searchResults[0].id);
 				return;
 			}
-			if (searchResults.length && newIndex < 0) {
+			if (searchResults.length && (newIndex < 0)) {
 				setActiveResult(searchResults[searchResults.length - 1].id);
 				return;
 			}
@@ -199,13 +193,13 @@ export default compose(
 		},
 		onEnter: ({ searchQuery, setSearchQuery, ...props }) => (evt) => {
 			evt.preventDefault();
+			setSearchQuery('');
 			const { history, searchResults, activeResult } = props;
 			const activeResultObj = searchResults.find(propEq('id', activeResult));
 			if (!activeResultObj) {
 				history.push(`/search/${encodeURIComponent(searchQuery)}`);
 				return;
 			}
-			setSearchQuery('');
 			const { id, type } = activeResultObj;
 			const itemType = type === 'stakeholder' ? 'protagonist' : type;
 			history.push(`/${itemType}/context/${id}`);
