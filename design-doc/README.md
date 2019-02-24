@@ -10,29 +10,26 @@ Critical oral history adds to conventional methods by encouraging decision maker
 Glossary
 
 | Document   | Is part of an archive collected by John Tirman, Malcolm Byrne and Hussein Banai at the MIT Center for International Studies. The archive’s documents have been procured through Freedom of Information Act requests, and open source documents (published interviews, analyses, memoirs, etc.). There are scans of the original document as well as their transcripts. Furthermore, metadata have been added to each of the documents (title, summary, creation date, publication date, publisher, author, recipient, type, kind, …). Through automated named entity extraction we have added categories to the metadata, such as involved protagonists, events and locations. |
-| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Event       | Is part of a list of relevant events between 1975 and 2011 curated by John Tirman et al. as part of their preparation of several “critical oral history” conferences. The events metadata categories consist of title, summary, start and end date. Through automated named entity extraction we have added categories to the metadata, such as involved protagonists, events and locations.                                                                                                                                                                                                                                                                                   |
-| Protagonist | Is a person, institution, organisation, author, publisher defined by either the documents’ metadata or the named entity extraction of documents and events.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| Entity      | Is any of the above.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| Tags        | Consist of the some of the metadata of documents and events, such as type and kind. Furthermore, they consist of events, locations, protagonists which have been automatically extracted from documents and events.                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| Event       | Is part of a list of relevant events between 1975 and 2011 curated by John Tirman et al. as part of their preparation of several “critical oral history” conferences. The events metadata categories consist of title, summary, start and end date. Through automated named entity extraction we have added categories to the metadata, such as involved protagonists, events and locations. |
+| Protagonist | Is a person, institution, organisation, author, publisher defined by either the documents’ metadata or the named entity extraction of documents and events. |
+| Entity      | Is any of the above. |
+| Tags        | Consist of the some of the metadata of documents and events, such as type and kind. Furthermore, they consist of events, locations, protagonists which have been automatically extracted from documents and events. |
 
 ## Main Timeline
-![](./images/1.png)
+![](./images/main-timeline.png)
 
 
 The Main Timeline is the starting point of the digital archive. Besides the header it consists four sections which are interrelated. The header on top is including the logo, a search bar and the navigation. The page’s body displays a centered timeline, which has both the archive’s documents and events. The documents are located on the timeline’s left side and the events on its right side. A mini-map on the very left side of the screen enables an overview about the distribution of data over the whole timeline. The very right side of the screen displays all protagonists which are either linked to a document or to an event currently visible in the viewport.
 
 **Spacing Rules**
 
-The timeline is centered, the participant view and the minimap, are locked on the left and right side of the timeline.
+The timeline is centered, the Protagonist view and the minimap, are locked on the left and right side of the timeline.
 
 **Timeline**
 
 The Main Timeline is one of the web app’s central features. It contains all the provided data of documents and events in chronological order. On the right hand are the events, on the left the documents. Events and Documents are marked with a small icon.
 
-![](./images/2.png)
-
-
+![](./images/icons.png)
 
 
 **Order of Events and Documents**
@@ -40,11 +37,9 @@ The Main Timeline is one of the web app’s central features. It contains all th
 The timeline works like a list displaying older events and documents on top and more recent events at the bottom. While Events are sorted by starting date, Documents are sorted by their creation date. Years and months are dynamically displayed in a sticky bar on top, while the days are part of the scrolling timeline. The spacing between the days is always the same regardless of the actual time in between (the spacing between the 1st and the 2nd of a month will be the same as between the 1st and 20st if there is no data in between)
 
 
-
-
 ### Tooltip
 
-![](./images/3.png)
+![](./images/tooltip.png)
 
 
 By hovering a document or event, the title is highlighted and the Tooltip is shown.
@@ -76,7 +71,7 @@ You can pin highlighted nodes, by clicking on the name. This way you can take a 
 
 ### Minimap
 
-![](./images/4.png)
+![](./images/minimap.png)
 
 
 The minimap is shown on the left of the timeline. It’s meant for a quick preview for the user.
@@ -90,15 +85,15 @@ The marker indicates what time frame is currently visible on the viewport.
 - The year with the most events and documents define the maximum opacity the year with the less defines the minimum opacity.
 - The tooltip shows which year is selected and, the number on the right is the actual number of events and documents, that the year contains.
 
-### Participant Cluster
+### Protagonist Cluster
 
-Participants, that are related to the events or documents in the viewport are shown as circle cluster on the right of the Main Timeline screen. They stick to the timeline. The size depends on how often there are mentioned in the Viewport.
+Protagonists, that are related to the events or documents in the viewport are shown as circle cluster on the right of the Main Timeline screen. They stick to the timeline. The size depends on how often there are mentioned in the Viewport.
 
 **Pictures**
 
 If provided, a picture is used instead of the grey circle
 
-![](./images/5.png)
+![](./images/protagonists-bubble-chart.png)
 
 
 **Size Rules**
@@ -108,7 +103,7 @@ Should there be 2 or more with the same amount of connections, they can share th
 These rules are for both, Main Timeline and the Detail View.
 
 
-![View of related entities in the Detail View](./images/6.png)
+![View of related entities in the Detail View](./images/protagonists-cluster.png)
 
 
 ### Position Rules
@@ -133,7 +128,7 @@ United State Departement of State - **USDS**
 Tehran - **TE**
 
 ### Searchbar
-![](./images/7.png)
+![](./images/search-bar.png)
 
 
 The Searchbar works like a fulltext search.
@@ -142,7 +137,7 @@ All nodes are shown in a mixed way, but it is possible to sort them by type with
 After clicking on a result you reach the detail view of the node.
 
 ### Detail View
-![](./images/8.png)
+![](./images/detail-view.png)
 
 
 The Detail View can be reached by searching for a specific node or by clicking on a node (e.g. in the Main Timeline). It gives the user the ability to look deeper into the node, by seeing its related nodes, its metadata and, in case of documents, its transcript and original PDF file.
@@ -152,17 +147,13 @@ The Detail View can be reached by searching for a specific node or by clicking o
 
 To get to the different parts of the Detail View, we use a tab navigation, which is visible at any time in every Detail View.
 
-![](./images/9.png)
+![](./images/tab-system.png)
 
 
 There are 2 tabs in the Detail Views of events and protagonists and 4 tabs in the Detail View of documents. The tabs “Context” and “Metadata” appear in every Detail Views. Document have two additional tabs: “Transcript” and “Original”. Currently selected tabs are highlighted.
 
 
 ### Context
-
-
-![The circular timeline](./images/10.png)
-
 
 **Circular timeline**
 
@@ -178,19 +169,19 @@ Depending on which type of node is represented as the central node in the Detail
 | When the central node is an event      | Related documents are those that share at least one tag.<br><br>This is independent of the tag’s type. | Related events are those that share at least one tag.<br><br>This is independent of the tag’s type. | Related protagonists are those that are mentioned in the event                              |
 | When the central node is a protagonist | Related documents are those in which the protagonist is mentioned in.                                  | Related events are those in which the protagonist is mentioned in.                                  | Related protagonists are those that are also mentioned in the related documents and events. |
 
-
-
-![](./images/11.png)
+![](./images/cirular-timeline.png)
 
 
 **Summary section**
 
 On the right side of the Detail View is a scrollable list of the related nodes also visible in the circular timeline. This gives the users a textual overview including: the node’s title, its date, a short summary,  and the kind (event, speech, statement…).
 
+![](./images/summary-section.png)
+
 
 **Keywords**
 
-![](./images/11.png)
+![](./images/keywords.png)
 
 
 Keywords are collected for documents and events through entity extraction. They are used as filter and are shown in the down left corner of the Details View’s context tab.
@@ -205,7 +196,7 @@ If they want to see the whole connected nodes again, they can use the “toggle 
 In the metadata tab the user can see all the metadata provided, depending on the node type.
 
 
-![](./images/12.png)
+![](./images/metadata.png)
 
 
 **Document**
@@ -237,7 +228,7 @@ Three categories
 - Categorization
   - tags
 
-Participants
+Protagonists
 
 - Core information
   - title
@@ -254,7 +245,7 @@ Participants
 
 A tap only available for documents. Here can the transcript of a document be seen and edited if necessary.
 
-![](./images/13.png)
+![](./images/transcript.png)
 
 
 **Original**
