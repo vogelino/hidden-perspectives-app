@@ -46,13 +46,7 @@ const SearchResults = ({
 	setActiveResult,
 	setActiveTab,
 	onResultClick,
-}) => (searchResults.length === 0 && !isLoading ? (
-	<Container show={!!searchQuery}>
-		<Content>
-			<NoResults>{`No results found for “${searchQuery}”.`}</NoResults>
-		</Content>
-	</Container>
-) : (
+}) => (
 	<Container show={!!searchQuery}>
 		<Content>
 			<TabsContainer>
@@ -73,10 +67,13 @@ const SearchResults = ({
 					{'to toggle through categories'}
 				</TabHint>
 			</TabsContainer>
-			<Results>
-				{isLoading
+			{searchResults.length === 0 && !isLoading ? (
+				<NoResults>{`No results found for “${searchQuery}”.`}</NoResults>
+			) : (
+				<Results>
+					{isLoading
 						&& loadingResults.map((key) => <LoadingResult key={key}>&nbsp;</LoadingResult>)}
-				{!isLoading
+					{!isLoading
 						&& searchResults.map(({ id, title, type }) => (
 							<Result
 								key={id}
@@ -88,10 +85,11 @@ const SearchResults = ({
 								{getFormattedTitle(title, searchQuery)}
 							</Result>
 						))}
-			</Results>
+				</Results>
+			)}
 		</Content>
 	</Container>
-));
+);
 
 SearchResults.propTypes = {
 	searchQuery: PropTypes.string,
