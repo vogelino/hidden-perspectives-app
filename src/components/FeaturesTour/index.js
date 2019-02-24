@@ -47,10 +47,10 @@ const steps = {
 			content: 'The minimap allows you to quickly jump into a specific year and to get a sense of the content\'s density of each year.',
 		},
 		{
-			title: 'Hovering & pinning',
+			title: 'Hovering',
 			image: PinningImage,
 			selector: '.protagonist-8cca25bd0a19999a594d',
-			content: 'Hovering on an element highlights related elements. To preserve related elements highlighted, click on an element.',
+			content: 'Hovering on an element highlights related elements.',
 		},
 		{
 			title: 'Searching',

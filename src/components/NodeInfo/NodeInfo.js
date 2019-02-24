@@ -64,7 +64,7 @@ const NodeInfo = ({
 			{authors.length > 0 && (
 				<AuthorsContainer>
 					<Headline variant="h6">{authors.length === 1 ? 'Author' : 'Authors'}</Headline>
-					{authors.map(({ authorId, name }) => (
+					{authors.map(({ id: authorId, name }) => (
 						<Stakeholder
 							key={authorId}
 							id={authorId}
@@ -78,7 +78,7 @@ const NodeInfo = ({
 			{locations.length > 0 && (
 				<AuthorsContainer>
 					<Headline variant="h6">{locations.length === 1 ? 'Location' : 'Locations'}</Headline>
-					{locations.map(({ locationId, name }) => (
+					{locations.map(({ id: locationId, name }) => (
 						<Item
 							key={locationId}
 							id={locationId}

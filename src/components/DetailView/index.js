@@ -396,7 +396,6 @@ const getContextParser = (props, item, tags) => ({ data: { allEvents, allDocumen
 		setItemCounts,
 		setTourIsOpen,
 		setHoveredElement,
-		setPinnedElement,
 	} = props;
 
 	if (allDocuments.length === 0 && allEvents.length === 0) {
@@ -419,7 +418,6 @@ const getContextParser = (props, item, tags) => ({ data: { allEvents, allDocumen
 	setProtagonists(protagonists);
 
 	stopLoading();
-	setPinnedElement(null);
 	setHoveredElement(null);
 	startTour('circle-timeline', setTourIsOpen);
 };
