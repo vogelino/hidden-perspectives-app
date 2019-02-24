@@ -6,6 +6,18 @@ $ git clone git@github.com:vogelino/hidden-perspectives-app.git
 $ cd hidden-perspectives-app
 ```
 
+## Managing node versions
+
+We recommend [**nvm**](https://github.com/creationix/nvm) for handeling node.js versions. You can install it using cURL:
+```sh
+curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
+```
+or Wget:
+```sh
+wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
+```
+[Read about how to use nvm here](https://github.com/creationix/nvm#usage). The currently used node version is defined in the `.nvmrc` file.
+
 ## Install the dependencies
 You have to install the project's dependencies using [Yarn](https://yarnpkg.com/en/).
 ```sh
@@ -21,7 +33,7 @@ $ cp .env.test.local.sample .env.test.local && $EDITOR .env.test.local # For the
 And adapt the variables to match your setup
 
 ## Available scripts
-### `yarn start`
+### `yarn dev`
 
 Runs the app in development mode.<br>
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
@@ -47,6 +59,15 @@ The build is minified and the filenames include the hashes.<br>
 
 Your app is ready to be deployed.
 
+### `yarn start`
+
+Serves the build on [http://localhost:5000](http://localhost:5000).
+
+
+## Deployment
+
+We are using [**Now**](https://zeit.co/now) for deploying the app. If you would like to use Now as well you should duplicate `now.sample.json`. Rename the file to `now.json` and [configure it for your personal needs](https://zeit.co/blog/now-json).
+
 ***
 
 # Project Setup
@@ -54,7 +75,7 @@ Your app is ready to be deployed.
 This project was bootstrapped using [Create React App](https://github.com/facebook/create-react-app) (CRA). CRA allows us to concentrate on business logic instead of spending lots of time on configuring the project build. Under the hood, CRA uses [Webpack](https://webpack.js.org/) to build and bundle the javascript code and any other type of imported files.
 
 ## React
-As indicated in the name "Create **React** App", CRA provides the foundation for create [React](https://reactjs.org/) apps. React is a front end library for building user interfaces. It focuses on the _View_ part in the _Model-View-Controller_ paradigm.
+As indicated in the name “Create **React** App”, CRA provides the foundation for create [React](https://reactjs.org/) apps. React is a front end library for building user interfaces. It focuses on the _View_ part in the _Model-View-Controller_ paradigm.
 
 ## React App Rewired
 We use [React App Rewired](https://github.com/timarney/react-app-rewired) to enhance the configuration not included by default by Create React App. We use it, for instance, to add compilation of [Styled Components](https://styled-components.com), which, as the name indicates, allows the creation of css-styled React component.
@@ -68,10 +89,10 @@ We use [Eslint](https://eslint.org/) to lint the javascript code, thus making su
 
 The Eslint configuration can be changed int the `.eslintrc` file. The file `.eslintignore` can be used to ignore files that aren't owned by the project or shouldn't be linted. 
 
-#### `npm run lint` or `yarn lint`
+#### `yarn lint`
 Runs eslint in the `src` folder and fixes all errors that can be fixed automatically.
 
-#### `npm run lint-latest` or `yarn lint-latest`
+#### `yarn lint-latest`
 Runs eslint on all javascript files that changed since the last commit. This script is executed as a git hook before each commit and push to prevent users to share code that doesn't respect the code style guidelines.
 
 ## Unit testing
@@ -124,6 +145,12 @@ Here is an overview of the main technologies/libraries used in this project.
     <tr>
       <td><a href="https://styled-components.com">Styled Components</a></td>
       <td>For styling the App</td>
+      <td>Free</td>
+      <td>MIT</td>
+    </tr>
+	<tr>
+      <td><a href="https://github.com/acdlite/recompose">Recompose</a></td>
+      <td>A React utility belt for function components and higher-order components</td>
       <td>Free</td>
       <td>MIT</td>
     </tr>
