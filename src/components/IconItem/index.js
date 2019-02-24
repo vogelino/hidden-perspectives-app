@@ -8,6 +8,5 @@ export default compose(
 		'itemType',
 		'isCurrent',
 		'hovered',
-		'pinned',
 	]),
 )(IconItem);

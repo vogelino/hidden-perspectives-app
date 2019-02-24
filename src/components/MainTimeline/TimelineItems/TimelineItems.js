@@ -58,9 +58,7 @@ class TimelineItemsClass extends React.PureComponent {
 	}
 
 	rowRenderer({ index, key, style }) {
-		const {
-			hoveredElement, setHoveredElement, pinnedElement, setPinnedElement,
-		} = this.props;
+		const { hoveredElement, setHoveredElement } = this.props;
 		const data = this.props.timelineItems[index];
 		if (!data) return null;
 		const { days, dateUnitIndex } = data;
@@ -74,14 +72,6 @@ class TimelineItemsClass extends React.PureComponent {
 				hoveredElement={hoveredElement}
 				hovered={isHovered(item, hoveredElement, itemType)}
 				hoverHandler={setHoveredElement}
-				pinned={!hoveredElement && isHovered(item, pinnedElement, itemType)}
-				clickHandler={(pinEl) => {
-					if (pinnedElement && pinEl.id === pinnedElement.id) {
-						return setPinnedElement(null);
-					}
-					return setPinnedElement(pinEl);
-				}}
-				onBlurCallback={() => setPinnedElement(null)}
 			/>
 		);
 
@@ -175,19 +165,6 @@ TimelineItemsClass.propTypes = {
 		),
 	]),
 	setHoveredElement: PropTypes.func,
-	pinnedElement: PropTypes.oneOfType([
-		PropTypes.shape({
-			id: PropTypes.string.isRequired,
-			itemType: PropTypes.string.isRequired,
-		}),
-		PropTypes.arrayOf(
-			PropTypes.shape({
-				id: PropTypes.string.isRequired,
-				itemType: PropTypes.string.isRequired,
-			}),
-		),
-	]),
-	setPinnedElement: PropTypes.func,
 	setActiveRowIndex: PropTypes.func,
 	onTimelineScroll: PropTypes.func,
 	activeRowIndex: PropTypes.number,
@@ -197,10 +174,8 @@ TimelineItemsClass.propTypes = {
 
 TimelineItemsClass.defaultProps = {
 	hoveredElement: null,
-	pinnedElement: null,
 	timelineItems: [],
 	setHoveredElement: () => {},
-	setPinnedElement: () => {},
 	setActiveRowIndex: () => {},
 	onTimelineScroll: () => {},
 	activeRowIndex: 300,

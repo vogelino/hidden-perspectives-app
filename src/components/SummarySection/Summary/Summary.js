@@ -15,19 +15,15 @@ import {
 const classIf = (className, predicate) => (predicate && className) || '';
 const getSummaryClass = ({
 	current,
-	hoveredElement,
 	hovered,
-	pinned,
 }) => [
 	'summary-element',
 	classIf('hovered', hovered),
 	classIf('current', current),
-	classIf('pinned', !hoveredElement && pinned),
 ].join(' ');
 
 const Summary = ({
 	hoveredElement,
-	pinnedElement,
 	hoverHandler,
 	clickHandler,
 	setComponentRef,
@@ -39,13 +35,11 @@ const Summary = ({
 		itemType,
 		type,
 		hovered,
-		pinned,
 		date,
 		title,
 		summary,
 		thumbnailUrl,
 		authors,
-		onBlurCallback,
 	} = rest;
 
 	const current = id === item.id;
@@ -55,7 +49,6 @@ const Summary = ({
 			className={getSummaryClass({
 				id,
 				hovered,
-				pinned,
 				current,
 			})}
 			id={`summary-${id}`}
@@ -63,7 +56,6 @@ const Summary = ({
 			onMouseEnter={() => hoverHandler({ ...rest, itemType })}
 			onMouseLeave={() => hoverHandler(null)}
 			onClick={() => clickHandler({ ...rest, itemType })}
-			onBlur={onBlurCallback}
 			tabIndex={0}
 		>
 			<Tooltip
@@ -101,7 +93,6 @@ Summary.propTypes = {
 	type: PropTypes.string,
 	summary: PropTypes.string,
 	hovered: PropTypes.bool,
-	pinned: PropTypes.bool,
 	item: PropTypes.shape({
 		id: PropTypes.string.isRequired,
 	}).isRequired,
@@ -117,22 +108,9 @@ Summary.propTypes = {
 			}),
 		),
 	]),
-	pinnedElement: PropTypes.oneOfType([
-		PropTypes.shape({
-			id: PropTypes.string.isRequired,
-			itemType: PropTypes.string.isRequired,
-		}),
-		PropTypes.arrayOf(
-			PropTypes.shape({
-				id: PropTypes.string.isRequired,
-				itemType: PropTypes.string.isRequired,
-			}),
-		),
-	]),
 	date: PropTypes.string,
 	hoverHandler: PropTypes.func,
 	clickHandler: PropTypes.func,
-	onBlurCallback: PropTypes.func,
 	setComponentRef: PropTypes.func,
 	title: PropTypes.string,
 };
@@ -144,12 +122,9 @@ Summary.defaultProps = {
 	date: '',
 	summary: '',
 	hoveredElement: null,
-	pinnedElement: null,
 	hovered: false,
-	pinned: false,
 	hoverHandler: () => {},
 	clickHandler: () => {},
-	onBlurCallback: () => null,
 	setComponentRef: () => {},
 };
 

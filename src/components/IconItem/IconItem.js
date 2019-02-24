@@ -64,7 +64,6 @@ const IconItem = ({
 	hovered,
 	size,
 	theme,
-	pinned,
 	isStack,
 }) => {
 	const {
@@ -80,7 +79,7 @@ const IconItem = ({
 		fillColor = 'white';
 		strokeColor = 'white';
 	}
-	if (hovered || pinned) {
+	if (hovered) {
 		fillColor = primaryDark;
 		strokeColor = primaryDark;
 	}
@@ -106,7 +105,6 @@ IconItem.propTypes = {
 	theme: PropTypes.shape().isRequired,
 	isCurrent: PropTypes.bool,
 	hovered: PropTypes.bool,
-	pinned: PropTypes.bool,
 	isStack: PropTypes.bool,
 	size: PropTypes.number,
 };
@@ -114,7 +112,6 @@ IconItem.propTypes = {
 IconItem.defaultProps = {
 	isCurrent: false,
 	hovered: false,
-	pinned: false,
 	isStack: false,
 	size: 16,
 };

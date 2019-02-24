@@ -8,8 +8,6 @@ import { isHovered } from '../../utils/timelineUtil';
 import { formatHumanDateShort } from '../../utils/dateUtil';
 import { withoutReRender } from '../../utils/hocUtil';
 import IconItem from '../IconItem';
-import PinNotification from '../PinNotification';
-import { getShortenedString } from '../../utils/stringUtil';
 import {
 	CircleContainer,
 	CircleContent,
@@ -23,7 +21,6 @@ import {
 	EventLegendContainer,
 	DocumentLegendContainer,
 	BubbleChartContainer,
-	PinNotificationWrapper,
 } from './styles';
 
 const toRadian = (angle) => angle * (Math.PI / 180);
@@ -94,42 +91,6 @@ const isFilteredByTag = (filteredTags, tags) => (
 	&& filteredTags.length !== tags.length
 );
 
-
-const getPinNotification = (pinnedElement, setPinnedElement) => {
-	const maxTitleLength = 70;
-	const isGroupOfElements = pinnedElement && Array.isArray(pinnedElement);
-	const item = isGroupOfElements
-		? pinnedElement[0]
-		: pinnedElement;
-	const { itemType } = item;
-
-	let itemTitle;
-	if (isGroupOfElements && pinnedElement.length > 1) {
-		itemTitle = `a group of ${pinnedElement.length} ${itemType}s`;
-	} else if (isGroupOfElements && pinnedElement.length === 1) {
-		itemTitle = itemType === 'stakeholder' ? item.name : item[`${itemType}Title`];
-	} else {
-		itemTitle = itemType === 'stakeholder' ? item.name : item.title;
-	}
-
-	const displayItemType = itemType === 'stakeholder' ? 'protagonist' : itemType;
-	const formattedItemTitle = `You pinned the ${displayItemType} “${getShortenedString(itemTitle, maxTitleLength)}”`;
-	const formattedGroupTitle = `You pinned ${itemTitle}`;
-
-	return (
-		<PinNotification
-			title={
-				isGroupOfElements && pinnedElement.length > 1
-					? formattedGroupTitle
-					: formattedItemTitle
-			}
-			itemType={itemType}
-			closeCallback={() => setPinnedElement(null)}
-			path={`/${displayItemType}/context/${item.id}`}
-		/>
-	);
-};
-
 const Circles = withoutReRender(() => (
 	<>
 		<Circle
@@ -188,20 +149,16 @@ const Legends = onlyUpdateForKeys([
 const TimelineItem = onlyUpdateForKeys([
 	'hoveredElement',
 	'hovered',
-	'pinned',
 ])(({
 	x,
 	y,
 	docSize,
 	angle,
-	hoveredElement,
 	hovered,
-	pinned,
 	currentElement,
 	group,
 	itemType,
-	onClick,
-	onBlurCallback,
+	onClick = () => {},
 	events,
 	documents,
 	onMouseEnter,
@@ -231,15 +188,11 @@ const TimelineItem = onlyUpdateForKeys([
 			width={docSize}
 			height={docSize}
 			angle={angle}
-			className={[
-				hovered ? 'hovered' : '',
-				!hoveredElement && pinned ? 'pinned' : '',
-			].join(' ')}
+			className={hovered ? 'hovered' : ''}
 			onMouseEnter={onMouseEnter}
 			onMouseLeave={onMouseLeave}
 			{...CIRCLE_CENTER}
 			onClick={onClick}
-			onBlur={onBlurCallback}
 			current={currentElement}
 			tabIndex={0}
 		>
@@ -263,7 +216,6 @@ const TimelineItem = onlyUpdateForKeys([
 					itemType={itemType}
 					isCurrent={isCurrent}
 					hovered={hovered}
-					pinned={!hoveredElement && pinned}
 					isStack={showGroupIndicator}
 				/>
 			</Symbol>
@@ -286,8 +238,6 @@ const CircleTimeline = ({
 	isLoading,
 	hoveredElement,
 	setHoveredElement,
-	pinnedElement,
-	setPinnedElement,
 	itemCounts,
 	filteredTags,
 	tags,
@@ -300,7 +250,6 @@ const CircleTimeline = ({
 		const radius = itemType === 'document' ? RADIUS_INNER : RADIUS_OUTER;
 		const currentElement = group.find(({ id }) => id === item.id);
 		const hovered = isHovered(group, hoveredElement, itemType);
-		const pinned = isHovered(group, pinnedElement, itemType);
 
 		return (
 			<TimelineItem
@@ -313,26 +262,11 @@ const CircleTimeline = ({
 				group={group}
 				itemType={itemType}
 				hovered={hovered}
-				pinned={pinned}
 				currentElement={currentElement}
 				onMouseEnter={() => setHoveredElement(
 					filteredGroup.map((groupEl) => ({ ...groupEl, itemType })),
 				)}
 				onMouseLeave={() => setHoveredElement(null)}
-				onClick={() => {
-					if (
-						pinnedElement && (
-							pinnedElement.id === docId
-							|| (Array.isArray(pinnedElement) && pinnedElement.find((el) => el.id === docId))
-						)
-					) {
-						return setPinnedElement(null);
-					}
-					return setPinnedElement(
-						filteredGroup.map((groupEl) => ({ ...groupEl, itemType })),
-					);
-				}}
-				onBlurCallback={() => setPinnedElement(null)}
 				{...{
 					angle: angle || 0,
 					hoveredElement,
@@ -340,11 +274,6 @@ const CircleTimeline = ({
 			/>
 		);
 	};
-
-	const PinnedElementNotification = pinnedElement && getPinNotification(
-		pinnedElement,
-		setPinnedElement,
-	);
 
 	return (
 		<CircleContainer>
@@ -356,8 +285,8 @@ const CircleTimeline = ({
 				>
 					<Circles />
 					<Legends {...{ itemCounts, isLoading }} />
-					{documents.map(createDocumentMapper('document'))}
-					{events.map(createDocumentMapper('event'))}
+					{!isLoading && documents.map(createDocumentMapper('document'))}
+					{!isLoading && events.map(createDocumentMapper('event'))}
 				</CircleSvg>
 				<CentralElement {...item} />
 				<BubbleChartContainer>
@@ -368,15 +297,10 @@ const CircleTimeline = ({
 						activeId={item.id}
 						hoveredElement={hoveredElement}
 						setHoveredElement={setHoveredElement}
-						pinnedElement={pinnedElement}
-						setPinnedElement={setPinnedElement}
 						radialLayout
 					/>
 				</BubbleChartContainer>
 			</CircleContent>
-			<PinNotificationWrapper>
-				{PinnedElementNotification}
-			</PinNotificationWrapper>
 		</CircleContainer>
 	);
 };
@@ -423,19 +347,6 @@ CircleTimeline.propTypes = {
 		),
 	]),
 	setHoveredElement: PropTypes.func,
-	pinnedElement: PropTypes.oneOfType([
-		PropTypes.shape({
-			id: PropTypes.string.isRequired,
-			itemType: PropTypes.string.isRequired,
-		}),
-		PropTypes.arrayOf(
-			PropTypes.shape({
-				id: PropTypes.string.isRequired,
-				itemType: PropTypes.string.isRequired,
-			}),
-		),
-	]),
-	setPinnedElement: PropTypes.func,
 	itemCounts: PropTypes.shape({
 		eventsCount: PropTypes.number.isRequired,
 		documentsCount: PropTypes.number.isRequired,
@@ -454,9 +365,7 @@ CircleTimeline.defaultProps = {
 	events: [],
 	protagonists: {},
 	hoveredElement: null,
-	pinnedElement: null,
 	setHoveredElement: () => {},
-	setPinnedElement: () => {},
 	isLoading: true,
 };
 

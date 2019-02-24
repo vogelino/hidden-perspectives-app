@@ -13,12 +13,11 @@ const TimelineElement = ({
 	itemType,
 	id,
 	hovered,
-	pinned,
 	path,
 	title,
 	hoverHandler,
 	clickHandler,
-	onBlurCallback,
+	history,
 	...itemProps
 }) => (
 	<Container>
@@ -26,14 +25,12 @@ const TimelineElement = ({
 			className={[
 				'timeline-event',
 				hovered ? 'hovered' : '',
-				pinned ? 'pinned' : '',
 			].join(' ')}
 			data-id={id}
 			right={itemType === 'document'}
 			onMouseEnter={() => hoverHandler({ id, itemType, ...itemProps })}
 			onMouseLeave={() => hoverHandler(null)}
-			onClick={() => clickHandler({ id, itemType, ...itemProps })}
-			onBlur={onBlurCallback}
+			onClick={() => history.push(`/${itemType === 'stakeholder' ? 'protagonist' : itemType}/context/${id}`)}
 			tabIndex={0}
 		>
 			<IconContainer>
@@ -60,13 +57,9 @@ TimelineElement.propTypes = {
 	hoverHandler: PropTypes.func.isRequired,
 	clickHandler: PropTypes.func.isRequired,
 	hovered: PropTypes.bool.isRequired,
-	pinned: PropTypes.bool.isRequired,
-	onBlurCallback: PropTypes.func,
-};
-
-
-TimelineElement.defaultProps = {
-	onBlurCallback: () => null,
+	history: PropTypes.shape({
+		push: PropTypes.func.isRequired,
+	}).isRequired,
 };
 
 export default TimelineElement;
