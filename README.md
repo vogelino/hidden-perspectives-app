@@ -63,6 +63,11 @@ Your app is ready to be deployed.
 
 Serves the build on [http://localhost:5000](http://localhost:5000).
 
+
+## Deployment
+
+We are using [**Now**](https://zeit.co/now) for deploying the app. If you would like to use Now as well you should duplicate `now.sample.json`. Rename the file to `now.json` and [configure it for your personal needs](https://zeit.co/blog/now-json).
+
 ***
 
 # Project Setup
