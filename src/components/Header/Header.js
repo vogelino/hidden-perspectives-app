@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Redirect } from 'react-router-dom';
 import UserInfo from './UserInfo';
 import Search from '../Search';
 import {
@@ -14,7 +15,10 @@ const isProduction = process && process.env && process.env.NODE_ENV === 'product
 
 const Header = ({
 	isAuthenticated,
-}) => (
+	browserIsNotSupported,
+}) => (browserIsNotSupported ? (
+	<Redirect to="/unsupported-browser" />
+) : (
 	<HeaderContainer>
 		<Logo to="/">Hidden Perspectives</Logo>
 		<Search />
@@ -28,14 +32,16 @@ const Header = ({
 			) : <UserInfo />
 		)}
 	</HeaderContainer>
-);
+));
 
 Header.propTypes = {
 	isAuthenticated: PropTypes.func,
+	browserIsNotSupported: PropTypes.bool,
 };
 
 Header.defaultProps = {
 	isAuthenticated: () => false,
+	browserIsNotSupported: true,
 };
 
 export default Header;

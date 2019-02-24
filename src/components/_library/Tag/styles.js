@@ -5,9 +5,8 @@ const getColor = ({
 	theme,
 	isActive,
 	hovered,
-	pinned,
 }) => {
-	if (pinned || hovered) return theme.primaryDark;
+	if (hovered) return theme.primaryDark;
 	if (isActive) return 'white';
 	return theme.gray800;
 };
@@ -16,9 +15,8 @@ const getBackground = ({
 	theme,
 	isActive,
 	hovered,
-	pinned,
 }) => {
-	if (pinned || hovered) return theme.primaryLight;
+	if (hovered) return theme.primaryLight;
 	if (isActive) return theme.primary;
 	return theme.gray200;
 };

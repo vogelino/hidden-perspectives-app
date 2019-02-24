@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import Headline from '../_library/Headline';
-import Button from '../_library/Button';
 
 export const Container = styled.div`
 	position: absolute;
@@ -55,10 +54,6 @@ export const Summary = styled.p`
 	line-height: 1.125rem;
 	font-weight: normal;
 	color: ${({ theme }) => theme.gray900};
-`;
-
-export const ExploreButton = styled(Button)`
-	margin-top: 0.5rem;
 `;
 
 export const AuthorsContainer = styled.div`
