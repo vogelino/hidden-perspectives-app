@@ -31,7 +31,7 @@ const Tooltip = ({
 	<Container id={`tooltip-${id}`} position={position} {...rest}>
 		<Content>
 			{!isLoading && thumbnailUrl && (
-				<PdfThumbnail file={thumbnailUrl} />
+				<PdfThumbnail file={thumbnailUrl} id={id} />
 			)}
 			{!noSubtitle && <Subtitle variant="h6">{isLoading ? 'Loading...' : subtitle}</Subtitle>}
 			{!isLoading && <Summary>{getShortenedString(summary, SUMMARY_MAX_LEN)}</Summary>}

@@ -1,7 +1,8 @@
 import styled from 'styled-components';
+import { NavLink } from 'react-router-dom';
 import { prop } from 'ramda';
 
-export const Container = styled.div`
+export const Container = styled(NavLink)`
 	float: left;
 	border-radius: 4px;
 	border: 1px solid ${({ theme }) => theme.gray200};
@@ -9,5 +10,4 @@ export const Container = styled.div`
 	width: ${prop('width')}px;
 	min-height: ${prop('width')}px;
 	overflow: hidden;
-	pointer-events: none;
 `;
