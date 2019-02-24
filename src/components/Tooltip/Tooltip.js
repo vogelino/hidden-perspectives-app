@@ -10,7 +10,6 @@ import {
 	Content,
 	Subtitle,
 	Summary,
-	ExploreButton,
 	AuthorsContainer,
 } from './styles';
 
@@ -49,15 +48,6 @@ const Tooltip = ({
 						</Stakeholder>
 					))}
 				</AuthorsContainer>
-			)}
-			{withLink && path && (
-				<ExploreButton
-					to={path}
-					primary
-					onClick={(evt) => evt.stopPropagation()}
-				>
-					{`Explore ${itemTypeName}`}
-				</ExploreButton>
 			)}
 		</Content>
 	</Container>

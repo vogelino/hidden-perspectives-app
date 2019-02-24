@@ -27,7 +27,6 @@ export default compose(
 	shouldUpdate((props, nextProps) => (
 		props.data.id !== nextProps.data.id
 		|| props.hovered !== nextProps.hovered
-		|| props.pinned !== nextProps.pinned
 		|| props.textNodeWidth !== nextProps.textNodeWidth
 		|| props.image !== nextProps.image
 	)),
