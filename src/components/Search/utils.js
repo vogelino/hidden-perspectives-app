@@ -155,7 +155,9 @@ export const withSearch = compose(
 			const { history, searchResults, activeResult } = props;
 			const activeResultObj = searchResults.find(propEq('id', activeResult));
 			if (!activeResultObj) {
-				history.push(`/search/${encodeURIComponent(searchQuery)}`);
+				if (searchQuery) {
+					history.push(`/search/${encodeURIComponent(searchQuery)}`);
+				}
 				return;
 			}
 			const { id, type } = activeResultObj;

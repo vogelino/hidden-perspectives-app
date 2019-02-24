@@ -33,6 +33,20 @@ const performQuery = debounce((props) => {
 		.catch(getErrorHandler(props, value));
 }, 350, { leading: false, trailing: true });
 
+const getOnKeyUpHandler = ({
+	onTab,
+	onArrow,
+	onEnter,
+	onEscape,
+}) => function onKeyUpHandler(evt) {
+	if (!document.querySelector('#search-bar:focus')) return undefined;
+	if (evt.code === 'Tab') return onTab(evt);
+	if (evt.code === 'Enter') return onEnter(evt);
+	if (evt.code === 'Escape') return onEscape(evt);
+	if (evt.code === 'ArrowDown' || evt.code === 'ArrowUp') return onArrow(evt);
+	return undefined;
+};
+
 export default compose(
 	withApollo,
 	withSearch,
@@ -55,23 +69,14 @@ export default compose(
 			startLoading();
 			performQuery(props);
 		},
+		onKeyUp: getOnKeyUpHandler,
 	}),
 	lifecycle({
 		componentDidMount() {
-			const {
-				onTab,
-				onArrow,
-				onEnter,
-				onEscape,
-			} = this.props;
-			document.addEventListener('keydown', (evt) => {
-				if (!document.querySelector('#search-bar:focus')) return undefined;
-				if (evt.code === 'Tab') return onTab(evt);
-				if (evt.code === 'Enter') return onEnter(evt);
-				if (evt.code === 'Escape') return onEscape(evt);
-				if (evt.code === 'ArrowDown' || evt.code === 'ArrowUp') return onArrow(evt);
-				return undefined;
-			});
+			document.addEventListener('keydown', this.props.onKeyUp);
+		},
+		componentWillUnmount() {
+			document.removeEventListener('keydown', this.props.onKeyUp);
 		},
 	}),
 )(Search);
