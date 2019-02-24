@@ -9,6 +9,8 @@ import { Items } from './styles';
 const SummarySection = ({
 	items,
 	setHoveredElement,
+	filteredTags,
+	tags,
 	history,
 	...props
 }) => (
@@ -16,6 +18,11 @@ const SummarySection = ({
 		{items.map((item) => {
 			const itemType = item.type === 'Event' ? 'event' : 'document';
 			const { hoveredElement } = props;
+			const isIncluded = filteredTags.length === tags.length
+				|| filteredTags.length === 0
+				|| !!filteredTags.find((filteredTag) => item.commonTags
+					.find(({ id }) => filteredTag === id));
+			if (!isIncluded) return null;
 			return (
 				<Summary
 					key={item.id}
@@ -44,6 +51,10 @@ SummarySection.propTypes = {
 		summary: PropTypes.string,
 	})),
 	setHoveredElement: PropTypes.func,
+	filteredTags: PropTypes.arrayOf(PropTypes.string).isRequired,
+	tags: PropTypes.arrayOf(PropTypes.shape({
+		id: PropTypes.string.isRequired,
+	})).isRequired,
 	hoveredElement: PropTypes.oneOfType([
 		PropTypes.shape({
 			id: PropTypes.string.isRequired,

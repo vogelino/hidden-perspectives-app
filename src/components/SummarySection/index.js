@@ -1,4 +1,9 @@
-import { compose, withProps, lifecycle } from 'recompose';
+import {
+	compose,
+	withProps,
+	lifecycle,
+	onlyUpdateForPropTypes,
+} from 'recompose';
 import {
 	flatten,
 	sortWith,
@@ -49,5 +54,6 @@ export default compose(
 			}
 		},
 	}),
+	onlyUpdateForPropTypes,
 )(SummarySection);
 
