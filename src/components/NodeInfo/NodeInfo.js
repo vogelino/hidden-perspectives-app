@@ -35,6 +35,7 @@ const NodeInfo = ({
 	original,
 	authors,
 	locations,
+	id,
 }) => {
 	const isLonger = description && isDescriptionLonger(description);
 	const clickHandler = isLonger ? () => toggleDescriptionExpansion(!descriptionExpanded) : () => {};
@@ -42,7 +43,7 @@ const NodeInfo = ({
 		<Container>
 			<TitleContainer>
 				{image && <StakholderImage image={image} />}
-				{original && <PdfThumbnail file={original} />}
+				{original && <PdfThumbnail file={original} id={id} />}
 				{subtitle && (
 					<Subtitle variant="h6">{subtitle}</Subtitle>
 				)}
@@ -63,11 +64,11 @@ const NodeInfo = ({
 			{authors.length > 0 && (
 				<AuthorsContainer>
 					<Headline variant="h6">{authors.length === 1 ? 'Author' : 'Authors'}</Headline>
-					{authors.map(({ id, name }) => (
+					{authors.map(({ authorId, name }) => (
 						<Stakeholder
-							key={id}
-							id={id}
-							to={`/protagonist/context/${id}`}
+							key={authorId}
+							id={authorId}
+							to={`/protagonist/context/${authorId}`}
 						>
 							{name}
 						</Stakeholder>
@@ -77,11 +78,11 @@ const NodeInfo = ({
 			{locations.length > 0 && (
 				<AuthorsContainer>
 					<Headline variant="h6">{locations.length === 1 ? 'Location' : 'Locations'}</Headline>
-					{locations.map(({ id, name }) => (
+					{locations.map(({ locationId, name }) => (
 						<Item
-							key={id}
-							id={id}
-							to={`/location/context/${id}`}
+							key={locationId}
+							id={locationId}
+							to={`/location/context/${locationId}`}
 							itemType="location"
 							nowrap
 						>
@@ -110,6 +111,7 @@ NodeInfo.propTypes = {
 		id: PropTypes.string.isRequired,
 		name: PropTypes.string.isRequired,
 	})),
+	id: PropTypes.string,
 };
 
 NodeInfo.defaultProps = {
@@ -120,6 +122,7 @@ NodeInfo.defaultProps = {
 	original: undefined,
 	authors: [],
 	locations: [],
+	id: '',
 };
 
 export default NodeInfo;

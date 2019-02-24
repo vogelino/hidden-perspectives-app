@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Circle, Pdf, Link } from './styles';
+import { Circle, Pdf } from './styles';
 
 const CentralElement = ({
 	image,
@@ -10,7 +10,7 @@ const CentralElement = ({
 	id,
 }) => {
 	if (image) return <Circle style={{ backgroundImage: `url("${image}")` }} />;
-	if (original) return <Link to={`/document/original/${id}`}><Circle><Pdf file={original} width={160} /></Circle></Link>;
+	if (original) return <Circle><Pdf file={original} width={160} id={id} /></Circle>;
 	if (itemType === 'event') return <Circle>{formattedDate.split(' ').map((string) => <div key={string}>{string}</div>)}</Circle>;
 	return <Circle />;
 };
@@ -28,7 +28,7 @@ CentralElement.defaultProps = {
 	original: undefined,
 	formattedDate: undefined,
 	itemType: undefined,
-	id: undefined,
+	id: '',
 };
 
 export default CentralElement;

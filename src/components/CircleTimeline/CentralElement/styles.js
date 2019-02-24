@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { NavLink } from 'react-router-dom';
 import PdfThumbnail from '../../PdfThumbnail';
 
 export const Pdf = styled(PdfThumbnail)`
@@ -43,7 +42,4 @@ export const Circle = styled.div`
 		transform: translate(-50%, -50%) scale(.8);
 		width: 10rem;
 	}
-`;
-
-export const Link = styled(NavLink)`
 `;
