@@ -25,12 +25,6 @@
     "storybook": "start-storybook -p 9009 -s public",
     "build-storybook": "build-storybook -s public"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "yarn run quality-check",
-      "pre-push": "yarn run quality-check"
-    }
-  },
   "browserslist": [
     ">0.2%",
     "not dead",
@@ -99,7 +93,6 @@
     "eslint-plugin-jest": "^21.26.0",
     "eslint-plugin-jsx-a11y": "^6.1.2",
     "eslint-plugin-react": "^7.11.1",
-    "husky": "^1.1.2",
     "prettier": "^1.16.3",
     "react-app-rewired": "^1.6.2",
     "sinon": "^7.1.0"
