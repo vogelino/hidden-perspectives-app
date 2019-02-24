@@ -16,7 +16,6 @@ const TimelineElement = ({
 	path,
 	title,
 	hoverHandler,
-	clickHandler,
 	history,
 	...itemProps
 }) => (
@@ -55,7 +54,6 @@ TimelineElement.propTypes = {
 	path: PropTypes.string.isRequired,
 	title: PropTypes.string.isRequired,
 	hoverHandler: PropTypes.func.isRequired,
-	clickHandler: PropTypes.func.isRequired,
 	hovered: PropTypes.bool.isRequired,
 	history: PropTypes.shape({
 		push: PropTypes.func.isRequired,
