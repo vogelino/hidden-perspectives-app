@@ -5,8 +5,13 @@ import { Container } from './styles';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
-const PdfThumbnail = ({ file, width, className }) => (
-	<Container className={className} width={width}>
+const PdfThumbnail = ({
+	file,
+	width,
+	className,
+	id,
+}) => (
+	<Container className={className} width={width} to={`/document/original/${id}`}>
 		<Document
 			file={file}
 			loading=" "
@@ -31,11 +36,13 @@ PdfThumbnail.propTypes = {
 	file: PropTypes.string.isRequired,
 	className: PropTypes.string,
 	width: PropTypes.number,
+	id: PropTypes.number,
 };
 
 PdfThumbnail.defaultProps = {
 	className: '',
 	width: 64,
+	id: '',
 };
 
 export default PdfThumbnail;

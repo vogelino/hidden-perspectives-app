@@ -6,13 +6,14 @@ const SearchField = ({
 	searchQuery,
 	onSearch,
 }) => (
-	<Container>
+	<Container autocomplete="off" onSubmit={(evt) => evt.preventDefault()}>
 		<Field
 			type="text"
 			value={searchQuery}
 			placeholder="Search for documents, events, locations or protagonists"
 			onChange={(evt) => onSearch(evt.target.value)}
 			id="search-bar"
+			autocomplete="false"
 		/>
 		{searchQuery && (
 			<ClearButton

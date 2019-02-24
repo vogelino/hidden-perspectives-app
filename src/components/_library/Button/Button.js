@@ -1,20 +1,31 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Link } from './styles';
+import { Button } from './styles';
 
 const CustomButton = ({
 	to,
 	children,
 	primary,
-	...rest
+	className,
+	history,
+	onClick,
 }) => (to ? (
-	<Link to={to} {...rest}>
-		<Button {...rest} variant={primary ? 'primary' : 'light'}>
-			{children}
-		</Button>
-	</Link>
+	<Button
+		variant={primary ? 'primary' : 'light'}
+		className={className}
+		onClick={(evt) => {
+			history.push(to);
+			if (onClick) onClick(evt);
+		}}
+	>
+		{children}
+	</Button>
 ) : (
-	<Button {...rest} variant={primary ? 'primary' : 'light'}>
+	<Button
+		variant={primary ? 'primary' : 'light'}
+		className={className}
+		onClick={onClick}
+	>
 		{children}
 	</Button>
 ));
@@ -27,11 +38,18 @@ CustomButton.propTypes = {
 		PropTypes.element,
 		PropTypes.node,
 	]).isRequired,
+	className: PropTypes.string,
+	history: PropTypes.shape({
+		push: PropTypes.func.isRequired,
+	}).isRequired,
+	onClick: PropTypes.func,
 };
 
 CustomButton.defaultProps = {
 	to: undefined,
 	primary: false,
+	className: '',
+	onClick: undefined,
 };
 
 export default CustomButton;

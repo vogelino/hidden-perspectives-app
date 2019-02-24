@@ -56,14 +56,12 @@ export const EventTitleContainer = styled.div`
 		${({ right }) => (right && 'font-size: 14px;')}
 	}
 
-	&.pinned ${IconContainer},
 	&.hovered ${IconContainer} {
 		color: ${({ theme }) => theme.primaryDark};
 		background: ${({ theme }) => theme.primaryLight};
 	}
 
-	&.hovered ${EventTitle},
-	&.pinned ${EventTitle} {
+	&.hovered ${EventTitle} {
 		color: ${({ theme }) => theme.primaryDark};
 		background: ${({ theme }) => theme.primaryLight};
 	}

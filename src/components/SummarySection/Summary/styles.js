@@ -43,7 +43,6 @@ export const Item = styled.div`
 		color: white;
 	}
 
-	&.pinned ${Title},
 	&.hovered ${Title} {
 		background: ${({ theme }) => theme.primaryLight};
 		color: ${({ theme }) => theme.primaryDark};

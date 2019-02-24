@@ -22,7 +22,10 @@ const NodeHeader = ({
 }) => (
 	<Container isStatic={isStatic}>
 		<TabsContainer>
-			<BackButton to="/" className="tour-back-to-timeline">←</BackButton>
+			<BackButton to="/" className="tour-back-to-timeline">
+				<span>←</span>
+				{' Back to the vertical timeline'}
+			</BackButton>
 			<Tabs className="tour-menu-tabs">
 				{tabs.map(({ label, url }) => (
 					<Tab key={label} to={url}>{label}</Tab>

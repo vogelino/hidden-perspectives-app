@@ -6,28 +6,19 @@ import Bubble from '../Bubble';
 const Bubbles = ({
 	bubbleLayoutItems,
 	hoveredElement,
-	pinnedElement,
 	images,
-	setPinnedElement,
 	activeElementId,
 	...rest
 }) => {
 	const bubbles = bubbleLayoutItems.reduce((acc, bubbleData) => {
 		const hovered = isHovered(bubbleData.data, hoveredElement, 'stakeholder');
-		const pinned = isHovered(bubbleData.data, pinnedElement, 'stakeholder');
 		const bubble = (
 			<Bubble
 				key={`bubble-link-${bubbleData.data.name}`}
 				hovered={hovered}
-				pinned={!hoveredElement && pinned}
 				isActive={activeElementId === bubbleData.data.id}
 				image={images.find(({ id }) => id === bubbleData.data.id)}
-				clickHandler={(pinEl) => {
-					if (pinnedElement && pinnedElement.id === pinEl.id) return setPinnedElement(null);
-					return setPinnedElement(pinEl);
-				}}
 				hoveredElement={hoveredElement}
-				pinnedElement={pinnedElement}
 				{...bubbleData}
 				{...rest}
 			/>
@@ -52,7 +43,6 @@ Bubbles.propTypes = {
 	isLoading: PropTypes.bool,
 	diameter: PropTypes.number,
 	setHoveredElement: PropTypes.func,
-	setPinnedElement: PropTypes.func,
 	activeElementId: PropTypes.string,
 	bubbleLayoutItems: PropTypes.arrayOf(
 		PropTypes.shape({
@@ -78,18 +68,6 @@ Bubbles.propTypes = {
 			}),
 		),
 	]),
-	pinnedElement: PropTypes.oneOfType([
-		PropTypes.shape({
-			id: PropTypes.string.isRequired,
-			itemType: PropTypes.string.isRequired,
-		}),
-		PropTypes.arrayOf(
-			PropTypes.shape({
-				id: PropTypes.string.isRequired,
-				itemType: PropTypes.string.isRequired,
-			}),
-		),
-	]),
 };
 
 Bubbles.defaultProps = {
@@ -98,10 +76,8 @@ Bubbles.defaultProps = {
 	bubbleLayoutItems: [],
 	images: [],
 	hoveredElement: null,
-	pinnedElement: null,
 	activeElementId: '',
 	setHoveredElement: () => { },
-	setPinnedElement: () => { },
 };
 
 

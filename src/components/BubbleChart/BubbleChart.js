@@ -26,7 +26,6 @@ BubbleChart.propTypes = {
 	isLoading: PropTypes.bool,
 	diameter: PropTypes.number,
 	setHoveredElement: PropTypes.func,
-	setPinnedElement: PropTypes.func,
 	activeElementId: PropTypes.string,
 	bubbleLayoutItems: PropTypes.arrayOf(
 		PropTypes.shape({
@@ -52,18 +51,6 @@ BubbleChart.propTypes = {
 			}),
 		),
 	]),
-	pinnedElement: PropTypes.oneOfType([
-		PropTypes.shape({
-			id: PropTypes.string.isRequired,
-			itemType: PropTypes.string.isRequired,
-		}),
-		PropTypes.arrayOf(
-			PropTypes.shape({
-				id: PropTypes.string.isRequired,
-				itemType: PropTypes.string.isRequired,
-			}),
-		),
-	]),
 };
 
 BubbleChart.defaultProps = {
@@ -72,10 +59,8 @@ BubbleChart.defaultProps = {
 	bubbleLayoutItems: [],
 	images: [],
 	hoveredElement: null,
-	pinnedElement: null,
 	activeElementId: '',
 	setHoveredElement: () => {},
-	setPinnedElement: () => {},
 };
 
 export default BubbleChart;
