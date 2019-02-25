@@ -39,6 +39,7 @@ const TimelineElement = ({
 				id={id}
 				itemType={itemType}
 				position={itemType === 'document' ? 'right' : 'left'}
+				noTitle
 			>
 				<EventTitle>
 					{title}

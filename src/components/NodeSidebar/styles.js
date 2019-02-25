@@ -7,7 +7,6 @@ export const Sidebar = styled.aside`
 	position: relative;
 	z-index: 1;
 	overflow: auto;
-	margin-top: 2.5rem;
 `;
 
 export const LeftSidebarContent = styled.div`

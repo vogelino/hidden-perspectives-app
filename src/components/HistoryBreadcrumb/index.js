@@ -79,10 +79,14 @@ const getAdditionalInfo = async (pathname, client) => {
 		variables: { id },
 	});
 	const title = getTitleFromResponse(titleReq, itemType);
+	const normalizedItemType = itemType === 'protagonist' ? 'stakeholder' : itemType;
 	return {
 		title: `${getShortenedString(title, 25)} (${ucFirst(pageName)})`,
+		fullTitle: title,
+		itemType: normalizedItemType,
+		id,
 		icon: {
-			itemType: itemType === 'protagonist' ? 'stakeholder' : itemType,
+			itemType: normalizedItemType,
 		},
 	};
 };
