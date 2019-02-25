@@ -11,7 +11,7 @@ import {
 const HistoryBreadcrumb = ({
 	pages,
 	currentPageUrl,
-}) => (
+}) => (!currentPageUrl.startsWith('/unsupported-browser') ? (
 	<ScrollWrapper>
 		<Container>
 			{pages.map(({
@@ -40,7 +40,7 @@ const HistoryBreadcrumb = ({
 			))}
 		</Container>
 	</ScrollWrapper>
-);
+) : null);
 
 HistoryBreadcrumb.propTypes = {
 	pages: PropTypes.arrayOf(PropTypes.shape({
