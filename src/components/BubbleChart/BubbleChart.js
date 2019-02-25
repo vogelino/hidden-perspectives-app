@@ -5,6 +5,7 @@ import {
 	BubblesSvg,
 	BubblesLoadingContainer,
 } from './styles';
+import BubbleChartTooltips from './BubbleChartTooltips';
 import BubbleChartImages from './BubbleChartImages';
 import Bubbles from './Bubbles';
 import LoadingIndicator from '../LoadingIndicator';
@@ -19,6 +20,7 @@ const BubbleChart = (props) => (
 			{props.bubbleLayoutItems.length && !props.isLoading && <Bubbles {...props} />}
 		</BubblesSvg>
 		<BubblesLoadingContainer {...props}><LoadingIndicator /></BubblesLoadingContainer>
+		<BubbleChartTooltips {...props} />
 	</BubbleChartContainer>
 );
 
