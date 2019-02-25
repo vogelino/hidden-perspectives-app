@@ -1,8 +1,5 @@
 import styled from 'styled-components';
 
-export const Name = styled.span`
-`;
-
 export const TooltipNumber = styled.span`
 	background: ${({ theme }) => theme.primaryDark10};
 	border-left: 1px solid ${({ theme }) => theme.primaryDark25};
@@ -10,26 +7,27 @@ export const TooltipNumber = styled.span`
 	padding: 0.5rem 0.75rem 0.5rem 0.65rem;
 `;
 
-export const Tooltip = styled.div`
+export const Tooltip = styled.div.attrs(({ y, x }) => ({
+	style: {
+		top: `${y}%`,
+		left: `${x}%`,
+	},
+}))`
 	background: ${({ theme }) => theme.primaryLight};
 	border: 1px solid white;
 	border-radius: 1rem;
 	color: ${({ theme }) => theme.primaryDark};
 	font-size: .75rem;
 	line-height: 1.5rem;
+	opacity: ${({ visible }) => (visible ? 1 : 0)};
 	overflow: hidden;
 	padding: 4px 0 0 .85rem;
+	pointer-events: none;
 	position: absolute;
-	transform: translateX(-50%) scale(1.25);
+	transform: translate(-50%, -4px);
+	transition: opacity 150ms ease-out;
 	white-space: nowrap;
 	z-index: 2;
-	top: 90%;
-	left: 50%;
-	pointer-events: none;
-
-	&:hover > ${Name} {
-		text-decoration: underline;
-	}
 `;
 
 export const Wrapper = styled.foreignObject`
