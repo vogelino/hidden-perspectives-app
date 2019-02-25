@@ -4,11 +4,12 @@ import LibraryButton from '../_library/Button';
 export const Container = styled.div`
 	position: relative;
 	width: 100%;
-	min-height: calc(100vh - 4.5rem);
+	min-height: calc(100vh - 7rem);
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	background: ${({ theme }) => theme.gray200};
+	margin-top: 7rem;
 `;
 
 export const FormWrapper = styled.div`

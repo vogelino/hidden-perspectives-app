@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const Items = styled.div`
 	width: 100%;
-	height: calc(100vh - 4.5rem);
+	height: calc(100vh - 7rem);
 	position: relative;
 	overflow-x: hidden;
 	overflow-y: auto;

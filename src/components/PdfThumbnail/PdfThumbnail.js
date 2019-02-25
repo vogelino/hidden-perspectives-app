@@ -24,6 +24,7 @@ const PdfThumbnail = ({
 				width={width}
 				renderInteractiveForms={false}
 				renderTextLayer={false}
+				renderAnnotationLayer={false}
 				loading=" "
 				error=" "
 				noData=" "

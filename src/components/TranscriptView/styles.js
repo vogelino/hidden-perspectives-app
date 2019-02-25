@@ -5,11 +5,13 @@ export const Container = styled.div`
 	margin-top: 4.5rem;
 	width: 100%;
 	display: flex;
+	user-select: none;
 `;
 
 export const TranscriptScrollContainer = styled.div`
 	padding-top: 3.5rem;
-	height: calc(100vh - 4.5rem);
+	margin-top: 2.5rem;
+	height: calc(100vh - 2.5rem);
 	overflow-y: auto;
 	width: calc(100vw - 25rem);
 `;
@@ -25,6 +27,7 @@ export const Transcript = styled.pre`
 	padding: 3rem;
 	border: 1px solid ${({ theme }) => theme.commonBorderColor};
 	border-radius: 3px;
+	margin: 0;
 
 	* {
 		font-family: 'Suisse Intl Mono', 'Courier', monospace;

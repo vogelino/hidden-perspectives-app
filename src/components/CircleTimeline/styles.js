@@ -6,8 +6,8 @@ export const CircleContainer = styled.div`
     justify-content: center;
 	flex: 1 1;
 	position: relative;
-	min-height: calc(100vh - 8rem);
-	max-height: calc(100vh - 8rem);
+	min-height: calc(100vh - 10.5rem);
+	max-height: calc(100vh - 10.5rem);
 	margin-top: 3.5rem;
 `;
 

@@ -10,4 +10,5 @@ export const Container = styled(NavLink)`
 	width: ${prop('width')}px;
 	min-height: ${prop('width')}px;
 	overflow: hidden;
+	max-height: 90px;
 `;

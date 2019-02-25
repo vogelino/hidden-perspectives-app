@@ -52,6 +52,9 @@ const OriginalView = ({
 								loading=" "
 								error=" "
 								noData=" "
+								renderInteractiveForms={false}
+								renderTextLayer={false}
+								renderAnnotationLayer={false}
 							/>
 						))}
 					</Document>

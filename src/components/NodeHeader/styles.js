@@ -4,7 +4,7 @@ import Button from '../_library/Button';
 
 export const Container = styled.header`
 	position: ${({ isStatic }) => (isStatic ? 'static' : 'fixed')};
-	top: 4.5rem;
+	top: 7rem;
 	left: 0;
 	width: 100%;
 	z-index: 2;
