@@ -16,7 +16,7 @@ export const LegendLabel = styled.span`
 
 export const MainTimelineContainer = styled.div`
 	position: fixed;
-	top: 4.5rem;
+	top: 7rem;
 	left: 0;
 	width: 100%;
 	height: 2.25rem;

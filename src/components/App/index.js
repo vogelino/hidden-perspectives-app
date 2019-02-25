@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Head from '../Head';
 import Theme from '../Theme';
+import HistoryBreadcrumb from '../HistoryBreadcrumb';
 import Home from '../../pages/home';
 import Login from '../../pages/login';
 import DocumentPage from '../../pages/document';
@@ -24,6 +25,7 @@ const App = () => (
 			<>
 				<Head />
 				<GlobalStyles />
+				<HistoryBreadcrumb />
 				<Route exact path="/" component={Home} />
 				<Route exact path="/document/context/:id" component={DocumentPage} />
 				<Route exact path="/document/transcript/:id" component={TranscriptPage} />

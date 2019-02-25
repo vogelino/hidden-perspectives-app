@@ -5,17 +5,17 @@ export const OuterContainer = styled.div`
 	width: 6rem;
 	height: 100%;
 	position: fixed;
-	top: 4.5rem;
+	top: 7rem;
 	left: 0;
 	border-right: 1px solid ${({ theme }) => theme.commonBorderColor};
 	z-index: 4;
 `;
 
 export const InnerContainer = styled.div`
-	height: calc(100vh - 4.5rem);
+	height: calc(100vh - 7rem);
 	width: calc(6rem - 1px);
 	position: fixed;
-	top: 4.5rem;
+	top: 7rem;
 	left: 0;
 	/* background: ${({ theme }) => theme.gray100}; */
 	z-index: 1;

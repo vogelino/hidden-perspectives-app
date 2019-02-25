@@ -2,9 +2,9 @@ import styled, { keyframes } from 'styled-components';
 
 export const Container = styled.div`
 	width: 100vw;
-	height: calc(100vh - 4.5rem);
+	height: calc(100vh - 7rem);
 	position: fixed;
-	top: 4.5rem;
+	top: 7rem;
 	left: 0;
 	background: ${({ theme }) => theme.gray200};
 	transition: opacity 200ms ease-out;
