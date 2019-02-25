@@ -17,6 +17,7 @@ const colors = {
 	iranRed: '#D7062C',
 	iconFillPrimary: '#6F767D',
 	iconStrokePrimary: '#1B2733',
+	danger: '#ce1126',
 };
 
 const selectTheme = {
