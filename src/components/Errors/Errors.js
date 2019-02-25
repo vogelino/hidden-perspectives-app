@@ -16,7 +16,6 @@ const Errors = ({ errors, isOpened, onClose }) => (errors.length > 0 && isOpened
 	<Container>
 		<CloseButton onClick={onClose}>✕</CloseButton>
 		<Title variant="h5">{getErrorTitle(errors)}</Title>
-		{console.log(errors)}
 		{errors.map((error) => (
 			<ErrorEl key={error}>
 				{error.split('\n').map((errorLine) => (
