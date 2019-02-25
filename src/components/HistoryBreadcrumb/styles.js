@@ -28,22 +28,22 @@ export const HistoryEntry = styled.span`
 	cursor: pointer;
 	opacity: .2;
 	transition: color 100ms ease-out, background 100ms ease-out, opacity 100ms ease-out;
+	
+	&.active {
+		color: white;
+		background: ${({ theme }) => theme.primary};
+		opacity: 1;
+		cursor: default;
+	}
 
-	&:hover {
+	&:not(.active):hover {
 		color: ${({ theme }) => theme.primaryDark};
 		background: ${({ theme }) => theme.primaryLight};
-		opacity: 1 !important;
 
 		${IconContainer} {
 			mix-blend-mode: luminosity;
 		}
 	}
-	
-	${({ isActive, theme }) => isActive && `
-		color: white;
-		background: ${theme.primary};
-		opacity: 1 !important;
-	`}
 
 	${({ hasIcon }) => hasIcon && `
 		position: relative;
@@ -61,7 +61,11 @@ export const Container = styled.nav`
 	white-space: nowrap;
 	height: calc(2.5rem + 14px);
 
-	&:hover ${HistoryEntry} {
+	&:hover ${HistoryEntry}:not(.active) {
 		opacity: .6;
+
+		&:hover {
+			opacity: 1;
+		}
 	}
 `;

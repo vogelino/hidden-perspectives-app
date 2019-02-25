@@ -2,8 +2,8 @@ import styled from 'styled-components';
 
 export const Container = styled.div`
 	display: flex;
-	height: calc(100vh - 7rem);
-	margin-top: 7rem;
+	height: 100vh;
+	padding-top: 7rem;
 	width: 100%;
 `;
 
@@ -14,7 +14,6 @@ export const Sidebar = styled.aside`
 	position: relative;
 	z-index: 1;
 	overflow: auto;
-	margin-top: 2.5rem;
 `;
 
 export const LeftSidebarContent = styled.div`

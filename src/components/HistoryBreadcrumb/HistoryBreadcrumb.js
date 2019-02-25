@@ -23,7 +23,7 @@ const HistoryBreadcrumb = ({
 				<HistoryEntry
 					key={url}
 					onClick={onClick}
-					isActive={url === currentPageUrl}
+					className={url === currentPageUrl && 'active'}
 					hasIcon={!!icon}
 				>
 					{icon && (
