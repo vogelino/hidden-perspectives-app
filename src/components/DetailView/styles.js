@@ -3,8 +3,11 @@ import styled from 'styled-components';
 export const Container = styled.div`
 	display: flex;
 	height: 100vh;
-	padding-top: 7rem;
 	width: 100%;
+	position: fixed;
+	top: 7rem;
+	left: 0;
+	z-index: 1;
 `;
 
 export const Sidebar = styled.aside`
