@@ -2,7 +2,7 @@ import {
 	compose,
 	withProps,
 	lifecycle,
-	onlyUpdateForPropTypes,
+	onlyUpdateForKeys,
 } from 'recompose';
 import {
 	flatten,
@@ -54,6 +54,11 @@ export default compose(
 			}
 		},
 	}),
-	onlyUpdateForPropTypes,
+	onlyUpdateForKeys([
+		'items',
+		'hoveredElement',
+		'filteredTags',
+		'isLoading',
+	]),
 )(SummarySection);
 
