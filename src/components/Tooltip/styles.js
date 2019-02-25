@@ -21,6 +21,7 @@ export const Content = styled.div`
 	z-index: 10;
 	text-align: left;
 	box-shadow: 0 .5rem 1rem rgba(0,0,0,.1);
+	white-space: normal;
 
 	&::after {
 		content: '';
@@ -31,14 +32,20 @@ export const Content = styled.div`
 
 export const Trigger = styled.div`
 	position: relative;
-	width: 100%;
-	height: 100%;
 	cursor: pointer;
+	display: inline-block;
 
 	&:hover ${Container} {
 		opacity: 1;
 		pointer-events: all;
 	}
+`;
+
+export const Title = styled(Headline)`
+	color: ${({ theme }) => theme.gray900};
+	font-size: 1rem;
+	line-height: 1.4rem;
+	margin: 0 0 .5rem 0;
 `;
 
 export const Subtitle = styled(Headline)`

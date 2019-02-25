@@ -6,8 +6,6 @@ export const ScrollWrapper = styled.div`
 	left: 0;
 	width: 100%;
 	height: 2.5rem;
-	overflow: hidden;
-	border-bottom: 1px solid ${({ theme }) => theme.commonBorderColor};
 	background: white;
 	z-index: 3;
 `;
@@ -56,10 +54,13 @@ export const Container = styled.nav`
 	width: auto;
 	padding: 0 2rem;
 	background: white;
-	overflow: hidden;
-	overflow-x: auto;
 	white-space: nowrap;
-	height: calc(2.5rem + 14px);
+	height: 2.5rem;
+	border-bottom: 1px solid ${({ theme }) => theme.commonBorderColor};
+
+	&::-webkit-scrollbar {
+		display: none;
+	}
 
 	&:hover ${HistoryEntry}:not(.active) {
 		opacity: .6;

@@ -8,6 +8,7 @@ import {
 	Trigger,
 	Container,
 	Content,
+	Title,
 	Subtitle,
 	Summary,
 	AuthorsContainer,
@@ -17,6 +18,7 @@ const SUMMARY_MAX_LEN = 200;
 const Tooltip = ({
 	id,
 	subtitle,
+	title,
 	summary,
 	thumbnailUrl,
 	isLoading,
@@ -24,6 +26,7 @@ const Tooltip = ({
 	itemTypeName,
 	path,
 	noSubtitle,
+	noTitle,
 	withLink,
 	authors,
 	...rest
@@ -33,6 +36,7 @@ const Tooltip = ({
 			{!isLoading && thumbnailUrl && (
 				<PdfThumbnail file={thumbnailUrl} id={id} />
 			)}
+			{!noTitle && <Title variant="h2">{isLoading ? 'Loading...' : title}</Title>}
 			{!noSubtitle && <Subtitle variant="h6">{isLoading ? 'Loading...' : subtitle}</Subtitle>}
 			{!isLoading && <Summary>{getShortenedString(summary, SUMMARY_MAX_LEN)}</Summary>}
 			{authors.length > 0 && (
@@ -56,11 +60,13 @@ const Tooltip = ({
 Tooltip.propTypes = {
 	id: PropTypes.string,
 	subtitle: PropTypes.string,
+	title: PropTypes.string,
 	summary: PropTypes.string,
 	thumbnailUrl: PropTypes.string,
 	path: PropTypes.string,
 	isLoading: PropTypes.bool,
 	noSubtitle: PropTypes.bool,
+	noTitle: PropTypes.bool,
 	withLink: PropTypes.bool,
 	position: PropTypes.oneOf(['left', 'right']),
 	itemTypeName: PropTypes.oneOf(['Event', 'Document', 'Protagonist']),
@@ -73,12 +79,14 @@ Tooltip.propTypes = {
 Tooltip.defaultProps = {
 	id: undefined,
 	subtitle: undefined,
+	title: undefined,
 	summary: undefined,
 	thumbnailUrl: undefined,
 	path: '',
 	isLoading: true,
 	withLink: true,
 	noSubtitle: false,
+	noTitle: false,
 	position: 'right',
 	itemTypeName: 'Document',
 	authors: [],
