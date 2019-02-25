@@ -2,12 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { findIndex } from 'ramda';
 import FeaturesTour from '../FeaturesTour';
-import Minimap from './Minimap';
 import { LoadingContainer } from '../LoadingIndicator/styles';
 import LoadingIndicator from '../LoadingIndicator';
+import { MainTimelineLegend } from '../Legend';
+import Errors from '../Errors';
+import Minimap from './Minimap';
 import TimelineItems from './TimelineItems';
 import Protagonists from './Protagonists';
-import { MainTimelineLegend } from '../Legend';
 import { Container } from './styles';
 
 const parseTimelineItems = (years) => {
@@ -51,7 +52,7 @@ const MainTimeline = ({
 			<LoadingContainer isLoading={isLoading}>
 				<LoadingIndicator />
 			</LoadingContainer>
-			{errors.map((error) => error)}
+			<Errors errors={errors} />
 			<Minimap
 				isLoading={isLoading}
 				items={minimapItems}

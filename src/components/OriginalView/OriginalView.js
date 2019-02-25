@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { pdfjs, Document, Page } from 'react-pdf';
 import LoadingIndicator from '../LoadingIndicator';
 import NodeSidebar from '../NodeSidebar';
+import Errors from '../Errors';
 import { LoadingContainer } from '../LoadingIndicator/styles';
 import { Container, Content, ScrollContainer } from './styles';
 
@@ -18,8 +19,10 @@ const OriginalView = ({
 	isLoading,
 	pagesCount,
 	setPagesCount,
+	errors,
 }) => (
 	<Container>
+		<Errors errors={errors} />
 		<LoadingContainer isLoading={isLoading}>
 			<LoadingIndicator />
 		</LoadingContainer>
@@ -66,6 +69,7 @@ OriginalView.propTypes = {
 	setPagesCount: PropTypes.func,
 	pagesCount: PropTypes.number,
 	isLoading: PropTypes.bool,
+	errors: Errors.propTypes.errors,
 };
 
 OriginalView.defaultProps = {
@@ -75,6 +79,7 @@ OriginalView.defaultProps = {
 	setPagesCount: () => undefined,
 	pagesCount: 0,
 	isLoading: true,
+	errors: Errors.defaultProps.errors,
 };
 
 export default OriginalView;

@@ -22,12 +22,16 @@ export const withErrors = compose(
 	})),
 );
 
-export const getErrorHandler = ({ setErrors }) => ({ message, graphQLErrors, stack }) => {
+export const getErrorHandler = ({
+	setErrors,
+	errors = [],
+}) => ({ graphQLErrors = [], stack }) => {
+	const gqlErrors = graphQLErrors.map((gqlError) => gqlError.message);
 	/* eslint-disable no-console */
-	console.error(message ? [message] : graphQLErrors);
+	console.error(gqlErrors);
 	if (stack) console.log(stack);
 	/* eslint-enable no-console */
-	setErrors(message ? [message] : graphQLErrors);
+	setErrors([...errors, ...gqlErrors]);
 };
 
 export const withoutReRender = lifecycle({

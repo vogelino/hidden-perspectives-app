@@ -4,6 +4,7 @@ import MetadataRow from '../_library/MetadataRow';
 import Fieldset from '../_library/Fieldset';
 import LoadingIndicator from '../LoadingIndicator';
 import NodeSidebar from '../NodeSidebar';
+import Errors from '../Errors';
 import { LoadingContainer } from '../LoadingIndicator/styles';
 import { Container, Content, ScrollContainer } from './styles';
 
@@ -21,8 +22,10 @@ const MetadataView = ({
 	isLoading,
 	id,
 	itemType,
+	errors,
 }) => (
 	<Container>
+		<Errors errors={errors} />
 		<LoadingContainer isLoading={isLoading}>
 			<LoadingIndicator />
 		</LoadingContainer>
@@ -69,11 +72,13 @@ MetadataView.propTypes = {
 			]).isRequired,
 		})).isRequired,
 	})),
+	errors: Errors.propTypes.errors,
 };
 
 MetadataView.defaultProps = {
 	isLoading: true,
 	data: [],
+	errors: Errors.defaultProps.errors,
 };
 
 export default MetadataView;

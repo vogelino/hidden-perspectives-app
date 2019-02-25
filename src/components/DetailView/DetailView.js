@@ -5,6 +5,7 @@ import SummarySection from '../SummarySection';
 import LabelFilters from '../LabelFilters';
 import NodeInfo from '../NodeInfo';
 import FeaturesTour from '../FeaturesTour';
+import Errors from '../Errors';
 import { Container, Sidebar, LeftSidebarContent } from './styles';
 
 const DetailView = ({
@@ -12,9 +13,11 @@ const DetailView = ({
 	isLoading,
 	tourIsOpen,
 	onTourClose,
+	errors,
 	...rest
 }) => (
 	<Container>
+		<Errors errors={errors} />
 		<FeaturesTour
 			page="circleTimeline"
 			isOpen={tourIsOpen}
@@ -65,6 +68,7 @@ DetailView.propTypes = {
 	isLoading: PropTypes.bool,
 	tourIsOpen: PropTypes.bool,
 	onTourClose: PropTypes.func,
+	errors: Errors.propTypes.errors,
 };
 
 DetailView.defaultProps = {
@@ -75,6 +79,7 @@ DetailView.defaultProps = {
 	protagonists: {},
 	tourIsOpen: false,
 	onTourClose: () => {},
+	errors: Errors.defaultProps.errors,
 };
 
 export default DetailView;

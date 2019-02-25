@@ -10,6 +10,7 @@ import {
 	addIndex,
 } from 'ramda';
 import LoadingIndicator from '../LoadingIndicator';
+import Errors from '../Errors';
 import NodeSidebar from '../NodeSidebar';
 import { LoadingContainer } from '../LoadingIndicator/styles';
 import {
@@ -34,8 +35,14 @@ const formatTranscript = pipe(
 	addIndex(map)(wrapIntoSpan),
 );
 
-const TranscriptView = ({ isLoading, transcript, id }) => (
+const TranscriptView = ({
+	isLoading,
+	transcript,
+	id,
+	errors,
+}) => (
 	<Container>
+		<Errors errors={errors} />
 		<LoadingContainer isLoading={isLoading}>
 			<LoadingIndicator />
 		</LoadingContainer>
@@ -54,11 +61,13 @@ TranscriptView.propTypes = {
 	id: PropTypes.string.isRequired,
 	transcript: PropTypes.string,
 	isLoading: PropTypes.bool,
+	errors: Errors.propTypes.errors,
 };
 
 TranscriptView.defaultProps = {
 	transcript: '',
 	isLoading: true,
+	errors: Errors.defaultProps.errors,
 };
 
 export default TranscriptView;
