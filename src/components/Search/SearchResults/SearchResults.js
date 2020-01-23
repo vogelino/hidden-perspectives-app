@@ -114,9 +114,10 @@ SearchResults.propTypes = {
 		}),
 	),
 	counts: PropTypes.shape({
-		events: PropTypes.number.isRequired,
-		documents: PropTypes.number.isRequired,
-		stakeholders: PropTypes.number.isRequired,
+		all: PropTypes.number,
+		events: PropTypes.number,
+		documents: PropTypes.number,
+		stakeholders: PropTypes.number,
 	}),
 };
 
