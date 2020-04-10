@@ -55,7 +55,7 @@
     "apollo-link-state": "^0.4.2",
     "apollo-link-ws": "^1.0.9",
     "apollo-utilities": "^1.0.23",
-    "auth0-js": "^9.8.1",
+    "auth0-js": "^9.13.2",
     "d3": "^5.7.0",
     "d3-force": "^2.0.0",
     "d3-scale": "^2.1.2",
