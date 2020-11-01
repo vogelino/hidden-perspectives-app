@@ -25,3 +25,5 @@ yarn-error.log*
 
 # now
 vercel.json
+.vercel
+
