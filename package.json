@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "engines": {
-    "node": "12.14.1"
+    "node": "12.x"
   },
   "url": "git@github.com:vogelino/hidden-perspectives-app.git",
   "repository": {
