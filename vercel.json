@@ -1,0 +1,8 @@
+{
+	"build": {
+		"env": {
+			"REACT_APP_GRAPHQL_QUERY_API": "https://api.graph.cool/simple/v1/hiddenpeeps",
+			"REACT_APP_GRAPHQL_SUSBSCRIPTION_API": "wss://subscriptions.graph.cool/v1/hiddenpeeps"
+		}
+	}
+}
